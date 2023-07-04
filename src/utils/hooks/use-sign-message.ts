@@ -17,6 +17,8 @@ interface GetSignatureData {
   exists: boolean;
 }
 
+const TC_VERSION = '1.0';
+
 const postSignature = async (account: KeyringPair) => {
   const signerResult = await signMessage(account, TERMS_AND_CONDITIONS_LINK);
 
@@ -57,6 +59,8 @@ const useSignMessage = (): UseSignMessageResult => {
 
   const dispatch = useDispatch();
   const [signatures, setSignatures] = useLocalStorage(LocalStorageKey.TC_SIGNATURES);
+  const [tcVersion, setTcVersion] = useLocalStorage(LocalStorageKey.TC_VERSION);
+
   const { selectedAccount } = useSubstrateSecureState();
 
   const setSignature = useCallback(
@@ -109,6 +113,7 @@ const useSignMessage = (): UseSignMessageResult => {
     },
     onSuccess: (_, variables) => {
       setSignature(variables.address, true);
+      setTcVersion(TC_VERSION);
       dispatch(showSignTermsModalAction(false));
       refetchSignatureData();
       notifications.show(variables.address, {
@@ -117,6 +122,12 @@ const useSignMessage = (): UseSignMessageResult => {
       });
     }
   });
+
+  useEffect(() => {
+    if (tcVersion === TC_VERSION) return;
+
+    setSignatures({});
+  }, [setSignatures, tcVersion]);
 
   // Reset mutation on account change
   useEffect(() => {
