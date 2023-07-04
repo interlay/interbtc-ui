@@ -7,14 +7,8 @@ const DEFAULT_EXTRINSIC: ExtrinsicData = {
         resolve(jest.fn());
 
         setTimeout(() => {
-          cb({ status: { isReady: true, type: 'Ready' } });
-        }, 1);
-        setTimeout(() => {
-          cb({ status: { isReady: true, isInBlock: true, type: 'InBlock' } });
-        }, 2);
-        setTimeout(() => {
           cb({ status: { isReady: true, isInBlock: true, isFinalized: true, type: 'Finalized' } });
-        }, 3);
+        }, 1);
       });
     })
   } as unknown) as ExtrinsicData['extrinsic']
