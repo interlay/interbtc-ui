@@ -26,7 +26,7 @@ const postSignature = async (account: KeyringPair) => {
     throw new Error('Failed to sign message');
   }
 
-  return fetch(`${SIGNER_API_URL}/${account.address}`, {
+  return fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({version: TC_VERSION})}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ const useSignMessage = (): UseSignMessageResult => {
         return storedSignature;
       }
 
-      const res = await fetch(`${SIGNER_API_URL}/${account.address}`, {
+      const res = await fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({version: TC_VERSION})}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
