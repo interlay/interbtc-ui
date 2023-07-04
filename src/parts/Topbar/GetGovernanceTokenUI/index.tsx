@@ -6,17 +6,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
 import { ReactComponent as GateLogoIcon } from '@/assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from '@/assets/img/exchanges/kraken-logo.svg';
-import { ReactComponent as LbankLogoIcon } from '@/assets/img/exchanges/lbank-logo.svg';
 import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchanges/mexc-logo-for-interlay.svg';
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
 import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
 import { showBuyModal } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
+import { CTA } from '@/component-library';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import InterlayDefaultOutlinedButton, {
-  Props as InterlayDefaultOutlinedButtonProps
-} from '@/legacy-components/buttons/InterlayDefaultOutlinedButton';
+import { Props as InterlayDefaultOutlinedButtonProps } from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/legacy-components/UI/InterlayModal';
@@ -49,10 +47,6 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     {
       link: 'https://www.mexc.com/exchange/INTR_USDT',
       icon: <MexcLogoForInterlayIcon width={148} height={18} />
-    },
-    {
-      link: 'https://www.lbank.info/exchange/intr/usdt',
-      icon: <LbankLogoIcon width={117} height={22} />
     }
   ];
 } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
@@ -120,9 +114,9 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
 
   return (
     <>
-      <InterlayDefaultOutlinedButton onClick={handleModalOpen} {...props}>
+      <CTA onClick={handleModalOpen} {...props}>
         {getGovernanceTokenLabel}
-      </InterlayDefaultOutlinedButton>
+      </CTA>
       <InterlayModal initialFocus={focusRef} open={isBuyModalOpen} onClose={handleModalClose}>
         <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
           <TitleWithUnderline text={getGovernanceTokenLabel} />

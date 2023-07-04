@@ -7,7 +7,7 @@ import InterlayRouterNavLink, {
 } from '@/legacy-components/UI/InterlayRouterNavLink';
 
 interface CustomProps {
-  external: boolean;
+  external?: boolean;
   href: string;
 }
 

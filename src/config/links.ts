@@ -11,6 +11,7 @@ const INTERLAY_TERMS_AND_CONDITIONS_LINK =
 const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
   'https://github.com/interlay/terms/blob/master/kintsugi-dapp-terms-of-use.pdf';
 const INTERLAY_USE_WRAPPED_CURRENCY_LINK = 'https://docs.interlay.io/#/interlay/earn-with-ibtc';
+const INTERLAY_GET_ASSETS_LINK = 'https://docs.interlay.io/#/guides/assets';
 const KINTSUGI_USE_WRAPPED_CURRENCY_LINK = 'https://docs.interlay.io/#/kintsugi/Earn-With-kBTC';
 const INTERLAY_GOVERNANCE_LINK = 'https://interlay.subsquare.io/';
 const KINTSUGI_GOVERNANCE_LINK = 'https://kintsugi.subsquare.io';
@@ -18,6 +19,7 @@ const INTERLAY_SUBSCAN_LINK = 'https://interlay.subscan.io';
 const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
 const INTERLAY_VAULT_DOCS_LINK = 'https://docs.interlay.io/#/vault/overview';
 const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/installation?id=dos-and-donts';
+const INTERLAY_WHITEPAPPER = 'https://gateway.pinata.cloud/ipfs/QmWp62gdLssFpAoG2JqK8sy3m3rTRUa8LyzoSY8ZFisYNB';
 
 const BANXA_LINK = 'http://talisman.banxa.com/';
 
@@ -34,6 +36,7 @@ export {
   INTERLAY_DOCS_LINK,
   INTERLAY_DOS_AND_DONTS_DOCS_LINK,
   INTERLAY_EMAIL_LINK,
+  INTERLAY_GET_ASSETS_LINK,
   INTERLAY_GITHUB_LINK,
   INTERLAY_GOVERNANCE_LINK,
   INTERLAY_SUBSCAN_LINK,
@@ -41,6 +44,7 @@ export {
   INTERLAY_TWITTER_LINK,
   INTERLAY_USE_WRAPPED_CURRENCY_LINK,
   INTERLAY_VAULT_DOCS_LINK,
+  INTERLAY_WHITEPAPPER,
   KINTSUGI_CROWDLOAN_LINK,
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,

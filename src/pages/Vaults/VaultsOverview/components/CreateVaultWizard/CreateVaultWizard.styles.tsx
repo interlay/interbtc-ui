@@ -62,12 +62,6 @@ const StyledDd = styled.dd`
   line-height: ${theme.lineHeight.base};
 `;
 
-const StyledHr = styled.hr`
-  border: 0;
-  border-bottom: ${theme.border.default};
-  margin: ${theme.spacing.spacing4} 0;
-`;
-
 export {
   StyledDd,
   StyledDisclaimerCard,
@@ -77,7 +71,6 @@ export {
   StyledDItem,
   StyledDl,
   StyledDt,
-  StyledHr,
   StyledModalHeader,
   StyledWarningIcon
 };

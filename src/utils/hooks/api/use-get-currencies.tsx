@@ -2,6 +2,7 @@ import { CurrencyExt, InterbtcPrimitivesCurrencyId, tokenSymbolToCurrency } from
 import { useCallback } from 'react';
 import { useQuery, UseQueryResult } from 'react-query';
 
+import { CurrencySquidFormat } from '@/types/currency';
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
 import { FeatureFlags, useFeatureFlag } from '../use-feature-flag';
@@ -10,6 +11,7 @@ type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
   getCurrencyFromTicker: (ticker: string) => CurrencyExt;
   getForeignCurrencyFromId: (id: number) => CurrencyExt;
   getCurrencyFromIdPrimitive: (currencyPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
+  getCurrencyFromSquidFormat: (currencySquidFormat: CurrencySquidFormat) => CurrencyExt;
 };
 
 const getCurrencies = async (featureFlags: { lending: boolean; amm: boolean }): Promise<Array<CurrencyExt>> => {
@@ -105,7 +107,29 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [getForeignCurrencyFromId, getLendCurrencyFromId]
   );
 
-  return { ...queryResult, getCurrencyFromTicker, getForeignCurrencyFromId, getCurrencyFromIdPrimitive };
+  const getCurrencyFromSquidFormat = useCallback(
+    (currencySquidFormat: CurrencySquidFormat) => {
+      switch (currencySquidFormat.__typename) {
+        case 'NativeToken':
+          return getCurrencyFromTicker(currencySquidFormat.token);
+        case 'ForeignAsset':
+          return getForeignCurrencyFromId(currencySquidFormat.asset);
+        case 'LendToken':
+          return getLendCurrencyFromId(currencySquidFormat.lendTokenId);
+        default:
+          throw new Error(`No handling implemented for currency format of ${currencySquidFormat}`);
+      }
+    },
+    [getCurrencyFromTicker, getForeignCurrencyFromId, getLendCurrencyFromId]
+  );
+
+  return {
+    ...queryResult,
+    getCurrencyFromTicker,
+    getForeignCurrencyFromId,
+    getCurrencyFromIdPrimitive,
+    getCurrencyFromSquidFormat
+  };
 };
 
 export { useGetCurrencies };

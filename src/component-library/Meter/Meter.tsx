@@ -1,7 +1,7 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 
 import { Span } from '../Text';
-import { Status, Variants } from '../utils/prop-types';
+import { MeterVariants, Status } from '../utils/prop-types';
 import { Indicator } from './Indicator';
 import { StyledContainer, StyledIndicatorWrapper, StyledMeter, StyledWrapper } from './Meter.style';
 import { RangeIndicators } from './RangeIndicators';
@@ -12,7 +12,7 @@ const getPosition = (percentage: number) => (percentage > 100 ? 100 : percentage
 type MeterRanges = [number, number, number, number];
 
 type Props = {
-  variant?: Variants;
+  variant?: MeterVariants;
   value?: number;
   ranges?: MeterRanges;
   showIndicator?: boolean;
