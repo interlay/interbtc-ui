@@ -9,6 +9,7 @@ const CROSS_CHAIN_TRANSFER_TO_FIELD = 'transfer-to';
 const CROSS_CHAIN_TRANSFER_AMOUNT_FIELD = 'transfer-amount';
 const CROSS_CHAIN_TRANSFER_TOKEN_FIELD = 'transfer-token';
 const CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD = 'transfer-account';
+const CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD = 'transfer-fee-token';
 
 type CrossChainTransferFormData = {
   [CROSS_CHAIN_TRANSFER_FROM_FIELD]?: ChainName;
@@ -16,6 +17,7 @@ type CrossChainTransferFormData = {
   [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]?: string;
   [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]?: string;
   [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]?: string;
+  [CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD]?: string;
 };
 
 type CrossChainTransferValidationParams = {
@@ -41,7 +43,8 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
       .required(t('forms.please_enter_your_field', { field: 'destination' })),
     [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: yup
       .string()
-      .required(t('forms.please_select_your_field', { field: 'transfer token' }))
+      .required(t('forms.please_select_your_field', { field: 'transfer token' })),
+    [CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
 const TRANSFER_RECIPIENT_FIELD = 'transfer-destination';
@@ -79,6 +82,7 @@ const transferSchema = (params: TransferValidationParams): yup.ObjectSchema<any>
 
 export {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
+  CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
   CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_TO_FIELD,

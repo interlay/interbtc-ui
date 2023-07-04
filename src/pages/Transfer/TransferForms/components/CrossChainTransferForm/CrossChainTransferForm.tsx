@@ -13,10 +13,12 @@ import {
   TransactionDetails,
   TransactionDetailsDd,
   TransactionDetailsDt,
-  TransactionDetailsGroup
+  TransactionDetailsGroup,
+  TransactionFeeDetails
 } from '@/components';
 import {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
+  CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
   CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_TO_FIELD,
@@ -34,6 +36,7 @@ import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { TransactionArgs } from '@/utils/hooks/transaction/types';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { ChainSelect } from '../ChainSelect';
@@ -59,7 +62,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         ? newMonetaryAmount(currentToken.minTransferAmount, getCurrencyFromTicker(currentToken.value), true)
         : undefined,
       maxAmount: currentToken
-        ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
+        ? newMonetaryAmount('1000000000000', getCurrencyFromTicker(currentToken.value), true)
         : undefined
     }
   };
@@ -71,39 +74,61 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   });
 
-  const handleSubmit = async (formData: CrossChainTransferFormData) => {
-    if (!data || !formData || !currentToken) return;
+  const getTransactionArgs = useCallback(
+    async (formData: CrossChainTransferFormData): Promise<TransactionArgs<Transaction.XCM_TRANSFER> | undefined> => {
+      if (!data || !formData || !currentToken) return;
 
-    const address = formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string;
+      const address = formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string;
 
-    const { signer } = await web3FromAddress(address);
-    const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName);
-    const apiPromise = data.provider.getApiPromise(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string);
+      const { signer } = await web3FromAddress(address);
+      const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName);
+      const apiPromise = data.provider.getApiPromise(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string);
 
-    apiPromise.setSigner(signer);
-    adapter.setApi(apiPromise);
+      apiPromise.setSigner(signer);
+      adapter.setApi(apiPromise);
 
-    const transferCurrency = getCurrencyFromTicker(currentToken.value);
-    const transferAmount = newMonetaryAmount(
-      form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
-      transferCurrency,
-      true
-    );
+      const transferCurrency = getCurrencyFromTicker(currentToken.value);
+      const transferAmount = newMonetaryAmount(
+        formData[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
+        transferCurrency,
+        true
+      );
 
-    const fromChain = formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName;
-    const toChain = formData[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName;
+      const fromChain = formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName;
+      const toChain = formData[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName;
 
-    transaction.execute(adapter, fromChain, toChain, address, transferAmount);
+      return [adapter, fromChain, toChain, address, transferAmount];
+    },
+    [currentToken, data, getCurrencyFromTicker]
+  );
+
+  const handleSubmit = async (values: CrossChainTransferFormData) => {
+    const args = await getTransactionArgs(values);
+    if (!args) {
+      return;
+    }
+
+    transaction.execute(...args);
   };
 
   const form = useForm<CrossChainTransferFormData>({
     initialValues: {
       [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
+      [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || '',
+      [CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t)
+    validationSchema: crossChainTransferSchema(schema, t),
+    onComplete: async (values: CrossChainTransferFormData) => {
+      const args = await getTransactionArgs(values);
+      if (!args) {
+        return;
+      }
+
+      const feeTicker = values[CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD];
+      transaction.fee.setCurrency(feeTicker).estimate(...args);
+    }
   });
 
   const handleOriginatingChainChange = (chain: ChainName) => {
@@ -252,12 +277,12 @@ const CrossChainTransferForm = (): JSX.Element => {
           })}
         />
         <TransactionDetails>
-          <TransactionDetailsGroup>
-            <TransactionDetailsDt size='xs' color='primary'>
-              Origin chain transfer fee
-            </TransactionDetailsDt>
-            <TransactionDetailsDd size='xs'>{currentToken?.originFee}</TransactionDetailsDd>
-          </TransactionDetailsGroup>
+          <TransactionFeeDetails
+            {...transaction.fee.detailsProps}
+            selectProps={form.getFieldProps(CROSS_CHAIN_TRANSFER_FEE_TOKEN_FIELD)}
+            label='Origin chain transfer fee'
+            renderWrappedInTransactionDetails={false}
+          />
           <TransactionDetailsGroup>
             <TransactionDetailsDt>Destination chain transfer fee estimate</TransactionDetailsDt>
             <TransactionDetailsDd size='xs'>{`${currentToken?.destFee.toString()} ${

@@ -27,6 +27,7 @@ type Props = {
   showInsufficientBalance?: boolean;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
+  renderWrappedInTransactionDetails?: boolean;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
@@ -41,6 +42,7 @@ const TransactionFeeDetails = ({
   label,
   tooltipLabel,
   className,
+  renderWrappedInTransactionDetails = true,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
@@ -62,27 +64,31 @@ const TransactionFeeDetails = ({
 
   const handleSelectionChange = (key: Key) => setTicker(key as string);
 
+  const content = (
+    <>
+      {selectProps && (
+        <TransactionSelectToken
+          {...mergeProps(selectProps || {}, {
+            label: t('fee_token'),
+            items: selectCurrency.items,
+            value: ticker,
+            onSelectionChange: handleSelectionChange
+          })}
+          errorMessage={undefined}
+          aria-describedby={errorMessage ? id : undefined}
+          validationState={errorMessage ? 'invalid' : 'valid'}
+        />
+      )}
+      <TransactionDetailsGroup>
+        <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('tx_fees')}</TransactionDetailsDt>
+        <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
+      </TransactionDetailsGroup>
+    </>
+  );
+
   return (
     <Flex gap='spacing2' direction='column' className={className}>
-      <TransactionDetails {...props}>
-        {selectProps && (
-          <TransactionSelectToken
-            {...mergeProps(selectProps || {}, {
-              label: t('fee_token'),
-              items: selectCurrency.items,
-              value: ticker,
-              onSelectionChange: handleSelectionChange
-            })}
-            errorMessage={undefined}
-            aria-describedby={errorMessage ? id : undefined}
-            validationState={errorMessage ? 'invalid' : 'valid'}
-          />
-        )}
-        <TransactionDetailsGroup>
-          <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('tx_fees')}</TransactionDetailsDt>
-          <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
-        </TransactionDetailsGroup>
-      </TransactionDetails>
+      {renderWrappedInTransactionDetails ? <TransactionDetails {...props}>{content}</TransactionDetails> : content}
       {errorMessage && (
         <Alert id={id} status='error'>
           {errorMessage}
