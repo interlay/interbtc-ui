@@ -1,4 +1,5 @@
-import { InterBtcApi } from '@interlay/interbtc-api';
+import { CurrencyExt, InterBtcApi } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { Transaction } from '../types';
 import { TransactionAction } from '.';
@@ -43,9 +44,11 @@ interface LoansRepayAction extends TransactionAction {
   args: Parameters<InterBtcApi['loans']['repay']>;
 }
 
+type CustomLoansRepayAllArgs = [calculatedLimit: MonetaryAmount<CurrencyExt>];
+
 interface LoansRepayAllAction extends TransactionAction {
   type: Transaction.LOANS_REPAY_ALL;
-  args: Parameters<InterBtcApi['loans']['repayAll']>;
+  args: [...Parameters<InterBtcApi['loans']['repayAll']>, ...CustomLoansRepayAllArgs];
 }
 
 type LoansActions =

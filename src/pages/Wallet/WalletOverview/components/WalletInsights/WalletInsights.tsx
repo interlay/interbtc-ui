@@ -39,8 +39,7 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
     );
 
   const totalBalance = rawBalance
-    ?.add(accountLendingStatistics?.supplyAmountUSD || 0)
-    .sub(accountLendingStatistics?.borrowAmountUSD || 0)
+    ?.sub(accountLendingStatistics?.borrowAmountUSD || 0)
     .add(accountPools?.accountLiquidityUSD || 0);
 
   const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';

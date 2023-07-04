@@ -5,7 +5,7 @@ import { Field, useFieldProps } from '../Field';
 import { HelperTextProps } from '../HelperText';
 import { LabelProps } from '../Label';
 import { hasError } from '../utils/input';
-import { Sizes } from '../utils/prop-types';
+import { Sizes, Spacing } from '../utils/prop-types';
 import { Adornment, StyledBaseInput } from './Input.style';
 
 type Props = {
@@ -17,6 +17,8 @@ type Props = {
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
   size?: Sizes;
+  // TODO: temporary
+  padding?: { top?: Spacing; bottom?: Spacing; left?: Spacing; right?: Spacing };
   validationState?: ValidationState;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -29,7 +31,7 @@ type BaseInputProps = Props & NativeAttrs & InheritAttrs;
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
   (
-    { startAdornment, endAdornment, bottomAdornment, disabled, size = 'medium', validationState, ...props },
+    { startAdornment, endAdornment, bottomAdornment, disabled, size = 'medium', validationState, padding, ...props },
     ref
   ): JSX.Element => {
     const endAdornmentRef = useRef<HTMLDivElement>(null);
@@ -57,6 +59,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
           $hasError={error}
           $isDisabled={!!disabled}
           $endAdornmentWidth={endAdornmentWidth}
+          $padding={padding}
           {...elementProps}
         />
         {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}

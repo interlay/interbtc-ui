@@ -3,11 +3,13 @@ import { ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { P, Switch, theme } from '@/component-library';
+import { P, Switch, TextLink, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { FEE_TICKERS } from '@/utils/constants/currency';
+import { EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -15,6 +17,8 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useGetVestingData } from '@/utils/hooks/api/use-get-vesting-data';
 
 import { ActionsCell } from './ActionsCell';
+
+const queryString = require('query-string');
 
 enum AvailableAssetsColumns {
   ASSET = 'asset',
@@ -42,20 +46,43 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
   const { data: vestingData } = useGetVestingData();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const [showZeroBalances, setShowZeroBalances] = useState(false);
+  const isFeeToken = (ticker: string) => FEE_TICKERS.includes(ticker);
+
+  const [showAllBalances, setShowAllBalances] = useState(false);
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
-    const filteredData = showZeroBalances ? data : data.filter((balance) => !balance.transferable.isZero());
+
+    const filteredData = showAllBalances
+      ? data
+      : data.filter((balance) => isFeeToken(balance.currency.ticker) || !balance.transferable.isZero());
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {
+        const tooltip = isFeeToken(currency.ticker) && (
+          <TextLink
+            color='secondary'
+            size='s'
+            external
+            icon
+            to={{
+              pathname: 'https://docs.interlay.io/#/guides/assets',
+              search: queryString.stringify({
+                [EXTERNAL_QUERY_PARAMETERS.DOCS.ASSET.ID]: currency.ticker.toLowerCase()
+              })
+            }}
+          >
+            {t('wallet.get_asset', { token: currency.ticker })}
+          </TextLink>
+        );
+
         const asset = (
           <AssetCell
             size={isMobile ? 'xl2' : undefined}
             textSize={isMobile ? 'base' : undefined}
             marginBottom={isMobile ? 'spacing4' : undefined}
             {...getCoinIconProps(currency)}
+            tooltip={tooltip}
           />
         );
 
@@ -100,11 +127,11 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
         };
       }
     );
-  }, [balances, showZeroBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable]);
+  }, [balances, showAllBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable, t]);
 
   const actions = (
-    <Switch isSelected={showZeroBalances} onChange={(e) => setShowZeroBalances(e.target.checked)}>
-      {t('show_zero_balance')}
+    <Switch isSelected={showAllBalances} onChange={(e) => setShowAllBalances(e.target.checked)}>
+      {t('show_all')}
     </Switch>
   );
 

@@ -5,6 +5,7 @@
   "receive": "You will receive",
   "confirm": "Confirm",
   "connect_wallet": "Connect Wallet",
+  "install_wallet": "Install Wallet",
   "next": "Next",
   "loading_ellipsis": "Loading...",
   "note": "Note",
@@ -76,11 +77,10 @@
   "redeem": "Redeem",
   "nav_bridge": "Bridge",
   "nav_strategies": "Strategies",
-  "nav_transfer": "Transfer",
+  "nav_transfer": "Transfer / Bridge",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
   "nav_pools": "Pools",
-  "nav_transactions": "My Transactions",
   "nav_staking": "Staking",
   "nav_stats": "Stats",
   "nav_dashboard": "Dashboard",
@@ -92,6 +92,7 @@
   "nav_use_wrapped": "Use {{wrappedTokenSymbol}}",
   "nav_governance": "Governance",
   "nav_wallet": "Wallet",
+  "nav_onboarding": "Onboarding",
   "report_bug": "Report a bug:",
   "request_funds": "Faucet",
   "request_btc": "BTC Faucet",
@@ -148,7 +149,7 @@
   "asset": "Asset",
   "price": "Price",
   "balance": "Balance",
-  "show_zero_balance": "Show Zero Balance",
+  "show_all": "Show All",
   "total_balance": "Total Balance",
   "transferable_balance": "Transferable Balance",
   "fund_wallet": "Fund Wallet",
@@ -157,6 +158,14 @@
   "sign_t&cs": "Sign T&Cs",
   "receivable_assets": "Receivable Assets",
   "dismiss": "Dismiss",
+  "insufficient_token_balance": "Insufficient {{token}} balance",
+  "amount": "Amount",
+  "select_token": "Select Token",
+  "fee_token": "Fee token",
+  "claim_rewards": "Claim Rewards",
+  "tx_fees": "Tx fees",
+  "view_subscan": "View Subscan",
+
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -168,13 +177,13 @@
     "with_added": "(≈ {{amountPrice}}) with added",
     "as_compensation_instead": "(≈ {{compensationPrice}}) as compensation instead.",
     "view_progress": "View Progress",
+    "close": "Close",
     "btc_destination_address": "BTC destination address",
     "you_will_receive": "Redeem {{wrappedTokenSymbol}} 1:1 for BTC",
     "waiting_for": "Waiting for",
     "vault": "Vault",
-    "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
+    "typically_takes": "The BTC typically takes only a few minutes to arrive but may take up to 6 hours.",
     "from_vault": "from Vault",
-    "we_will_inform_you_btc": "We will inform you when the BTC payment is executed.",
     "redeem_processed": "Your Redeem request is being processed",
     "retried": "Retried",
     "error_more_than_6_blocks_behind": "You can't redeem {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} parachain is more than 6 blocks behind.",
@@ -349,7 +358,7 @@
     "maximum_in_single_request": "Max issuable in single request",
     "maximum_total_request": "Max issuable in total",
     "maximum_in_single_request_error": "Please enter less than {{maxAmount}} {{wrappedTokenSymbol}}.",
-    "request": "Request id  #{{id}}",
+    "request": "Request id",
     "you_received": "You have received",
     "contact_team": "Contact the team for debugging if you think this is an error.",
     "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of {{wrappedTokenSymbol}}.",
@@ -554,7 +563,6 @@
     "no_account": "You don't have an account. Create one",
     "install_supported_wallets": "Please install one of the currently supported wallets. By connecting the wallet you accept the ",
     "select_account": "Please select an account",
-    "install_wallet": "Please install supported wallet",
     "select_wallet": "Please select a wallet",
     "exclude_us_citizens": "By proceeding you confirm that you have read and accepted the <1>terms and conditions</1>, and represent and warrant that you are not a Resident of the United States or a \"U.S. person\" within the meaning of Rule 902(k) under the United States Securities Act of 1933 (the \"Securities Act\").",
     "sign_terms": "Please sign the terms and conditions using your account's digital signature. This is required for each account that you connect to this website.",
@@ -563,7 +571,7 @@
     "change_wallet": "Change Wallet",
     "disconnect": "Disconnect",
     "please_select_an_account": "Please select an account",
-    "please_install_supported_wallet": "Please install supported wallet",
+    "please_install_supported_wallet": "Please install a supported wallet",
     "please_select_a_wallet": "Please select a wallet"
   },
   "loans": {
@@ -598,8 +606,8 @@
     "insufficient_liquidity_trade": "Insufficient liquidity for this trade",
     "from": "From",
     "to": "To",
-    "swap_has_price_inpact_of": "Considering external price sources, this swap has a price impact of",
-    "you_are_swapping_input_for_output": "Your are swapping {{inputAmount}} {{inputTicker}} ({{inputAmountUSD}}) for {{outputAmount}} {{outputTicker}} ({{outputAmountUSD}})",
+    "swap_has_price_inpact_of": "According to external price sources, this swap would result in a monetary loss of",
+    "you_are_swapping_input_for_output": "You are swapping {{inputAmount}} {{inputTicker}} ({{inputAmountUSD}}) for {{outputAmount}} {{outputTicker}} ({{outputAmountUSD}})",
     "cancel_swap": "Cancel swap",
     "confirm_swap": "Confirm swap"
   },
@@ -610,7 +618,9 @@
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}} {{token}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
     "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
-    "field_amount": "{{field}} amount"
+    "field_amount": "{{field}} amount",
+    "please_enter_a_valid_address": "Please enter a valid address",
+    "ensure_adequate_amount_left_to_cover_action": "Ensure that an adequate number of coins are left to cover the {{ action }}"
   },
   "xcm_transfer": {
     "validation": {
@@ -629,10 +639,13 @@
   },
   "wallet": {
     "available_assets": "Available assets",
+    "get_asset": "Get {{token}}",
     "no_assets_available": "No assets available",
     "total_governance_locked": "Total {{token}} Locked",
     "available_to_stake": "Available to stake",
-    "voting_power_governance": "Voting Power {{token}}"
+    "voting_power_governance": "Voting Power {{token}}",
+    "welcome_to_dapp": "Welcome to {{ name }}",
+    "dapp_is_a_one_stop_shop_for_bitcoin_defi": "{{ name }} is a one-stop shop for Bitcoin DeFi: swaps, lending, staking, and 1-click strategies. {{ wrappedToken }} is trustless multi-chain Bitcoin, secured by collateral, cryptography, and a decentralized vault network."
   },
   "strategy": {
     "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",
@@ -712,5 +725,31 @@
     "requested_vault_replacement": "Requested vault replacement",
     "claiming_vesting": "Claiming vesting",
     "claimed_vesting": "Claimed vesting"
+  },
+  "bridge": {
+    "max_issuable": "Max issuable",
+    "max_redeemable": "Max redeemable",
+    "in_single_request": "In single request",
+    "in_total": "In total",
+    "manually_select_vault": "Manually Select Vault",
+    "select_vault": "Select Vault",
+    "select_a_vault": "Select a vault",
+    "compensation_amount": "Compensation amount",
+    "bridge_fee": "Bridge Fee",
+    "fee_paids_to_vaults_relayers_maintainers": "The bridge fee paid to the vaults, relayers and maintainers of the system",
+    "security_deposit": "Security Deposit",
+    "security_deposit_token": "Security deposit token",
+    "security_deposit_is_a_denial_of_service_protection": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed",
+    "bitcoin_network_fee": "Bitcoin Network Fee",
+    "transaction_fee": "Transaction Fee",
+    "fee_for_transaction_to_be_included_in_the_parachain": "The fee for the transaction to be included in the parachain",
+    "premium_redeem": "Premium Redeem",
+    "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation."
+  },
+  "notifications": {
+    "signature_submission_failed": "Signature submission failed",
+    "signature_submission_successful": "Signature submission successful",
+    "funding_account_failed": "Funding account failed",
+    "funding_account_successful": "Funding account successful"
   }
 }

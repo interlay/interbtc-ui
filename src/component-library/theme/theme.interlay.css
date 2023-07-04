@@ -10,11 +10,12 @@
 }
 
 .theme-interlay {
-  --colors-border: var(--colors-neutral-black-25);
+  --colors-border: #dee3f5;
   --colors-bg-primary: var(--colors-neutral-white);
   /* Card */
   --color-card-primary-bg: var(--colors-neutral-white);
   --color-card-secondary-bg: var(--colors-light-blue-10);
+  --color-card-tertiary-bg: #fbfbfc;
   /* CTA */
   --colors-cta-primary: var(--colors-light-blue);
   --colors-cta-primary-hover: var(--colors-light-blue-90);
@@ -34,13 +35,13 @@
   /* Tabs */
   --colors-tabs-bg: var(--colors-neutral-white);
   --colors-tabs-text: var(--colors-neutral-black-9);
-  --colors-tabs-active-color: var(--colors-light-blue);
-  --colors-tabs-active-bg: var(--colors-lighter-blue);
+  --colors-tabs-active-color: var(--colors-neutral-white);
+  --colors-tabs-active-bg: var(--colors-light-blue);
   /* Loading Spinner */
-  --colors-indeterminate-primary-color: var(--colors-lighter-blue);
-  --colors-indeterminate-primary-bg: var(--colors-neutral-black-20);
-  --colors-indeterminate-secondary-color: var(--colors-light-blue);
-  --colors-indeterminate-secondary-bg: var(--colors-light-blue-10);
+  --colors-indeterminate-primary-color: var(--colors-light-blue);
+  --colors-indeterminate-primary-bg: var(--colors-light-blue-10);
+  --colors-indeterminate-secondary-color: var(--colors-lighter-blue);
+  --colors-indeterminate-secondary-bg: var(--colors-neutral-black-20);
   --colors-indeterminate-outlined-color: var(--colors-neutral-black-80);
   --colors-indeterminate-outlined-bg: var(--colors-neutral-black-20);
   /* Meter */
@@ -54,14 +55,17 @@
   --color-progress-circle-fill: var(--colors-light-blue);
   /* Input */
   --colors-input-text: var(--colors-neutral-black);
-  --colors-input-default-border: var(--colors-neutral-light-grey);
+  --colors-input-default-border: #dee3f5;
   --colors-input-hover-border: var(--colors-lighter-blue);
   --colors-input-focus-border: var(--colors-light-blue-90);
   --colors-input-disabled-text: #9a9a9a;
   --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
   --colors-input-background: var(--colors-neutral-white);
+  --colors-input-disabled-bg: #fbfbfc;
+  /* Label */
+  --colors-label-text: var(--colors-neutral-black);
   /* Token Input */
-  --colors-token-input-end-adornment-bg: var(--colors-neutral-lighter-grey);
+  --colors-token-input-end-adornment-bg: var(--colors-neutral-white);
   /* Token List */
   --colors-token-list-item-text: var(--colors-neutral-black);
   --colors-token-list-item-select-text: var(--colors-neutral-white);

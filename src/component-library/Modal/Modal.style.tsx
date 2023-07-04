@@ -13,6 +13,7 @@ type StyledModalProps = {
 type StyledDialogProps = {
   $isCentered?: boolean;
   $hasMaxHeight?: boolean;
+  $isOpen?: boolean;
 };
 
 type StyledModalBodyProps = {
@@ -56,6 +57,7 @@ const StyledModal = styled.div<StyledModalProps>`
 const StyledDialog = styled(Dialog)<StyledDialogProps>`
   max-height: ${({ $hasMaxHeight }) => $hasMaxHeight && '560px'};
   overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
+  pointer-events: ${({ $isOpen }) => !$isOpen && 'none'};
 `;
 
 const StyledDialogBody = styled(DialogBody)<StyledModalBodyProps>`

@@ -28,7 +28,8 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(
           'focus:ring-opacity-50',
 
           'border',
-          'border-transparent',
+          'border-black',
+          'border-opacity-10',
           'font-medium',
 
           disabledOrPending
@@ -36,7 +37,7 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(
             : clsx(
                 TEXT_CLASSES,
                 'dark:!text-black', // Suppressing white text color in this specific edge case
-                'bg-interlayPaleSky-100',
+                'bg-white',
                 'hover:bg-interlayPaleSky-200'
               ),
 
