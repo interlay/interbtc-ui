@@ -9,5 +9,19 @@ enum ForeignAssetIdLiteral {
   BTC = 'BTC'
 }
 
-export type { BTCToCollateralTokenRate };
+type CurrencySquidFormat =
+  | {
+      __typename: 'NativeToken';
+      token: string;
+    }
+  | {
+      __typename: 'ForeignAsset';
+      asset: number;
+    }
+  | {
+      __typename: 'LendToken';
+      lendTokenId: number;
+    };
+
+export type { BTCToCollateralTokenRate, CurrencySquidFormat };
 export { ForeignAssetIdLiteral };
