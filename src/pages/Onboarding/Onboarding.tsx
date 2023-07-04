@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { Card, CTA, CTALink, Flex, H1, H2, P, TextLink } from '@/component-library';
+import { Card, CTA, CTALink, Flex, H1, H2, P, Strong } from '@/component-library';
 import { AuthModal, SignTermsModal } from '@/components';
 import { INTERLAY_DISCORD_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
@@ -94,11 +94,7 @@ const Onboarding = (): JSX.Element => {
       title: 'Request Funds',
       content: (
         <>
-          If you do not have any INTR, join our Discord and request funds in the{' '}
-          <TextLink external weight='bold' color='secondary' to='#'>
-            #faucet channel
-          </TextLink>
-          .
+          If you do not have any INTR, join our Discord and request funds in the <Strong>#faucet</Strong> channel.
         </>
       ),
       ctaType: CTALink,
