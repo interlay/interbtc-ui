@@ -8,9 +8,13 @@ const DEFAULT_EXTRINSIC: ExtrinsicData = {
 
         setTimeout(() => {
           cb({ status: { isReady: true, type: 'Ready' } });
-          cb({ status: { isReady: true, isInBlock: true, type: 'InBlock' } });
-          cb({ status: { isReady: true, isInBlock: true, isFinalized: true, type: 'Finalized' } });
         }, 1);
+        setTimeout(() => {
+          cb({ status: { isReady: true, isInBlock: true, type: 'InBlock' } });
+        }, 2);
+        setTimeout(() => {
+          cb({ status: { isReady: true, isInBlock: true, isFinalized: true, type: 'Finalized' } });
+        }, 3);
       });
     })
   } as unknown) as ExtrinsicData['extrinsic']

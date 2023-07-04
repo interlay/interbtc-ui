@@ -4,7 +4,7 @@ import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { DEFAULT_DEADLINE_BLOCK_NUMBER, mockGetFutureBlockNumber } from '../mocks/@interlay/interbtc-api';
 import { MOCK_AMM } from '../mocks/@interlay/interbtc-api/parachain';
 import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
-import { render, screen, userEvent, waitFor, within } from '../test-utils';
+import { render, screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../test-utils';
 import { waitForFeeEstimate, waitForTransactionExecute, withinTransactionModal } from './utils/transaction';
 
 const { ACCOUNT_LIQUIDITY, TRADE } = MOCK_AMM.DATA;
@@ -153,11 +153,9 @@ describe('Swap Page', () => {
 
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 
-    const transactionModal = await withinTransactionModal();
-
-    userEvent.click(transactionModal.getAllByRole('button', { name: /dismiss/i })[0]);
-
     await waitForTransactionExecute(swap);
+
+    await withinTransactionModal();
 
     await waitFor(() => {
       expect(
@@ -178,8 +176,22 @@ describe('Swap Page', () => {
     );
 
     /* END - Execute trade setup */
+  });
 
-    /* START - Execute trade setup with different slippage */
+  it('should be able to swap with different slippage', async () => {
+    await render(<App />, { path });
+
+    userEvent.click(screen.getByRole('button', { name: /choose token for to field/i }));
+
+    const dialog = within(screen.getByRole('dialog', { name: /select token/i }));
+
+    userEvent.click(dialog.getByRole('row', { name: WRAPPED_TOKEN.ticker }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: new RegExp(`enter ${RELAY_CHAIN_NATIVE_TOKEN.ticker} amount`, 'i') })
+      ).toBeDisabled();
+    });
 
     userEvent.click(screen.getByRole('button', { name: /slippage settings/i }));
 
@@ -197,13 +209,22 @@ describe('Swap Page', () => {
       ).toHaveValue(TRADE.outputAmount.toString());
     });
 
+    await waitForFeeEstimate(swap);
+
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
+
+    await waitForTransactionExecute(swap);
+
+    await withinTransactionModal();
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: 'From' })).toHaveValue('');
+      expect(screen.getByRole('textbox', { name: 'To' })).toHaveValue('');
+    });
 
     await waitFor(() => {
       expect(TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.5);
     });
-
-    /* END - Execute trade setup with different slippage */
   });
 
   it('should show price impact warning', async () => {
@@ -252,9 +273,7 @@ describe('Swap Page', () => {
 
     await waitForTransactionExecute(swap);
 
-    const transactionModal = await withinTransactionModal();
-
-    userEvent.click(transactionModal.getAllByRole('button', { name: /dismiss/i })[0]);
+    await withinTransactionModal();
 
     await waitFor(() => {
       expect(screen.getByRole('textbox', { name: 'From' })).toHaveValue('');

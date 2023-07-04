@@ -116,8 +116,8 @@ const SwapForm = ({
 
   const transaction = useTransaction(Transaction.AMM_SWAP, {
     onSigning: () => {
-      setInputAmount(undefined);
       form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);
+      setInputAmount(undefined);
       setTrade(undefined);
     },
     onSuccess: onSwap
@@ -217,6 +217,7 @@ const SwapForm = ({
   // MEMO: re-validate form on balances refetch
   useEffect(() => {
     form.validateForm();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [balances]);
 
