@@ -1,5 +1,3 @@
-// import { useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
-
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -14,6 +12,14 @@ jest.mock('@/utils/hooks/api/use-get-dex-volume', () => ({
     data: {},
     getDexVolumeByTicker: mockGetDexVolumeByTicker,
     getDexTotalVolumeUSD: mockgetDexTotalVolumeUSD
+  })
+}));
+
+jest.mock('@/utils/hooks/api/use-get-pools-trading-apr', () => ({
+  ...jest.requireActual('@/utils/hooks/api/use-get-pools-trading-apr'),
+  useGetPoolsTradingApr: jest.fn().mockReturnValue({
+    isLoading: false,
+    getTradingAprOfPool: jest.fn().mockReturnValue(2)
   })
 }));
 
