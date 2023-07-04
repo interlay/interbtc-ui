@@ -1,6 +1,6 @@
 import { MOCK_TRANSACTION } from '@/test/mocks/@interlay/interbtc-api';
 
-import { screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
+import { screen, waitFor, within } from '../../test-utils';
 
 const { getFeeEstimate } = MOCK_TRANSACTION.MODULE;
 

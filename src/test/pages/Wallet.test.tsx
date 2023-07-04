@@ -42,6 +42,12 @@ const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;
 const { ACCOUNT_LIQUIDITY } = MOCK_AMM.DATA;
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
 
+const { getLpTokens, getLiquidityProvidedByAccount } = MOCK_AMM.MODULE;
+const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;
+
+const { ACCOUNT_LIQUIDITY } = MOCK_AMM.DATA;
+const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
+
 const path = '/wallet';
 
 const TABLES = {
