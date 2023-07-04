@@ -258,7 +258,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  ...mergeProps(form.getFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, false, true), {
+                  ...mergeProps(form.getSelectFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, false, true), {
                     onSelectionChange: handleVaultSelectionChange
                   })
                 }}
@@ -271,11 +271,11 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
-                securityDepositSelectProps={form.getFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
+                securityDepositSelectProps={form.getSelectFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
                 showInsufficientSecurityBalance={!hasEnoughGriefingCollateralBalance}
                 feeDetailsProps={{
                   ...transaction.fee.detailsProps,
-                  selectProps: form.getFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)
+                  selectProps: form.getSelectFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)
                 }}
               />
               <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>

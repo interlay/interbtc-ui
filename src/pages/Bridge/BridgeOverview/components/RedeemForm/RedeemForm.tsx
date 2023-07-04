@@ -294,7 +294,7 @@ const RedeemForm = ({
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  ...mergeProps(form.getFieldProps(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD, false, true), {
+                  ...mergeProps(form.getSelectFieldProps(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD, false, true), {
                     onSelectionChange: handleVaultSelectionChange
                   })
                 }}
@@ -317,7 +317,7 @@ const RedeemForm = ({
                 bitcoinNetworkFee={currentInclusionFee}
                 feeDetailsProps={{
                   ...transaction.fee.detailsProps,
-                  selectProps: form.getFieldProps(BRIDGE_REDEEM_FEE_TOKEN, true)
+                  selectProps: form.getSelectFieldProps(BRIDGE_REDEEM_FEE_TOKEN, true)
                 }}
               />
               <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>

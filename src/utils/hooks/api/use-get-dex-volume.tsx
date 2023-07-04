@@ -3,6 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { subDays } from 'date-fns';
 import { gql, GraphQLClient } from 'graphql-request';
 import { useCallback } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
@@ -153,6 +154,8 @@ const useGetDexVolumes = (range: DateRangeVolume): UseGetCurrenciesResult => {
     (tickers: string[]) => tickers.reduce((sum, ticker) => sum + (getDexVolumeByTicker(ticker)?.usd || 0), 0),
     [getDexVolumeByTicker]
   );
+
+  useErrorHandler(queryResult.error);
 
   return { ...queryResult, getDexTotalVolumeUSD, getDexVolumeByTicker };
 };
