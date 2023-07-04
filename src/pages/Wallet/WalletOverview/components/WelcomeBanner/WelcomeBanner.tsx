@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { Flex } from '@/component-library';
-import { INTERLAY_WHITEPAPPER } from '@/config/links';
+import { INTERLAY_GET_ASSETS_LINK, INTERLAY_WHITEPAPPER } from '@/config/links';
 import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES } from '@/utils/constants/links';
 
@@ -44,7 +44,7 @@ const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
             Whitepaper
           </StyledCTALink>
           {/* TODO: to be added */}
-          <StyledCTALink fullWidth external icon to={'#'}>
+          <StyledCTALink fullWidth external icon to={INTERLAY_GET_ASSETS_LINK}>
             Fund Wallet Guide
           </StyledCTALink>
           <StyledCTALink fullWidth to={PAGES.ONBOARDING}>
