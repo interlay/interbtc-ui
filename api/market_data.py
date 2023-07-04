@@ -12,6 +12,17 @@ tickers = {
   "Tether USD": "tether",
 }
 
+# map coingecko ids to dia ids
+dia_assets = {
+    "bitcoin": "/Bitcoin/0x0000000000000000000000000000000000000000",
+    "interlay": "/Interlay/0x0000000000000000000000000000000000000000",
+    "polkadot": "/Polkadot/0x0000000000000000000000000000000000000000",
+    "kusama": "/Kusama/0x0000000000000000000000000000000000000000",
+    "kintsugi": "/Kintsugi/Token:KINT",
+    "acala-dollar": "/Acala/Token:AUSD",
+    "tether": "/Ethereum/0xdAC17F958D2ee523a2206206994597C13D831ec7"
+}
+
 @app.after_request
 def add_header(response):
     response.cache_control.max_age = 0
@@ -32,32 +43,25 @@ def coingecko(args):
 def dia(asset):
     headers_dict = {
         "content-type": "application/json",
-        "accept": "application/json",
-        "x-cg-pro-api-key": api_key,
+        "accept": "application/json"
     }
+
     url = "https://api.diadata.org/v1/assetQuotation"
-    if asset == "bitcoin":
-      url += "/Bitcoin/0x0000000000000000000000000000000000000000"
-    elif asset == "interlay":
-      url += "/Interlay/0x0000000000000000000000000000000000000000"
-    elif asset == "liquid-staking-dot":
-      return { "liquid-staking-dot": None }
-    elif asset == "polkadot":
-      url += "/Polkadot/0x0000000000000000000000000000000000000000/"
-    elif asset == "tether":
-      url += "/Ethereum/0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    try:
+      url += dia_assets[asset]
+      resp = requests.get(url, headers=headers_dict)
+      data = resp.json()
 
-    resp = requests.get(url, headers=headers_dict)
-    data = resp.json()
+      # optionally rename the ticker
+      ticker = tickers.get(data["Name"], data["Name"]).lower()
 
-    # optionally rename the ticker
-    ticker = tickers.get(data["Name"], data["Name"]).lower()
-
-    return {
-      ticker: {
-        "usd": data["Price"],
+      return {
+        ticker: {
+          "usd": data["Price"],
+        }
       }
-    }
+    except KeyError:
+      return { asset: None }
 
 
 @app.route("/marketdata/price", methods=["GET"])
