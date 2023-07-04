@@ -43,7 +43,6 @@ const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
           <StyledCTALink fullWidth external icon to={INTERLAY_WHITEPAPPER}>
             Whitepaper
           </StyledCTALink>
-          {/* TODO: to be added */}
           <StyledCTALink fullWidth external icon to={INTERLAY_GET_ASSETS_LINK}>
             Fund Wallet Guide
           </StyledCTALink>
