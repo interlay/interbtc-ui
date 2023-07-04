@@ -49,20 +49,23 @@ const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult 
   const { data: oracleCurrencies } = useGetOracleCurrencies();
 
   const filteredCurrencies = useMemo(() => {
-    if (currencies === undefined) {
+    if (!currencies) {
       return [];
     }
+
     switch (filter) {
       case SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY: {
-        if (pools === undefined) {
-          return [];
+        if (!pools?.length) {
+          return [GOVERNANCE_TOKEN];
         }
+
         return currencies.filter(canBeSwappedForNativeCurrency(pools));
       }
       case SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY: {
-        if (oracleCurrencies === undefined) {
-          return [];
+        if (!oracleCurrencies?.length) {
+          return [GOVERNANCE_TOKEN];
         }
+
         return currencies.filter(canBeUsedAsIssueGriefingCollateral(oracleCurrencies));
       }
       default:
@@ -85,7 +88,7 @@ const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult 
       };
     });
 
-    if (filter !== undefined) {
+    if (!filter) {
       parsedTokenData = parsedTokenData.sort((currencyA, currencyB) =>
         currencyB.balance.sub(currencyA.balance).toNumber()
       );
