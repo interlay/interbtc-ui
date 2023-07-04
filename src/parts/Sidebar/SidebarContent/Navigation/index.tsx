@@ -197,7 +197,7 @@ const Navigation = ({
         }
       }
     ],
-    []
+    [isOnboardingEnabled]
   );
 
   return (
