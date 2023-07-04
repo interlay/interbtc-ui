@@ -10,6 +10,7 @@ api_key = os.environ.get("CG_API_KEY")
 
 tickers = {
   "Tether USD": "tether",
+  "Acala USD": "acala-dollar"
 }
 
 # map coingecko ids to dia ids
