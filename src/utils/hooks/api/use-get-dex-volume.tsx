@@ -48,8 +48,8 @@ const GET_DEX_VOLUMES = gql`
   query poolVolumes($start: DateTime, $end: DateTime) {
     startVolumes: cumulativeDexTradingVolumes(
       limit: 1
-      orderBy: tillTimestamp_DESC
-      where: { tillTimestamp_lte: $start }
+      orderBy: tillTimestamp_ASC
+      where: { tillTimestamp_gte: $start }
     ) {
       tillTimestamp
       amounts {
