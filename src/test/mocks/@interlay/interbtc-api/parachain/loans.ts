@@ -4,6 +4,7 @@ import {
   CurrencyExt,
   LendingStats,
   LoanAsset,
+  LoanPosition,
   LoansAPI,
   newMonetaryAmount,
   TickerToData
@@ -12,47 +13,121 @@ import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { CollateralActions } from '@/pages/Vaults/Vault/types';
 
-const DEFAULT_LEND_TOKENS: CurrencyExt[] = [];
-
-const DEFAULT_IBTC = {
-  AMOUNT: { VERY_SMALL: '0.01', SMALL: '0.1', MEDIUM: '1', LARGE: '10', VERY_LARGE: '100' },
-  MONETARY: {
-    EMPTY: newMonetaryAmount(0, WRAPPED_TOKEN, true),
-    VERY_SMALL: newMonetaryAmount(0.01, WRAPPED_TOKEN, true),
-    SMALL: newMonetaryAmount(0.1, WRAPPED_TOKEN, true),
-    MEDIUM: newMonetaryAmount(1, WRAPPED_TOKEN, true),
-    LARGE: newMonetaryAmount(10, WRAPPED_TOKEN, true),
-    VERY_LARGE: newMonetaryAmount(100, WRAPPED_TOKEN, true)
+const WRAPPED_ASSET_AMOUNT = {
+  EMPTY: {
+    VALUE: '0',
+    MONETARY: newMonetaryAmount(0, WRAPPED_TOKEN)
+  },
+  VERY_SMALL: {
+    VALUE: '0.0001',
+    MONETARY: newMonetaryAmount(0.0001, WRAPPED_TOKEN)
+  },
+  SMALL: {
+    VALUE: '0.001',
+    MONETARY: newMonetaryAmount(0.001, WRAPPED_TOKEN)
+  },
+  MEDIUM: {
+    VALUE: '0.1',
+    MONETARY: newMonetaryAmount(0.1, WRAPPED_TOKEN)
+  },
+  LARGE: {
+    VALUE: '1',
+    MONETARY: newMonetaryAmount(1, WRAPPED_TOKEN)
+  },
+  VERY_LARGE: {
+    VALUE: '10',
+    MONETARY: newMonetaryAmount(10, WRAPPED_TOKEN)
   }
 };
 
-const DEFAULT_INTR = {
-  AMOUNT: { VERY_SMALL: '10', SMALL: '100', MEDIUM: '1000', LARGE: '10000', VERY_LARGE: '100000' },
-  MONETARY: {
-    EMPTY: newMonetaryAmount(0, GOVERNANCE_TOKEN, true),
-    VERY_SMALL: newMonetaryAmount(10, GOVERNANCE_TOKEN, true),
-    SMALL: newMonetaryAmount(100, GOVERNANCE_TOKEN, true),
-    MEDIUM: newMonetaryAmount(1000, GOVERNANCE_TOKEN, true),
-    LARGE: newMonetaryAmount(10000, GOVERNANCE_TOKEN, true),
-    VERY_LARGE: newMonetaryAmount(100000, GOVERNANCE_TOKEN, true)
+const WRAPPED_ASSET_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
+  NON_COLLATERAL: {
+    amount: WRAPPED_ASSET_AMOUNT.MEDIUM.MONETARY,
+    isCollateral: false
+  },
+  COLLATERAL: {
+    amount: WRAPPED_ASSET_AMOUNT.MEDIUM.MONETARY,
+    isCollateral: true
   }
 };
 
-const DEFAULT_APY = {
-  IBTC: {
+const WRAPPED_ASSET_BORROW: BorrowPosition = {
+  amount: WRAPPED_ASSET_AMOUNT.MEDIUM.MONETARY,
+  accumulatedDebt: WRAPPED_ASSET_AMOUNT.VERY_SMALL.MONETARY
+};
+
+const WRAPPED_ASSET = {
+  AMOUNT: WRAPPED_ASSET_AMOUNT,
+  POSITIONS: {
+    LEND: WRAPPED_ASSET_LEND,
+    BORROW: WRAPPED_ASSET_BORROW
+  },
+  APY: {
     BASE: '10.20',
     LEND: '10.48',
     BORROW: '9.92'
+  }
+};
+
+const GOVERNANCE_ASSET_AMOUNT = {
+  EMPTY: {
+    VALUE: '0',
+    MONETARY: newMonetaryAmount(0, GOVERNANCE_TOKEN)
   },
-  INTR: {
+  VERY_SMALL: {
+    VALUE: '1',
+    MONETARY: newMonetaryAmount(1, GOVERNANCE_TOKEN)
+  },
+  SMALL: {
+    VALUE: '10',
+    MONETARY: newMonetaryAmount(10, GOVERNANCE_TOKEN)
+  },
+  MEDIUM: {
+    VALUE: '1000',
+    MONETARY: newMonetaryAmount(1000, GOVERNANCE_TOKEN)
+  },
+  LARGE: {
+    VALUE: '10000',
+    MONETARY: newMonetaryAmount(10000, GOVERNANCE_TOKEN)
+  },
+  VERY_LARGE: {
+    VALUE: '1000000',
+    MONETARY: newMonetaryAmount(1000000, GOVERNANCE_TOKEN)
+  }
+};
+
+const GOVERNANCE_ASSET_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
+  NON_COLLATERAL: {
+    amount: GOVERNANCE_ASSET_AMOUNT.MEDIUM.MONETARY,
+    isCollateral: false
+  },
+  COLLATERAL: {
+    amount: GOVERNANCE_ASSET_AMOUNT.MEDIUM.MONETARY,
+    isCollateral: true
+  }
+};
+
+const GOVERNANCE_ASSET_BORROW: BorrowPosition = {
+  amount: GOVERNANCE_ASSET_AMOUNT.MEDIUM.MONETARY,
+  accumulatedDebt: GOVERNANCE_ASSET_AMOUNT.VERY_SMALL.MONETARY
+};
+
+const GOVERNANCE_ASSET = {
+  AMOUNT: GOVERNANCE_ASSET_AMOUNT,
+  POSITIONS: {
+    LEND: GOVERNANCE_ASSET_LEND,
+    BORROW: GOVERNANCE_ASSET_BORROW
+  },
+  APY: {
     BASE: '10.20',
     LEND: '10.20',
     BORROW: '10.20'
   }
 };
 
-const DEFAULT_POSITIONS = {
+const LOAN_POSITIONS = {
   LEND: {
     IBTC: {
       currency: WRAPPED_TOKEN,
@@ -175,7 +250,7 @@ const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   getLendingStats: jest.fn().mockResolvedValue(DEFAULT_LENDING_STATS),
   getLendPositionsOfAccount: jest.fn().mockResolvedValue(DEFAULT_LEND_POSITIONS),
   getLendTokenExchangeRates: jest.fn(),
-  getLendTokens: jest.fn().mockResolvedValue(DEFAULT_LEND_TOKENS),
+  getLendTokens: jest.fn().mockResolvedValue([]),
   getLiquidationThresholdLiquidity: jest.fn(),
   getLoanAssets: jest.fn().mockResolvedValue(DEFAULT_ASSETS),
   getLoansMarkets: jest.fn(),
