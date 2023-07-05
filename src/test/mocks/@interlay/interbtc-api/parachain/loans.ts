@@ -4,6 +4,7 @@ import {
   CurrencyExt,
   LendingStats,
   LoanAsset,
+  LoansAPI,
   newMonetaryAmount,
   TickerToData
 } from '@interlay/interbtc-api';
@@ -125,34 +126,6 @@ const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
   INTR: DEFAULT_INTR_LOAN_ASSET
 };
 
-const mockGetLendPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_LEND_POSITIONS);
-const mockGetBorrowPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_BORROW_POSITIONS);
-const mockGetLoanAssets = jest.fn().mockReturnValue(DEFAULT_ASSETS);
-const mockGetAccountSubsidyRewards = jest.fn().mockReturnValue({
-  total: DEFAULT_INTR.MONETARY.MEDIUM,
-  perMarket: {
-    INTR: null,
-    IBTC: null,
-    DOT: null
-  }
-});
-
-const mockGetLendTokenExchangeRates = jest.fn();
-
-const mockLend = jest.fn();
-const mockWithdraw = jest.fn();
-const mockWithdrawAll = jest.fn();
-const mockBorrow = jest.fn();
-const mockRepay = jest.fn();
-const mockRepayAll = jest.fn();
-
-const mockEnableAsCollateral = jest.fn();
-const mockDisableAsCollateral = jest.fn();
-
-const mockClaimAllSubsidyRewards = jest.fn();
-
-const mockGetLendTokens = jest.fn(() => DEFAULT_LEND_TOKENS);
-
 const DEFAULT_THRESOLD = {
   MIN: new Big(0),
   LOW: new Big(0.25),
@@ -183,36 +156,35 @@ const DEFAULT_LENDING_STATS: LendingStats = {
   totalLentBtc: DEFAULT_IBTC.MONETARY.LARGE
 };
 
-const mockGetLendingStats = jest.fn().mockReturnValue(DEFAULT_LENDING_STATS);
+const DATA = {};
 
-export {
-  DEFAULT_APY,
-  DEFAULT_ASSETS,
-  DEFAULT_BORROW_POSITIONS,
-  DEFAULT_CALCULATE_BORROW_LIMIT,
-  DEFAULT_IBTC,
-  DEFAULT_IBTC_LOAN_ASSET,
-  DEFAULT_INTR_LOAN_ASSET,
-  DEFAULT_LEND_POSITIONS,
-  DEFAULT_LENDING_STATS,
-  DEFAULT_POSITIONS,
-  DEFAULT_THRESOLD,
-  mockBorrow,
-  mockCalculateBorrowLimitBtcChange,
-  mockCalculateLtvAndThresholdsChange,
-  mockClaimAllSubsidyRewards,
-  mockDisableAsCollateral,
-  mockEnableAsCollateral,
-  mockGetAccountSubsidyRewards,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendingStats,
-  mockGetLendPositionsOfAccount,
-  mockGetLendTokenExchangeRates,
-  mockGetLoanAssets,
-  mockLend,
-  mockRepay,
-  mockRepayAll,
-  mockWithdraw,
-  mockWithdrawAll
+const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
+  lend: jest.fn(),
+  borrow: jest.fn(),
+  withdraw: jest.fn(),
+  withdrawAll: jest.fn(),
+  repayAll: jest.fn(),
+  repay: jest.fn(),
+  claimAllSubsidyRewards: jest.fn(),
+  disableAsCollateral: jest.fn(),
+  enableAsCollateral: jest.fn(),
+  liquidateBorrowPosition: jest.fn(),
+  getAccruedRewardsOfAccount: jest.fn(),
+  getBorrowerAccountIds: jest.fn(),
+  getBorrowPositionsOfAccount: jest.fn().mockResolvedValue(DEFAULT_BORROW_POSITIONS),
+  getLendingStats: jest.fn().mockResolvedValue(DEFAULT_LENDING_STATS),
+  getLendPositionsOfAccount: jest.fn().mockResolvedValue(DEFAULT_LEND_POSITIONS),
+  getLendTokenExchangeRates: jest.fn(),
+  getLendTokens: jest.fn().mockResolvedValue(DEFAULT_LEND_TOKENS),
+  getLiquidationThresholdLiquidity: jest.fn(),
+  getLoanAssets: jest.fn().mockResolvedValue(DEFAULT_ASSETS),
+  getLoansMarkets: jest.fn(),
+  getUndercollateralizedBorrowers: jest.fn()
 };
-export { mockGetLendTokens };
+
+const MOCK_LOANS = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_LOANS };
