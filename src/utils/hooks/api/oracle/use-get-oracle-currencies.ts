@@ -26,13 +26,19 @@ interface UseGetOracleCurrenciesResult {
   data: Array<CurrencyExt> | undefined;
 }
 
-const useGetOracleCurrencies = (): UseGetOracleCurrenciesResult => {
+type UseGetOracleCurrenciesProps = {
+  enabled?: boolean;
+};
+
+const useGetOracleCurrencies = ({
+  enabled = true
+}: UseGetOracleCurrenciesProps | undefined = {}): UseGetOracleCurrenciesResult => {
   const { getCurrencyFromIdPrimitive, isLoading: isLoadingCurrencies } = useGetCurrencies(true);
 
   const { data } = useQuery({
     queryKey: 'getOracleCurrencies',
     queryFn: getOracleCurrencies(getCurrencyFromIdPrimitive),
-    enabled: !isLoadingCurrencies
+    enabled: enabled && !isLoadingCurrencies
   });
 
   return { data };

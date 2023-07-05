@@ -131,7 +131,7 @@ const TransferForm = (): JSX.Element => {
               balance={transferTokenBalance?.toString() || 0}
               humanBalance={transferTokenBalance?.toHuman() || 0}
               valueUSD={transferAmountUSD}
-              selectProps={mergeProps(form.getFieldProps(TRANSFER_TOKEN_FIELD, true), {
+              selectProps={mergeProps(form.getSelectFieldProps(TRANSFER_TOKEN_FIELD, true), {
                 onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, TRANSFER_TOKEN_FIELD),
                 items: selectItems
               })}
@@ -147,7 +147,7 @@ const TransferForm = (): JSX.Element => {
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
               {...transaction.fee.detailsProps}
-              selectProps={form.getFieldProps(TRANSFER_FEE_TOKEN_FIELD)}
+              selectProps={form.getSelectFieldProps(TRANSFER_FEE_TOKEN_FIELD)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
               Transfer

@@ -220,7 +220,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             items={originatingChains}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
+            {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
               onSelectionChange: (key: Key) => handleOriginatingChainChange(key as ChainName)
             })}
           />
@@ -228,7 +228,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <ChainSelect
             label='Destination Chain'
             items={destinationChains}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
+            {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onSelectionChange: (key: Key) => handleDestinationChainChange(key as ChainName)
             })}
           />
@@ -240,7 +240,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
-            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
+            selectProps={mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
               onSelectionChange: (ticker: Key) =>
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
@@ -251,7 +251,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <AccountSelect
           label='Destination'
           accounts={accounts}
-          {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false), {
+          {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false), {
             onChange: handleDestinationAccountChange
           })}
         />
