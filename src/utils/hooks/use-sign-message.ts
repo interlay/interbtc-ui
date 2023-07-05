@@ -1,20 +1,23 @@
 import { PressEvent } from '@react-types/shared';
 import { useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { showSignTermsModalAction } from '@/common/actions/general.actions';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
+import { NotificationToastType, useNotifications } from '../context/Notifications';
 import { signMessage } from '../helpers/wallet';
-import { LocalStorageKey, TCSignaturesData, useLocalStorage } from './use-local-storage';
+import { LocalStorageKey, useLocalStorage } from './use-local-storage';
 
 interface GetSignatureData {
   exists: boolean;
 }
+
+const TC_VERSION = '1.0';
 
 const postSignature = async (account: KeyringPair) => {
   const signerResult = await signMessage(account, TERMS_AND_CONDITIONS_LINK);
@@ -23,7 +26,7 @@ const postSignature = async (account: KeyringPair) => {
     throw new Error('Failed to sign message');
   }
 
-  return fetch(`${SIGNER_API_URL}/${account.address}`, {
+  return fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({version: TC_VERSION})}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -50,10 +53,14 @@ type UseSignMessageResult = {
 };
 
 const useSignMessage = (): UseSignMessageResult => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const notifications = useNotifications();
 
   const dispatch = useDispatch();
-  const [signatures, setSignatures] = useLocalStorage<TCSignaturesData>(LocalStorageKey.TC_SIGNATURES);
+  const [signatures, setSignatures] = useLocalStorage(LocalStorageKey.TC_SIGNATURES);
+  const [tcVersion, setTcVersion] = useLocalStorage(LocalStorageKey.TC_VERSION);
+
   const { selectedAccount } = useSubstrateSecureState();
 
   const setSignature = useCallback(
@@ -69,7 +76,7 @@ const useSignMessage = (): UseSignMessageResult => {
         return storedSignature;
       }
 
-      const res = await fetch(`${SIGNER_API_URL}/${account.address}`, {
+      const res = await fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({version: TC_VERSION})}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -100,15 +107,28 @@ const useSignMessage = (): UseSignMessageResult => {
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
     onError: (_, variables) => {
       setSignature(variables.address, false);
-      toast.error('Something went wrong!');
+      notifications.show(variables.address, {
+        type: NotificationToastType.STANDARD,
+        props: { variant: 'error', title: t('notifications.signature_submission_failed') }
+      });
     },
     onSuccess: (_, variables) => {
       setSignature(variables.address, true);
+      setTcVersion(TC_VERSION);
       dispatch(showSignTermsModalAction(false));
       refetchSignatureData();
-      toast.success('Your signature was submitted successfully.');
+      notifications.show(variables.address, {
+        type: NotificationToastType.STANDARD,
+        props: { variant: 'success', title: t('notifications.signature_submission_successful') }
+      });
     }
   });
+
+  useEffect(() => {
+    if (tcVersion === TC_VERSION) return;
+
+    setSignatures({});
+  }, [setSignatures, tcVersion]);
 
   // Reset mutation on account change
   useEffect(() => {

@@ -5,14 +5,11 @@ import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 
-import oracleExchangeRatesQuery, { composableExchangeRateSubquery } from '../queries/oracle-exchange-rates-query';
+import { composableExchangeRateSubquery } from '../queries/oracle-exchange-rates-query';
 
-const ORACLE_LATEST_EXCHANGE_RATE_FETCHER = 'oracle-exchange-rate-fetcher';
 const ORACLE_ALL_LATEST_UPDATES_FETCHER = 'oracle-all-latest-updates-fetcher';
 
 type BtcToCurrencyOracleStatus = OracleStatus<Bitcoin, CurrencyExt>;
-
-type LatestExchangeRateFetcherParams = [key: string, currency: CurrencyExt, onlineTimeout: number];
 
 type AllOracleLatestUpdatesFetcherParams = [
   key: string,
@@ -39,34 +36,6 @@ function decodeOracleValues(
     online: Date.now() <= lastUpdate.getTime() + onlineTimeout
   };
 }
-
-// TODO: should type properly (`Relay`)
-const latestExchangeRateFetcher = async (
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus | undefined> => {
-  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams;
-
-  if (key !== ORACLE_LATEST_EXCHANGE_RATE_FETCHER) throw new Error('Invalid key!');
-
-  // TODO: should type properly (`Relay`)
-  // TODO: Need to refactor when we want to support lend tokens as collateral for vaults.
-  const cond = 'foreignAsset' in currency ? `asset_eq: ${currency.foreignAsset.id}` : `token_eq: ${currency.ticker}`;
-  const latestOracleData = await graphqlFetcher<Array<any>>()({
-    queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey: {${cond}}`)]
-  });
-
-  // TODO: should type properly (`Relay`)
-  const rates = latestOracleData?.data?.oracleUpdates || [];
-  return rates.map((update) =>
-    decodeOracleValues(
-      update,
-      currency,
-      onlineTimeout,
-      new Map([[update.oracleId, update.oracleId]]) // placeholder, as not used in card
-    )
-  )[0];
-};
 
 const allLatestSubmissionsFetcher = async (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -95,11 +64,6 @@ const allLatestSubmissionsFetcher = async (
     .map(([update]) => decodeOracleValues(update, currency, onlineTimeout, namesMap));
 };
 
-export {
-  allLatestSubmissionsFetcher,
-  latestExchangeRateFetcher,
-  ORACLE_ALL_LATEST_UPDATES_FETCHER,
-  ORACLE_LATEST_EXCHANGE_RATE_FETCHER
-};
+export { allLatestSubmissionsFetcher, ORACLE_ALL_LATEST_UPDATES_FETCHER };
 
 export type { BtcToCurrencyOracleStatus };

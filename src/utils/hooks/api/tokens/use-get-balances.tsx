@@ -1,4 +1,4 @@
-import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -6,7 +6,6 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -55,25 +54,7 @@ const useGetBalances = (): UseGetBalances => {
 
   const getBalance = useCallback((ticker: string) => data?.[ticker], [data]);
 
-  // return available balance as well known as free field (ChainBalance).
-  // if the ticker is governance, the necessary for fees will be deducted
-  // from the return value
-  const getAvailableBalance = useCallback(
-    (ticker: string) => {
-      const { transferable } = getBalance(ticker) || {};
-
-      if (ticker === GOVERNANCE_TOKEN.ticker) {
-        if (!transferable) return undefined;
-
-        const governanceBalance = transferable.sub(TRANSACTION_FEE_AMOUNT);
-
-        return governanceBalance.toBig().gte(0) ? governanceBalance : newMonetaryAmount(0, governanceBalance.currency);
-      }
-
-      return transferable;
-    },
-    [getBalance]
-  );
+  const getAvailableBalance = useCallback((ticker: string) => getBalance(ticker)?.transferable, [getBalance]);
 
   return { ...queryResult, getBalance, getAvailableBalance };
 };

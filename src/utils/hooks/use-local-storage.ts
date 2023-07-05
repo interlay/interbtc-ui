@@ -1,10 +1,16 @@
 import { useLocalStorage as useLibLocalStorage } from 'react-use';
 
 enum LocalStorageKey {
-  TC_SIGNATURES = 'TC_SIGNATURES'
+  TC_SIGNATURES = 'TC_SIGNATURES',
+  TC_VERSION = 'TC_VERSION',
+  WALLET_WELCOME_BANNER = 'WALLET_WELCOME_BANNER'
 }
 
-type TCSignaturesData = Record<string, boolean>;
+type LocalStorageValueTypes = {
+  [LocalStorageKey.TC_SIGNATURES]: Record<string, boolean>;
+  [LocalStorageKey.TC_VERSION]: string;
+  [LocalStorageKey.WALLET_WELCOME_BANNER]: boolean;
+};
 
 type Options<T = unknown> =
   | {
@@ -18,8 +24,10 @@ type Options<T = unknown> =
   | undefined;
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useLocalStorage = <T = unknown>(key: LocalStorageKey, initialValue?: T, options?: Options<T>) =>
-  useLibLocalStorage(key, initialValue, options);
+const useLocalStorage = <T extends keyof LocalStorageValueTypes>(
+  key: T,
+  initialValue?: LocalStorageValueTypes[T],
+  options?: Options<LocalStorageValueTypes[T]>
+) => useLibLocalStorage<LocalStorageValueTypes[T]>(key, initialValue, options);
 
 export { LocalStorageKey, useLocalStorage };
-export type { TCSignaturesData };

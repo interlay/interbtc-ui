@@ -8,7 +8,6 @@ import {
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
@@ -48,8 +47,6 @@ const getMaxCalculatedAmount = ({
 };
 
 type UseLoanFormData = {
-  governanceBalance: MonetaryAmount<CurrencyExt>;
-  transactionFee: MonetaryAmount<CurrencyExt>;
   assetPrice: number;
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
@@ -58,20 +55,17 @@ type UseLoanFormData = {
   };
 };
 
-// TODO: reduce GOVERNANCE for fees from max amount
 const useLoanFormData = (
   loanAction: BorrowAction | LendAction,
   asset: LoanAsset,
   position?: CollateralPosition | BorrowPosition
 ): UseLoanFormData => {
-  const { getBalance, getAvailableBalance } = useGetBalances();
+  const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
   const { data: statistics } = useGetAccountLendingStatistics();
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
-  const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const transactionFee = TRANSACTION_FEE_AMOUNT;
   const assetBalance = getAvailableBalance(asset.currency.ticker) || zeroAssetAmount;
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
@@ -94,8 +88,6 @@ const useLoanFormData = (
       : maxAmountData;
 
   return {
-    governanceBalance,
-    transactionFee,
     assetPrice,
     assetAmount: {
       available,

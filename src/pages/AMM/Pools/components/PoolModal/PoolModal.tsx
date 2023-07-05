@@ -20,7 +20,7 @@ type PoolModalProps = Props & InheritAttrs;
 const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useGetAccountPools();
-  const ref = useRef<HTMLDivElement>(null);
+  const overlappingModalRef = useRef<HTMLDivElement>(null);
 
   if (!pool) {
     return null;
@@ -32,19 +32,29 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
       onClose={onClose}
       align='top'
       // Pool modal should not close while user interacts with stacked modal (slippage modal)
-      shouldCloseOnInteractOutside={(el) => !ref.current?.contains(el)}
+      shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
       {...props}
     >
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth disabledKeys={pool.isEmpty ? ['withdraw'] : []}>
           <TabsItem key='deposit' title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm slippageModalRef={ref} pool={pool} onSuccess={refetch} onSigning={onClose} />
+              <DepositForm
+                overlappingModalRef={overlappingModalRef}
+                pool={pool}
+                onSuccess={refetch}
+                onSigning={onClose}
+              />
             </StyledWrapper>
           </TabsItem>
           <TabsItem key='withdraw' title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm slippageModalRef={ref} pool={pool} onSuccess={refetch} onSigning={onClose} />
+              <WithdrawForm
+                overlappingModalRef={overlappingModalRef}
+                pool={pool}
+                onSuccess={refetch}
+                onSigning={onClose}
+              />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>

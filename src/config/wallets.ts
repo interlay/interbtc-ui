@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { ReactComponent as ParitySignerCompanionLogoIcon } from '@/assets/img/parity-signer-companion-logo.svg';
 import { ReactComponent as PolkadotExtensionLogoIcon } from '@/assets/img/polkadot-extension-logo.svg';
 import { ReactComponent as SubWalletLogoIcon } from '@/assets/img/subwallet-logo.svg';
 import { ReactComponent as TalismanWalletLogoIcon } from '@/assets/img/talisman-wallet-logo.svg';
@@ -8,7 +9,8 @@ import { APP_NAME } from '@/config/relay-chains';
 enum WalletSourceName {
   PolkadotExtensionLogoIcon = 'polkadot-js',
   Talisman = 'talisman',
-  SubWallet = 'subwallet-js'
+  SubWallet = 'subwallet-js',
+  ParitySignerCompanion = 'parity-signer-companion'
 }
 
 interface WalletData {
@@ -32,6 +34,11 @@ const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
     name: 'SubWallet',
     LogoIcon: SubWalletLogoIcon,
     url: 'https://subwallet.app/'
+  },
+  [WalletSourceName.ParitySignerCompanion]: {
+    name: 'Parity Signer Companion',
+    LogoIcon: ParitySignerCompanionLogoIcon,
+    url: 'https://github.com/paritytech/parity-signer-companion#installation'
   }
 };
 
