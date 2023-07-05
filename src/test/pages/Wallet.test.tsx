@@ -34,7 +34,7 @@ import { render, screen, userEvent, waitFor } from '../test-utils';
 import { withinList } from './utils/list';
 import { queryTable, withinTable, withinTableRow } from './utils/table';
 
-jest.mock('@/pages/AMM', () => ({ __esModule: true, default: () => <div>Swap page</div> }));
+jest.mock('@/pages/Swap', () => ({ __esModule: true, default: () => <div>Swap page</div> }));
 
 const { getLpTokens, getLiquidityProvidedByAccount } = MOCK_AMM.MODULE;
 const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;

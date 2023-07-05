@@ -25,7 +25,7 @@ describe('AuthModal', () => {
 
     const items = screen.getAllByRole('button', { name: /navigate/i, exact: false });
 
-    expect(items).toHaveLength(3);
+    expect(items).toHaveLength(4);
 
     const [item] = items;
 
