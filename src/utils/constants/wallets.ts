@@ -1,7 +1,8 @@
 enum WalletName {
   PolkadotJS = 'polkadot-js',
   Talisman = 'talisman',
-  SubWallet = 'subwallet-js'
+  SubWallet = 'subwallet-js',
+  ParitySignerCompanion = 'parity-signer-companion'
 }
 
 type WalletData = {
@@ -30,7 +31,13 @@ const SUBWALLET_WALLET = {
   url: 'https://subwallet.app/'
 };
 
-const WALLETS = [POLKADOTJS_WALLET, TALISMAN_WALLET, SUBWALLET_WALLET];
+const PARITY_SIGNER_COMPANION = {
+  title: 'Parity Signer Companion',
+  extensionName: WalletName.ParitySignerCompanion,
+  url: 'https://github.com/paritytech/parity-signer-companion#installation'
+};
 
-export { POLKADOTJS_WALLET, SUBWALLET_WALLET, TALISMAN_WALLET, WalletName, WALLETS };
+const WALLETS = [POLKADOTJS_WALLET, TALISMAN_WALLET, SUBWALLET_WALLET, PARITY_SIGNER_COMPANION];
+
+export { PARITY_SIGNER_COMPANION, POLKADOTJS_WALLET, SUBWALLET_WALLET, TALISMAN_WALLET, WalletName, WALLETS };
 export type { WalletData };
