@@ -18,6 +18,10 @@ const Template: Story<WalletIconProps> = (args) => (
       <WalletIcon {...args} name='polkadot-js' />
       <Span size='xs'>Polkadot.js</Span>
     </Flex>
+    <Flex direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
+      <WalletIcon {...args} name='parity-signer-companion' />
+      <Span size='xs'>Parity Signer Companion</Span>
+    </Flex>
   </Flex>
 );
 
