@@ -165,7 +165,10 @@
   "claim_rewards": "Claim Rewards",
   "tx_fees": "Tx fees",
   "view_subscan": "View Subscan",
-
+  "apr_breakdown": "APR Breakdown",
+  "apy_breakdown": "APY Breakdown",
+  "earned": "Earned",
+  "rewards_apr_ticker": "Rewards APR {{ticker}}",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -588,7 +591,10 @@
     "my_borrow_positions": "My Borrow Positions",
     "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation.",
     "no_loan_positions": "No {{loanType}} positions",
-    "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here"
+    "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here",
+    "owed": "Owed",
+    "lend_apy_ticker": "Lend APY {{ticker}}",
+    "borrow_apy_ticker": "Borrow APY {{ticker}}"
   },
   "amm": {
     "pools": {

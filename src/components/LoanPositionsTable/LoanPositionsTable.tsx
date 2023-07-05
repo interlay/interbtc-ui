@@ -10,7 +10,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Table, TableProps } from '../DataGrid';
-import { ApyCell } from './ApyCell';
+import { LoanApyCell } from './LoanApyCell';
 import { LoanTablePlaceholder } from './LoanTablePlaceholder';
 
 enum LoanPositionTableColumns {
@@ -99,7 +99,7 @@ const LoanPositionsTable = ({
             };
 
         const apy = (
-          <ApyCell
+          <LoanApyCell
             {...apyCellProps}
             currency={currency}
             prices={prices}

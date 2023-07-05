@@ -1,5 +1,7 @@
 export type { AccountSelectProps } from './AccountSelect';
 export { AccountSelect } from './AccountSelect';
+export type { ApyDetailsGroupItemProps, ApyDetailsGroupProps, ApyDetailsProps } from './ApyDetails';
+export { ApyDetails, ApyDetailsGroup, ApyDetailsGroupItem } from './ApyDetails';
 export type { AuthCTAProps } from './AuthCTA';
 export { AuthCTA } from './AuthCTA';
 export type { AuthModalProps, SignTermsModalProps } from './AuthModal';
@@ -11,7 +13,9 @@ export { FundWallet } from './FundWallet';
 export type { IsAuthenticatedProps } from './IsAuthenticated';
 export { IsAuthenticated } from './IsAuthenticated';
 export type { LoanPositionsTableProps } from './LoanPositionsTable';
+export type { LoanApyCellProps } from './LoanPositionsTable';
 export { LoanPositionsTable } from './LoanPositionsTable';
+export { LoanApyCell } from './LoanPositionsTable';
 export type { NotificationsPopoverProps } from './NotificationsPopover';
 export { NotificationsPopover } from './NotificationsPopover';
 export type { NotificationToastProps, TransactionToastProps } from './NotificationToast';
