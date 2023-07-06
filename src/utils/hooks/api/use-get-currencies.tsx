@@ -5,8 +5,6 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { CurrencySquidFormat } from '@/types/currency';
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
-import { FeatureFlags, useFeatureFlag } from '../use-feature-flag';
-
 type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
   getCurrencyFromTicker: (ticker: string) => CurrencyExt;
   getForeignCurrencyFromId: (id: number) => CurrencyExt;
@@ -14,23 +12,20 @@ type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
   getCurrencyFromSquidFormat: (currencySquidFormat: CurrencySquidFormat) => CurrencyExt;
 };
 
-const getCurrencies = async (featureFlags: { lending: boolean; amm: boolean }): Promise<Array<CurrencyExt>> => {
+const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
   const [foreignCurrencies, lendCurrencies, lpTokens] = await Promise.all([
     window.bridge.assetRegistry.getForeignAssets(),
-    featureFlags.lending ? window.bridge.loans.getLendTokens() : [],
-    featureFlags.amm ? window.bridge.amm.getLpTokens() : []
+    window.bridge.loans.getLendTokens(),
+    window.bridge.amm.getLpTokens()
   ]);
   return [...NATIVE_CURRENCIES, ...foreignCurrencies, ...lendCurrencies, ...lpTokens];
 };
 
 // Returns all currencies, both native and foreign and helping utils to get CurrencyExt object.
 const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
-  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
-  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
-
   const queryResult = useQuery({
     queryKey: 'getCurrencies',
-    queryFn: () => getCurrencies({ lending: isLendingEnabled, amm: isAMMEnabled }),
+    queryFn: () => getCurrencies(),
     enabled: bridgeLoaded
   });
 

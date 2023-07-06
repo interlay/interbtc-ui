@@ -63,9 +63,6 @@ const Navigation = ({
   const { t } = useTranslation();
   const { selectedAccount } = useSubstrateSecureState();
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
-  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
-  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
-  const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
 
@@ -74,8 +71,7 @@ const Navigation = ({
       {
         name: 'nav_wallet',
         link: PAGES.WALLET,
-        icon: UserIcon,
-        disabled: !isWalletEnabled
+        icon: UserIcon
       },
       {
         name: 'nav_strategies',
@@ -97,20 +93,17 @@ const Navigation = ({
       {
         name: 'nav_lending',
         link: PAGES.LOANS,
-        icon: PresentationChartBarIcon,
-        disabled: !isLendingEnabled
+        icon: PresentationChartBarIcon
       },
       {
         name: 'nav_swap',
         link: PAGES.SWAP,
-        icon: ArrowPathRoundedSquareIcon,
-        disabled: !isAMMEnabled
+        icon: ArrowPathRoundedSquareIcon
       },
       {
         name: 'nav_pools',
         link: PAGES.POOLS,
-        icon: Square3Stack3DIcon,
-        disabled: !isAMMEnabled
+        icon: Square3Stack3DIcon
       },
       {
         name: 'nav_staking',
@@ -136,7 +129,7 @@ const Navigation = ({
         separator: true
       }
     ],
-    [isWalletEnabled, isStrategiesEnabled, isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
+    [isStrategiesEnabled, selectedAccount?.address, vaultClientLoaded]
   );
 
   const SECONDARY_NAVIGATION_ITEMS = React.useMemo(

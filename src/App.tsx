@@ -49,9 +49,6 @@ const App = (): JSX.Element => {
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
-  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
-  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
-  const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
 
@@ -193,26 +190,20 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
                   </Route>
-                  {isLendingEnabled && (
-                    <Route path={PAGES.LOANS}>
-                      <Loans />
-                    </Route>
-                  )}
-                  {isAMMEnabled && (
-                    <Route path={PAGES.SWAP}>
-                      <Swap />
-                    </Route>
-                  )}
-                  {isAMMEnabled && (
-                    <Route path={PAGES.POOLS}>
-                      <Pools />
-                    </Route>
-                  )}
-                  {isWalletEnabled && (
-                    <Route path={PAGES.WALLET}>
-                      <Wallet />
-                    </Route>
-                  )}
+                  <Route path={PAGES.LOANS}>
+                    <Loans />
+                  </Route>
+                  <Route path={PAGES.SWAP}>
+                    <Swap />
+                  </Route>
+
+                  <Route path={PAGES.POOLS}>
+                    <Pools />
+                  </Route>
+
+                  <Route path={PAGES.WALLET}>
+                    <Wallet />
+                  </Route>
                   {isStrategiesEnabled && (
                     <Route path={PAGES.STRATEGIES}>
                       <Strategies />
@@ -226,7 +217,7 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>
-                  <Redirect exact from={PAGES.HOME} to={isWalletEnabled ? PAGES.WALLET : PAGES.BRIDGE} />
+                  <Redirect exact from={PAGES.HOME} to={PAGES.WALLET} />
                   <Route path='*'>
                     <NoMatch />
                   </Route>
