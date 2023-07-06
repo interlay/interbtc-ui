@@ -7,6 +7,7 @@ import { Signer } from '@polkadot/types/types';
 
 import {
   MOCK_AMM,
+  MOCK_LOANS,
   MOCK_SYSTEM,
   MOCK_TRANSACTION,
   mockApiCreateType,
@@ -40,24 +41,6 @@ import {
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
-import {
-  mockBorrow,
-  mockClaimAllSubsidyRewards,
-  mockDisableAsCollateral,
-  mockEnableAsCollateral,
-  mockGetAccountSubsidyRewards,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendingStats,
-  mockGetLendPositionsOfAccount,
-  mockGetLendTokenExchangeRates,
-  mockGetLendTokens,
-  mockGetLoanAssets,
-  mockLend,
-  mockRepay,
-  mockRepayAll,
-  mockWithdraw,
-  mockWithdrawAll
-} from './parachain/loans';
 import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
 
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
@@ -111,24 +94,7 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     getRequestLimits: mockIssueGetRequestLimits,
     request: mockIssueRequest
   },
-  loans: {
-    getLendTokens: mockGetLendTokens,
-    getLendPositionsOfAccount: mockGetLendPositionsOfAccount,
-    getBorrowPositionsOfAccount: mockGetBorrowPositionsOfAccount,
-    getLoanAssets: mockGetLoanAssets,
-    getAccruedRewardsOfAccount: mockGetAccountSubsidyRewards,
-    lend: mockLend,
-    withdraw: mockWithdraw,
-    withdrawAll: mockWithdrawAll,
-    borrow: mockBorrow,
-    repay: mockRepay,
-    repayAll: mockRepayAll,
-    enableAsCollateral: mockEnableAsCollateral,
-    disableAsCollateral: mockDisableAsCollateral,
-    claimAllSubsidyRewards: mockClaimAllSubsidyRewards,
-    getLendingStats: mockGetLendingStats,
-    getLendTokenExchangeRates: mockGetLendTokenExchangeRates
-  },
+  loans: MOCK_LOANS.MODULE,
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
   },

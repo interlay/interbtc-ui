@@ -1,10 +1,8 @@
 import {
   BorrowPosition,
   CollateralPosition,
-  CurrencyExt,
   LendingStats,
   LoanAsset,
-  LoanPosition,
   LoansAPI,
   newMonetaryAmount,
   TickerToData
@@ -13,9 +11,8 @@ import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
-import { CollateralActions } from '@/pages/Vaults/Vault/types';
 
-const WRAPPED_ASSET_AMOUNT = {
+const WRAPPED_LOAN_AMOUNT = {
   EMPTY: {
     VALUE: '0',
     MONETARY: newMonetaryAmount(0, WRAPPED_TOKEN)
@@ -42,36 +39,29 @@ const WRAPPED_ASSET_AMOUNT = {
   }
 };
 
-const WRAPPED_ASSET_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
+const WRAPPED_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
   NON_COLLATERAL: {
-    amount: WRAPPED_ASSET_AMOUNT.MEDIUM.MONETARY,
+    amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: false
   },
   COLLATERAL: {
-    amount: WRAPPED_ASSET_AMOUNT.MEDIUM.MONETARY,
+    amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: true
   }
 };
 
-const WRAPPED_ASSET_BORROW: BorrowPosition = {
-  amount: WRAPPED_ASSET_AMOUNT.MEDIUM.MONETARY,
-  accumulatedDebt: WRAPPED_ASSET_AMOUNT.VERY_SMALL.MONETARY
+const WRAPPED_LOAN_BORROW: BorrowPosition = {
+  amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
+  accumulatedDebt: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY
 };
 
-const WRAPPED_ASSET = {
-  AMOUNT: WRAPPED_ASSET_AMOUNT,
-  POSITIONS: {
-    LEND: WRAPPED_ASSET_LEND,
-    BORROW: WRAPPED_ASSET_BORROW
-  },
-  APY: {
-    BASE: '10.20',
-    LEND: '10.48',
-    BORROW: '9.92'
-  }
+const WRAPPED_APY = {
+  BASE: '10.20',
+  LEND: '10.48',
+  BORROW: '9.92'
 };
 
-const GOVERNANCE_ASSET_AMOUNT = {
+const GOVERNANCE_LOAN_AMOUNT = {
   EMPTY: {
     VALUE: '0',
     MONETARY: newMonetaryAmount(0, GOVERNANCE_TOKEN)
@@ -98,33 +88,26 @@ const GOVERNANCE_ASSET_AMOUNT = {
   }
 };
 
-const GOVERNANCE_ASSET_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
+const GOVERNANCE_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
   NON_COLLATERAL: {
-    amount: GOVERNANCE_ASSET_AMOUNT.MEDIUM.MONETARY,
+    amount: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: false
   },
   COLLATERAL: {
-    amount: GOVERNANCE_ASSET_AMOUNT.MEDIUM.MONETARY,
+    amount: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: true
   }
 };
 
-const GOVERNANCE_ASSET_BORROW: BorrowPosition = {
-  amount: GOVERNANCE_ASSET_AMOUNT.MEDIUM.MONETARY,
-  accumulatedDebt: GOVERNANCE_ASSET_AMOUNT.VERY_SMALL.MONETARY
+const GOVERNANCE_LOAN_BORROW: BorrowPosition = {
+  amount: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
+  accumulatedDebt: GOVERNANCE_LOAN_AMOUNT.VERY_SMALL.MONETARY
 };
 
-const GOVERNANCE_ASSET = {
-  AMOUNT: GOVERNANCE_ASSET_AMOUNT,
-  POSITIONS: {
-    LEND: GOVERNANCE_ASSET_LEND,
-    BORROW: GOVERNANCE_ASSET_BORROW
-  },
-  APY: {
-    BASE: '10.20',
-    LEND: '10.20',
-    BORROW: '10.20'
-  }
+const GOVERNANCE_APY = {
+  BASE: '10.20',
+  LEND: '10.20',
+  BORROW: '10.20'
 };
 
 const LOAN_POSITIONS = {
@@ -158,80 +141,104 @@ const LOAN_POSITIONS = {
   }
 };
 
-const DEFAULT_LEND_POSITIONS: CollateralPosition[] = [DEFAULT_POSITIONS.LEND.IBTC];
-
-const DEFAULT_BORROW_POSITIONS: BorrowPosition[] = [DEFAULT_POSITIONS.BORROW.IBTC];
-
-const DEFAULT_IBTC_LOAN_ASSET: LoanAsset = {
+const WRAPPED_ASSET: LoanAsset = {
   currency: WRAPPED_TOKEN,
-  lendApy: new Big(DEFAULT_APY.IBTC.BASE),
-  borrowApy: new Big(DEFAULT_APY.IBTC.BASE),
-  totalLiquidity: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-  lendReward: DEFAULT_INTR.MONETARY.VERY_LARGE,
-  borrowReward: DEFAULT_INTR.MONETARY.VERY_LARGE,
-  availableCapacity: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-  collateralThreshold: new Big(0.6),
-  liquidationThreshold: new Big(0.8),
+  lendApy: new Big(WRAPPED_APY.BASE),
+  borrowApy: new Big(WRAPPED_APY.BASE),
+  totalLiquidity: WRAPPED_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  lendReward: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  borrowReward: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  availableCapacity: WRAPPED_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  collateralThreshold: THRESOLD.MEDIUM,
+  liquidationThreshold: THRESOLD.HIGH,
   isActive: true,
-  totalBorrows: DEFAULT_IBTC.MONETARY.MEDIUM,
-  borrowCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-  supplyCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-  exchangeRate: new ExchangeRate(Bitcoin, WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM.toBig())
+  totalBorrows: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
+  borrowCap: WRAPPED_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  supplyCap: WRAPPED_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  exchangeRate: new ExchangeRate(Bitcoin, WRAPPED_TOKEN, WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY.toBig())
 };
 
-const DEFAULT_INTR_LOAN_ASSET: LoanAsset = {
+const WRAPPED_LOAN = {
+  AMOUNT: WRAPPED_LOAN_AMOUNT,
+  POSITIONS: {
+    LEND: WRAPPED_LOAN_LEND,
+    BORROW: WRAPPED_LOAN_BORROW
+  },
+  APY: WRAPPED_APY,
+  ASSET: WRAPPED_ASSET
+};
+
+const GOVERNANCE_ASSET: LoanAsset = {
   currency: GOVERNANCE_TOKEN,
-  lendApy: new Big(DEFAULT_APY.INTR.BASE),
-  borrowApy: new Big(DEFAULT_APY.INTR.BASE),
-  totalLiquidity: DEFAULT_INTR.MONETARY.VERY_SMALL,
+  lendApy: new Big(GOVERNANCE_APY.BASE),
+  borrowApy: new Big(GOVERNANCE_APY.BASE),
+  totalLiquidity: GOVERNANCE_LOAN_AMOUNT.VERY_SMALL.MONETARY,
   lendReward: null,
   borrowReward: null,
-  availableCapacity: DEFAULT_INTR.MONETARY.VERY_SMALL,
-  collateralThreshold: new Big(0.6),
-  liquidationThreshold: new Big(0.8),
+  availableCapacity: GOVERNANCE_LOAN_AMOUNT.VERY_SMALL.MONETARY,
+  collateralThreshold: THRESOLD.MEDIUM,
+  liquidationThreshold: THRESOLD.HIGH,
   isActive: true,
-  totalBorrows: DEFAULT_INTR.MONETARY.MEDIUM,
-  borrowCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
-  supplyCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
-  exchangeRate: new ExchangeRate(Bitcoin, GOVERNANCE_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM.toBig())
+  totalBorrows: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
+  borrowCap: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  supplyCap: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
+  exchangeRate: new ExchangeRate(Bitcoin, GOVERNANCE_TOKEN, WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY.toBig())
 };
 
-const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
-  IBTC: DEFAULT_IBTC_LOAN_ASSET,
-  INTR: DEFAULT_INTR_LOAN_ASSET
+const GOVERNANCE_LOAN = {
+  AMOUNT: GOVERNANCE_LOAN_AMOUNT,
+  POSITIONS: {
+    LEND: GOVERNANCE_LOAN_LEND,
+    BORROW: GOVERNANCE_LOAN_BORROW
+  },
+  APY: GOVERNANCE_APY,
+  ASSET: GOVERNANCE_ASSET
 };
 
-const DEFAULT_THRESOLD = {
-  MIN: new Big(0),
-  LOW: new Big(0.25),
-  MEDIUM: new Big(0.5),
-  HIGH: new Big(0.75),
-  MAX: new Big(1)
+const LOAN_POSITIONS = {
+  LEND: {
+    EMPTY: [],
+    AVERAGE: [WRAPPED_LOAN.POSITIONS.LEND.NON_COLLATERAL],
+    AVERAGE_COLLATERAL: [WRAPPED_LOAN.POSITIONS.LEND.COLLATERAL],
+    FULL: [WRAPPED_LOAN.POSITIONS.LEND.NON_COLLATERAL, GOVERNANCE_LOAN.POSITIONS.LEND.NON_COLLATERAL],
+    FULL_COLLATERAL: [WRAPPED_LOAN.POSITIONS.LEND.COLLATERAL, GOVERNANCE_LOAN.POSITIONS.LEND.COLLATERAL]
+  },
+  BORROW: {
+    EMPTY: [],
+    AVERAGE: [WRAPPED_LOAN.POSITIONS.BORROW],
+    FULL: [WRAPPED_LOAN.POSITIONS.BORROW, GOVERNANCE_LOAN.POSITIONS.BORROW]
+  }
 };
 
-const DEFAULT_CALCULATE_BORROW_LIMIT = {
-  ltv: DEFAULT_THRESOLD.LOW,
-  collateralThresholdWeightedAverage: DEFAULT_THRESOLD.MEDIUM,
-  liquidationThresholdWeightedAverage: DEFAULT_THRESOLD.HIGH
+const ASSETS: TickerToData<LoanAsset> = {
+  [WRAPPED_ASSET.currency.ticker]: WRAPPED_ASSET,
+  [GOVERNANCE_ASSET.currency.ticker]: GOVERNANCE_ASSET
 };
 
-const mockCalculateLtvAndThresholdsChange = jest.fn().mockReturnValue(DEFAULT_CALCULATE_BORROW_LIMIT);
-
-const mockCalculateBorrowLimitBtcChange = jest.fn().mockReturnValue(DEFAULT_IBTC.MONETARY.LARGE);
-
-const DEFAULT_LENDING_STATS: LendingStats = {
-  borrowLimitBtc: DEFAULT_IBTC.MONETARY.LARGE,
-  calculateBorrowLimitBtcChange: mockCalculateBorrowLimitBtcChange,
-  calculateLtvAndThresholdsChange: mockCalculateLtvAndThresholdsChange,
-  collateralThresholdWeightedAverage: new Big(0.5),
-  liquidationThresholdWeightedAverage: new Big(0.75),
-  ltv: new Big(0.2),
-  totalBorrowedBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL,
-  totalCollateralBtc: DEFAULT_IBTC.MONETARY.LARGE,
-  totalLentBtc: DEFAULT_IBTC.MONETARY.LARGE
+const INACTIVE_ASSETS: TickerToData<LoanAsset> = {
+  [WRAPPED_ASSET.currency.ticker]: { ...WRAPPED_ASSET, isActive: false },
+  [GOVERNANCE_ASSET.currency.ticker]: { ...GOVERNANCE_ASSET, isActive: false }
 };
 
-const DATA = {};
+const LTV_THRESHOLD = {
+  ltv: THRESOLD.LOW,
+  collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
+  liquidationThresholdWeightedAverage: THRESOLD.HIGH
+};
+
+const LENDING_STATS: LendingStats = {
+  collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
+  liquidationThresholdWeightedAverage: THRESOLD.HIGH,
+  ltv: THRESOLD.MIN,
+  totalLentBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
+  borrowLimitBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
+  totalBorrowedBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY,
+  totalCollateralBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
+  calculateBorrowLimitBtcChange: jest.fn().mockReturnValue(LTV_THRESHOLD),
+  calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.LARGE.MONETARY)
+};
+
+const DATA = { LTV_THRESHOLD, ASSETS, INACTIVE_ASSETS, LOAN_POSITIONS, WRAPPED_LOAN, GOVERNANCE_LOAN, LENDING_STATS };
 
 const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   lend: jest.fn(),
@@ -246,13 +253,13 @@ const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   liquidateBorrowPosition: jest.fn(),
   getAccruedRewardsOfAccount: jest.fn(),
   getBorrowerAccountIds: jest.fn(),
-  getBorrowPositionsOfAccount: jest.fn().mockResolvedValue(DEFAULT_BORROW_POSITIONS),
-  getLendingStats: jest.fn().mockResolvedValue(DEFAULT_LENDING_STATS),
-  getLendPositionsOfAccount: jest.fn().mockResolvedValue(DEFAULT_LEND_POSITIONS),
+  getBorrowPositionsOfAccount: jest.fn().mockResolvedValue(LOAN_POSITIONS.BORROW.EMPTY),
+  getLendingStats: jest.fn().mockResolvedValue(LENDING_STATS),
+  getLendPositionsOfAccount: jest.fn().mockResolvedValue(LOAN_POSITIONS.LEND.EMPTY),
   getLendTokenExchangeRates: jest.fn(),
   getLendTokens: jest.fn().mockResolvedValue([]),
   getLiquidationThresholdLiquidity: jest.fn(),
-  getLoanAssets: jest.fn().mockResolvedValue(DEFAULT_ASSETS),
+  getLoanAssets: jest.fn().mockResolvedValue(ASSETS),
   getLoansMarkets: jest.fn(),
   getUndercollateralizedBorrowers: jest.fn()
 };
