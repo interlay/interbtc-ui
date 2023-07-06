@@ -39,7 +39,7 @@ type EstimateTypeArgs<T extends Transaction> = {
 
 type EstimateFunctions<T extends Transaction> = EstimateArgs<T> | EstimateTypeArgs<T>;
 
-type EstimateFeeParams = { ticker: string; params: TransactionActions };
+type EstimateFeeParams = TransactionActions;
 
 type ReactQueryUseFeeEstimateResult = Omit<
   UseMutationResult<FeeEstimateResult, Error, EstimateFeeParams, unknown>,
@@ -49,9 +49,10 @@ type ReactQueryUseFeeEstimateResult = Omit<
 type UseFeeEstimateResult<T extends Transaction> = {
   defaultCurrency: CurrencyExt;
   detailsProps: {
-    defaultCurrency: CurrencyExt;
+    currency: CurrencyExt;
     amount?: MonetaryAmount<CurrencyExt>;
     showInsufficientBalance?: boolean;
+    onSelectionChange: (ticker: string) => void;
   };
 } & ReactQueryUseFeeEstimateResult &
   EstimateFunctions<T>;

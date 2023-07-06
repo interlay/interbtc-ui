@@ -72,30 +72,30 @@ function useTransaction<T extends Transaction>(
 
   const [isSigned, setSigned] = useState(false);
 
+  const [feeCurrency, setFeeCurrency] = useState(defaultFeeCurrency);
+
   const { showSuccessModal, customStatus, prefetchFee, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
 
   const mutateFee: (
     pools: Array<LiquidityPool>
   ) => MutationFunction<FeeEstimateResult, EstimateFeeParams> = useCallback(
-    (pools) => async ({ ticker, params }) => {
-      const currency = getCurrencyFromTicker(ticker);
-
-      const feeBalance = getBalance(currency.ticker)?.transferable;
+    (pools) => async (params) => {
+      const feeBalance = getBalance(feeCurrency.ticker)?.transferable;
 
       // returning undefined means that action amount is not based on fee currency
-      const actionAmount = getActionAmount(params, currency);
+      const actionAmount = getActionAmount(params, feeCurrency);
 
       const availableBalance = actionAmount ? feeBalance?.sub(actionAmount) : feeBalance;
 
-      const amount = await estimateTransactionFee(currency, pools || [], params);
+      const amount = await estimateTransactionFee(feeCurrency, pools || [], params);
 
       return {
         amount,
         isValid: !!availableBalance && !!amount && availableBalance.gte(amount)
       };
     },
-    [getBalance, getCurrencyFromTicker]
+    [feeCurrency, getBalance]
   );
 
   const { mutate: feeMutate, ...feeMutation } = useMutation<FeeEstimateResult, Error, EstimateFeeParams, unknown>(
@@ -107,21 +107,17 @@ function useTransaction<T extends Transaction>(
   const estimateFeeParamsRef = useRef<EstimateFeeParams>();
 
   const handleEstimateFee = useCallback(
-    (ticker: string = defaultFeeCurrency.ticker) => (
-      ...args: Parameters<UseTransactionResult<T>['fee']['estimate']>
-    ) => {
+    () => (...args: Parameters<UseTransactionResult<T>['fee']['estimate']>) => {
       const params = getParams(args, typeOrOptions, customStatus);
 
-      const variables = { ticker, params };
+      estimateFeeParamsRef.current = params;
 
-      estimateFeeParamsRef.current = variables;
-
-      feeMutate(variables);
+      feeMutate(params);
     },
     [typeOrOptions, customStatus, feeMutate]
   );
 
-  const handleSetCurrency = (ticker?: string) => ({ estimate: handleEstimateFee(ticker) });
+  const handleSetCurrency = () => ({ estimate: handleEstimateFee() });
 
   useEffect(() => {
     if (feeMutation.data || !prefetchFee || !bridgeLoaded || !data) return;
@@ -129,7 +125,7 @@ function useTransaction<T extends Transaction>(
 
     const params = getParams(prefetchFee.args, type, customStatus);
 
-    feeMutate({ params, ticker: defaultFeeCurrency.ticker });
+    feeMutate(params);
   }, [bridgeLoaded, data]);
 
   // Re-estimate fee based on latest stored variables
@@ -207,6 +203,12 @@ function useTransaction<T extends Transaction>(
     }
   };
 
+  const handleFeeSelectionChange = (ticker: string) => {
+    const currency = getCurrencyFromTicker(ticker);
+
+    setFeeCurrency(currency);
+  };
+
   return {
     ...transactionMutation,
     isSigned,
@@ -219,10 +221,11 @@ function useTransaction<T extends Transaction>(
       estimate: handleEstimateFee(),
       setCurrency: handleSetCurrency,
       detailsProps: {
-        defaultCurrency: defaultFeeCurrency,
+        currency: feeCurrency,
         amount: feeMutation.data?.amount,
         // could possible be undefined, so we want to check for that
-        showInsufficientBalance: feeMutation.data?.isValid === false
+        showInsufficientBalance: feeMutation.data?.isValid === false,
+        onSelectionChange: handleFeeSelectionChange
       }
     }
   };

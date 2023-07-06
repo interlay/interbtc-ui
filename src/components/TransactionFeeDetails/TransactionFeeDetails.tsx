@@ -1,7 +1,7 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps, useId } from '@react-aria/utils';
-import { Key, ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
@@ -21,12 +21,13 @@ import {
 } from '../TransactionDetails';
 
 type Props = {
-  defaultCurrency?: CurrencyExt;
+  currency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
   showInsufficientBalance?: boolean;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
+  onSelectionChange?: (ticker: string) => void;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
@@ -35,32 +36,30 @@ type TransactionFeeDetailsProps = Props & InheritAttrs;
 
 const TransactionFeeDetails = ({
   amount,
-  defaultCurrency,
+  currency,
   showInsufficientBalance,
   selectProps,
   label,
   tooltipLabel,
   className,
+  onSelectionChange,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
   const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
   const id = useId();
-  const [ticker, setTicker] = useState(defaultCurrency?.ticker);
 
   const amountLabel = amount
     ? `${amount.toHuman()} ${amount.currency.ticker} (${displayMonetaryAmountInUSDFormat(
         amount,
         getTokenPrice(prices, amount.currency.ticker)?.usd
       )})`
-    : `${0.0} ${ticker} (${formatUSD(0)})`;
+    : `${0.0} ${currency?.ticker} (${formatUSD(0)})`;
 
   const errorMessage =
     showInsufficientBalance &&
     t('forms.ensure_adequate_amount_left_to_cover_action', { action: t('fees').toLowerCase() });
-
-  const handleSelectionChange = (key: Key) => setTicker(key as string);
 
   return (
     <Flex gap='spacing2' direction='column' className={className}>
@@ -70,8 +69,8 @@ const TransactionFeeDetails = ({
             {...mergeProps(selectProps || {}, {
               label: t('fee_token'),
               items: selectCurrency.items,
-              value: ticker,
-              onSelectionChange: handleSelectionChange
+              value: currency?.ticker,
+              onSelectionChange
             })}
             errorMessage={undefined}
             aria-describedby={errorMessage ? id : undefined}
