@@ -57,9 +57,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   // Doing this call on mount so that the form becomes dirty
   // TODO: improve approach
   useEffect(() => {
+    if (!isOpen) return;
+
     form.setFieldValue(LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOpen]);
 
   const { supplyAmountUSD, netAPY } = statistics || {};
 

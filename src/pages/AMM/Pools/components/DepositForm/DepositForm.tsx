@@ -181,7 +181,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
                     valueUSD={new Big(isNaN(Number(form.values[ticker])) ? 0 : form.values[ticker] || 0)
                       .mul(getTokenPrice(prices, ticker)?.usd || 0)
                       .toNumber()}
-                    {...mergeProps(form.getFieldProps(ticker, false, true), { onChange: handleChange })}
+                    {...mergeProps(form.getFieldProps(ticker, false, false), { onChange: handleChange })}
                   />
                   {!isLastItem && <StyledPlusDivider marginTop='spacing5' />}
                 </Fragment>

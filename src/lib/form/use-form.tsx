@@ -3,14 +3,24 @@ import { FieldInputProps, FormikConfig, FormikErrors as FormErrors, FormikValues
 import { FocusEvent, Key, useCallback } from 'react';
 import { useDebounce } from 'react-use';
 
+const getFieldName = (nameOrOptions: any) => {
+  const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
+  return isOptions ? nameOrOptions.name : nameOrOptions;
+};
+
 type GetFieldProps = (
   nameOrOptions: any,
   hideErrorMessage?: boolean,
   hideUntouchedError?: boolean
 ) => FieldInputProps<any> & {
   errorMessage?: string | string[];
-  onSelectionChange: (key: Key) => void;
 };
+
+type GetSelectFieldProps = (
+  nameOrOptions: any,
+  hideErrorMessage?: boolean,
+  hideUntouchedError?: boolean
+) => Omit<ReturnType<GetFieldProps>, 'onChange'> & { onSelectionChange?: (key: Key) => void };
 
 type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
   hideErrorMessages?: boolean;
@@ -77,16 +87,7 @@ const useForm = <Values extends FormikValues = FormikValues>({
   const getFieldProps: GetFieldProps = useCallback(
     (nameOrOptions: any, hideErrorMessage?: boolean, hideUntouchedError?: boolean) => {
       const fieldProps = getFormikFieldProps(nameOrOptions);
-
-      const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
-      const fieldName = isOptions ? nameOrOptions.name : nameOrOptions;
-
-      const customFieldProps = {
-        ...fieldProps,
-        onSelectionChange: (key: Key) => {
-          setFieldValue(fieldName, key, true);
-        }
-      };
+      const fieldName = getFieldName(nameOrOptions);
 
       // Asses if error message is going to be omitted, but validation still takes place (approach used in swap due to custom error messages)
       const hideError = hideErrorMessage || hideErrorMessages;
@@ -103,21 +104,38 @@ const useForm = <Values extends FormikValues = FormikValues>({
           : formik.errors[fieldName];
 
         return {
-          ...customFieldProps,
+          ...fieldProps,
           onBlur: chain(fieldProps.onBlur, (e: FocusEvent<unknown>) => handleBlur(e, fieldName, isTouched as boolean)),
           errorMessage: errorMessage as string | string[] | undefined
         };
       }
 
-      return customFieldProps;
+      return fieldProps;
     },
-    [getFormikFieldProps, hideErrorMessages, formik.touched, formik.errors, setFieldValue, handleBlur]
+    [getFormikFieldProps, hideErrorMessages, formik.touched, formik.errors, handleBlur]
+  );
+
+  const getSelectFieldProps: GetSelectFieldProps = useCallback(
+    (nameOrOptions: any, hideErrorMessage?: boolean, hideUntouchedError?: boolean) => {
+      const props = getFieldProps(nameOrOptions, hideErrorMessage, hideUntouchedError);
+      const fieldName = getFieldName(nameOrOptions);
+
+      return {
+        ...props,
+        onSelectionChange: (key: Key) => {
+          setFieldValue(fieldName, key, true);
+        },
+        onChange: undefined
+      };
+    },
+    [getFieldProps, setFieldValue]
   );
 
   return {
     values,
     validateForm,
     getFieldProps,
+    getSelectFieldProps,
     setFieldTouched,
     setFieldValue,
     ...formik

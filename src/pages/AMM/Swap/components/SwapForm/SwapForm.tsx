@@ -304,7 +304,7 @@ const SwapForm = ({
                   balance={inputBalance?.toString() || 0}
                   humanBalance={inputBalance?.toHuman() || 0}
                   valueUSD={inputAmountUSD}
-                  selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, true), {
+                  selectProps={mergeProps(form.getSelectFieldProps(SWAP_INPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_INPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
@@ -319,7 +319,7 @@ const SwapForm = ({
                   humanBalance={outputBalance?.toHuman() || 0}
                   valueUSD={outputAmountUSD}
                   value={trade?.outputAmount.toString() || ''}
-                  selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, true), {
+                  selectProps={mergeProps(form.getSelectFieldProps(SWAP_OUTPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
@@ -329,7 +329,7 @@ const SwapForm = ({
                 {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
                 <TransactionFeeDetails
                   {...transaction.fee.detailsProps}
-                  selectProps={form.getFieldProps(SWAP_FEE_TOKEN_FIELD)}
+                  selectProps={form.getSelectFieldProps(SWAP_FEE_TOKEN_FIELD)}
                 />
               </Flex>
               <SwapCTA trade={trade} fee={transaction.fee} form={form} pair={pair} />

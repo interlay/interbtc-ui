@@ -3,7 +3,7 @@ import { mergeProps } from '@react-aria/utils';
 import { OverlayTriggerState } from '@react-stately/overlays';
 import { forwardRef, ReactNode, RefObject } from 'react';
 
-import { Underlay } from '../Overlay';
+import { Underlay } from '../Overlay/Underlay';
 import { StyledModal, StyledWrapper } from './Modal.style';
 
 type Props = {
