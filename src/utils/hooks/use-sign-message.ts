@@ -50,6 +50,8 @@ type UseSignMessageResult = {
   };
 };
 
+const shouldCheckSignature = !!TC_VERSION;
+
 const useSignMessage = (): UseSignMessageResult => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -101,7 +103,7 @@ const useSignMessage = (): UseSignMessageResult => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    enabled: !!selectedAccount,
+    enabled: !!selectedAccount && shouldCheckSignature,
     queryFn: () => selectedAccount && getSignature(selectedAccount)
   });
 
@@ -135,13 +137,13 @@ const useSignMessage = (): UseSignMessageResult => {
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
-    if (!account || !SIGNER_API_URL || hasSignature) return;
+    if (!account || !SIGNER_API_URL || hasSignature || !shouldCheckSignature) return;
 
     signMessageMutation.mutate(account);
   };
 
   const handleOpenSignTermModal = async (account: KeyringPair) => {
-    if (!SIGNER_API_URL) return;
+    if (!SIGNER_API_URL || !shouldCheckSignature) return;
 
     // Cancel possible ongoing unwanted account
     queryClient.cancelQueries({ queryKey });
@@ -157,7 +159,7 @@ const useSignMessage = (): UseSignMessageResult => {
   };
 
   return {
-    hasSignature: !!hasSignature,
+    hasSignature: shouldCheckSignature ? !!hasSignature : true,
     modal: {
       buttonProps: { onPress: () => handleSignMessage(selectedAccount), loading: signMessageMutation.isLoading }
     },
