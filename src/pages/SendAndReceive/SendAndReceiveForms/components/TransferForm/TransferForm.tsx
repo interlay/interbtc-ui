@@ -25,6 +25,7 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
+import { useWallet } from '@/utils/hooks/use-wallet';
 
 type TransferFormProps = {
   ticker?: string;
@@ -32,7 +33,7 @@ type TransferFormProps = {
 
 const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-
+  const { account } = useWallet();
   const prices = useGetPrices();
   const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
   const { getBalance } = useGetBalances();
@@ -43,7 +44,12 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
     onSuccess: () => {
       form.resetForm();
-    }
+    },
+    prefetchFee: account
+      ? ({
+          args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
+        } as any)
+      : undefined
   });
 
   const transferTokenBalance = transferToken && getBalance(transferToken.ticker)?.transferable;

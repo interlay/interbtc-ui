@@ -1,7 +1,7 @@
 import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { MutationFunction, useMutation } from 'react-query';
 import { useInterval } from 'react-use';
@@ -20,6 +20,8 @@ import {
   FeeEstimateResult,
   TransactionResult,
   UseTransactionOptions,
+  UseTransactionOptionsWithoutType,
+  UseTransactionOptionsWithType,
   UseTransactionResult,
   UseTransactionWithoutType,
   UseTransactionWithType
@@ -49,11 +51,16 @@ const mutateTransaction: (
 };
 
 // The three declared functions are use to infer types on diferent implementations
-function useTransaction<T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionWithType<T>;
-function useTransaction<T extends Transaction>(options?: UseTransactionOptions): UseTransactionWithoutType<T>;
 function useTransaction<T extends Transaction>(
-  typeOrOptions?: T | UseTransactionOptions,
-  options?: UseTransactionOptions
+  type: T,
+  options?: UseTransactionOptionsWithType<T>
+): UseTransactionWithType<T>;
+function useTransaction<T extends Transaction>(
+  options?: UseTransactionOptionsWithoutType<T>
+): UseTransactionWithoutType<T>;
+function useTransaction<T extends Transaction>(
+  typeOrOptions?: T | UseTransactionOptions<T>,
+  options?: UseTransactionOptions<T>
 ): UseTransactionResult<T> {
   const { state } = useSubstrate();
   const { data: pools } = useGetLiquidityPools();
@@ -62,7 +69,7 @@ function useTransaction<T extends Transaction>(
 
   const [isSigned, setSigned] = useState(false);
 
-  const { showSuccessModal, customStatus, ...mutateOptions } =
+  const { showSuccessModal, customStatus, prefetchFee, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
 
   const mutateFee: (
@@ -112,6 +119,16 @@ function useTransaction<T extends Transaction>(
   );
 
   const handleSetCurrency = (ticker?: string) => ({ estimate: handleEstimateFee(ticker) });
+
+  useEffect(() => {
+    if (feeMutation.data || !prefetchFee) return;
+
+    const type = (prefetchFee as UseTransactionOptionsWithType<T>['prefetchFee'])?.type || typeOrOptions;
+
+    const params = getParams(prefetchFee.args, type, customStatus);
+
+    feeMutate({ params, ticker: defaultFeeCurrency.ticker });
+  }, []);
 
   // Re-estimate fee based on latest stored variables
   useInterval(() => {

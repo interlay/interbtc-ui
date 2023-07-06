@@ -68,12 +68,36 @@ type UseTransactionResult<T extends Transaction> = {
 } & ReactQueryUseTransactionResult &
   ExecuteFunctions<T>;
 
-type UseTransactionOptions = Omit<
+type PrefetchFeeEstimateHanlderWithType<T extends Transaction> = { type: T; args: TransactionArgs<T> };
+type PrefetchFeeEstimateHanlderWithoutType<T extends Transaction> = { args: TransactionArgs<T> };
+
+type UseTransactionOptionsWithType<T extends Transaction> = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
+  prefetchFee?: PrefetchFeeEstimateHanlderWithType<T>;
+  showSuccessModal?: boolean;
+};
+
+type UseTransactionOptionsWithoutType<T extends Transaction> = Omit<
+  UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
+  'mutationFn'
+> & {
+  customStatus?: ExtrinsicStatus['type'];
+  onSigning?: (variables: TransactionActions) => void;
+  prefetchFee?: PrefetchFeeEstimateHanlderWithoutType<T>;
+  showSuccessModal?: boolean;
+};
+
+type UseTransactionOptions<T extends Transaction> = Omit<
+  UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
+  'mutationFn'
+> & {
+  customStatus?: ExtrinsicStatus['type'];
+  onSigning?: (variables: TransactionActions) => void;
+  prefetchFee?: PrefetchFeeEstimateHanlderWithType<T> | PrefetchFeeEstimateHanlderWithoutType<T>;
   showSuccessModal?: boolean;
 };
 
@@ -103,6 +127,8 @@ export type {
   TransactionResult,
   UseFeeEstimateResult,
   UseTransactionOptions,
+  UseTransactionOptionsWithoutType,
+  UseTransactionOptionsWithType,
   UseTransactionResult,
   UseTransactionWithoutType,
   UseTransactionWithType
