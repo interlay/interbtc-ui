@@ -147,7 +147,10 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
               {...transaction.fee.detailsProps}
-              selectProps={{ ...form.getFieldProps(POOL_WITHDRAW_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+              selectProps={{
+                ...form.getSelectFieldProps(POOL_WITHDRAW_FEE_TOKEN_FIELD),
+                modalRef: overlappingModalRef
+              }}
             />
             <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
               {t('amm.pools.remove_liquidity')}

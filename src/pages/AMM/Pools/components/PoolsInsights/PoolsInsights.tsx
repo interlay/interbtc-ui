@@ -156,7 +156,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
               <TransactionFeeDetails
                 {...transaction.fee.detailsProps}
                 selectProps={{
-                  ...form.getFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
+                  ...form.getSelectFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef
                 }}
               />
