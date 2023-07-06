@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import { showSignTermsModalAction } from '@/common/actions/general.actions';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
-import { SIGNER_API_URL } from '@/constants';
+import { SIGNER_API_URL, TC_VERSION } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import { NotificationToastType, useNotifications } from '../context/Notifications';
@@ -17,8 +17,6 @@ interface GetSignatureData {
   exists: boolean;
 }
 
-const TC_VERSION = '1.0';
-
 const postSignature = async (account: KeyringPair) => {
   const signerResult = await signMessage(account, TERMS_AND_CONDITIONS_LINK);
 
@@ -26,7 +24,7 @@ const postSignature = async (account: KeyringPair) => {
     throw new Error('Failed to sign message');
   }
 
-  return fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({version: TC_VERSION})}`, {
+  return fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({ version: TC_VERSION })}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -59,24 +57,28 @@ const useSignMessage = (): UseSignMessageResult => {
 
   const dispatch = useDispatch();
   const [signatures, setSignatures] = useLocalStorage(LocalStorageKey.TC_SIGNATURES);
-  const [tcVersion, setTcVersion] = useLocalStorage(LocalStorageKey.TC_VERSION);
 
   const { selectedAccount } = useSubstrateSecureState();
 
   const setSignature = useCallback(
-    (address: string, hasSignature: boolean) => setSignatures({ ...signatures, [address]: hasSignature }),
+    (address: string, hasSignature: boolean) =>
+      setSignatures({ ...signatures, [address]: { isSigned: hasSignature, version: TC_VERSION } }),
     [setSignatures, signatures]
   );
 
   const getSignature = useCallback(
     async (account: KeyringPair): Promise<boolean> => {
-      const storedSignature = signatures?.[account.address];
+      const signatureData = signatures?.[account.address];
 
-      if (storedSignature !== undefined) {
-        return storedSignature;
+      // if the stored value is boolean, we will force to fetch, so we can migrate to lastest structure
+      const hasStoredSignature =
+        typeof signatureData === 'object' ? signatureData?.version === TC_VERSION && signatureData.isSigned : undefined;
+
+      if (hasStoredSignature !== undefined) {
+        return hasStoredSignature;
       }
 
-      const res = await fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({version: TC_VERSION})}`, {
+      const res = await fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({ version: TC_VERSION })}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -113,7 +115,6 @@ const useSignMessage = (): UseSignMessageResult => {
     },
     onSuccess: (_, variables) => {
       setSignature(variables.address, true);
-      setTcVersion(TC_VERSION);
       dispatch(showSignTermsModalAction(false));
       refetchSignatureData();
       notifications.show(variables.address, {
@@ -122,12 +123,6 @@ const useSignMessage = (): UseSignMessageResult => {
       });
     }
   });
-
-  useEffect(() => {
-    if (tcVersion === TC_VERSION) return;
-
-    setSignatures({});
-  }, [setSignatures, tcVersion]);
 
   // Reset mutation on account change
   useEffect(() => {
