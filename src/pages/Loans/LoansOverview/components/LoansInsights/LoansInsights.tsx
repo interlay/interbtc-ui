@@ -134,7 +134,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
                 <TransactionFeeDetails
                   {...transaction.fee.detailsProps}
                   selectProps={{
-                    ...form.getFieldProps(LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD),
+                    ...form.getSelectFieldProps(LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                     modalRef: overlappingModalRef
                   }}
                 />

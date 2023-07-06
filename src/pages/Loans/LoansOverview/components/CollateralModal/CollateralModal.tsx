@@ -142,7 +142,7 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
               <TransactionFeeDetails
                 {...transaction.fee.detailsProps}
                 selectProps={{
-                  ...form.getFieldProps(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
+                  ...form.getSelectFieldProps(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef
                 }}
               />
