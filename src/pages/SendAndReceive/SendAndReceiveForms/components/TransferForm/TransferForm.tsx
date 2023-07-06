@@ -36,7 +36,7 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const { account } = useWallet();
   const prices = useGetPrices();
   const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { getBalance } = useGetBalances();
+  const { getAvailableBalance, getBalanceInputProps } = useGetBalances();
   const { items: selectItems } = useSelectCurrency();
 
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
@@ -45,14 +45,15 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
     onSuccess: () => {
       form.resetForm();
     },
-    prefetchFee: account
-      ? ({
-          args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
-        } as any)
-      : undefined
+    prefetchFee:
+      account && bridgeLoaded
+        ? ({
+            args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
+          } as any)
+        : undefined
   });
 
-  const transferTokenBalance = transferToken && getBalance(transferToken.ticker)?.transferable;
+  const transferTokenBalance = transferToken && getAvailableBalance(transferToken.ticker);
 
   const minAmount = transferToken && newMonetaryAmount(1, transferToken);
 
@@ -148,14 +149,15 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
             <TokenInput
               placeholder='0.00'
               label='Amount'
-              balance={transferTokenBalance?.toString() || 0}
-              humanBalance={transferTokenBalance?.toHuman() || 0}
               valueUSD={transferAmountUSD}
               selectProps={mergeProps(form.getSelectFieldProps(TRANSFER_TOKEN_FIELD, true), {
                 onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, TRANSFER_TOKEN_FIELD),
                 items: selectItems
               })}
-              {...mergeProps(form.getFieldProps(TRANSFER_AMOUNT_FIELD, false, true))}
+              {...mergeProps(
+                form.getFieldProps(TRANSFER_AMOUNT_FIELD, false, true),
+                getBalanceInputProps(transferToken.ticker, transaction.fee.data?.amount)
+              )}
             />
             <Input
               placeholder='Enter recipient account'

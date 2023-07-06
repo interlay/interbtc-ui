@@ -1,4 +1,5 @@
-import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
+import { ChainBalance, CurrencyExt, isCurrencyEqual, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -6,6 +7,7 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { TokenInputProps } from '@/component-library';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -31,7 +33,12 @@ const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Pro
 
 type UseGetBalances = UseQueryResult<BalanceData | undefined> & {
   getBalance: (ticker: string) => ChainBalance | undefined;
-  getAvailableBalance: (ticker: string) => ChainBalance['free'] | undefined;
+  // TODO: make not optional
+  getAvailableBalance: (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => ChainBalance['free'] | undefined;
+  getBalanceInputProps: (
+    ticker: string,
+    feeAmount?: MonetaryAmount<CurrencyExt>
+  ) => Pick<TokenInputProps, 'balance' | 'humanBalance'>;
 };
 
 const getBalancesQueryKey = (accountAddress?: string): string => 'getBalances'.concat(accountAddress || '');
@@ -54,9 +61,42 @@ const useGetBalances = (): UseGetBalances => {
 
   const getBalance = useCallback((ticker: string) => data?.[ticker], [data]);
 
-  const getAvailableBalance = useCallback((ticker: string) => getBalance(ticker)?.transferable, [getBalance]);
+  const getAvailableBalance = useCallback(
+    (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => {
+      const balance = getBalance(ticker)?.transferable;
 
-  return { ...queryResult, getBalance, getAvailableBalance };
+      if (!feeAmount) {
+        return balance;
+      }
+
+      if (!balance) {
+        return undefined;
+      }
+
+      const isBalanceAndFeeSameCurrency = isCurrencyEqual(balance.currency, feeAmount.currency);
+
+      if (!isBalanceAndFeeSameCurrency) {
+        return balance;
+      }
+
+      return balance.gte(feeAmount) ? balance.sub(feeAmount) : newMonetaryAmount(0, balance.currency);
+    },
+    [getBalance]
+  );
+
+  const getBalanceInputProps = useCallback(
+    (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => {
+      const balance = getAvailableBalance(ticker, feeAmount);
+
+      return {
+        balance: balance?.toString() || 0,
+        humanBalance: balance?.toHuman() || 0
+      };
+    },
+    [getAvailableBalance]
+  );
+
+  return { ...queryResult, getBalance, getAvailableBalance, getBalanceInputProps };
 };
 
 export { getBalancesQueryKey, useGetBalances };

@@ -4,8 +4,10 @@ import { mergeProps } from '@react-aria/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { MutationFunction, useMutation } from 'react-query';
+import { useSelector } from 'react-redux';
 import { useInterval } from 'react-use';
 
+import { StoreType } from '@/common/types/util.types';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useSubstrate } from '@/lib/substrate';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
@@ -62,9 +64,10 @@ function useTransaction<T extends Transaction>(
   typeOrOptions?: T | UseTransactionOptions<T>,
   options?: UseTransactionOptions<T>
 ): UseTransactionResult<T> {
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { state } = useSubstrate();
   const { data: pools } = useGetLiquidityPools();
-  const { getCurrencyFromTicker } = useGetCurrencies(true);
+  const { data, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
   const { getBalance } = useGetBalances();
 
   const [isSigned, setSigned] = useState(false);
@@ -121,14 +124,13 @@ function useTransaction<T extends Transaction>(
   const handleSetCurrency = (ticker?: string) => ({ estimate: handleEstimateFee(ticker) });
 
   useEffect(() => {
-    if (feeMutation.data || !prefetchFee) return;
-
+    if (feeMutation.data || !prefetchFee || !bridgeLoaded || !data) return;
     const type = (prefetchFee as UseTransactionOptionsWithType<T>['prefetchFee'])?.type || typeOrOptions;
 
     const params = getParams(prefetchFee.args, type, customStatus);
 
     feeMutate({ params, ticker: defaultFeeCurrency.ticker });
-  }, []);
+  }, [bridgeLoaded, data]);
 
   // Re-estimate fee based on latest stored variables
   useInterval(() => {
