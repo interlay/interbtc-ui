@@ -46,7 +46,7 @@ const PoolApyCell = ({ pool, prices, totalLiquidityUSD, onClick }: PoolApyCellPr
   const label = (
     <ApyDetails>
       <ApyDetailsGroup title={t('apr_breakdown')}>
-        <ApyDetailsGroupItem label='Base APR' value={baseAprLabel} />
+        <ApyDetailsGroupItem label={t('amm.pools.trading_fee_apr')} value={baseAprLabel} />
         {hasRewards && (
           <ApyDetailsGroupItem
             label={t('rewards_apr_ticker', { ticker: GOVERNANCE_TOKEN.ticker })}

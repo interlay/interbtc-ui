@@ -603,7 +603,8 @@
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
-      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please."
+      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please.",
+      "trading_fee_apr": "Trading Fee APR"
     },
     "swap": "Swap",
     "select_token": "Select Token",
