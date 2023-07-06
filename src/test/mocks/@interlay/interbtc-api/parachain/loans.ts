@@ -1,4 +1,5 @@
 import {
+  AccruedRewards,
   BorrowPosition,
   CollateralPosition,
   LendingStats,
@@ -226,10 +227,9 @@ const LTV_THRESHOLD = {
   liquidationThresholdWeightedAverage: THRESOLD.HIGH
 };
 
-const LENDING_STATS: LendingStats = {
+const COMMON_STATS = {
   collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
   liquidationThresholdWeightedAverage: THRESOLD.HIGH,
-  ltv: THRESOLD.MIN,
   totalLentBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
   borrowLimitBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
   totalBorrowedBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY,
@@ -238,7 +238,54 @@ const LENDING_STATS: LendingStats = {
   calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.LARGE.MONETARY)
 };
 
-const DATA = { LTV_THRESHOLD, ASSETS, INACTIVE_ASSETS, LOAN_POSITIONS, WRAPPED_LOAN, GOVERNANCE_LOAN, LENDING_STATS };
+const LENDING_STATS: Record<'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV', LendingStats> = {
+  LOW_LTV: {
+    ...COMMON_STATS,
+    ltv: THRESOLD.MIN
+  },
+  MEDIUM_LTV: {
+    ...COMMON_STATS,
+    ltv: THRESOLD.MEDIUM
+  },
+  HIGH_LTV: {
+    ...COMMON_STATS,
+    ltv: THRESOLD.HIGH
+  }
+};
+
+const ACCOUNT_REWARDS: Record<'EMPTY' | 'FULL', AccruedRewards> = {
+  EMPTY: {
+    perMarket: {
+      [WRAPPED_ASSET.currency.ticker]: { lend: null, borrow: null },
+      [GOVERNANCE_ASSET.currency.ticker]: { lend: null, borrow: null }
+    },
+    total: newMonetaryAmount(0, GOVERNANCE_TOKEN)
+  },
+  FULL: {
+    perMarket: {
+      [WRAPPED_ASSET.currency.ticker]: {
+        lend: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
+        borrow: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY
+      },
+      [GOVERNANCE_ASSET.currency.ticker]: {
+        lend: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
+        borrow: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY
+      }
+    },
+    total: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY
+  }
+};
+
+const DATA = {
+  LTV_THRESHOLD,
+  ASSETS,
+  INACTIVE_ASSETS,
+  LOAN_POSITIONS,
+  WRAPPED_LOAN,
+  GOVERNANCE_LOAN,
+  LENDING_STATS,
+  ACCOUNT_REWARDS
+};
 
 const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   lend: jest.fn(),
@@ -251,10 +298,10 @@ const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   disableAsCollateral: jest.fn(),
   enableAsCollateral: jest.fn(),
   liquidateBorrowPosition: jest.fn(),
-  getAccruedRewardsOfAccount: jest.fn(),
+  getAccruedRewardsOfAccount: jest.fn().mockResolvedValue(ACCOUNT_REWARDS.EMPTY),
   getBorrowerAccountIds: jest.fn(),
   getBorrowPositionsOfAccount: jest.fn().mockResolvedValue(LOAN_POSITIONS.BORROW.EMPTY),
-  getLendingStats: jest.fn().mockResolvedValue(LENDING_STATS),
+  getLendingStats: jest.fn().mockResolvedValue(LENDING_STATS.LOW_LTV),
   getLendPositionsOfAccount: jest.fn().mockResolvedValue(LOAN_POSITIONS.LEND.EMPTY),
   getLendTokenExchangeRates: jest.fn(),
   getLendTokens: jest.fn().mockResolvedValue([]),
