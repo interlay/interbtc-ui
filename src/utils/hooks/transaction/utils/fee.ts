@@ -41,6 +41,8 @@ const getOptimalTradeForTxFeeSwap = (
   return trade;
 };
 
+// NOTE: This function assumes that there is existing swap path between feeCurrency and
+// native fee currency
 const getTxFeeSwapData = async (
   nativeTxFee: MonetaryAmount<CurrencyExt>,
   feeCurrency: CurrencyExt,
@@ -50,9 +52,8 @@ const getTxFeeSwapData = async (
   // First we construct reverse direction trade to get estimated swap path and amount
   const reverseDirectionTrade = window.bridge.amm.getOptimalTrade(nativeTxFee, feeCurrency, pools);
   if (reverseDirectionTrade === null) {
-    throw new Error(
-      `Not possible to exchange ${feeCurrency.name} for ${nativeTxFee.currency.name}: trade path not found.`
-    );
+    // If the trade is not found it means the input amount is too small - multiply it by 10 and repeat calculation.
+    return getTxFeeSwapData(nativeTxFee.mul(10), feeCurrency, baseExtrinsic, pools);
   }
   // Final native token transaction fee is estimated for base extrinsic wrapped in multiTransactionPayment call.
   // NOTE: We assume here the reverse direction trade has similar weight.
