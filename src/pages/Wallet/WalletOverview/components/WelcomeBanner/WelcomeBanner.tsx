@@ -4,6 +4,7 @@ import { Flex } from '@/component-library';
 import { INTERLAY_GET_ASSETS_LINK, INTERLAY_WHITEPAPPER } from '@/config/links';
 import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES } from '@/utils/constants/links';
+import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 
 import {
   StyledCard,
@@ -24,6 +25,7 @@ type WelcomeBannerProps = {
 
 const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
   const { t } = useTranslation();
+  const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
 
   return (
     <StyledCard direction='row' gap='spacing4' justifyContent='space-between' alignItems='center'>
@@ -46,9 +48,11 @@ const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
           <StyledCTALink fullWidth external icon to={INTERLAY_GET_ASSETS_LINK}>
             Fund Wallet Guide
           </StyledCTALink>
-          <StyledCTALink fullWidth to={PAGES.ONBOARDING}>
-            Tutorial
-          </StyledCTALink>
+          {isOnboardingEnabled && (
+            <StyledCTALink fullWidth to={PAGES.ONBOARDING}>
+              Tutorial
+            </StyledCTALink>
+          )}
         </StyledCTAGroup>
       </StyledTextWrapper>
       <StyledImageWrapper>

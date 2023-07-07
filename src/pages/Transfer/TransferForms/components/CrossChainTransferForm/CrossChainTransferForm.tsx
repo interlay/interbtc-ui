@@ -28,7 +28,7 @@ import {
   useForm
 } from '@/lib/form';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import { Chains } from '@/types/chains';
+import { ChainData, Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -90,8 +90,12 @@ const CrossChainTransferForm = (): JSX.Element => {
       true
     );
 
-    const fromChain = formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName;
-    const toChain = formData[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName;
+    const fromChain = originatingChains?.find(
+      (chain) => chain.id === formData[CROSS_CHAIN_TRANSFER_FROM_FIELD]
+    ) as ChainData;
+    const toChain = destinationChains.find(
+      (chain) => chain.id === formData[CROSS_CHAIN_TRANSFER_TO_FIELD]
+    ) as ChainData;
 
     transaction.execute(adapter, fromChain, toChain, address, transferAmount);
   };
@@ -216,7 +220,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             items={originatingChains}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
+            {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
               onSelectionChange: (key: Key) => handleOriginatingChainChange(key as ChainName)
             })}
           />
@@ -224,7 +228,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <ChainSelect
             label='Destination Chain'
             items={destinationChains}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
+            {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onSelectionChange: (key: Key) => handleDestinationChainChange(key as ChainName)
             })}
           />
@@ -236,7 +240,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
-            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
+            selectProps={mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
               onSelectionChange: (ticker: Key) =>
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
@@ -247,7 +251,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <AccountSelect
           label='Destination'
           accounts={accounts}
-          {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false), {
+          {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false), {
             onChange: handleDestinationAccountChange
           })}
         />

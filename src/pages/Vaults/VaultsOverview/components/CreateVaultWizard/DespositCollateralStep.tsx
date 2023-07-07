@@ -123,7 +123,7 @@ const DepositCollateralStep = ({
           <TransactionFeeDetails
             {...transaction.fee.detailsProps}
             selectProps={{
-              ...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD),
+              ...form.getSelectFieldProps(VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD),
               modalRef: overlappingModalRef
             }}
           />

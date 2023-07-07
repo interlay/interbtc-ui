@@ -68,9 +68,11 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
 
   // Doing this call on mount so that the form becomes dirty
   useEffect(() => {
+    if (!isOpen) return;
+
     form.setFieldValue(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOpen]);
 
   const handleCloseModal = () => setOpen(false);
 
@@ -154,7 +156,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
               <TransactionFeeDetails
                 {...transaction.fee.detailsProps}
                 selectProps={{
-                  ...form.getFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
+                  ...form.getSelectFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef
                 }}
               />

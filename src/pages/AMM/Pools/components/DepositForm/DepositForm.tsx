@@ -181,7 +181,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
                     valueUSD={new Big(isNaN(Number(form.values[ticker])) ? 0 : form.values[ticker] || 0)
                       .mul(getTokenPrice(prices, ticker)?.usd || 0)
                       .toNumber()}
-                    {...mergeProps(form.getFieldProps(ticker, false, true), { onChange: handleChange })}
+                    {...mergeProps(form.getFieldProps(ticker, false, false), { onChange: handleChange })}
                   />
                   {!isLastItem && <StyledPlusDivider marginTop='spacing5' />}
                 </Fragment>
@@ -198,7 +198,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
               {...transaction.fee.detailsProps}
-              selectProps={{ ...form.getFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+              selectProps={{ ...form.getSelectFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
             />
             <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
               {t('amm.pools.add_liquidity')}
