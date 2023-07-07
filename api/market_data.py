@@ -16,11 +16,13 @@ tickers = {
 # map coingecko ids to dia ids
 dia_assets = {
     "bitcoin": "/Bitcoin/0x0000000000000000000000000000000000000000",
+    "ethereum": "/Ethereum/0x0000000000000000000000000000000000000000",
     "interlay": "/Interlay/0x0000000000000000000000000000000000000000",
     "polkadot": "/Polkadot/0x0000000000000000000000000000000000000000",
     "kusama": "/Kusama/0x0000000000000000000000000000000000000000",
     "kintsugi": "/Kintsugi/Token:KINT",
     "acala-dollar": "/Acala/Token:AUSD",
+    "karura": "/Bifrost/518",
     "tether": "/Ethereum/0xdAC17F958D2ee523a2206206994597C13D831ec7"
 }
 
