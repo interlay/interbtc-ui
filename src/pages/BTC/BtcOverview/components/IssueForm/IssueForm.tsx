@@ -22,7 +22,7 @@ import {
   BTC_ISSUE_CUSTOM_VAULT_SWITCH,
   BTC_ISSUE_FEE_TOKEN,
   BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN,
-  BtcIssueFormData,
+  BTCIssueFormData,
   btcIssueSchema,
   useForm
 } from '@/lib/form';
@@ -94,7 +94,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     minAmount: dustValue
   };
 
-  const handleSubmit = async (values: BtcIssueFormData) => {
+  const handleSubmit = async (values: BTCIssueFormData) => {
     const args = getTransactionArgs(values);
 
     if (!args) return;
@@ -103,7 +103,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   };
 
   const getTransactionArgs = useCallback(
-    (values: BtcIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
+    (values: BTCIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
       const amount = values[BTC_ISSUE_AMOUNT_FIELD];
       const griefingCollateralCurrencyTicker = values[BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN];
       if (!vaultsData || !amount || griefingCollateralCurrencyTicker === undefined || isLoadingCurrencies) return;
@@ -141,7 +141,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     [getAvailableVaults, getCurrencyFromTicker, isLoadingCurrencies, vaultsData]
   );
 
-  const form = useForm<BtcIssueFormData>({
+  const form = useForm<BTCIssueFormData>({
     initialValues: {
       [BTC_ISSUE_AMOUNT_FIELD]: '',
       [BTC_ISSUE_CUSTOM_VAULT_FIELD]: '',

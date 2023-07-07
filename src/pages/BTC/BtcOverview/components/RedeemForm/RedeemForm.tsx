@@ -21,7 +21,7 @@ import {
   BTC_REDEEM_CUSTOM_VAULT_SWITCH,
   BTC_REDEEM_FEE_TOKEN,
   BTC_REDEEM_PREMIUM_VAULT_FIELD,
-  BtcRedeemFormData,
+  BTCRedeemFormData,
   btcRedeemSchema,
   useForm
 } from '@/lib/form';
@@ -114,7 +114,7 @@ const RedeemForm = ({
   const redeemBalance = assetBalance.gt(currentRequestLimit) ? currentRequestLimit : assetBalance;
 
   const getTransactionArgs = useCallback(
-    (values: BtcRedeemFormData): TransactionArgs<Transaction.REDEEM_REQUEST> | undefined => {
+    (values: BTCRedeemFormData): TransactionArgs<Transaction.REDEEM_REQUEST> | undefined => {
       const amount = values[BTC_REDEEM_AMOUNT_FIELD];
       const btcAddress = values[BTC_REDEEM_ADDRESS];
 
@@ -147,7 +147,7 @@ const RedeemForm = ({
     [vaultsData, getAvailableVaults]
   );
 
-  const handleSubmit = async (values: BtcRedeemFormData) => {
+  const handleSubmit = async (values: BTCRedeemFormData) => {
     const args = getTransactionArgs(values);
 
     if (!args) return;
@@ -169,7 +169,7 @@ const RedeemForm = ({
     minAmount
   };
 
-  const form = useForm<BtcRedeemFormData>({
+  const form = useForm<BTCRedeemFormData>({
     initialValues: {
       [BTC_REDEEM_AMOUNT_FIELD]: '',
       [BTC_REDEEM_CUSTOM_VAULT_FIELD]: '',

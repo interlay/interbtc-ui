@@ -8,7 +8,7 @@ const BTC_ISSUE_CUSTOM_VAULT_SWITCH = 'issue-custom-vault-switch';
 const BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN = 'issue-griefing-collateral-token';
 const BTC_ISSUE_FEE_TOKEN = 'issue-fee-token';
 
-type BtcIssueFormData = {
+type BTCIssueFormData = {
   [BTC_ISSUE_AMOUNT_FIELD]?: string;
   [BTC_ISSUE_CUSTOM_VAULT_FIELD]?: string;
   [BTC_ISSUE_CUSTOM_VAULT_SWITCH]?: boolean;
@@ -16,11 +16,11 @@ type BtcIssueFormData = {
   [BTC_ISSUE_FEE_TOKEN]?: string;
 };
 
-type BtcIssueValidationParams = {
+type BTCIssueValidationParams = {
   [BTC_ISSUE_AMOUNT_FIELD]: MaxAmountValidationParams & MinAmountValidationParams;
 };
 
-const btcIssueSchema = (params: BtcIssueValidationParams): yup.ObjectSchema<any> =>
+const btcIssueSchema = (params: BTCIssueValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
     [BTC_ISSUE_AMOUNT_FIELD]: yup
       .string()
@@ -49,7 +49,7 @@ const BTC_REDEEM_PREMIUM_VAULT_FIELD = 'redeem-premium-vault';
 const BTC_REDEEM_ADDRESS = 'redeem-address';
 const BTC_REDEEM_FEE_TOKEN = 'redeem-fee-token';
 
-type BtcRedeemFormData = {
+type BTCRedeemFormData = {
   [BTC_REDEEM_AMOUNT_FIELD]?: string;
   [BTC_REDEEM_CUSTOM_VAULT_FIELD]?: string;
   [BTC_REDEEM_CUSTOM_VAULT_SWITCH]?: boolean;
@@ -58,11 +58,11 @@ type BtcRedeemFormData = {
   [BTC_REDEEM_FEE_TOKEN]?: string;
 };
 
-type BtcRedeemValidationParams = {
+type BTCRedeemValidationParams = {
   [BTC_REDEEM_AMOUNT_FIELD]: MaxAmountValidationParams & MinAmountValidationParams;
 };
 
-const btcRedeemSchema = (params: BtcRedeemValidationParams): yup.ObjectSchema<any> =>
+const btcRedeemSchema = (params: BTCRedeemValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
     [BTC_REDEEM_AMOUNT_FIELD]: yup
       .string()
@@ -102,4 +102,4 @@ export {
   btcIssueSchema,
   btcRedeemSchema
 };
-export type { BtcIssueFormData, BtcRedeemFormData };
+export type { BTCIssueFormData, BTCRedeemFormData };
