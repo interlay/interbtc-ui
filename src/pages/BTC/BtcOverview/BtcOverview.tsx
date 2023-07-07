@@ -8,7 +8,7 @@ import { useGetMaxBurnableTokens } from '@/utils/hooks/api/bridge/use-get-max-bu
 import { useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
-import { StyledCard, StyledFormWrapper, StyledWrapper } from './BtcOverview.styles';
+import { StyledCard, StyledFormWrapper, StyledWrapper } from './BTCOverview.styles';
 import { IssueForm, LegacyBurnForm, LegacyTransactions, RedeemForm } from './components';
 
 const BtcOverview = (): JSX.Element => {

@@ -26,7 +26,7 @@ import * as constants from './constants';
 import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
-const Btc = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Btc'));
+const BTC = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
@@ -185,7 +185,7 @@ const App = (): JSX.Element => {
                     <TX />
                   </Route>
                   <Route path={PAGES.BTC}>
-                    <Btc />
+                    <BTC />
                   </Route>
                   <Route path={PAGES.SEND_AND_RECEIVE}>
                     <SendAndReceive />
