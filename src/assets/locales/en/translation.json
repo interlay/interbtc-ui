@@ -75,9 +75,9 @@
   "locked_btc": "Locked BTC",
   "issue": "Issue",
   "redeem": "Redeem",
-  "nav_bridge": "Bridge",
+  "nav_btc": "BTC",
   "nav_strategies": "Strategies",
-  "nav_transfer": "Transfer / Bridge",
+  "nav_send_and_receive": "Send and Receive",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
   "nav_pools": "Pools",
@@ -726,7 +726,7 @@
     "claiming_vesting": "Claiming vesting",
     "claimed_vesting": "Claimed vesting"
   },
-  "bridge": {
+  "btc": {
     "max_issuable": "Max issuable",
     "max_redeemable": "Max redeemable",
     "in_single_request": "In single request",

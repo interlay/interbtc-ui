@@ -100,7 +100,7 @@ describe('Wallet Page', () => {
 
       userEvent.click(row.getByRole('link', { name: /issue/i }));
 
-      expect(history.location.pathname).toBe(PAGES.BRIDGE);
+      expect(history.location.pathname).toBe(PAGES.BTC);
       expect(history.location.search).toMatch(`${QUERY_PARAMETERS.TAB}=issue`);
     });
 

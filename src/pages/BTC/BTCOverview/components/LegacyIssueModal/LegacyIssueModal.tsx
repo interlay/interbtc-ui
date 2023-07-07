@@ -16,11 +16,7 @@ interface CustomProps {
   request: Issue;
 }
 
-const SubmittedIssueRequestModal = ({
-  open,
-  onClose,
-  request
-}: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
+const LegacyIssueModal = ({ open, onClose, request }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -51,4 +47,4 @@ const SubmittedIssueRequestModal = ({
   );
 };
 
-export default SubmittedIssueRequestModal;
+export { LegacyIssueModal };
