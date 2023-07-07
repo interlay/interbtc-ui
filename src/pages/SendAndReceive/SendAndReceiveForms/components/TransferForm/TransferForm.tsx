@@ -42,7 +42,6 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
 
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
-    enablePreEstimate: !!account,
     preEstimate: account && {
       args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
     },

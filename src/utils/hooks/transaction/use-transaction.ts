@@ -20,6 +20,7 @@ import { Transaction, TransactionActions } from './types';
 import {
   EstimateFeeVariables,
   FeeEstimateResult,
+  PreEstimateVariablesWithType,
   TransactionResult,
   UseTransactionOptions,
   UseTransactionOptionsWithoutType,
@@ -75,6 +76,8 @@ function useTransaction<T extends Transaction>(
   const { showSuccessModal, customStatus, preEstimate, enablePreEstimate, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
 
+  const feeResultRef = useRef<FeeEstimateResult>();
+
   const mutateFee: (
     pools: Array<LiquidityPool>
   ) => MutationFunction<FeeEstimateResult, EstimateFeeVariables> = useCallback(
@@ -88,17 +91,24 @@ function useTransaction<T extends Transaction>(
 
       const amount = await estimateTransactionFee(currency, pools || [], params);
 
-      return {
+      const result = {
         amount,
         isValid: !!availableBalance && !!amount && availableBalance.gte(amount)
       };
+
+      feeResultRef.current = result;
+
+      return result;
     },
     [getBalance]
   );
 
-  const { mutate: feeMutate, ...feeMutation } = useMutation<FeeEstimateResult, Error, EstimateFeeVariables, unknown>(
-    mutateFee(pools || [])
-  );
+  const { mutate: feeMutate, data, ...feeMutation } = useMutation<
+    FeeEstimateResult,
+    Error,
+    EstimateFeeVariables,
+    unknown
+  >(mutateFee(pools || []));
 
   useErrorHandler(feeMutation.error);
 
@@ -125,7 +135,7 @@ function useTransaction<T extends Transaction>(
 
       if (!estimateArgs) return;
 
-      const type = (estimateArgs as any)?.type || typeOrOptions;
+      const type = (estimateArgs as PreEstimateVariablesWithType<T>)?.type || typeOrOptions;
 
       const params = getParams(estimateArgs.args, type, customStatus);
 
@@ -138,19 +148,18 @@ function useTransaction<T extends Transaction>(
 
     const isReady = currencies && balances;
 
-    const shouldEstimate = !feeMutation.data && feeMutation.isIdle && enablePreEstimate;
+    if (!isReady) return;
 
-    if (!isReady || !shouldEstimate || !preEstimate) return;
-
-    estimate();
+    if (!data && preEstimate && enablePreEstimate) {
+      estimate();
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currencies, balances, enablePreEstimate, preEstimate]);
+  }, [currencies, balances, enablePreEstimate]);
 
   // Re-estimate fee based on latest stored variables
   useInterval(() => {
     if (!estimateFeeVariablesRef.current || feeMutation.isLoading) return;
-
     feeMutate(estimateFeeVariablesRef.current);
   }, REFETCH_INTERVAL.MINUTE);
 
@@ -166,7 +175,7 @@ function useTransaction<T extends Transaction>(
   );
 
   const { mutate, mutateAsync, ...transactionMutation } = useMutation(
-    mutateTransaction(feeMutation.data?.amount, pools || []),
+    mutateTransaction(data?.amount, pools || []),
     optionsProp
   );
 
@@ -235,6 +244,8 @@ function useTransaction<T extends Transaction>(
     feeMutate(variables);
   };
 
+  const feeData = data || feeResultRef.current;
+
   return {
     ...transactionMutation,
     reject: handleReject,
@@ -242,14 +253,15 @@ function useTransaction<T extends Transaction>(
     executeAsync: handleExecuteAsync,
     fee: {
       ...feeMutation,
+      data: feeData,
       defaultCurrency: defaultFeeCurrency,
       estimate: handleEstimateFee(),
       setCurrency: handleSetCurrency,
       detailsProps: {
         currency: feeCurrency,
-        amount: feeMutation.data?.amount,
+        amount: feeData?.amount,
         // could possible be undefined, so we want to check for that
-        showInsufficientBalance: feeMutation.data?.isValid === false,
+        showInsufficientBalance: feeData?.isValid === false,
         onSelectionChange: handleFeeSelectionChange
       }
     }

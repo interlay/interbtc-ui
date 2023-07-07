@@ -36,7 +36,7 @@ type UseGetBalances = UseQueryResult<BalanceData | undefined> & {
   // TODO: make not optional
   getAvailableBalance: (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => ChainBalance['free'] | undefined;
   getBalanceInputProps: (
-    ticker: string,
+    ticker?: string,
     feeAmount?: MonetaryAmount<CurrencyExt>
   ) => Pick<TokenInputProps, 'balance' | 'humanBalance'>;
 };
@@ -85,12 +85,12 @@ const useGetBalances = (): UseGetBalances => {
   );
 
   const getBalanceInputProps = useCallback(
-    (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => {
-      const balance = getAvailableBalance(ticker, feeAmount);
+    (ticker?: string, feeAmount?: MonetaryAmount<CurrencyExt>) => {
+      const balance = ticker && getAvailableBalance(ticker, feeAmount);
 
       return {
-        balance: balance?.toString() || 0,
-        humanBalance: balance?.toHuman() || 0
+        balance: balance ? balance.toString() : 0,
+        humanBalance: balance ? balance.toHuman() : 0
       };
     },
     [getAvailableBalance]
