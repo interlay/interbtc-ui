@@ -272,7 +272,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
           )}
           <TransactionFeeDetails
             {...transaction.fee.detailsProps}
-            selectProps={{ ...form.getFieldProps(LOAN_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+            selectProps={{ ...form.getSelectFieldProps(LOAN_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
           />
           <AuthCTA type='submit' disabled={isBtnDisabled} size='large'>
             {content.title}

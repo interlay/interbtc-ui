@@ -198,7 +198,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
               {...transaction.fee.detailsProps}
-              selectProps={{ ...form.getFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+              selectProps={{ ...form.getSelectFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
             />
             <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
               {t('amm.pools.add_liquidity')}
