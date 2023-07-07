@@ -17,13 +17,13 @@ import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
-  BRIDGE_ISSUE_AMOUNT_FIELD,
-  BRIDGE_ISSUE_CUSTOM_VAULT_FIELD,
-  BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH,
-  BRIDGE_ISSUE_FEE_TOKEN,
-  BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN,
-  BridgeIssueFormData,
-  bridgeIssueSchema,
+  BTC_ISSUE_AMOUNT_FIELD,
+  BTC_ISSUE_CUSTOM_VAULT_FIELD,
+  BTC_ISSUE_CUSTOM_VAULT_SWITCH,
+  BTC_ISSUE_FEE_TOKEN,
+  BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN,
+  BtcIssueFormData,
+  btcIssueSchema,
   useForm
 } from '@/lib/form';
 import { BridgeActions } from '@/types/bridge';
@@ -94,7 +94,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     minAmount: dustValue
   };
 
-  const handleSubmit = async (values: BridgeIssueFormData) => {
+  const handleSubmit = async (values: BtcIssueFormData) => {
     const args = getTransactionArgs(values);
 
     if (!args) return;
@@ -103,9 +103,9 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   };
 
   const getTransactionArgs = useCallback(
-    (values: BridgeIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
-      const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD];
-      const griefingCollateralCurrencyTicker = values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
+    (values: BtcIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
+      const amount = values[BTC_ISSUE_AMOUNT_FIELD];
+      const griefingCollateralCurrencyTicker = values[BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN];
       if (!vaultsData || !amount || griefingCollateralCurrencyTicker === undefined || isLoadingCurrencies) return;
 
       const monetaryAmount = new BitcoinAmount(amount);
@@ -114,7 +114,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
       if (!availableVaults) return;
 
-      const vaultId = values[BRIDGE_ISSUE_CUSTOM_VAULT_FIELD];
+      const vaultId = values[BTC_ISSUE_CUSTOM_VAULT_FIELD];
 
       let vault: BridgeVaultData | undefined;
 
@@ -141,16 +141,16 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     [getAvailableVaults, getCurrencyFromTicker, isLoadingCurrencies, vaultsData]
   );
 
-  const form = useForm<BridgeIssueFormData>({
+  const form = useForm<BtcIssueFormData>({
     initialValues: {
-      [BRIDGE_ISSUE_AMOUNT_FIELD]: '',
-      [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]: '',
-      [BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH]: false,
-      [BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN]: GOVERNANCE_TOKEN.ticker,
-      [BRIDGE_ISSUE_FEE_TOKEN]: transaction.fee.defaultCurrency.ticker
+      [BTC_ISSUE_AMOUNT_FIELD]: '',
+      [BTC_ISSUE_CUSTOM_VAULT_FIELD]: '',
+      [BTC_ISSUE_CUSTOM_VAULT_SWITCH]: false,
+      [BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN]: GOVERNANCE_TOKEN.ticker,
+      [BTC_ISSUE_FEE_TOKEN]: transaction.fee.defaultCurrency.ticker
     },
     validateOnChange: true,
-    validationSchema: bridgeIssueSchema({ [BRIDGE_ISSUE_AMOUNT_FIELD]: transferAmountSchemaParams }),
+    validationSchema: btcIssueSchema({ [BTC_ISSUE_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
     hideErrorMessages: transaction.isLoading,
     onComplete: (values) => {
@@ -158,13 +158,13 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
       if (!args) return;
 
-      const feeTicker = values[BRIDGE_ISSUE_FEE_TOKEN];
+      const feeTicker = values[BTC_ISSUE_FEE_TOKEN];
 
       transaction.fee.setCurrency(feeTicker).estimate(...args);
     }
   });
 
-  const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
+  const griefingCollateralTicker = form.values[BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN];
 
   useEffect(() => {
     const computeSecurityDeposit = async () => {
@@ -181,8 +181,8 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
-      form.setFieldTouched(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, false, true);
-      form.setFieldValue(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, '', true);
+      form.setFieldTouched(BTC_ISSUE_CUSTOM_VAULT_FIELD, false, true);
+      form.setFieldValue(BTC_ISSUE_CUSTOM_VAULT_FIELD, '', true);
 
       setSelectedVault(undefined);
     }
@@ -210,7 +210,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const isSelectingVault = form.values[BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH];
+  const isSelectingVault = form.values[BTC_ISSUE_CUSTOM_VAULT_SWITCH];
 
   const griefingCollateralCurrencyBalance = griefingCollateralTicker
     ? getAvailableBalance(griefingCollateralTicker)
@@ -247,18 +247,18 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 label={t('amount')}
                 ticker='BTC'
                 valueUSD={monetaryAmountUSD}
-                {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD, false, true), {
+                {...mergeProps(form.getFieldProps(BTC_ISSUE_AMOUNT_FIELD, false, true), {
                   onChange: handleChangeIssueAmount
                 })}
               />
               <SelectVaultCard
                 isSelectingVault={isSelectingVault}
                 vaults={vaults}
-                switchProps={mergeProps(form.getFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH), {
+                switchProps={mergeProps(form.getFieldProps(BTC_ISSUE_CUSTOM_VAULT_SWITCH), {
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  ...mergeProps(form.getSelectFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, false, true), {
+                  ...mergeProps(form.getSelectFieldProps(BTC_ISSUE_CUSTOM_VAULT_FIELD, false, true), {
                     onSelectionChange: handleVaultSelectionChange
                   })
                 }}
@@ -271,11 +271,11 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
-                securityDepositSelectProps={form.getSelectFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
+                securityDepositSelectProps={form.getSelectFieldProps(BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
                 showInsufficientSecurityBalance={!hasEnoughGriefingCollateralBalance}
                 feeDetailsProps={{
                   ...transaction.fee.detailsProps,
-                  selectProps: form.getSelectFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)
+                  selectProps: form.getSelectFieldProps(BTC_ISSUE_FEE_TOKEN, true)
                 }}
               />
               <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>

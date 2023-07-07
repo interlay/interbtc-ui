@@ -1,4 +1,4 @@
-export * from './bridge';
+export * from './btc';
 export * from './loans';
 export * from './pools';
 export * from './strategy';
