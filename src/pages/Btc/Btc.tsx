@@ -2,13 +2,13 @@ import { withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 
-import BridgeOverview from './BridgeOverview';
+import BtcOverview from './BtcOverview';
 
-const Bridge = (): JSX.Element => {
-  return <BridgeOverview />;
+const Btc = (): JSX.Element => {
+  return <BtcOverview />;
 };
 
-export default withErrorBoundary(Bridge, {
+export default withErrorBoundary(Btc, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

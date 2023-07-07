@@ -8,10 +8,10 @@ import { useGetMaxBurnableTokens } from '@/utils/hooks/api/bridge/use-get-max-bu
 import { useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
-import { StyledCard, StyledFormWrapper, StyledWrapper } from './BridgeOverview.styles';
+import { StyledCard, StyledFormWrapper, StyledWrapper } from './BtcOverview.styles';
 import { IssueForm, LegacyBurnForm, LegacyTransactions, RedeemForm } from './components';
 
-const BridgeOverview = (): JSX.Element => {
+const BtcOverview = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
 
   const { defaultSelectedKey } = tabsProps;
@@ -59,4 +59,4 @@ const BridgeOverview = (): JSX.Element => {
   );
 };
 
-export default BridgeOverview;
+export default BtcOverview;

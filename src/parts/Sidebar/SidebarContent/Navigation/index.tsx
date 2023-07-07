@@ -80,8 +80,8 @@ const Navigation = ({
         disabled: !isStrategiesEnabled
       },
       {
-        name: `${WRAPPED_TOKEN_SYMBOL}`,
-        link: PAGES.BRIDGE,
+        name: `nav_btc`,
+        link: PAGES.BTC,
         icon: ArrowPathIcon,
         hidden: false
       },

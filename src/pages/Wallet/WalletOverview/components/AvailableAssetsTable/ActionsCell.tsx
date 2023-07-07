@@ -54,7 +54,7 @@ const ActionsCell = ({
           <CTALink
             {...commonCTAProps}
             to={{
-              pathname: PAGES.BRIDGE,
+              pathname: PAGES.BTC,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.TAB]: 'issue'
               })
@@ -67,7 +67,7 @@ const ActionsCell = ({
           <CTALink
             {...commonCTAProps}
             to={{
-              pathname: PAGES.BRIDGE,
+              pathname: PAGES.BTC,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.TAB]: 'redeem'
               })

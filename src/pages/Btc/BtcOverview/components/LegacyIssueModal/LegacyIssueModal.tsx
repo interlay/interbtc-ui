@@ -32,7 +32,7 @@ const LegacyIssueModal = ({ open, onClose, request }: CustomProps & Omit<ModalPr
       <ModalFooter>
         <InterlayRouterLink
           to={{
-            pathname: PAGES.BRIDGE,
+            pathname: PAGES.BTC,
             search: queryString.stringify({
               [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: request.id
             })
