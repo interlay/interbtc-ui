@@ -10,7 +10,7 @@ import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import { SlippageManager, TransactionFeeDetails } from '@/components';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   SWAP_FEE_TOKEN_FIELD,
   SWAP_INPUT_AMOUNT_FIELD,
@@ -114,7 +114,35 @@ const SwapForm = ({
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const selectCurrency = useSelectCurrency();
 
+  // const preEstimate = useMemo(async () => {
+  //   const inputMonetaryAmount = newMonetaryAmount(1, GOVERNANCE_TOKEN, true);
+
+  //   const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, WRAPPED_TOKEN, liquidityPools);
+
+  //   if (!trade || !accountId) return;
+
+  //   const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
+
+  //   const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+
+  //   return { args: [trade, minimumAmountOut, accountId, deadline] };
+  // }, [accountId]);
+
   const transaction = useTransaction(Transaction.AMM_SWAP, {
+    preEstimate: async () => {
+      const inputMonetaryAmount = newMonetaryAmount(1, pair.input as any, true);
+
+      const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, WRAPPED_TOKEN, liquidityPools);
+
+      if (!trade || !accountId) return;
+
+      const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
+
+      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+
+      return { args: [trade, minimumAmountOut, accountId, deadline] };
+    },
+    enablePreEstimate: true,
     onSigning: () => {
       setInputAmount(undefined);
       form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);

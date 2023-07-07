@@ -39,10 +39,10 @@ type EstimateTypeArgs<T extends Transaction> = {
 
 type EstimateFunctions<T extends Transaction> = EstimateArgs<T> | EstimateTypeArgs<T>;
 
-type EstimateFeeParams = TransactionActions;
+type EstimateFeeVariables = { params: TransactionActions; currency: CurrencyExt };
 
 type ReactQueryUseFeeEstimateResult = Omit<
-  UseMutationResult<FeeEstimateResult, Error, EstimateFeeParams, unknown>,
+  UseMutationResult<FeeEstimateResult, Error, EstimateFeeVariables, unknown>,
   'mutate' | 'mutateAsync'
 >;
 
@@ -64,13 +64,16 @@ type ReactQueryUseTransactionResult = Omit<
 
 type UseTransactionResult<T extends Transaction> = {
   reject: (error?: Error) => void;
-  isSigned: boolean;
   fee: UseFeeEstimateResult<T>;
 } & ReactQueryUseTransactionResult &
   ExecuteFunctions<T>;
 
-type PrefetchFeeEstimateHanlderWithType<T extends Transaction> = { type: T; args: TransactionArgs<T> };
-type PrefetchFeeEstimateHanlderWithoutType<T extends Transaction> = { args: TransactionArgs<T> };
+type PrefetchFeeEstimateHanlderWithType<T extends Transaction> =
+  | { args: TransactionArgs<T> }
+  | (() => Promise<{ args: TransactionArgs<T> } | undefined>);
+type PrefetchFeeEstimateHanlderWithoutType<T extends Transaction> =
+  | { type: T; args: TransactionArgs<T> }
+  | (() => Promise<{ type: T; args: TransactionArgs<T> } | undefined>);
 
 type UseTransactionOptionsWithType<T extends Transaction> = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
@@ -78,7 +81,8 @@ type UseTransactionOptionsWithType<T extends Transaction> = Omit<
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
-  prefetchFee?: PrefetchFeeEstimateHanlderWithType<T>;
+  enablePreEstimate?: boolean;
+  preEstimate?: PrefetchFeeEstimateHanlderWithType<T>;
   showSuccessModal?: boolean;
 };
 
@@ -88,7 +92,8 @@ type UseTransactionOptionsWithoutType<T extends Transaction> = Omit<
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
-  prefetchFee?: PrefetchFeeEstimateHanlderWithoutType<T>;
+  enablePreEstimate?: boolean;
+  preEstimate?: PrefetchFeeEstimateHanlderWithoutType<T>;
   showSuccessModal?: boolean;
 };
 
@@ -98,7 +103,8 @@ type UseTransactionOptions<T extends Transaction> = Omit<
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
-  prefetchFee?: PrefetchFeeEstimateHanlderWithType<T> | PrefetchFeeEstimateHanlderWithoutType<T>;
+  enablePreEstimate?: boolean;
+  preEstimate?: PrefetchFeeEstimateHanlderWithType<T> | PrefetchFeeEstimateHanlderWithoutType<T>;
   showSuccessModal?: boolean;
 };
 
@@ -118,7 +124,7 @@ type UseTransactionWithoutType<T extends Transaction> = Omit<
 
 export type {
   EstimateArgs,
-  EstimateFeeParams,
+  EstimateFeeVariables,
   EstimateFunctions,
   EstimateTypeArgs,
   ExecuteArgs,

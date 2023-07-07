@@ -42,15 +42,13 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
 
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
+    enablePreEstimate: !!account,
+    preEstimate: account && {
+      args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
+    },
     onSuccess: () => {
       form.resetForm();
-    },
-    prefetchFee:
-      account && bridgeLoaded
-        ? ({
-            args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
-          } as any)
-        : undefined
+    }
   });
 
   const transferTokenBalance = transferToken && getAvailableBalance(transferToken.ticker);
