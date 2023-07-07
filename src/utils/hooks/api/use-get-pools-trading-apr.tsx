@@ -14,9 +14,9 @@ import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToBigUSD } from '@/common/utils/utils';
 import { SQUID_URL } from '@/constants';
-import { calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { CurrencySquidFormat } from '@/types/currency';
 import { MILLISECONDS_PER_DAY } from '@/utils/constants/date-time';
+import { calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import { useGetLiquidityPools } from './amm/use-get-liquidity-pools';

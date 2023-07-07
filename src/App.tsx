@@ -36,8 +36,8 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
-const Swap = React.lazy(() => import(/* webpackChunkName: 'amm' */ '@/pages/AMM'));
-const Pools = React.lazy(() => import(/* webpackChunkName: 'amm/pools' */ '@/pages/AMM/Pools'));
+const Swap = React.lazy(() => import(/* webpackChunkName: 'amm' */ '@/pages/Swap'));
+const Pools = React.lazy(() => import(/* webpackChunkName: 'amm/pools' */ '@/pages/Pools'));
 const Wallet = React.lazy(() => import(/* webpackChunkName: 'wallet' */ '@/pages/Wallet'));
 const Onboarding = React.lazy(() => import(/* webpackChunkName: 'onboarding' */ '@/pages/Onboarding'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
