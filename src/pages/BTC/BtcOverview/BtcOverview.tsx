@@ -11,7 +11,7 @@ import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './BTCOverview.styles';
 import { IssueForm, LegacyBurnForm, LegacyTransactions, RedeemForm } from './components';
 
-const BtcOverview = (): JSX.Element => {
+const BTCOverview = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
 
   const { defaultSelectedKey } = tabsProps;
@@ -59,4 +59,4 @@ const BtcOverview = (): JSX.Element => {
   );
 };
 
-export default BtcOverview;
+export default BTCOverview;
