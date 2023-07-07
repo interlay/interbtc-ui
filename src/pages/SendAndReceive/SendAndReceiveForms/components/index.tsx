@@ -1,4 +1,4 @@
-import { CrossChainTransferForm } from './BridgeForm';
+import { BridgeForm } from './BridgeForm';
 import { TransferForm } from './TransferForm';
 
-export { CrossChainTransferForm, TransferForm };
+export { BridgeForm, TransferForm };

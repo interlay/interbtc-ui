@@ -2,10 +2,10 @@ import { Flex, Tabs, TabsItem } from '@/component-library';
 import MainContainer from '@/parts/MainContainer';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
-import { CrossChainTransferForm, TransferForm } from './components';
-import { StyledCard, StyledFormWrapper, StyledWrapper } from './TransferForms.styles';
+import { BridgeForm, TransferForm } from './components';
+import { StyledCard, StyledFormWrapper, StyledWrapper } from './SendAndReceiveForms.styles';
 
-const TransferForms = (): JSX.Element => {
+const SendAndReceiveForms = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
 
   return (
@@ -19,9 +19,9 @@ const TransferForms = (): JSX.Element => {
                   <TransferForm />
                 </StyledFormWrapper>
               </TabsItem>
-              <TabsItem title='Bridge' key='crossChainTransfer'>
+              <TabsItem title='Bridge' key='bridge'>
                 <StyledFormWrapper>
-                  <CrossChainTransferForm />
+                  <BridgeForm />
                 </StyledFormWrapper>
               </TabsItem>
             </Tabs>
@@ -32,4 +32,4 @@ const TransferForms = (): JSX.Element => {
   );
 };
 
-export default TransferForms;
+export default SendAndReceiveForms;

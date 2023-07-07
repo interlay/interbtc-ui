@@ -1,3 +1,3 @@
-import TransferOverview from './TransferForms';
+import SendAndReceiveOverview from './SendAndReceiveForms';
 
-export default TransferOverview;
+export default SendAndReceiveOverview;

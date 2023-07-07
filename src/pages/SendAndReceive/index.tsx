@@ -1,3 +1,3 @@
-import Transfer from './Transfer';
+import SendAndReceive from './SendAndReceive';
 
-export default Transfer;
+export default SendAndReceive;

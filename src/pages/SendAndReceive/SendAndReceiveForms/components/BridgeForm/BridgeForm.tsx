@@ -16,14 +16,14 @@ import {
   TransactionDetailsGroup
 } from '@/components';
 import {
-  CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
-  CROSS_CHAIN_TRANSFER_FROM_FIELD,
-  CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD,
-  CROSS_CHAIN_TRANSFER_TO_FIELD,
-  CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
-  CrossChainTransferFormData,
-  crossChainTransferSchema,
-  CrossChainTransferValidationParams,
+  BRIDGE_AMOUNT_FIELD,
+  BRIDGE_FROM_FIELD,
+  BRIDGE_TO_ACCOUNT_FIELD,
+  BRIDGE_TO_FIELD,
+  BRIDGE_TOKEN_FIELD,
+  BridgeFormData,
+  bridgeSchema,
+  BridgeValidationParams,
   isFormDisabled,
   useForm
 } from '@/lib/form';
@@ -37,9 +37,9 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { ChainSelect } from '../ChainSelect';
-import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './CrossChainTransferForm.styles';
+import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './BridgeForm.styles';
 
-const CrossChainTransferForm = (): JSX.Element => {
+const BridgeForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
   const [currentToken, setCurrentToken] = useState<XCMTokenData>();
@@ -53,8 +53,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const { data, getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
 
-  const schema: CrossChainTransferValidationParams = {
-    [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
+  const schema: BridgeValidationParams = {
+    [BRIDGE_AMOUNT_FIELD]: {
       minAmount: currentToken
         ? newMonetaryAmount(currentToken.minTransferAmount, getCurrencyFromTicker(currentToken.value), true)
         : undefined,
@@ -66,55 +66,47 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const transaction = useTransaction(Transaction.XCM_TRANSFER, {
     onSuccess: () => {
-      setTokenData(form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName);
-      form.setFieldValue(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, '');
+      setTokenData(form.values[BRIDGE_TO_FIELD] as ChainName);
+      form.setFieldValue(BRIDGE_AMOUNT_FIELD, '');
     }
   });
 
-  const handleSubmit = async (formData: CrossChainTransferFormData) => {
+  const handleSubmit = async (formData: BridgeFormData) => {
     if (!data || !formData || !currentToken) return;
 
-    const address = formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string;
+    const address = formData[BRIDGE_TO_ACCOUNT_FIELD] as string;
 
     const { signer } = await web3FromAddress(address);
-    const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName);
-    const apiPromise = data.provider.getApiPromise(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string);
+    const adapter = data.bridge.findAdapter(formData[BRIDGE_FROM_FIELD] as ChainName);
+    const apiPromise = data.provider.getApiPromise(formData[BRIDGE_FROM_FIELD] as string);
 
     apiPromise.setSigner(signer);
     adapter.setApi(apiPromise);
 
     const transferCurrency = getCurrencyFromTicker(currentToken.value);
-    const transferAmount = newMonetaryAmount(
-      form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
-      transferCurrency,
-      true
-    );
+    const transferAmount = newMonetaryAmount(form.values[BRIDGE_AMOUNT_FIELD] || 0, transferCurrency, true);
 
-    const fromChain = originatingChains?.find(
-      (chain) => chain.id === formData[CROSS_CHAIN_TRANSFER_FROM_FIELD]
-    ) as ChainData;
-    const toChain = destinationChains.find(
-      (chain) => chain.id === formData[CROSS_CHAIN_TRANSFER_TO_FIELD]
-    ) as ChainData;
+    const fromChain = originatingChains?.find((chain) => chain.id === formData[BRIDGE_FROM_FIELD]) as ChainData;
+    const toChain = destinationChains.find((chain) => chain.id === formData[BRIDGE_TO_FIELD]) as ChainData;
 
     transaction.execute(adapter, fromChain, toChain, address, transferAmount);
   };
 
-  const form = useForm<CrossChainTransferFormData>({
+  const form = useForm<BridgeFormData>({
     initialValues: {
-      [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
+      [BRIDGE_AMOUNT_FIELD]: '',
+      [BRIDGE_TOKEN_FIELD]: '',
+      [BRIDGE_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t)
+    validationSchema: bridgeSchema(schema, t)
   });
 
   const handleOriginatingChainChange = (chain: ChainName) => {
     const destinationChains = getDestinationChains(chain);
 
     setDestinationChains(destinationChains);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+    form.setFieldValue(BRIDGE_TO_FIELD, destinationChains[0].id);
   };
 
   const handleDestinationChainChange = async (chain: ChainName) => {
@@ -129,7 +121,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
+    form.setFieldValue(BRIDGE_TO_ACCOUNT_FIELD, e.target.value);
   };
 
   const setTokenData = useCallback(
@@ -137,10 +129,10 @@ const CrossChainTransferForm = (): JSX.Element => {
       if (!accountId || !form) return;
 
       const tokens = await getAvailableTokens(
-        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+        form.values[BRIDGE_FROM_FIELD] as ChainName,
         destination,
         accountId.toString(),
-        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+        form.values[BRIDGE_TO_ACCOUNT_FIELD] as string
       );
 
       if (!tokens) return;
@@ -151,17 +143,13 @@ const CrossChainTransferForm = (): JSX.Element => {
       const token = tokens.find((token) => token.value === currentToken?.value) || tokens[0];
 
       setCurrentToken(token);
-      form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value);
+      form.setFieldValue(BRIDGE_TOKEN_FIELD, token.value);
     },
     [accountId, currentToken, form, getAvailableTokens]
   );
 
   const transferMonetaryAmount = currentToken
-    ? newSafeMonetaryAmount(
-        form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
-        getCurrencyFromTicker(currentToken.value),
-        true
-      )
+    ? newSafeMonetaryAmount(form.values[BRIDGE_AMOUNT_FIELD] || 0, getCurrencyFromTicker(currentToken.value), true)
     : 0;
 
   const valueUSD = transferMonetaryAmount
@@ -177,12 +165,12 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!originatingChains?.length) return;
 
     // This prevents a render loop caused by setFieldValue
-    if (form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD]) return;
+    if (form.values[BRIDGE_FROM_FIELD]) return;
 
     const destinationChains = getDestinationChains(originatingChains[0].id);
 
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+    form.setFieldValue(BRIDGE_FROM_FIELD, originatingChains[0].id);
+    form.setFieldValue(BRIDGE_TO_FIELD, destinationChains[0].id);
 
     setDestinationChains(destinationChains);
 
@@ -201,7 +189,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   // that it's consitent across the application
   useEffect(() => {
     if (!accountId) return;
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, accountId?.toString());
+    form.setFieldValue(BRIDGE_TO_ACCOUNT_FIELD, accountId?.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
 
@@ -220,7 +208,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             items={originatingChains}
-            {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
+            {...mergeProps(form.getSelectFieldProps(BRIDGE_FROM_FIELD, false), {
               onSelectionChange: (key: Key) => handleOriginatingChainChange(key as ChainName)
             })}
           />
@@ -228,7 +216,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <ChainSelect
             label='Destination Chain'
             items={destinationChains}
-            {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
+            {...mergeProps(form.getSelectFieldProps(BRIDGE_TO_FIELD, false), {
               onSelectionChange: (key: Key) => handleDestinationChainChange(key as ChainName)
             })}
           />
@@ -240,18 +228,17 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
-            selectProps={mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
-              onSelectionChange: (ticker: Key) =>
-                handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
+            selectProps={mergeProps(form.getSelectFieldProps(BRIDGE_TOKEN_FIELD), {
+              onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, BRIDGE_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, false, true))}
+            {...mergeProps(form.getFieldProps(BRIDGE_AMOUNT_FIELD, false, true))}
           />
         </div>
         <AccountSelect
           label='Destination'
           accounts={accounts}
-          {...mergeProps(form.getSelectFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false), {
+          {...mergeProps(form.getSelectFieldProps(BRIDGE_TO_ACCOUNT_FIELD, false), {
             onChange: handleDestinationAccountChange
           })}
         />
@@ -277,4 +264,4 @@ const CrossChainTransferForm = (): JSX.Element => {
   );
 };
 
-export { CrossChainTransferForm };
+export { BridgeForm };

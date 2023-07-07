@@ -1,1 +1,1 @@
-export { CrossChainTransferForm } from './CrossChainTransferForm';
+export { BridgeForm } from './BridgeForm';

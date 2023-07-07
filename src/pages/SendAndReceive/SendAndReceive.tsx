@@ -2,13 +2,13 @@ import { withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 
-import TransferForms from './SendAndReceiveForms';
+import SendAndReceiveForms from './SendAndReceiveForms';
 
-const Transfer = (): JSX.Element => {
-  return <TransferForms />;
+const SendAndReceive = (): JSX.Element => {
+  return <SendAndReceiveForms />;
 };
 
-export default withErrorBoundary(Transfer, {
+export default withErrorBoundary(SendAndReceive, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

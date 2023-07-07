@@ -14,7 +14,7 @@ const PAGES = Object.freeze({
   HOME: '/',
   BTC: '/bridge',
   STRATEGIES: '/strategies',
-  TRANSFER: '/transfer',
+  SEND_AND_RECEIVE: '/transfer',
   TX: '/tx',
   STAKING: '/staking',
   DASHBOARD: '/dashboard',

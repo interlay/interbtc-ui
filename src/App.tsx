@@ -187,7 +187,7 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.BTC}>
                     <Btc />
                   </Route>
-                  <Route path={PAGES.TRANSFER}>
+                  <Route path={PAGES.SEND_AND_RECEIVE}>
                     <Transfer />
                   </Route>
                   <Route path={PAGES.LOANS}>

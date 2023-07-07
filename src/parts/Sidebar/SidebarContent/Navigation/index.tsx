@@ -86,8 +86,8 @@ const Navigation = ({
         hidden: false
       },
       {
-        name: 'nav_transfer',
-        link: PAGES.TRANSFER,
+        name: 'nav_send_and_receive',
+        link: PAGES.SEND_AND_RECEIVE,
         icon: ArrowsRightLeftIcon
       },
       {
