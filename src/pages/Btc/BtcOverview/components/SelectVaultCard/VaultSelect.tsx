@@ -11,7 +11,7 @@ const VaultSelect = (props: VaultSelectProps): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <Select<'modal', BridgeVaultData> {...props} type='modal' modalTitle={t('bridge.select_vault')} size='large'>
+    <Select<'modal', BridgeVaultData> {...props} type='modal' modalTitle={t('btc.select_vault')} size='large'>
       {(data: BridgeVaultData) => (
         <Item key={data.id} textValue={data.vaultId.accountId.toString()}>
           <VaultListItem data={data} />

@@ -20,7 +20,7 @@ const RequestLimitsCard = ({ title, singleRequestLimit, maxRequestLimit }: Reque
         <Dl direction='column' gap='spacing2'>
           <DlGroup justifyContent='space-between' flex='1'>
             <Dt size='xs' color='primary'>
-              {t('bridge.in_single_request')}
+              {t('btc.in_single_request')}
             </Dt>
             <Dd size='xs'>
               {singleRequestLimit.toHuman()} {singleRequestLimit.currency.ticker}
@@ -29,7 +29,7 @@ const RequestLimitsCard = ({ title, singleRequestLimit, maxRequestLimit }: Reque
           {maxRequestLimit && (
             <DlGroup justifyContent='space-between' flex='1'>
               <Dt size='xs' color='primary'>
-                {t('bridge.in_total')}
+                {t('btc.in_total')}
               </Dt>
               <Dd size='xs'>
                 {maxRequestLimit.toHuman()} {maxRequestLimit.currency.ticker}

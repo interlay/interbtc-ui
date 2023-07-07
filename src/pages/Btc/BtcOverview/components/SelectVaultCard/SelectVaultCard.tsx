@@ -28,10 +28,10 @@ const SelectVaultCard = ({ vaults, isSelectingVault, switchProps, selectProps }:
       flex='1'
     >
       <StyledSwitch isSelected={isSelectingVault} labelProps={{ size: 'xs' }} {...switchProps}>
-        {t('bridge.manually_select_vault')}
+        {t('btc.manually_select_vault')}
       </StyledSwitch>
       {isSelectingVault && vaults && (
-        <VaultSelect items={vaults} placeholder={t('bridge.select_a_vault')} aria-label='Vault' {...selectProps} />
+        <VaultSelect items={vaults} placeholder={t('btc.select_a_vault')} aria-label='Vault' {...selectProps} />
       )}
     </Card>
   );

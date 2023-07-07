@@ -73,7 +73,7 @@ const TransactionDetails = ({
             <TokenInput
               placeholder='0.00'
               isDisabled
-              label={t('bridge.compensation_amount')}
+              label={t('btc.compensation_amount')}
               ticker={compensationAmount.currency.ticker}
               value={compensationAmount?.toString()}
               valueUSD={compensationAmountUSD}
@@ -83,8 +83,8 @@ const TransactionDetails = ({
       </Flex>
       <BaseTransactionDetails>
         <TransactionDetailsGroup>
-          <TransactionDetailsDt tooltipLabel={t('bridge.fee_paids_to_vaults_relayers_maintainers')}>
-            {t('bridge.bridge_fee')}
+          <TransactionDetailsDt tooltipLabel={t('btc.fee_paids_to_vaults_relayers_maintainers')}>
+            {t('btc.bridge_fee')}
           </TransactionDetailsDt>
           <TransactionDetailsDd>
             {bridgeFee.toHuman()} {bridgeFee.currency.ticker} (
@@ -95,7 +95,7 @@ const TransactionDetails = ({
           <>
             {securityDepositSelectProps && (
               <TransactionSelectToken
-                label={t('bridge.security_deposit_token')}
+                label={t('btc.security_deposit_token')}
                 items={griefingCollateralCurrencies}
                 aria-describedby={griefingCollateralErrorMessageId}
                 validationState={showInsufficientSecurityBalance ? 'invalid' : 'valid'}
@@ -103,8 +103,8 @@ const TransactionDetails = ({
               />
             )}
             <TransactionDetailsGroup>
-              <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>
-                {t('bridge.security_deposit')}
+              <TransactionDetailsDt tooltipLabel={t('btc.security_deposit_is_a_denial_of_service_protection')}>
+                {t('btc.security_deposit')}
               </TransactionDetailsDt>
               <TransactionDetailsDd>
                 {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
@@ -121,13 +121,11 @@ const TransactionDetails = ({
       {showInsufficientSecurityBalance && (
         <Alert id={griefingCollateralErrorMessageId} status='error'>
           {t('forms.ensure_adequate_amount_left_to_cover_action', {
-            action: t('bridge.security_deposit_token').toLowerCase()
+            action: t('btc.security_deposit_token').toLowerCase()
           })}
         </Alert>
       )}
-      {bitcoinNetworkFee && (
-        <TransactionFeeDetails label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
-      )}
+      {bitcoinNetworkFee && <TransactionFeeDetails label={t('btc.bitcoin_network_fee')} amount={bitcoinNetworkFee} />}
       {feeDetailsProps && <TransactionFeeDetails {...feeDetailsProps} />}
     </Flex>
   );

@@ -238,7 +238,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
               <RequestLimitsCard
-                title={t('bridge.max_issuable')}
+                title={t('btc.max_issuable')}
                 singleRequestLimit={requestLimits.singleVaultMaxIssuable}
                 maxRequestLimit={requestLimits.totalMaxIssuable}
               />

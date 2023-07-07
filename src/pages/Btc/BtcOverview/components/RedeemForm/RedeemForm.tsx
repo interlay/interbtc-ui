@@ -266,7 +266,7 @@ const RedeemForm = ({
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
-              <RequestLimitsCard title={t('bridge.max_redeemable')} singleRequestLimit={redeemLimit} />
+              <RequestLimitsCard title={t('btc.max_redeemable')} singleRequestLimit={redeemLimit} />
               <TokenInput
                 placeholder='0.00'
                 label={t('amount')}

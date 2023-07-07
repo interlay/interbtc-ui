@@ -726,7 +726,7 @@
     "claiming_vesting": "Claiming vesting",
     "claimed_vesting": "Claimed vesting"
   },
-  "bridge": {
+  "btc": {
     "max_issuable": "Max issuable",
     "max_redeemable": "Max redeemable",
     "in_single_request": "In single request",
