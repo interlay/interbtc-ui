@@ -28,7 +28,7 @@ import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Btc = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Btc'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
-const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/SendAndReceive'));
+const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
@@ -188,7 +188,7 @@ const App = (): JSX.Element => {
                     <Btc />
                   </Route>
                   <Route path={PAGES.SEND_AND_RECEIVE}>
-                    <Transfer />
+                    <SendAndReceive />
                   </Route>
                   <Route path={PAGES.LOANS}>
                     <Loans />
