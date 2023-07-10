@@ -4,7 +4,7 @@ import { WalletName } from '@/utils/constants/wallets';
 
 import { IconProps } from '../Icon';
 import { FallbackIcon } from './FallbackIcon';
-import { ParitySignerCompanion,PolkadotJS, SubWallet, Talisman } from './icons';
+import { ParitySignerCompanion, PolkadotJS, SubWallet, Talisman } from './icons';
 
 type WalletComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
