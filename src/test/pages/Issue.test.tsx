@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
 import App from '@/App';
@@ -14,7 +13,6 @@ import {
   MOCK_BITCOIN_HEIGHT,
   MOCK_BTC_RELAY_HEIGHT,
   MOCK_EXCHANGE_RATE,
-  MOCK_TOKEN_BALANCE,
   mockBtcRelayGetLatestBlockHeight,
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
@@ -22,8 +20,7 @@ import {
   mockIssueGetDustValue,
   mockIssueGetRequestLimits,
   mockIssueRequest,
-  mockOracleGetExchangeRate,
-  mockTokensBalance
+  mockOracleGetExchangeRate
 } from '../mocks/@interlay/interbtc-api';
 import { MOCK_TOKEN_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
@@ -179,31 +176,31 @@ describe.skip('issue form', () => {
     expect(totalMaxIssuableAmountElement).toHaveTextContent(totalMaxIssuableAmount);
   });
 
-  it('when the governance token balance is less than required', async () => {
-    mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
-      if (currency.ticker === GOVERNANCE_TOKEN.ticker) {
-        return new ChainBalance(currency, 0, 0);
-      } else {
-        return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
-      }
-    });
+  // it('when the governance token balance is less than required', async () => {
+  //   mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+  //     if (currency.ticker === GOVERNANCE_TOKEN.ticker) {
+  //       return new ChainBalance(currency, 0, 0);
+  //     } else {
+  //       return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
+  //     }
+  //   });
 
-    const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
+  //   const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
-    const inputAmount = 0.0001;
+  //   const inputAmount = 0.0001;
 
-    await changeAmountToIssue(inputAmount.toString());
+  //   await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient free INTR for security deposit and fees"`);
+  //   expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient free INTR for security deposit and fees"`);
 
-    await submitForm();
+  //   await submitForm();
 
-    await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
+  //   await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
-    mockTokensBalance.mockImplementation(
-      (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
-    );
-  });
+  //   mockTokensBalance.mockImplementation(
+  //     (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
+  //   );
+  // });
 
   it('when the input amount is greater than the single vault max issuable amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();

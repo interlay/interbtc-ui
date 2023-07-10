@@ -1,20 +1,18 @@
 import '@testing-library/jest-dom';
 
-import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
-import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 
 import {
   MOCK_BITCOIN_HEIGHT,
   MOCK_BTC_RELAY_HEIGHT,
   MOCK_EXCHANGE_RATE,
-  MOCK_TOKEN_BALANCE,
   mockBtcRelayGetLatestBlockHeight,
   mockElectrsAPIGetLatestBlockHeight,
   mockOracleGetExchangeRate,
@@ -22,7 +20,6 @@ import {
   mockRedeemGetDustValue,
   mockRedeemGetFeeRate,
   mockRedeemRequest,
-  mockTokensBalance,
   mockVaultsGetVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
 import { MOCK_TOKEN_PRICES } from '../mocks/fetch';
@@ -161,33 +158,33 @@ describe.skip('redeem form', () => {
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
   });
 
-  it('when the wrapped token balance is less than required', async () => {
-    mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
-      if (currency.ticker === WRAPPED_TOKEN.ticker) {
-        return new ChainBalance(currency, 0, 0);
-      } else {
-        return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
-      }
-    });
+  // it('when the wrapped token balance is less than required', async () => {
+  //   mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+  //     if (currency.ticker === WRAPPED_TOKEN.ticker) {
+  //       return new ChainBalance(currency, 0, 0);
+  //     } else {
+  //       return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
+  //     }
+  //   });
 
-    const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
+  //   const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
-    const inputAmount = 0.0001;
+  //   const inputAmount = 0.0001;
 
-    await changeAmountToRedeem(inputAmount.toString());
+  //   await changeAmountToRedeem(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(
-      `"Please enter an amount smaller than your current balance: 0"`
-    );
+  //   expect(errorElement.textContent).toMatchInlineSnapshot(
+  //     `"Please enter an amount smaller than your current balance: 0"`
+  //   );
 
-    await submitForm();
+  //   await submitForm();
 
-    await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
+  //   await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
 
-    mockTokensBalance.mockImplementation(
-      (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
-    );
-  });
+  //   mockTokensBalance.mockImplementation(
+  //     (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
+  //   );
+  // });
 
   it('when the input amount is greater than the single vault max redeemable amount', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();

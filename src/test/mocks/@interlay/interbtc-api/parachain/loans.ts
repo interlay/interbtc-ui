@@ -13,6 +13,8 @@ import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
+import { DEFAULT_EXTRINSIC } from './extrinsic';
+
 const WRAPPED_LOAN_AMOUNT = {
   EMPTY: {
     VALUE: '0',
@@ -288,27 +290,28 @@ const DATA = {
 };
 
 const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
-  lend: jest.fn(),
-  borrow: jest.fn(),
-  withdraw: jest.fn(),
-  withdrawAll: jest.fn(),
-  repayAll: jest.fn(),
-  repay: jest.fn(),
-  claimAllSubsidyRewards: jest.fn(),
-  disableAsCollateral: jest.fn(),
-  enableAsCollateral: jest.fn(),
-  liquidateBorrowPosition: jest.fn(),
   getAccruedRewardsOfAccount: jest.fn().mockResolvedValue(ACCOUNT_REWARDS.EMPTY),
   getBorrowerAccountIds: jest.fn(),
   getBorrowPositionsOfAccount: jest.fn().mockResolvedValue(LOAN_POSITIONS.BORROW.EMPTY),
-  getLendingStats: jest.fn().mockResolvedValue(LENDING_STATS.LOW_LTV),
+  getLendingStats: jest.fn().mockReturnValue(LENDING_STATS.LOW_LTV),
   getLendPositionsOfAccount: jest.fn().mockResolvedValue(LOAN_POSITIONS.LEND.EMPTY),
   getLendTokenExchangeRates: jest.fn(),
   getLendTokens: jest.fn().mockResolvedValue([]),
   getLiquidationThresholdLiquidity: jest.fn(),
   getLoanAssets: jest.fn().mockResolvedValue(ASSETS),
   getLoansMarkets: jest.fn(),
-  getUndercollateralizedBorrowers: jest.fn()
+  getUndercollateralizedBorrowers: jest.fn(),
+  // MUTATIONS
+  lend: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  borrow: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  withdraw: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  withdrawAll: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  repayAll: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  repay: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  claimAllSubsidyRewards: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  disableAsCollateral: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  enableAsCollateral: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  liquidateBorrowPosition: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC)
 };
 
 const MOCK_LOANS = {

@@ -9,6 +9,7 @@ import {
   MOCK_AMM,
   MOCK_LOANS,
   MOCK_SYSTEM,
+  MOCK_TOKENS,
   MOCK_TRANSACTION,
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
@@ -31,9 +32,6 @@ import {
   mockRedeemGetPremiumRedeemFeeRate,
   mockRedeemRequest,
   mockSystemChain,
-  mockTokensBalance,
-  mockTokensSubscribeToBalance,
-  mockTokensTotal,
   mockVaultsGet,
   mockVaultsGetPremiumRedeemVaults,
   mockVaultsGetVaultsWithIssuableTokens,
@@ -109,11 +107,7 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     request: mockRedeemRequest
   },
   system: MOCK_SYSTEM.MODULE,
-  tokens: {
-    balance: mockTokensBalance,
-    total: mockTokensTotal,
-    subscribeToBalance: mockTokensSubscribeToBalance
-  },
+  tokens: MOCK_TOKENS.MODULE,
   vaults: {
     get: mockVaultsGet,
     getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens,

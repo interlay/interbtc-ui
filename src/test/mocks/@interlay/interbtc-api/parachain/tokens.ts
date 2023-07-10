@@ -1,33 +1,42 @@
-import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
+import { ChainBalance, CurrencyExt, newMonetaryAmount, TokensAPI } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 
-const MOCK_TOKEN_BALANCE = '1000000000000';
-const MOCK_TOKEN_TOTAL_AMOUNT = '10000000000000000000000';
+import { DEFAULT_EXTRINSIC } from './extrinsic';
 
-const DEFAULT_TOKENS_BALANCE_FN = (currency: CurrencyExt, _id: AccountId): ChainBalance =>
-  new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
+const BALANCE_VALUE = 1000000000000;
 
-const EMPTY_TOKENS_BALANCE_FN = (currency: CurrencyExt, _id: AccountId): ChainBalance =>
-  new ChainBalance(currency, new Big(0), new Big(0));
-
-const mockTokensBalance = jest.fn().mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
-
-const mockTokensTotal = jest.fn(async (currency: CurrencyExt) => newMonetaryAmount(MOCK_TOKEN_TOTAL_AMOUNT, currency));
-
-const mockTokensSubscribeToBalance = jest.fn((currency: CurrencyExt, account, callback) => {
-  const balance = new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
-  callback(account, balance);
-
-  return () => undefined;
-});
-
-export {
-  DEFAULT_TOKENS_BALANCE_FN,
-  EMPTY_TOKENS_BALANCE_FN,
-  MOCK_TOKEN_BALANCE,
-  MOCK_TOKEN_TOTAL_AMOUNT,
-  mockTokensBalance,
-  mockTokensSubscribeToBalance,
-  mockTokensTotal
+const BALANCE_FN = {
+  EMPTY: (currency: CurrencyExt): ChainBalance => new ChainBalance(currency, 0, 0, 0),
+  FULL: (currency: CurrencyExt): ChainBalance => new ChainBalance(currency, BALANCE_VALUE, BALANCE_VALUE, BALANCE_VALUE)
 };
+
+const TOTAL_VALUE = 10000000000000000000000;
+
+const TOTAL_FN = {
+  EMPTY: (currency: CurrencyExt): MonetaryAmount<CurrencyExt> => newMonetaryAmount(0, currency),
+  FULL: (currency: CurrencyExt): MonetaryAmount<CurrencyExt> => newMonetaryAmount(TOTAL_VALUE, currency)
+};
+
+const DATA = { BALANCE_FN, TOTAL_FN };
+
+const MODULE: Record<keyof TokensAPI, jest.Mock<any, any>> = {
+  balance: jest.fn().mockImplementation(BALANCE_FN.FULL),
+  total: jest.fn().mockImplementation(TOTAL_FN.FULL),
+  // MUTATIONS
+  buildTransferExtrinsic: jest.fn(),
+  transfer: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  setBalance: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  subscribeToBalance: jest.fn().mockImplementation((currency: CurrencyExt, account, callback) => {
+    const balance = new ChainBalance(currency, BALANCE_VALUE, BALANCE_VALUE);
+    callback(account, balance);
+
+    return () => undefined;
+  })
+};
+
+const MOCK_TOKENS = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_TOKENS };

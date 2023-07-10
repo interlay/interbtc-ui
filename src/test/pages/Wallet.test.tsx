@@ -6,24 +6,12 @@ import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/con
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
-import {
-  DEFAULT_TOKENS_BALANCE_FN,
-  EMPTY_TOKENS_BALANCE_FN,
-  MOCK_AMM,
-  MOCK_SYSTEM,
-  mockTokensBalance
-} from '../mocks/@interlay/interbtc-api';
+import { MOCK_AMM, MOCK_LOANS, MOCK_SYSTEM, MOCK_TOKENS } from '../mocks/@interlay/interbtc-api';
 import {
   DEFAULT_STAKED_BALANCE,
   EMPTY_STAKED_BALANCE,
   mockGetStakedBalance
 } from '../mocks/@interlay/interbtc-api/parachain/escrow';
-import {
-  DEFAULT_BORROW_POSITIONS,
-  DEFAULT_LEND_POSITIONS,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendPositionsOfAccount
-} from '../mocks/@interlay/interbtc-api/parachain/loans';
 import {
   EMPTY_VESTING_SCHEDULES,
   mockClaimVesting,
@@ -38,9 +26,11 @@ jest.mock('@/pages/Swap', () => ({ __esModule: true, default: () => <div>Swap pa
 
 const { getLpTokens, getLiquidityProvidedByAccount } = MOCK_AMM.MODULE;
 const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;
+const { getLendPositionsOfAccount, getBorrowPositionsOfAccount } = MOCK_LOANS.MODULE;
 
 const { ACCOUNT_LIQUIDITY } = MOCK_AMM.DATA;
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
+const { LOAN_POSITIONS } = MOCK_LOANS.DATA;
 
 const path = '/wallet';
 
@@ -60,9 +50,8 @@ describe('Wallet Page', () => {
 
     // ignoring lp-tokens
     getLpTokens.mockResolvedValue([]);
-    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
+    getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE);
+    getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
     getLiquidityProvidedByAccount.mockReturnValue(ACCOUNT_LIQUIDITY.EMPTY);
     mockGetStakedBalance.mockReturnValue(DEFAULT_STAKED_BALANCE);
     getCurrentBlockNumber.mockReturnValue(BLOCK_NUMBER.CURRENT);
@@ -74,7 +63,7 @@ describe('Wallet Page', () => {
   });
 
   // TODO: add tests for Transfer CTALinks
-  describe.skip('Available Assets', () => {
+  describe('Available Assets', () => {
     it('should render table (desktop)', async () => {
       await render(<App />, { path });
 
@@ -116,7 +105,7 @@ describe('Wallet Page', () => {
       });
     });
 
-    it('should be able to claim vesting', async () => {
+    it.only('should be able to claim vesting', async () => {
       getCurrentBlockNumber.mockReturnValue(10);
       mockVestingSchedules.mockReturnValue(SOME_VESTING_SCHEDULES);
 
@@ -155,9 +144,7 @@ describe('Wallet Page', () => {
       );
     });
 
-    it('should display zero balance assets', async () => {
-      mockTokensBalance.mockImplementation(EMPTY_TOKENS_BALANCE_FN);
-
+    it('should display all balance assets', async () => {
       await render(<App />, { path });
 
       const table = withinTable(TABLES.AVAILABLE_ASSETS);
@@ -175,15 +162,17 @@ describe('Wallet Page', () => {
 
   describe('Lending Positions', () => {
     it('should display table', async () => {
+      getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE);
+
       await render(<App />, { path });
 
       const table = withinTable(TABLES.LEND_POSITIONS);
 
-      expect(table.getAllByRole('row')).toHaveLength(DEFAULT_LEND_POSITIONS.length);
+      expect(table.getAllByRole('row')).toHaveLength(LOAN_POSITIONS.LEND.AVERAGE.length);
     });
 
     it('should not display table', async () => {
-      mockGetLendPositionsOfAccount.mockReturnValue([]);
+      getLendPositionsOfAccount.mockResolvedValue([]);
 
       await render(<App />, { path });
 
@@ -193,15 +182,17 @@ describe('Wallet Page', () => {
 
   describe('Borrow Positions', () => {
     it('should display table', async () => {
+      getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
+
       await render(<App />, { path });
 
       const table = withinTable(TABLES.BORROW_POSITIONS);
 
-      expect(table.getAllByRole('row')).toHaveLength(DEFAULT_BORROW_POSITIONS.length);
+      expect(table.getAllByRole('row')).toHaveLength(LOAN_POSITIONS.BORROW.AVERAGE.length);
     });
 
     it('should not display table', async () => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
+      getBorrowPositionsOfAccount.mockReturnValue([]);
 
       await render(<App />, { path });
 
