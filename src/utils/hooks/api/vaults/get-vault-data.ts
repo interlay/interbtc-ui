@@ -153,7 +153,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     },
     body: JSON.stringify({
       query: redeemCountQuery(
-        `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
+        `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending`
       )
     })
   });
