@@ -62,6 +62,10 @@
     {
       "source": "/transfer/:path*",
       "destination": "/send-and-receive/:path*"
+    },
+    {
+      "source": "/transfer?tab=crossChainTransfer",
+      "destination": "/send-and-receive?tab=bridge"
     }
   ]
 }
