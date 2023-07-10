@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
-import { AuthCTA, ReceivableAssets, TransactionFeeDetails } from '@/components';
+import { AuthCTA, ReceivableAssets, SlippageManager, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { POOL_WITHDRAW_AMOUNT_FIELD, POOL_WITHDRAW_FEE_TOKEN_FIELD, useForm } from '@/lib/form';
 import { WithdrawLiquidityPoolFormData, withdrawLiquidityPoolSchema } from '@/lib/form/schemas';
-import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';

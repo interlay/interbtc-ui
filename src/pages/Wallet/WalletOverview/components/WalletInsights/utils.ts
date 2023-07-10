@@ -1,7 +1,7 @@
 import { CurrencyExt, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
+import { calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 const calculateClaimableFarmingRewardUSD = (

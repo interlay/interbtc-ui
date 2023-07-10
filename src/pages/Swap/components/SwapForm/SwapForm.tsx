@@ -9,7 +9,7 @@ import { useDebounce, useInterval } from 'react-use';
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
-import { TransactionFeeDetails } from '@/components';
+import { SlippageManager, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   SWAP_FEE_TOKEN_FIELD,
@@ -20,7 +20,6 @@ import {
   swapSchema,
   useForm
 } from '@/lib/form';
-import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Alert, Flex } from '@/component-library';
-import { AuthCTA, TransactionFeeDetails } from '@/components';
+import { AuthCTA, SlippageManager, TransactionFeeDetails } from '@/components';
 import {
   DepositLiquidityPoolFormData,
   depositLiquidityPoolSchema,
@@ -14,7 +14,6 @@ import {
   POOL_DEPOSIT_FEE_TOKEN_FIELD,
   useForm
 } from '@/lib/form';
-import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';

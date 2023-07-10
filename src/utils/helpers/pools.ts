@@ -2,9 +2,8 @@ import { CurrencyExt, LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
-import { calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
-
 import { Prices } from '../hooks/api/use-get-prices';
+import { calculateTotalLiquidityUSD } from './pool';
 
 const getPooledTickers = (liquidityPools: LiquidityPool[]): Set<string> =>
   liquidityPools.reduce((acc, pool) => {
