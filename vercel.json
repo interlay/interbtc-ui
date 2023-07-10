@@ -56,16 +56,12 @@
   ],
   "redirects": [
     {
-      "source": "/bridge/:path*",
-      "destination": "/btc/:path*"
+      "source": "/bridge:path*",
+      "destination": "/btc:path*"
     },
     {
-      "source": "/transfer/:path*",
-      "destination": "/send-and-receive/:path*"
-    },
-    {
-      "source": "/transfer?tab=crossChainTransfer",
-      "destination": "/send-and-receive?tab=bridge"
+      "source": "/transfer:path*",
+      "destination": "/send-and-receive:path*"
     }
   ]
 }
