@@ -54,7 +54,7 @@ const ActionsCell = ({
           <CTALink
             {...commonCTAProps}
             to={{
-              pathname: PAGES.BRIDGE,
+              pathname: PAGES.BTC,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.TAB]: 'issue'
               })
@@ -67,7 +67,7 @@ const ActionsCell = ({
           <CTALink
             {...commonCTAProps}
             to={{
-              pathname: PAGES.BRIDGE,
+              pathname: PAGES.BTC,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.TAB]: 'redeem'
               })
@@ -106,7 +106,7 @@ const ActionsCell = ({
           <CTALink
             {...commonCTAProps}
             to={{
-              pathname: PAGES.TRANSFER,
+              pathname: PAGES.SEND_AND_RECEIVE,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.TAB]: 'crossChainTransfer'
               })

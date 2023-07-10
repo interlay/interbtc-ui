@@ -5,8 +5,8 @@ import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercentage, formatUSD } from '@/common/utils/utils';
-import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
+import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
 import { getFarmingApr } from '@/utils/helpers/pools';
 import { DateRangeVolume, useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
 import { useGetPoolsTradingApr } from '@/utils/hooks/api/use-get-pools-trading-apr';
