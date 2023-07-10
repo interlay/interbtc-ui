@@ -12,9 +12,9 @@ const URL_PARAMETERS = Object.freeze({
 
 const PAGES = Object.freeze({
   HOME: '/',
-  BTC: '/bridge',
+  BTC: '/btc',
   STRATEGIES: '/strategies',
-  SEND_AND_RECEIVE: '/transfer',
+  SEND_AND_RECEIVE: '/send-and-receive',
   TX: '/tx',
   STAKING: '/staking',
   DASHBOARD: '/dashboard',

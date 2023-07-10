@@ -53,5 +53,15 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/bridge/:path*",
+      "destination": "/btc/:path*"
+    },
+    {
+      "source": "/transfer/:path*",
+      "destination": "/send-and-receive/:path*"
+    }
   ]
 }
