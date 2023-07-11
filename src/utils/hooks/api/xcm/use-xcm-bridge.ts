@@ -105,6 +105,9 @@ const useXCMBridge = (): UseXCMBridge => {
             })
           );
 
+          // TODO: This is a workaround until this is implemented on the bridge
+          const isUSDTFromAssetHub = (from === 'statemine' || from === 'statemint') && token === 'USDT';
+
           // TODO: resolve type mismatch with BaseCrossChainAdapter and remove `any`
           const originAdapter = data.bridge.findAdapter(from) as any;
 
@@ -119,13 +122,14 @@ const useXCMBridge = (): UseXCMBridge => {
 
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
-          const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
+          const originFeeToAtomic = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
+          const originFee = isUSDTFromAssetHub ? '0.01 USDT' : `${originFeeToAtomic.toString()} ${nativeToken.symbol}`;
 
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
             destFee: inputConfig.destFee.balance,
-            originFee: `${originFee.toString()} ${nativeToken.symbol}`,
+            originFee,
             minTransferAmount: minInputToBig,
             value: token
           };
