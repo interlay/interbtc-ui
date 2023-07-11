@@ -105,9 +105,6 @@ const useXCMBridge = (): UseXCMBridge => {
             })
           );
 
-          // TODO: This is a workaround until this is implemented on the bridge
-          const isUSDTFromAssetHub = (from === 'statemine' || from === 'statemint') && token === 'USDT';
-
           // TODO: resolve type mismatch with BaseCrossChainAdapter and remove `any`
           const originAdapter = data.bridge.findAdapter(from) as any;
 
@@ -123,6 +120,12 @@ const useXCMBridge = (): UseXCMBridge => {
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
           const originFeeToAtomic = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
+
+          // TODO: This is a workaround until this is implemented on the bridge. USDT is supported as a
+          // fee currency when transferring DOT/KSM from asset hub, but the bridge only returns the estimate
+          // in the native token. For that reason we have to hardcode the estimate in the UI and bypass
+          // `inputConfig.feeEstimate altogether.
+          const isUSDTFromAssetHub = (from === 'statemine' || from === 'statemint') && token === 'USDT';
           const originFee = isUSDTFromAssetHub ? '0.01 USDT' : `${originFeeToAtomic.toString()} ${nativeToken.symbol}`;
 
           return {
