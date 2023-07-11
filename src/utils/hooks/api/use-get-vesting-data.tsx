@@ -25,8 +25,6 @@ const getVestingData = async (accountId: AccountId): Promise<VestingData> => {
   const schedule = schedules[0];
   const isClaimable = !!schedule && currentBlockNumber > schedule.start.toNumber() + schedule.period.toNumber();
 
-  console.log(schedule, currentBlockNumber);
-
   return {
     schedules,
     isClaimable

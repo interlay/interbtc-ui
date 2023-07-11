@@ -7,13 +7,12 @@ import { Signer } from '@polkadot/types/types';
 
 import {
   MOCK_AMM,
+  MOCK_API,
   MOCK_LOANS,
   MOCK_SYSTEM,
   MOCK_TOKENS,
   MOCK_TRANSACTION,
-  mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
-  mockChainType,
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
@@ -31,7 +30,6 @@ import {
   mockRedeemGetMaxBurnableTokens,
   mockRedeemGetPremiumRedeemFeeRate,
   mockRedeemRequest,
-  mockSystemChain,
   mockVaultsGet,
   mockVaultsGetPremiumRedeemVaults,
   mockVaultsGetVaultsWithIssuableTokens,
@@ -39,7 +37,6 @@ import {
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
-import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
 
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
 
@@ -49,31 +46,7 @@ const mockCollateralCurrencies = [Polkadot, Interlay];
 const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
   removeAccount: jest.fn(),
   setAccount: mockSetAccount,
-  api: {
-    createType: mockApiCreateType,
-    rpc: {
-      system: {
-        chain: mockSystemChain,
-        chainType: mockChainType
-      }
-    },
-    on: jest.fn(),
-    query: {
-      vesting: {
-        vestingSchedules: mockVestingSchedules as any
-      },
-      oracle: {
-        aggregate: {
-          keys: jest.fn().mockReturnValue([])
-        }
-      }
-    },
-    tx: {
-      vesting: {
-        claim: mockClaimVesting
-      }
-    }
-  },
+  api: MOCK_API.PROMISE,
   assetRegistry: {
     getForeignAssets: mockGetForeignAssets
   },

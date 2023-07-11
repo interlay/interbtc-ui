@@ -6,18 +6,12 @@ import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/con
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
-import { MOCK_AMM, MOCK_LOANS, MOCK_SYSTEM, MOCK_TOKENS } from '../mocks/@interlay/interbtc-api';
+import { MOCK_AMM, MOCK_API, MOCK_LOANS, MOCK_SYSTEM } from '../mocks/@interlay/interbtc-api';
 import {
   DEFAULT_STAKED_BALANCE,
   EMPTY_STAKED_BALANCE,
   mockGetStakedBalance
 } from '../mocks/@interlay/interbtc-api/parachain/escrow';
-import {
-  EMPTY_VESTING_SCHEDULES,
-  mockClaimVesting,
-  mockVestingSchedules,
-  SOME_VESTING_SCHEDULES
-} from '../mocks/@interlay/interbtc-api/parachain/vesting';
 import { render, screen, userEvent, waitFor } from '../test-utils';
 import { withinList } from './utils/list';
 import { queryTable, withinTable, withinTableRow } from './utils/table';
@@ -27,10 +21,12 @@ jest.mock('@/pages/Swap', () => ({ __esModule: true, default: () => <div>Swap pa
 const { getLpTokens, getLiquidityProvidedByAccount } = MOCK_AMM.MODULE;
 const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;
 const { getLendPositionsOfAccount, getBorrowPositionsOfAccount } = MOCK_LOANS.MODULE;
+const { claimVesting, vestingSchedules } = MOCK_API.MODULE;
 
 const { ACCOUNT_LIQUIDITY } = MOCK_AMM.DATA;
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
 const { LOAN_POSITIONS } = MOCK_LOANS.DATA;
+const { VESTING_SCHEDULES } = MOCK_API.DATA;
 
 const path = '/wallet';
 
@@ -55,7 +51,7 @@ describe('Wallet Page', () => {
     getLiquidityProvidedByAccount.mockReturnValue(ACCOUNT_LIQUIDITY.EMPTY);
     mockGetStakedBalance.mockReturnValue(DEFAULT_STAKED_BALANCE);
     getCurrentBlockNumber.mockReturnValue(BLOCK_NUMBER.CURRENT);
-    mockVestingSchedules.mockReturnValue(EMPTY_VESTING_SCHEDULES);
+    vestingSchedules.mockReturnValue(VESTING_SCHEDULES.EMPTY);
   });
 
   afterEach(() => {
@@ -105,9 +101,9 @@ describe('Wallet Page', () => {
       });
     });
 
-    it.only('should be able to claim vesting', async () => {
+    it('should be able to claim vesting', async () => {
       getCurrentBlockNumber.mockReturnValue(10);
-      mockVestingSchedules.mockReturnValue(SOME_VESTING_SCHEDULES);
+      vestingSchedules.mockReturnValue(VESTING_SCHEDULES.FULL);
 
       await render(<App />, { path });
 
@@ -116,7 +112,7 @@ describe('Wallet Page', () => {
       userEvent.click(row.getByRole('button', { name: /claim vesting/i }));
 
       await waitFor(() => {
-        expect(mockClaimVesting).toHaveBeenCalledTimes(1);
+        expect(claimVesting).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -149,10 +145,9 @@ describe('Wallet Page', () => {
 
       const table = withinTable(TABLES.AVAILABLE_ASSETS);
 
-      expect(table.queryAllByRole('row')).toHaveLength(0);
-      expect(screen.getByText(/no assets available/i)).toBeInTheDocument();
+      expect(table.getAllByRole('row')).toHaveLength(NATIVE_CURRENCIES.length);
 
-      userEvent.click(screen.getByRole('switch', { name: /show zero balance/i }));
+      userEvent.click(screen.getByRole('switch', { name: /show all/i }));
 
       await waitFor(() => {
         expect(table.queryAllByRole('row')).toHaveLength(NATIVE_CURRENCIES.length);
