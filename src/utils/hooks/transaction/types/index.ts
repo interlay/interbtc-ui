@@ -66,7 +66,6 @@ type TransactionEvents = {
 
 interface TransactionAction {
   accountAddress: string;
-  events?: TransactionEvents;
   timestamp: number;
   customStatus?: ExtrinsicStatus['type'];
 }
@@ -83,7 +82,11 @@ type LibActions =
   | RewardsActions
   | VestingActions;
 
-type TransactionActions = XCMActions | LibActions;
+type Actions = XCMActions | LibActions;
+
+type TransactionActions = Actions & TransactionAction;
+
+type FeeEstimateActions = Actions;
 
 type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
 
@@ -95,4 +98,13 @@ enum TransactionStatus {
 }
 
 export { Transaction, TransactionStatus };
-export type { LibActions, TransactionAction, TransactionActions, TransactionArgs, TransactionEvents, XCMActions };
+export type {
+  Actions,
+  FeeEstimateActions,
+  LibActions,
+  TransactionAction,
+  TransactionActions,
+  TransactionArgs,
+  TransactionEvents,
+  XCMActions
+};

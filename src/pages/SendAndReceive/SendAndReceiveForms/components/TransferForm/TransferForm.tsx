@@ -18,6 +18,7 @@ import {
   transferSchema,
   TransferValidationParams
 } from '@/lib/form/schemas';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -36,14 +37,15 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const { account } = useWallet();
   const prices = useGetPrices();
   const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { getAvailableBalance, getBalanceInputProps } = useGetBalances();
+  const { getAvailableBalance } = useGetBalances();
   const { items: selectItems } = useSelectCurrency();
 
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
 
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
+    enablePreEstimate: !!account,
     preEstimate: account && {
-      args: [account?.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
+      args: [account.toString(), newMonetaryAmount(1, GOVERNANCE_TOKEN)]
     },
     onSuccess: () => {
       form.resetForm();
@@ -106,9 +108,9 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
 
       if (!transactionData) return;
 
-      const { amount, destination, feeTicker } = transactionData;
+      const { amount, destination } = transactionData;
 
-      transaction.fee.setCurrency(feeTicker).estimate(destination, amount);
+      transaction.fee.estimate(destination, amount);
     }
   });
 
@@ -153,7 +155,7 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
               })}
               {...mergeProps(
                 form.getFieldProps(TRANSFER_AMOUNT_FIELD, false, true),
-                getBalanceInputProps(transferToken.ticker, transaction.fee.data?.amount)
+                getTokenInputProps(transferTokenBalance)
               )}
             />
             <Input

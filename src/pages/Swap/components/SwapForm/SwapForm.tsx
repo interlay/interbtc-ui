@@ -23,6 +23,7 @@ import {
 import { SwapPair } from '@/types/swap';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -111,7 +112,7 @@ const SwapForm = ({
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { data: balances, getBalance, getAvailableBalance, getBalanceInputProps } = useGetBalances();
+  const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const selectCurrency = useSelectCurrency();
 
   const transaction = useTransaction(Transaction.AMM_SWAP, {
@@ -170,6 +171,7 @@ const SwapForm = ({
   useDebounce(handleChangeTrade, 500, [inputAmount, pair]);
 
   const inputBalance = pair.input && getAvailableBalance(pair.input.ticker, transaction.fee.data?.amount);
+  const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const minAmount = pair.input && newMonetaryAmount(1, pair.input);
@@ -332,11 +334,9 @@ const SwapForm = ({
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_INPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
-                  {...mergeProps(
-                    form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, true),
-                    getBalanceInputProps(pair.input?.ticker, transaction.fee.data?.amount),
-                    { onChange: handleChangeInput }
-                  )}
+                  {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, true), getTokenInputProps(inputBalance), {
+                    onChange: handleChangeInput
+                  })}
                 />
                 <SwapDivider onPress={handlePairSwap} />
                 <TokenInput
@@ -349,7 +349,7 @@ const SwapForm = ({
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
-                  {...getBalanceInputProps(pair.output?.ticker)}
+                  {...getTokenInputProps(outputBalance)}
                 />
               </Flex>
               <Flex direction='column' gap='spacing2'>

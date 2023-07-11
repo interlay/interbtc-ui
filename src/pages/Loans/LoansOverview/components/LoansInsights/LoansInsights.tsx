@@ -47,11 +47,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
     },
     validationSchema: claimRewardsLoanSchema(),
     onSubmit: () => transaction.execute(),
-    onComplete: async (values) => {
-      const feeTicker = values[LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate();
-    }
+    onComplete: async () => transaction.fee.estimate()
   });
 
   // Doing this call on mount so that the form becomes dirty

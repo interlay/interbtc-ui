@@ -14,7 +14,8 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { getExtrinsic } from '../extrinsics';
-import { Transaction, TransactionActions } from '../types';
+import { FeeEstimateResult } from '../hooks/use-fee-estimate';
+import { Actions, Transaction } from '../types';
 
 // 50% on top of trade to be safe (slippage, different weight)
 const OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER = 1.5;
@@ -76,7 +77,7 @@ const getTxFeeSwapData = async (
 const estimateTransactionFee: (
   feeCurrency: CurrencyExt,
   pools: Array<LiquidityPool>,
-  params: TransactionActions
+  params: Actions
 ) => Promise<MonetaryAmount<CurrencyExt>> = async (feeCurrency, pools, params) => {
   const baseExtrinsicData = await getExtrinsic(params);
   const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
@@ -98,7 +99,7 @@ const estimateTransactionFee: (
 const wrapWithTxFeeSwap = (
   feeAmount: MonetaryAmount<CurrencyExt> | undefined,
   baseExtrinsicData: ExtrinsicData,
-  pools: Array<LiquidityPool>
+  pools: Array<LiquidityPool> = []
 ): ExtrinsicData => {
   if (feeAmount === undefined || isCurrencyEqual(feeAmount.currency, GOVERNANCE_TOKEN)) {
     return baseExtrinsicData;
@@ -123,10 +124,7 @@ const wrapWithTxFeeSwap = (
 // MEMO: if we ever need toadd QTOKENS as a possible fee
 // token, we will need to handle it here for loan withdraw and
 // withdrawAll
-const getActionAmount = (
-  params: TransactionActions,
-  feeCurrency: CurrencyExt
-): MonetaryAmount<CurrencyExt> | undefined => {
+const getActionAmount = (params: Actions, feeCurrency: CurrencyExt): MonetaryAmount<CurrencyExt> | undefined => {
   let amounts: MonetaryAmount<CurrencyExt>[] | undefined;
 
   switch (params.type) {
@@ -177,4 +175,22 @@ const getActionAmount = (
   return amounts.find((amount) => isCurrencyEqual(amount.currency, feeCurrency));
 };
 
-export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };
+const subtractFee = (params: Actions, feeData: FeeEstimateResult): Actions => {
+  switch (params.type) {
+    // /* START - AMM */
+    // case Transaction.AMM_SWAP: {
+    //   return window.bridge.amm.swap(...params.args);
+    // }
+
+    /* START - TOKENS */
+    case Transaction.TOKENS_TRANSFER: {
+      const [destination, amount] = params.args;
+      params.args = [destination, amount.sub(feeData.amount)];
+      /* END - TOKENS */
+    }
+  }
+
+  return params;
+};
+
+export { estimateTransactionFee, getActionAmount, subtractFee, wrapWithTxFeeSwap };

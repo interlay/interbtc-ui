@@ -97,9 +97,7 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
 
       const { accountId, amount, deadline, pool } = transactionData;
 
-      const feeTicker = values[POOL_WITHDRAW_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate(amount, pool, slippage, deadline, accountId);
+      return transaction.fee.estimate(amount, pool, slippage, deadline, accountId);
     }
   });
 

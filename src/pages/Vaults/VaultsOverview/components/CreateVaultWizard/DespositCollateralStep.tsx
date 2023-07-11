@@ -84,9 +84,7 @@ const DepositCollateralStep = ({
     onComplete: (values) => {
       const transactionData = getTransactionArgs(values);
 
-      const feeTicker = values[VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD];
-
-      transaction.fee.setCurrency(feeTicker).estimate(transactionData.monetaryAmount);
+      transaction.fee.estimate(transactionData.monetaryAmount);
     }
   });
 

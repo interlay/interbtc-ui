@@ -57,12 +57,10 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
     },
     validationSchema: claimRewardsPoolSchema(),
     onSubmit: handleSubmit,
-    onComplete: async (values) => {
+    onComplete: async () => {
       if (!accountPoolsData) return;
 
-      const feeTicker = values[POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate(accountPoolsData.claimableRewards);
+      return transaction.fee.estimate(accountPoolsData.claimableRewards);
     }
   });
 

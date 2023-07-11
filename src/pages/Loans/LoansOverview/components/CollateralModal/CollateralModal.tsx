@@ -105,13 +105,11 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
     },
     validationSchema: toggleCollateralLoanSchema(),
     onSubmit: handleSubmit,
-    onComplete: async (values) => {
-      const feeTicker = values[LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD];
-
+    onComplete: async () => {
       if (variant === 'enable') {
-        return transaction.fee.setCurrency(feeTicker).estimate(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
+        return transaction.fee.estimate(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
       } else {
-        return transaction.fee.setCurrency(feeTicker).estimate(Transaction.LOANS_DISABLE_COLLATERAL, asset.currency);
+        return transaction.fee.estimate(Transaction.LOANS_DISABLE_COLLATERAL, asset.currency);
       }
     }
   });

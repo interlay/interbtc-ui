@@ -1,9 +1,8 @@
 import { InterBtcApi } from '@interlay/interbtc-api';
 
 import { Transaction } from '../types';
-import { TransactionAction } from '.';
 
-interface TokensTransferAction extends TransactionAction {
+interface TokensTransferAction {
   type: Transaction.TOKENS_TRANSFER;
   args: Parameters<InterBtcApi['tokens']['transfer']>;
 }

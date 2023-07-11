@@ -157,9 +157,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
       if (!args) return;
 
-      const feeTicker = values[BTC_ISSUE_FEE_TOKEN];
-
-      transaction.fee.setCurrency(feeTicker).estimate(...args);
+      transaction.fee.estimate(...args);
     }
   });
 

@@ -179,41 +179,28 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
 
       const { monetaryAmount } = transactionData;
 
-      const feeTicker = values[LOAN_FEE_TOKEN_FIELD];
-
       switch (variant) {
         case 'lend':
-          return transaction.fee
-            .setCurrency(feeTicker)
-            .estimate(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
+          return transaction.fee.estimate(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
         case 'withdraw': {
           if (isMaxAmount) {
-            return transaction.fee
-              .setCurrency(feeTicker)
-              .estimate(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
+            return transaction.fee.estimate(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
           } else {
-            return transaction.fee
-              .setCurrency(feeTicker)
-              .estimate(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
+            return transaction.fee.estimate(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
           }
         }
         case 'borrow':
-          return transaction.fee
-            .setCurrency(feeTicker)
-            .estimate(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
+          return transaction.fee.estimate(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
 
         case 'repay': {
           if (isMaxAmount) {
             return (
               transaction.fee
-                .setCurrency(feeTicker)
                 // passing the limit calculated, so it can be used in the validation in transaction hook
                 .estimate(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, assetAmount.available)
             );
           } else {
-            return transaction.fee
-              .setCurrency(feeTicker)
-              .estimate(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
+            return transaction.fee.estimate(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
           }
         }
       }

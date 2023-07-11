@@ -114,9 +114,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
       const { accountId, amounts, deadline, pool } = transactionData;
 
-      const feeTicker = values[POOL_DEPOSIT_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate(amounts, pool, slippage, deadline, accountId);
+      return transaction.fee.estimate(amounts, pool, slippage, deadline, accountId);
     }
   });
 

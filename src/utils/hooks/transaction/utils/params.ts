@@ -1,13 +1,10 @@
-import { ExtrinsicStatus } from '@polkadot/types/interfaces';
-
-import { Transaction, TransactionActions } from '../types';
+import { Actions, Transaction } from '../types';
 import { ExecuteFunctions } from '../types/hook';
 
-const getParams = <T extends Transaction>(
+const getActionData = <T extends Transaction>(
   args: Parameters<ExecuteFunctions<T>['execute']>,
-  typeOrOptions?: T | Record<string, unknown>,
-  customStatus?: ExtrinsicStatus['type']
-): TransactionActions => {
+  typeOrOptions?: T | Record<string, unknown>
+): Actions => {
   let params = {};
 
   // Assign correct params for when transaction type is declared on hook params
@@ -19,11 +16,7 @@ const getParams = <T extends Transaction>(
     params = { type, args: restArgs };
   }
 
-  return {
-    ...params,
-    timestamp: new Date().getTime(),
-    customStatus
-  } as TransactionActions;
+  return params as Actions;
 };
 
-export { getParams };
+export { getActionData };

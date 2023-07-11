@@ -7,7 +7,6 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { TokenInputProps } from '@/component-library';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -35,10 +34,6 @@ type UseGetBalances = UseQueryResult<BalanceData | undefined> & {
   getBalance: (ticker: string) => ChainBalance | undefined;
   // TODO: make not optional
   getAvailableBalance: (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => ChainBalance['free'] | undefined;
-  getBalanceInputProps: (
-    ticker?: string,
-    feeAmount?: MonetaryAmount<CurrencyExt>
-  ) => Pick<TokenInputProps, 'balance' | 'humanBalance'>;
 };
 
 const getBalancesQueryKey = (accountAddress?: string): string => 'getBalances'.concat(accountAddress || '');
@@ -84,19 +79,7 @@ const useGetBalances = (): UseGetBalances => {
     [getBalance]
   );
 
-  const getBalanceInputProps = useCallback(
-    (ticker?: string, feeAmount?: MonetaryAmount<CurrencyExt>) => {
-      const balance = ticker && getAvailableBalance(ticker, feeAmount);
-
-      return {
-        balance: balance ? balance.toString() : 0,
-        humanBalance: balance ? balance.toHuman() : 0
-      };
-    },
-    [getAvailableBalance]
-  );
-
-  return { ...queryResult, getBalance, getAvailableBalance, getBalanceInputProps };
+  return { ...queryResult, getBalance, getAvailableBalance };
 };
 
 export { getBalancesQueryKey, useGetBalances };

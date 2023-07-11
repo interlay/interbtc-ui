@@ -185,9 +185,7 @@ const RedeemForm = ({
 
       if (!args) return;
 
-      const feeTicker = values[BTC_REDEEM_FEE_TOKEN];
-
-      transaction.fee.setCurrency(feeTicker).estimate(...args);
+      transaction.fee.estimate(...args);
     }
   });
 
