@@ -1,7 +1,7 @@
 import { ChainBalance, CurrencyExt, newMonetaryAmount, TokensAPI } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { DEFAULT_EXTRINSIC } from './extrinsic';
+import { EXTRINSIC_DATA } from '../extrinsic';
 
 const BALANCE_VALUE = 1000000000000;
 
@@ -24,8 +24,8 @@ const MODULE: Record<keyof TokensAPI, jest.Mock<any, any>> = {
   total: jest.fn().mockImplementation(TOTAL_FN.FULL),
   // MUTATIONS
   buildTransferExtrinsic: jest.fn(),
-  transfer: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  setBalance: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
+  transfer: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  setBalance: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
   subscribeToBalance: jest.fn().mockImplementation((currency: CurrencyExt, account, callback) => {
     const balance = new ChainBalance(currency, BALANCE_VALUE, BALANCE_VALUE);
     callback(account, balance);

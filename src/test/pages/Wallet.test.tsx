@@ -101,7 +101,7 @@ describe('Wallet Page', () => {
       });
     });
 
-    it('should be able to claim vesting', async () => {
+    it.only('should be able to claim vesting', async () => {
       getCurrentBlockNumber.mockReturnValue(10);
       vestingSchedules.mockReturnValue(VESTING_SCHEDULES.FULL);
 

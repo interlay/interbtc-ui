@@ -13,7 +13,7 @@ import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
-import { DEFAULT_EXTRINSIC } from './extrinsic';
+import { EXTRINSIC_DATA } from '../extrinsic';
 
 const WRAPPED_LOAN_AMOUNT = {
   EMPTY: {
@@ -302,16 +302,16 @@ const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   getLoansMarkets: jest.fn(),
   getUndercollateralizedBorrowers: jest.fn(),
   // MUTATIONS
-  lend: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  borrow: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  withdraw: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  withdrawAll: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  repayAll: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  repay: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  claimAllSubsidyRewards: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  disableAsCollateral: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  enableAsCollateral: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  liquidateBorrowPosition: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC)
+  lend: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  borrow: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  withdraw: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  withdrawAll: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  repayAll: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  repay: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  claimAllSubsidyRewards: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  disableAsCollateral: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  enableAsCollateral: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  liquidateBorrowPosition: jest.fn().mockResolvedValue(EXTRINSIC_DATA)
 };
 
 const MOCK_LOANS = {
