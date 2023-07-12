@@ -25,7 +25,7 @@ const handleTransaction = async (
     let unsubscribe: () => void;
 
     (extrinsicData.extrinsic as SubmittableExtrinsic<'promise'>)
-      .signAndSend(account, { nonce: -1 }, callback)
+      .signAndSend(account, { nonce: -1, assetId: 1984 }, callback)
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
 
