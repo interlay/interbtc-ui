@@ -2,7 +2,7 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { UseMutationOptions, UseMutationResult } from 'react-query';
 
-import { EstimateArgs, EstimateTypeArgs, UseFeeEstimateOptions, UseFeeEstimateResult } from '../hooks/use-fee-estimate';
+import { EstimateArgs, EstimateTypeArgs, UseFeeEstimateResult } from '../hooks/use-fee-estimate';
 import { Transaction, TransactionActions, TransactionArgs } from '.';
 
 type TransactionResult = { status: 'success' | 'error'; data: ISubmittableResult; error?: Error };
@@ -32,32 +32,32 @@ type UseTransactionResult<T extends Transaction> = {
 } & ReactQueryUseTransactionResult &
   ExecuteFunctions<T>;
 
-type UseTransactionOptionsWithType<T extends Transaction> = Omit<
+type UseTransactionOptionsWithType = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
   showSuccessModal?: boolean;
-} & UseFeeEstimateOptions<T>;
+};
 
-type UseTransactionOptionsWithoutType<T extends Transaction> = Omit<
+type UseTransactionOptionsWithoutType = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
   showSuccessModal?: boolean;
-} & UseFeeEstimateOptions<T>;
+};
 
-type UseTransactionOptions<T extends Transaction> = Omit<
+type UseTransactionOptions = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
   showSuccessModal?: boolean;
-} & UseFeeEstimateOptions<T>;
+};
 
 type UseTransactionWithType<T extends Transaction> = Omit<
   Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>,
@@ -80,7 +80,6 @@ export type {
   ExecuteFunctions,
   ExecuteTypeArgs,
   TransactionResult,
-  UseFeeEstimateOptions,
   UseFeeEstimateResult,
   UseTransactionOptions,
   UseTransactionOptionsWithoutType,

@@ -5,6 +5,7 @@ import { MutationFunction, useMutation } from 'react-query';
 import { useSubstrate } from '@/lib/substrate';
 
 import { useGetLiquidityPools } from '../../api/amm/use-get-liquidity-pools';
+import { useGetBalances } from '../../api/tokens/use-get-balances';
 import { getExtrinsic, getStatus } from '../extrinsics';
 import { Transaction, TransactionActions } from '../types';
 import {
@@ -16,8 +17,8 @@ import {
   UseTransactionWithoutType,
   UseTransactionWithType
 } from '../types/hook';
-import { subtractFee, wrapWithTxFeeSwap } from '../utils/fee';
-import { getActionData } from '../utils/params';
+import { wrapWithTxFeeSwap } from '../utils/fee';
+import { getActionData, getFeeAdaptedActionData } from '../utils/params';
 import { submitTransaction } from '../utils/submit';
 import { useFeeEstimate } from './use-fee-estimate';
 import { useTransactionNotifications } from './use-transaction-notifications';
@@ -25,24 +26,23 @@ import { useTransactionNotifications } from './use-transaction-notifications';
 // The three declared functions are use to infer types on diferent implementations
 function useTransaction<T extends Transaction>(
   type: T,
-  options?: UseTransactionOptionsWithType<T>
+  options?: UseTransactionOptionsWithType
 ): UseTransactionWithType<T>;
 function useTransaction<T extends Transaction>(
-  options?: UseTransactionOptionsWithoutType<T>
+  options?: UseTransactionOptionsWithoutType
 ): UseTransactionWithoutType<T>;
 function useTransaction<T extends Transaction>(
-  typeOrOptions?: T | UseTransactionOptions<T>,
-  options?: UseTransactionOptions<T>
+  typeOrOptions?: T | UseTransactionOptions,
+  options?: UseTransactionOptions
 ): UseTransactionResult<T> {
   const { state } = useSubstrate();
   const { data: pools } = useGetLiquidityPools();
+  const { getAvailableBalance } = useGetBalances();
 
-  const { showSuccessModal, customStatus, preEstimate, enablePreEstimate, ...mutateOptions } =
+  const { showSuccessModal, customStatus, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
 
   const { data: feeData, ...feeEstimate } = useFeeEstimate<T>({
-    enablePreEstimate,
-    preEstimate,
     typeOrOptions
   });
 
@@ -74,17 +74,21 @@ function useTransaction<T extends Transaction>(
 
   const { mutate, mutateAsync, ...transactionMutation } = useMutation(mutateTransaction, optionsProp);
 
-  // Handles params for both type of implementations
   const getBaseParams = useCallback(
     async (...args: Parameters<UseTransactionResult<T>['execute']>): Promise<TransactionActions> => {
-      const params = getActionData(args, typeOrOptions);
+      let params = getActionData(args, typeOrOptions);
+      console.log(feeData);
 
-      const feeData = await feeEstimate.estimateAsync<T>(...(args as [any]));
+      if (feeData?.isEqualToActionCurrency) {
+        // run a more recent estimate before submitting the transaction
+        const newFeeData = await feeEstimate.estimateAsync<T>(...(args as [any]));
+        const balance = getAvailableBalance(newFeeData.amount.currency.ticker);
 
-      const finalParams = feeData?.isSameAsActionCurrency ? subtractFee(params, feeData) : params;
+        params = balance ? getFeeAdaptedActionData(params, newFeeData, balance) : params;
+      }
 
       return {
-        ...finalParams,
+        ...params,
         customStatus,
         timestamp: new Date().getTime(),
         // Execution should only ran when authenticated
@@ -92,7 +96,7 @@ function useTransaction<T extends Transaction>(
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [typeOrOptions, customStatus, state.selectedAccount?.address]
+    [typeOrOptions, feeData, customStatus, state.selectedAccount?.address]
   );
 
   const handleExecute = useCallback(

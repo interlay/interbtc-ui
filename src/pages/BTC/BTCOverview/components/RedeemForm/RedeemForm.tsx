@@ -313,7 +313,7 @@ const RedeemForm = ({
                 bridgeFee={bridgeFee}
                 bitcoinNetworkFee={currentInclusionFee}
                 feeDetailsProps={{
-                  ...transaction.fee.detailsProps,
+                  ...transaction.fee,
                   selectProps: form.getSelectFieldProps(BTC_REDEEM_FEE_TOKEN, true)
                 }}
               />

@@ -21,13 +21,11 @@ import {
 } from '../TransactionDetails';
 
 type Props = {
-  currency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
-  showInsufficientBalance?: boolean;
+  isValid?: boolean;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
-  onSelectionChange?: (ticker: string) => void;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
@@ -36,13 +34,11 @@ type TransactionFeeDetailsProps = Props & InheritAttrs;
 
 const TransactionFeeDetails = ({
   amount,
-  currency,
-  showInsufficientBalance,
+  isValid,
   selectProps,
   label,
   tooltipLabel,
   className,
-  onSelectionChange,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
@@ -55,11 +51,10 @@ const TransactionFeeDetails = ({
         amount,
         getTokenPrice(prices, amount.currency.ticker)?.usd
       )})`
-    : `${0.0} ${currency?.ticker} (${formatUSD(0)})`;
+    : `${0.0} ${selectProps?.value} (${formatUSD(0)})`;
 
   const errorMessage =
-    showInsufficientBalance &&
-    t('forms.ensure_adequate_amount_left_to_cover_action', { action: t('fees').toLowerCase() });
+    isValid === false && t('forms.ensure_adequate_amount_left_to_cover_action', { action: t('fees').toLowerCase() });
 
   return (
     <Flex gap='spacing2' direction='column' className={className}>
@@ -68,9 +63,7 @@ const TransactionFeeDetails = ({
           <TransactionSelectToken
             {...mergeProps(selectProps || {}, {
               label: t('fee_token'),
-              items: selectCurrency.items,
-              value: currency?.ticker,
-              onSelectionChange
+              items: selectCurrency.items
             })}
             errorMessage={undefined}
             aria-describedby={errorMessage ? id : undefined}

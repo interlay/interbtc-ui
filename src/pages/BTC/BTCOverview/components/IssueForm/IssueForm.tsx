@@ -271,7 +271,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 securityDepositSelectProps={form.getSelectFieldProps(BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
                 showInsufficientSecurityBalance={!hasEnoughGriefingCollateralBalance}
                 feeDetailsProps={{
-                  ...transaction.fee.detailsProps,
+                  ...transaction.fee,
                   selectProps: form.getSelectFieldProps(BTC_ISSUE_FEE_TOKEN, true)
                 }}
               />

@@ -1,3 +1,7 @@
+import { CurrencyExt } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
+
+import { FeeEstimateResult } from '../hooks/use-fee-estimate';
 import { Actions, Transaction } from '../types';
 import { ExecuteFunctions } from '../types/hook';
 
@@ -19,4 +23,48 @@ const getActionData = <T extends Transaction>(
   return params as Actions;
 };
 
-export { getActionData };
+const getAmount = (
+  actionAmount: MonetaryAmount<CurrencyExt>,
+  feeAmount: MonetaryAmount<CurrencyExt>,
+  balance: MonetaryAmount<CurrencyExt>
+): MonetaryAmount<CurrencyExt> => {
+  const isMaxAmount = balance.eq(actionAmount);
+
+  if (isMaxAmount) {
+    return actionAmount.sub(feeAmount);
+  }
+
+  const leftoverBalance = balance.sub(actionAmount);
+
+  if (leftoverBalance.lt(feeAmount)) {
+    return actionAmount.sub(feeAmount.sub(leftoverBalance));
+  }
+
+  return actionAmount;
+};
+
+const getFeeAdaptedActionData = (
+  params: Actions,
+  feeData: FeeEstimateResult,
+  balance: MonetaryAmount<CurrencyExt>
+): Actions => {
+  const { amount: feeAmount } = feeData;
+
+  switch (params.type) {
+    // /* START - AMM */
+    // case Transaction.AMM_SWAP: {
+    //   return window.bridge.amm.swap(...params.args);
+    // }
+
+    /* START - TOKENS */
+    case Transaction.TOKENS_TRANSFER: {
+      const [destination, amount] = params.args;
+      params.args = [destination, getAmount(amount, feeAmount, balance)];
+      /* END - TOKENS */
+    }
+  }
+
+  return params;
+};
+
+export { getActionData, getFeeAdaptedActionData };

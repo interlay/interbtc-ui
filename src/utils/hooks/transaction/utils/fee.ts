@@ -14,7 +14,6 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { getExtrinsic } from '../extrinsics';
-import { FeeEstimateResult } from '../hooks/use-fee-estimate';
 import { Actions, Transaction } from '../types';
 
 // 50% on top of trade to be safe (slippage, different weight)
@@ -93,7 +92,8 @@ const estimateTransactionFee: (
     pools
   );
 
-  return wrappedInSwapTxFee;
+  // final buffer
+  return wrappedInSwapTxFee.mul(1.05);
 };
 
 const wrapWithTxFeeSwap = (
@@ -175,22 +175,4 @@ const getActionAmount = (params: Actions, feeCurrency: CurrencyExt): MonetaryAmo
   return amounts.find((amount) => isCurrencyEqual(amount.currency, feeCurrency));
 };
 
-const subtractFee = (params: Actions, feeData: FeeEstimateResult): Actions => {
-  switch (params.type) {
-    // /* START - AMM */
-    // case Transaction.AMM_SWAP: {
-    //   return window.bridge.amm.swap(...params.args);
-    // }
-
-    /* START - TOKENS */
-    case Transaction.TOKENS_TRANSFER: {
-      const [destination, amount] = params.args;
-      params.args = [destination, amount.sub(feeData.amount)];
-      /* END - TOKENS */
-    }
-  }
-
-  return params;
-};
-
-export { estimateTransactionFee, getActionAmount, subtractFee, wrapWithTxFeeSwap };
+export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };

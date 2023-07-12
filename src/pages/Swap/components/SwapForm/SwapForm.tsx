@@ -116,26 +116,6 @@ const SwapForm = ({
   const selectCurrency = useSelectCurrency();
 
   const transaction = useTransaction(Transaction.AMM_SWAP, {
-    enablePreEstimate: !!accountId,
-    preEstimate: async () => {
-      if (!accountId) return;
-
-      const [pool] = liquidityPools.filter((pool) => !pool.isEmpty);
-
-      const [input, output] = pool.pooledCurrencies;
-
-      const inputMonetaryAmount = newMonetaryAmount(1, input.currency, true);
-
-      const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, output.currency, liquidityPools);
-
-      if (!trade) return;
-
-      const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
-
-      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
-
-      return { args: [trade, minimumAmountOut, accountId, deadline] };
-    },
     onSigning: () => {
       setInputAmount(undefined);
       form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);
@@ -264,24 +244,6 @@ const SwapForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair]);
 
-  // useEffect(() => {
-  //   const estimateFee = async () => {
-  //     const transactionData = await getTransactionArgs(trade);
-
-  //     if (!transactionData) return;
-
-  //     const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
-
-  //     transaction.fee.estimate(tradeData, minimumAmountOut, accountId, deadline);
-  //   };
-
-  //   if (!trade) return;
-
-  //   estimateFee();
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [trade]);
-
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => setInputAmount(e.target.value);
 
   const handlePairChange = (pair: SwapPair) => onChangePair(pair);
@@ -355,7 +317,7 @@ const SwapForm = ({
               <Flex direction='column' gap='spacing2'>
                 {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
                 <TransactionFeeDetails
-                  {...transaction.fee.detailsProps}
+                  {...transaction.fee}
                   selectProps={form.getSelectFieldProps(SWAP_FEE_TOKEN_FIELD)}
                 />
               </Flex>
