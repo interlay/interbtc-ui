@@ -1,4 +1,5 @@
-import { CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { useEffect, useRef } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
@@ -19,7 +20,7 @@ import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
 import { StyledDescription } from './CollateralModal.style';
 
-type CollateralModalVariant = 'enable' | 'disable' | 'disable-error';
+type CollateralModalVariant = 'enable' | 'disable' | 'disable-error' | 'disable-vault-collateral';
 
 const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: LoanAsset) =>
   ({
@@ -40,10 +41,21 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
       description:
         'This asset is required to support your borrowed assets. Either repay borrowed assets, or supply another asset as collateral.',
       buttonLabel: `Dismiss`
+    },
+    'disable-vault-collateral': {
+      title: 'Already used as vault collateral',
+      description:
+        'This asset is already used as vault collateral and therefore can not be used as collateral for lending.',
+      buttonLabel: `Dismiss`
     }
   }[variant]);
 
-const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): CollateralModalVariant => {
+const getModalVariant = (
+  isCollateralActive: boolean,
+  ltvStatus: Status | undefined,
+  vaultCollateralAmount: MonetaryAmount<CurrencyExt>
+): CollateralModalVariant => {
+  if (!vaultCollateralAmount.isZero()) return 'disable-vault-collateral';
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
   if (!ltvStatus || ltvStatus !== 'success') return 'disable-error';
@@ -73,11 +85,11 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
     onSuccess: refetch
   });
 
-  const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
+  const { isCollateral: isCollateralActive, amount: lendPositionAmount, vaultCollateralAmount } = position;
 
   const loanAction = isCollateralActive ? 'withdraw' : 'lend';
   const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount });
-  const variant = getModalVariant(isCollateralActive, currentLTV?.status);
+  const variant = getModalVariant(isCollateralActive, currentLTV?.status, vaultCollateralAmount);
 
   const handleSubmit = () => {
     if (variant === 'enable') {
@@ -107,7 +119,7 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
   // Doing this call on mount so that the form becomes dirty
   // TODO: find better approach
   useEffect(() => {
-    if (variant === 'disable-error' || !isOpen) return;
+    if (variant === 'disable-error' || variant === 'disable-vault-collateral' || !isOpen) return;
 
     form.setFieldValue(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,11 +140,13 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
       <ModalBody>
         <Flex direction='column' gap='spacing8'>
           <StyledDescription color='tertiary'>{content.description}</StyledDescription>
-          <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
+          {variant !== 'disable-vault-collateral' && (
+            <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
+          )}
         </Flex>
       </ModalBody>
       <ModalFooter>
-        {variant === 'disable-error' ? (
+        {variant === 'disable-error' || variant === 'disable-vault-collateral' ? (
           <CTA size='large' onPress={onClose}>
             {content.buttonLabel}
           </CTA>
