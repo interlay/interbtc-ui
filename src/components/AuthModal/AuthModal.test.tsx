@@ -21,11 +21,11 @@ describe('AuthModal', () => {
 
     await render(<AuthModal isOpen onClose={jest.fn} />);
 
-    expect(screen.getByRole('heading', { name: /please install supported wallet/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /please install a supported wallet/i })).toBeInTheDocument();
 
     const items = screen.getAllByRole('button', { name: /navigate/i, exact: false });
 
-    expect(items).toHaveLength(3);
+    expect(items).toHaveLength(4);
 
     const [item] = items;
 

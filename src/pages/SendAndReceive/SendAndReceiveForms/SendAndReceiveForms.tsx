@@ -19,7 +19,7 @@ const SendAndReceiveForms = (): JSX.Element => {
                   <TransferForm />
                 </StyledFormWrapper>
               </TabsItem>
-              <TabsItem title='Bridge' key='crossChainTransfer'>
+              <TabsItem title='Bridge' key='bridge'>
                 <StyledFormWrapper>
                   <BridgeForm />
                 </StyledFormWrapper>
