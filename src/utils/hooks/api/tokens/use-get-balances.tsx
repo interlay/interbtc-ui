@@ -1,5 +1,4 @@
-import { ChainBalance, CurrencyExt, isCurrencyEqual, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -33,7 +32,7 @@ const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Pro
 type UseGetBalances = UseQueryResult<BalanceData | undefined> & {
   getBalance: (ticker: string) => ChainBalance | undefined;
   // TODO: make not optional
-  getAvailableBalance: (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => ChainBalance['free'] | undefined;
+  getAvailableBalance: (ticker: string) => ChainBalance['free'] | undefined;
 };
 
 const getBalancesQueryKey = (accountAddress?: string): string => 'getBalances'.concat(accountAddress || '');
@@ -56,28 +55,7 @@ const useGetBalances = (): UseGetBalances => {
 
   const getBalance = useCallback((ticker: string) => data?.[ticker], [data]);
 
-  const getAvailableBalance = useCallback(
-    (ticker: string, feeAmount?: MonetaryAmount<CurrencyExt>) => {
-      const balance = getBalance(ticker)?.transferable;
-
-      if (!feeAmount) {
-        return balance;
-      }
-
-      if (!balance) {
-        return undefined;
-      }
-
-      const isBalanceAndFeeSameCurrency = isCurrencyEqual(balance.currency, feeAmount.currency);
-
-      if (!isBalanceAndFeeSameCurrency) {
-        return balance;
-      }
-
-      return balance.gte(feeAmount) ? balance.sub(feeAmount) : newMonetaryAmount(0, balance.currency);
-    },
-    [getBalance]
-  );
+  const getAvailableBalance = useCallback((ticker: string) => getBalance(ticker)?.transferable, [getBalance]);
 
   return { ...queryResult, getBalance, getAvailableBalance };
 };

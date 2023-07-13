@@ -1,7 +1,6 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { FeeEstimateResult } from '../hooks/use-fee-estimate';
 import { Actions, Transaction } from '../types';
 import { ExecuteFunctions } from '../types/hook';
 
@@ -43,28 +42,4 @@ const getAmount = (
   return actionAmount;
 };
 
-const getFeeAdaptedActionData = (
-  params: Actions,
-  feeData: FeeEstimateResult,
-  balance: MonetaryAmount<CurrencyExt>
-): Actions => {
-  const { amount: feeAmount } = feeData;
-
-  switch (params.type) {
-    // /* START - AMM */
-    // case Transaction.AMM_SWAP: {
-    //   return window.bridge.amm.swap(...params.args);
-    // }
-
-    /* START - TOKENS */
-    case Transaction.TOKENS_TRANSFER: {
-      const [destination, amount] = params.args;
-      params.args = [destination, getAmount(amount, feeAmount, balance)];
-      /* END - TOKENS */
-    }
-  }
-
-  return params;
-};
-
-export { getActionData, getFeeAdaptedActionData };
+export { getActionData, getAmount };

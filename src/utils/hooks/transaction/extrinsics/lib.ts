@@ -5,9 +5,8 @@ import { LibActions, Transaction } from '../types';
 const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
   switch (params.type) {
     /* START - AMM */
-    case Transaction.AMM_SWAP: {
+    case Transaction.AMM_SWAP:
       return window.bridge.amm.swap(...params.args);
-    }
     case Transaction.AMM_ADD_LIQUIDITY:
       return window.bridge.amm.addLiquidity(...params.args);
     case Transaction.AMM_REMOVE_LIQUIDITY:

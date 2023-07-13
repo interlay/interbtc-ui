@@ -1,3 +1,5 @@
+import { CurrencyExt } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { useCallback } from 'react';
 import { MutationFunction, useMutation } from 'react-query';
@@ -18,9 +20,9 @@ import {
   UseTransactionWithType
 } from '../types/hook';
 import { wrapWithTxFeeSwap } from '../utils/fee';
-import { getActionData, getFeeAdaptedActionData } from '../utils/params';
+import { getActionData, getAmount } from '../utils/params';
 import { submitTransaction } from '../utils/submit';
-import { useFeeEstimate } from './use-fee-estimate';
+import { FeeEstimateResult, useFeeEstimate } from './use-fee-estimate';
 import { useTransactionNotifications } from './use-transaction-notifications';
 
 // The three declared functions are use to infer types on diferent implementations
@@ -76,16 +78,7 @@ function useTransaction<T extends Transaction>(
 
   const getBaseParams = useCallback(
     async (...args: Parameters<UseTransactionResult<T>['execute']>): Promise<TransactionActions> => {
-      let params = getActionData(args, typeOrOptions);
-      console.log(feeData);
-
-      if (feeData?.isEqualToActionCurrency) {
-        // run a more recent estimate before submitting the transaction
-        const newFeeData = await feeEstimate.estimateAsync<T>(...(args as [any]));
-        const balance = getAvailableBalance(newFeeData.amount.currency.ticker);
-
-        params = balance ? getFeeAdaptedActionData(params, newFeeData, balance) : params;
-      }
+      const params = getActionData(args, typeOrOptions);
 
       return {
         ...params,
@@ -125,11 +118,27 @@ function useTransaction<T extends Transaction>(
     }
   };
 
+  const calculateFeeAffectAmount = useCallback(
+    (amount: MonetaryAmount<CurrencyExt>, fee?: FeeEstimateResult) => {
+      const feeResult = fee || feeData;
+
+      const balance = feeResult && getAvailableBalance(feeResult.amount.currency.ticker);
+
+      if (!feeResult || !balance) {
+        return amount;
+      }
+
+      return getAmount(amount, feeResult.amount, balance);
+    },
+    [feeData, getAvailableBalance]
+  );
+
   return {
     ...transactionMutation,
     reject: handleReject,
     execute: handleExecute,
     executeAsync: handleExecuteAsync,
+    calculateFeeAffectAmount,
     fee: {
       ...feeEstimate,
       data: feeData

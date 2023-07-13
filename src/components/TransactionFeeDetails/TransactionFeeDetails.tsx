@@ -8,6 +8,7 @@ import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/util
 import { Alert, Flex } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { UseFeeEstimateResult } from '@/utils/hooks/transaction/types/hook';
 import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import {
@@ -26,6 +27,7 @@ type Props = {
   isValid?: boolean;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
+  fee?: UseFeeEstimateResult<any>;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
@@ -39,6 +41,7 @@ const TransactionFeeDetails = ({
   label,
   tooltipLabel,
   className,
+  fee,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
@@ -46,10 +49,12 @@ const TransactionFeeDetails = ({
   const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
   const id = useId();
 
-  const amountLabel = amount
-    ? `${amount.toHuman()} ${amount.currency.ticker} (${displayMonetaryAmountInUSDFormat(
-        amount,
-        getTokenPrice(prices, amount.currency.ticker)?.usd
+  const amountt = amount || fee?.data?.amount;
+
+  const amountLabel = amountt
+    ? `${amountt.toHuman()} ${amountt.currency.ticker} (${displayMonetaryAmountInUSDFormat(
+        amountt,
+        getTokenPrice(prices, amountt.currency.ticker)?.usd
       )})`
     : `${0.0} ${selectProps?.value} (${formatUSD(0)})`;
 
@@ -61,7 +66,7 @@ const TransactionFeeDetails = ({
       <TransactionDetails {...props}>
         {selectProps && (
           <TransactionSelectToken
-            {...mergeProps(selectProps || {}, {
+            {...mergeProps(selectProps || {}, fee?.selectProps || {}, {
               label: t('fee_token'),
               items: selectCurrency.items
             })}

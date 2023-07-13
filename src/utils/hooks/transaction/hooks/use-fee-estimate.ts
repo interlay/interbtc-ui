@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { Key, useCallback, useRef, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -71,7 +71,9 @@ type ReactQueryUseFeeEstimateResult = Omit<
 
 type UseFeeEstimateResult<T extends Transaction> = {
   defaultCurrency: CurrencyExt;
+  currency: CurrencyExt;
   selectProps: Pick<SelectProps, 'value' | 'onSelectionChange'>;
+  isEqualFeeCurrency: (currency: CurrencyExt) => boolean;
 } & ReactQueryUseFeeEstimateResult &
   EstimateFunctions<T>;
 
@@ -95,6 +97,7 @@ function useFeeEstimate<T extends Transaction>({
   const mutateFee: MutationFunction<FeeEstimateResult, EstimateFeeVariables> = useCallback(
     async ({ params, currency }) => {
       const amount = await estimateTransactionFee(currency, pools || [], params);
+
       const feeBalance = getBalance(currency.ticker)?.transferable;
 
       const actionAmount = getActionAmount(params, amount.currency);
@@ -173,14 +176,20 @@ function useFeeEstimate<T extends Transaction>({
     mutate(variables);
   };
 
+  const isEqualFeeCurrency = useCallback((currency: CurrencyExt) => isCurrencyEqual(currency, feeCurrency), [
+    feeCurrency
+  ]);
+
   const result = data || feeResultRef.current;
 
   return {
     ...feeMutation,
     data: result,
     defaultCurrency: defaultFeeCurrency,
+    currency: feeCurrency,
     estimate: handleEstimateFee,
     estimateAsync: handleEstimateFeeAsync,
+    isEqualFeeCurrency,
     selectProps: {
       value: feeCurrency.ticker,
       onSelectionChange: handleFeeSelectionChange

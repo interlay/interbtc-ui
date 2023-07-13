@@ -28,7 +28,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { getTransactionFeeDetailsProps, Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
@@ -139,7 +139,15 @@ const SwapForm = ({
 
       const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
 
-      transaction.fee.estimate(tradeData, minimumAmountOut, accountId, deadline);
+      const feeEstimate = await transaction.fee.estimateAsync(tradeData, minimumAmountOut, accountId, deadline);
+
+      if (feeEstimate.isEqualToActionCurrency) {
+        const newInputMonetaryAmount = transaction.calculateFeeAffectAmount(inputMonetaryAmount, feeEstimate);
+
+        const trade = window.bridge.amm.getOptimalTrade(newInputMonetaryAmount, pair.output, liquidityPools);
+
+        return setTrade(trade);
+      }
     }
 
     setTrade(trade);
@@ -150,7 +158,7 @@ const SwapForm = ({
 
   useDebounce(handleChangeTrade, 500, [inputAmount, pair]);
 
-  const inputBalance = pair.input && getAvailableBalance(pair.input.ticker, transaction.fee.data?.amount);
+  const inputBalance = pair.input && getAvailableBalance(pair.input.ticker);
   const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
@@ -187,7 +195,7 @@ const SwapForm = ({
   const handleSwap = async () => {
     const transactionData = await getTransactionArgs(trade);
 
-    if (!transactionData) return;
+    if (!transactionData || !transaction.fee.data || !inputBalance) return;
 
     const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
 
@@ -317,7 +325,7 @@ const SwapForm = ({
               <Flex direction='column' gap='spacing2'>
                 {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
                 <TransactionFeeDetails
-                  {...transaction.fee}
+                  {...getTransactionFeeDetailsProps(transaction.fee)}
                   selectProps={form.getSelectFieldProps(SWAP_FEE_TOKEN_FIELD)}
                 />
               </Flex>

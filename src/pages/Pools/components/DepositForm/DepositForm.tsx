@@ -1,4 +1,5 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
 import { ChangeEventHandler, Fragment, RefObject, useCallback, useMemo, useState } from 'react';
@@ -26,8 +27,10 @@ import { PoolName } from '../PoolName';
 import { StyledPlusDivider, StyledTokenInput } from './DepositForm.styles';
 import { DepositOutputAssets } from './DepositOutputAssets';
 
-const isCustomAmountsMode = (form: ReturnType<typeof useForm>) =>
-  form.dirty && Object.values(form.touched).filter(Boolean).length > 0;
+const isCustomAmountsMode = (form: ReturnType<typeof useForm>, pool: LiquidityPool) =>
+  // If pool has no liquidity, the assets ratio is set by the user,
+  // therefore the value inputted is directly used.
+  (form.dirty && Object.values(form.touched).filter(Boolean).length > 0) || pool.isEmpty;
 
 type DepositFormProps = {
   pool: LiquidityPool;
@@ -41,6 +44,8 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
   const [slippage, setSlippage] = useState(0.1);
 
+  const [isCustomMode, setCustomMode] = useState(false);
+
   const accountId = useAccountId();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
@@ -51,13 +56,36 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     onSigning
   });
 
-  const getTransactionArgs = useCallback(
-    async (values: DepositLiquidityPoolFormData) => {
-      if (!accountId) return;
-
-      const amounts = pooledCurrencies.map((amount) =>
+  const getAmounts = useCallback(
+    (values: DepositLiquidityPoolFormData, isEstimate?: boolean) => {
+      const amounts: MonetaryAmount<CurrencyExt>[] = pooledCurrencies.map((amount) =>
         newSafeMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
       );
+
+      const feeCurrencyAmount = amounts.find((amount) => transaction.fee.isEqualFeeCurrency(amount.currency));
+
+      if (!isEstimate && feeCurrencyAmount && transaction.fee.data) {
+        const newFeeCurrencyAmount = transaction.calculateFeeAffectAmount(feeCurrencyAmount);
+
+        if (isCustomMode) {
+          return amounts.map((amount) =>
+            transaction.fee.isEqualFeeCurrency(amount.currency) ? newFeeCurrencyAmount : amount
+          );
+        } else {
+          return pool.getLiquidityDepositInputAmounts(newFeeCurrencyAmount);
+        }
+      }
+
+      return amounts;
+    },
+    [isCustomMode, pool, pooledCurrencies, transaction]
+  );
+
+  const getTransactionArgs = useCallback(
+    async (values: DepositLiquidityPoolFormData, isEstimate?: boolean) => {
+      if (!accountId) return;
+
+      const amounts = getAmounts(values, isEstimate);
 
       try {
         const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
@@ -67,7 +95,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
         transaction.reject(error);
       }
     },
-    [accountId, pool, pooledCurrencies, slippage, transaction]
+    [accountId, getAmounts, pool, slippage, transaction]
   );
 
   const handleSubmit = async (data: DepositLiquidityPoolFormData) => {
@@ -108,7 +136,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     validationSchema: depositLiquidityPoolSchema({ tokens }),
     onSubmit: handleSubmit,
     onComplete: async (values) => {
-      const transactionData = await getTransactionArgs(values);
+      const transactionData = await getTransactionArgs(values, true);
 
       if (!transactionData) return;
 
@@ -118,10 +146,12 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     }
   });
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    // If pool has no liquidity, the assets ratio is set by the user,
-    // therefore the value inputted is directly used.
-    if (isCustomAmountsMode(form) || pool.isEmpty) return;
+  const handleChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const isCustom = isCustomAmountsMode(form, pool);
+
+    if (isCustom) {
+      return setCustomMode(true);
+    }
 
     if (!e.target.value || isNaN(Number(e.target.value))) {
       return form.setValues({ ...form.values, ...defaultValues });
@@ -194,7 +224,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
           )}
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...transaction.fee}
+              fee={transaction.fee}
               selectProps={{ ...form.getSelectFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
             />
             <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>

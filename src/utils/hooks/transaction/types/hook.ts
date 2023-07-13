@@ -1,8 +1,10 @@
+import { CurrencyExt } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { UseMutationOptions, UseMutationResult } from 'react-query';
 
-import { EstimateArgs, EstimateTypeArgs, UseFeeEstimateResult } from '../hooks/use-fee-estimate';
+import { EstimateArgs, EstimateTypeArgs, FeeEstimateResult, UseFeeEstimateResult } from '../hooks/use-fee-estimate';
 import { Transaction, TransactionActions, TransactionArgs } from '.';
 
 type TransactionResult = { status: 'success' | 'error'; data: ISubmittableResult; error?: Error };
@@ -29,6 +31,10 @@ type ReactQueryUseTransactionResult = Omit<
 type UseTransactionResult<T extends Transaction> = {
   reject: (error?: Error) => void;
   fee: UseFeeEstimateResult<T>;
+  calculateFeeAffectAmount: (
+    amount: MonetaryAmount<CurrencyExt>,
+    feeData?: FeeEstimateResult
+  ) => MonetaryAmount<CurrencyExt>;
 } & ReactQueryUseTransactionResult &
   ExecuteFunctions<T>;
 
