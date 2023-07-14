@@ -43,7 +43,7 @@ const getRedeemData = async (): Promise<RedeemData> => {
 
   const redeemLimit = vaultsWithRedeemableTokens.values().next().value || newMonetaryAmount(0, WRAPPED_TOKEN);
 
-  const premiumRedeemLimit = premiumRedeemVaults.values().next().value || newMonetaryAmount(0, WRAPPED_TOKEN);
+  const premiumRedeemLimit = premiumRedeemVaults.values().next().value;
 
   const premium = premiumRedeemLimit
     ? {
