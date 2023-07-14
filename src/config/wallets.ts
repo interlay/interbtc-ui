@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { ReactComponent as NovaWalletLogoIcon } from '@/assets/img/nova-logo.svg';
 import { ReactComponent as ParitySignerCompanionLogoIcon } from '@/assets/img/parity-signer-companion-logo.svg';
 import { ReactComponent as PolkadotExtensionLogoIcon } from '@/assets/img/polkadot-extension-logo.svg';
 import { ReactComponent as SubWalletLogoIcon } from '@/assets/img/subwallet-logo.svg';
@@ -7,10 +8,11 @@ import { ReactComponent as TalismanWalletLogoIcon } from '@/assets/img/talisman-
 import { APP_NAME } from '@/config/relay-chains';
 
 enum WalletSourceName {
+  Nova = 'nova',
+  ParitySignerCompanion = 'parity-signer-companion',
   PolkadotExtensionLogoIcon = 'polkadot-js',
-  Talisman = 'talisman',
   SubWallet = 'subwallet-js',
-  ParitySignerCompanion = 'parity-signer-companion'
+  Talisman = 'talisman'
 }
 
 interface WalletData {
@@ -20,15 +22,15 @@ interface WalletData {
 }
 
 const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
-  [WalletSourceName.PolkadotExtensionLogoIcon]: {
-    name: 'Polkadot{.js}',
-    LogoIcon: PolkadotExtensionLogoIcon,
-    url: 'https://polkadot.js.org/extension/'
-  },
   [WalletSourceName.Talisman]: {
     name: 'Talisman',
     LogoIcon: TalismanWalletLogoIcon,
     url: 'https://talisman.xyz/'
+  },
+  [WalletSourceName.Nova]: {
+    name: 'Nova',
+    LogoIcon: NovaWalletLogoIcon,
+    url: 'https://novawallet.io/'
   },
   [WalletSourceName.SubWallet]: {
     name: 'SubWallet',
@@ -39,6 +41,11 @@ const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
     name: 'Parity Signer Companion',
     LogoIcon: ParitySignerCompanionLogoIcon,
     url: 'https://github.com/paritytech/parity-signer-companion#installation'
+  },
+  [WalletSourceName.PolkadotExtensionLogoIcon]: {
+    name: 'Polkadot{.js} (for developers)',
+    LogoIcon: PolkadotExtensionLogoIcon,
+    url: 'https://polkadot.js.org/extension/'
   }
 };
 
