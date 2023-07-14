@@ -25,7 +25,7 @@ const PARITY_SIGNER_COMPANION = {
 };
 
 const POLKADOTJS_WALLET = {
-  title: 'Polkadot.js',
+  title: 'Polkadot.js (for developers)',
   extensionName: WalletName.PolkadotJS,
   url: 'https://polkadot.js.org/extension/'
 };
