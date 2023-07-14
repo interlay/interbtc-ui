@@ -9,8 +9,8 @@ import * as React from 'react';
 import { useLocalStorage } from 'react-use';
 
 import { APP_NAME } from '@/config/relay-chains';
-import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/config/wallets';
 import * as constants from '@/constants';
+import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/utils/constants/account';
 
 import { substrateReducer } from './reducer';
 import {
