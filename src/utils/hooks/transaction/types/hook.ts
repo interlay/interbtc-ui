@@ -38,32 +38,30 @@ type UseTransactionResult<T extends Transaction> = {
 } & ReactQueryUseTransactionResult &
   ExecuteFunctions<T>;
 
+type UseTransactionCommonOptions = {
+  customStatus?: ExtrinsicStatus['type'];
+  onSigning?: (variables: TransactionActions) => void;
+  onFeeChange?: (data: FeeEstimateResult) => void;
+  showSuccessModal?: boolean;
+};
+
 type UseTransactionOptionsWithType = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
-> & {
-  customStatus?: ExtrinsicStatus['type'];
-  onSigning?: (variables: TransactionActions) => void;
-  showSuccessModal?: boolean;
-};
+> &
+  UseTransactionCommonOptions;
 
 type UseTransactionOptionsWithoutType = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
-> & {
-  customStatus?: ExtrinsicStatus['type'];
-  onSigning?: (variables: TransactionActions) => void;
-  showSuccessModal?: boolean;
-};
+> &
+  UseTransactionCommonOptions;
 
 type UseTransactionOptions = Omit<
   UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
   'mutationFn'
-> & {
-  customStatus?: ExtrinsicStatus['type'];
-  onSigning?: (variables: TransactionActions) => void;
-  showSuccessModal?: boolean;
-};
+> &
+  UseTransactionCommonOptions;
 
 type UseTransactionWithType<T extends Transaction> = Omit<
   Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>,

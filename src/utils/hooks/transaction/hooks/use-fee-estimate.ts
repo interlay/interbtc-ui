@@ -1,8 +1,9 @@
 import { CurrencyExt, isCurrencyEqual } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { mergeProps } from '@react-aria/utils';
 import { Key, useCallback, useRef, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
-import { MutationFunction, useMutation, UseMutationResult } from 'react-query';
+import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useInterval } from 'react-use';
 
@@ -15,7 +16,6 @@ import { useGetLiquidityPools } from '../../api/amm/use-get-liquidity-pools';
 import { useGetBalances } from '../../api/tokens/use-get-balances';
 import { useGetCurrencies } from '../../api/use-get-currencies';
 import { Actions, Transaction, TransactionArgs } from '../types';
-import { UseTransactionOptions } from '../types/hook';
 import { estimateTransactionFee, getActionAmount } from '../utils/fee';
 import { getActionData } from '../utils/params';
 
@@ -77,13 +77,14 @@ type UseFeeEstimateResult<T extends Transaction> = {
 } & ReactQueryUseFeeEstimateResult &
   EstimateFunctions<T>;
 
+type FeeEstimateOptions = Omit<
+  UseMutationOptions<FeeEstimateResult, Error, EstimateFeeVariables, unknown>,
+  'mutationFn'
+>;
+
 const defaultFeeCurrency = GOVERNANCE_TOKEN;
 
-function useFeeEstimate<T extends Transaction>({
-  typeOrOptions
-}: {
-  typeOrOptions?: T | UseTransactionOptions;
-}): UseFeeEstimateResult<T> {
+function useFeeEstimate<T extends Transaction>(type?: T, options?: FeeEstimateOptions): UseFeeEstimateResult<T> {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: pools } = useGetLiquidityPools();
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
@@ -115,22 +116,20 @@ function useFeeEstimate<T extends Transaction>({
     [getBalance, pools]
   );
 
-  const { data, mutate, mutateAsync, ...feeMutation } = useMutation<
-    FeeEstimateResult,
-    Error,
-    EstimateFeeVariables,
-    unknown
-  >(mutateFee, {
-    onSuccess: (data) => {
-      feeResultRef.current = data;
-    }
-  });
+  const { data, mutate, mutateAsync, ...feeMutation } = useMutation(
+    mutateFee,
+    mergeProps(options || {}, {
+      onSuccess: (data: FeeEstimateResult) => {
+        feeResultRef.current = data;
+      }
+    })
+  );
 
   useErrorHandler(feeMutation.error);
 
   const handleEstimateFee = useCallback(
     (...args: Parameters<EstimateArgs<T>['estimate']>) => {
-      const params = getActionData(args, typeOrOptions);
+      const params = getActionData(args, type);
 
       const variables = { params, currency: feeCurrency };
 
@@ -138,12 +137,12 @@ function useFeeEstimate<T extends Transaction>({
 
       mutate(variables);
     },
-    [typeOrOptions, feeCurrency, mutate]
+    [type, feeCurrency, mutate]
   );
 
   const handleEstimateFeeAsync = useCallback(
     (...args: Parameters<EstimateArgs<T>['estimate']>) => {
-      const params = getActionData(args, typeOrOptions);
+      const params = getActionData(args, type);
 
       const variables = { params, currency: feeCurrency };
 
@@ -151,7 +150,7 @@ function useFeeEstimate<T extends Transaction>({
 
       return mutateAsync(variables);
     },
-    [typeOrOptions, feeCurrency, mutateAsync]
+    [type, feeCurrency, mutateAsync]
   );
 
   // Re-estimate fee based on latest stored variables

@@ -28,7 +28,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { getTransactionFeeDetailsProps, Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { FeeEstimateResult, Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
@@ -121,10 +121,16 @@ const SwapForm = ({
       form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);
       setTrade(undefined);
     },
-    onSuccess: onSwap
+    onSuccess: onSwap,
+    onFeeChange: (data) => {
+      // if input currency is being used for fees
+      if (data.isEqualToActionCurrency) {
+        handleChangeTrade(data);
+      }
+    }
   });
 
-  const handleChangeTrade = async () => {
+  const handleChangeTrade = async (feeData?: FeeEstimateResult) => {
     if (!pair.input || !pair.output || !inputAmount) {
       return setTrade(undefined);
     }
@@ -139,7 +145,8 @@ const SwapForm = ({
 
       const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
 
-      const feeEstimate = await transaction.fee.estimateAsync(tradeData, minimumAmountOut, accountId, deadline);
+      const feeEstimate =
+        feeData || (await transaction.fee.estimateAsync(tradeData, minimumAmountOut, accountId, deadline));
 
       if (feeEstimate.isEqualToActionCurrency) {
         const newInputMonetaryAmount = transaction.calculateFeeAffectAmount(inputMonetaryAmount, feeEstimate);
@@ -325,7 +332,7 @@ const SwapForm = ({
               <Flex direction='column' gap='spacing2'>
                 {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
                 <TransactionFeeDetails
-                  {...getTransactionFeeDetailsProps(transaction.fee)}
+                  fee={transaction.fee}
                   selectProps={form.getSelectFieldProps(SWAP_FEE_TOKEN_FIELD)}
                 />
               </Flex>

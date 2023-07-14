@@ -41,12 +41,13 @@ function useTransaction<T extends Transaction>(
   const { data: pools } = useGetLiquidityPools();
   const { getAvailableBalance } = useGetBalances();
 
-  const { showSuccessModal, customStatus, ...mutateOptions } =
+  const { showSuccessModal, customStatus, onFeeChange, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
 
-  const { data: feeData, ...feeEstimate } = useFeeEstimate<T>({
-    typeOrOptions
-  });
+  const { data: feeData, ...feeEstimate } = useFeeEstimate<T>(
+    typeof typeOrOptions === 'string' ? typeOrOptions : undefined,
+    { onSuccess: onFeeChange }
+  );
 
   const notifications = useTransactionNotifications({ showSuccessModal });
 

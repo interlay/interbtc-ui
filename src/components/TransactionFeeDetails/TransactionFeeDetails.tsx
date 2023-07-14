@@ -1,5 +1,3 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps, useId } from '@react-aria/utils';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +20,7 @@ import {
 } from '../TransactionDetails';
 
 type Props = {
-  amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
-  isValid?: boolean;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
   fee?: UseFeeEstimateResult<any>;
@@ -35,8 +31,6 @@ type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
 type TransactionFeeDetailsProps = Props & InheritAttrs;
 
 const TransactionFeeDetails = ({
-  amount,
-  isValid,
   selectProps,
   label,
   tooltipLabel,
@@ -44,17 +38,18 @@ const TransactionFeeDetails = ({
   fee,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
-  const prices = useGetPrices();
   const { t } = useTranslation();
-  const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
   const id = useId();
+  const prices = useGetPrices();
+  const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
 
-  const amountt = amount || fee?.data?.amount;
+  const { selectProps: feeSelectProps, data } = fee || {};
+  const { amount, isValid } = data || {};
 
-  const amountLabel = amountt
-    ? `${amountt.toHuman()} ${amountt.currency.ticker} (${displayMonetaryAmountInUSDFormat(
-        amountt,
-        getTokenPrice(prices, amountt.currency.ticker)?.usd
+  const amountLabel = amount
+    ? `${amount.toHuman()} ${amount.currency.ticker} (${displayMonetaryAmountInUSDFormat(
+        amount,
+        getTokenPrice(prices, amount.currency.ticker)?.usd
       )})`
     : `${0.0} ${selectProps?.value} (${formatUSD(0)})`;
 
@@ -66,7 +61,7 @@ const TransactionFeeDetails = ({
       <TransactionDetails {...props}>
         {selectProps && (
           <TransactionSelectToken
-            {...mergeProps(selectProps || {}, fee?.selectProps || {}, {
+            {...mergeProps(selectProps || {}, feeSelectProps || {}, {
               label: t('fee_token'),
               items: selectCurrency.items
             })}
