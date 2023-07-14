@@ -21,7 +21,7 @@ import {
   BTC_ISSUE_CUSTOM_VAULT_FIELD,
   BTC_ISSUE_CUSTOM_VAULT_SWITCH,
   BTC_ISSUE_FEE_TOKEN,
-  BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN,
+  BTC_ISSUE_SECURITY_DEPOSIT_TOKEN,
   BTCIssueFormData,
   btcIssueSchema,
   useForm
@@ -104,8 +104,8 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const getTransactionArgs = useCallback(
     (values: BTCIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
       const amount = values[BTC_ISSUE_AMOUNT_FIELD];
-      const griefingCollateralCurrencyTicker = values[BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN];
-      if (!vaultsData || !amount || griefingCollateralCurrencyTicker === undefined || isLoadingCurrencies) return;
+      const securityDepositTicker = values[BTC_ISSUE_SECURITY_DEPOSIT_TOKEN];
+      if (!vaultsData || !amount || securityDepositTicker === undefined || isLoadingCurrencies) return;
 
       const monetaryAmount = new BitcoinAmount(amount);
 
@@ -127,14 +127,14 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
         vault = getRandomArrayElement(availableVaults);
       }
 
-      const griefingCollateralCurrency = getCurrencyFromTicker(griefingCollateralCurrencyTicker);
+      const securityDeposit = getCurrencyFromTicker(securityDepositTicker);
       return [
         monetaryAmount,
         vault.vaultId.accountId,
         vault.collateralCurrency,
         false,
         vaultsData.map,
-        griefingCollateralCurrency
+        securityDeposit
       ];
     },
     [getAvailableVaults, getCurrencyFromTicker, isLoadingCurrencies, vaultsData]
@@ -145,7 +145,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
       [BTC_ISSUE_AMOUNT_FIELD]: '',
       [BTC_ISSUE_CUSTOM_VAULT_FIELD]: '',
       [BTC_ISSUE_CUSTOM_VAULT_SWITCH]: false,
-      [BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN]: GOVERNANCE_TOKEN.ticker,
+      [BTC_ISSUE_SECURITY_DEPOSIT_TOKEN]: GOVERNANCE_TOKEN.ticker,
       [BTC_ISSUE_FEE_TOKEN]: transaction.fee.defaultCurrency.ticker
     },
     validateOnChange: true,
@@ -161,12 +161,12 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     }
   });
 
-  const griefingCollateralTicker = form.values[BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN];
+  const securityDepositTicker = form.values[BTC_ISSUE_SECURITY_DEPOSIT_TOKEN];
 
   useEffect(() => {
     const computeSecurityDeposit = async () => {
-      const btcAmount = safeBitcoinAmount(amount || 0);
-      const deposit = await getSecurityDeposit(btcAmount, griefingCollateralTicker);
+      const btcAmount = safeBitcoinAmount(debouncedAmount || 0);
+      const deposit = await getSecurityDeposit(btcAmount, securityDepositTicker);
 
       if (!deposit) return;
 
@@ -174,7 +174,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     };
 
     computeSecurityDeposit();
-  }, [amount, griefingCollateralTicker, setSecurityDeposit, getSecurityDeposit]);
+  }, [debouncedAmount, securityDepositTicker, setSecurityDeposit, getSecurityDeposit]);
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
@@ -209,24 +209,24 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const isSelectingVault = form.values[BTC_ISSUE_CUSTOM_VAULT_SWITCH];
 
-  const griefingCollateralCurrencyBalance = griefingCollateralTicker
-    ? getAvailableBalance(griefingCollateralTicker)
-    : undefined;
+  const securityDepositBalance = securityDepositTicker ? getAvailableBalance(securityDepositTicker) : undefined;
 
-  const hasEnoughGriefingCollateralBalance = useMemo(() => {
+  const hasAvailableSecurityDepositBalance = useMemo(() => {
     if (!debouncedAmount) return true;
 
-    if (
-      !griefingCollateralCurrencyBalance ||
-      !isCurrencyEqual(securityDeposit.currency, griefingCollateralCurrencyBalance.currency)
-    ) {
+    if (!securityDepositBalance || !isCurrencyEqual(securityDeposit.currency, securityDepositBalance.currency)) {
       return false;
     }
 
-    return griefingCollateralCurrencyBalance.gte(securityDeposit);
-  }, [debouncedAmount, griefingCollateralCurrencyBalance, securityDeposit]);
+    // when security deposit currency is equal to fee currency it should be taken into account
+    if (transaction.fee.data && transaction.fee.isEqualFeeCurrency(securityDepositBalance.currency)) {
+      return securityDepositBalance.sub(transaction.fee.data.amount).gte(securityDeposit);
+    }
 
-  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee) || !hasEnoughGriefingCollateralBalance;
+    return securityDepositBalance.gte(securityDeposit);
+  }, [debouncedAmount, securityDepositBalance, securityDeposit, transaction.fee]);
+
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee) || !hasAvailableSecurityDepositBalance;
 
   return (
     <>
@@ -268,10 +268,10 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
-                securityDepositSelectProps={form.getSelectFieldProps(BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
-                showInsufficientSecurityBalance={!hasEnoughGriefingCollateralBalance}
+                securityDepositSelectProps={form.getSelectFieldProps(BTC_ISSUE_SECURITY_DEPOSIT_TOKEN, true)}
+                showInsufficientSecurityBalance={!hasAvailableSecurityDepositBalance}
                 feeDetailsProps={{
-                  ...transaction.fee,
+                  fee: transaction.fee,
                   selectProps: form.getSelectFieldProps(BTC_ISSUE_FEE_TOKEN, true)
                 }}
               />

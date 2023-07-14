@@ -23,7 +23,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { getTransactionFeeDetailsProps, Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
@@ -165,7 +165,7 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...getTransactionFeeDetailsProps(transaction.fee)}
+              fee={transaction.fee}
               selectProps={form.getSelectFieldProps(TRANSFER_FEE_TOKEN_FIELD)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>

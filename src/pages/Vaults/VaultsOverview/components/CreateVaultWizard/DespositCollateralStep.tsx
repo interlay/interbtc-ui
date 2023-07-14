@@ -64,9 +64,13 @@ const DepositCollateralStep = ({
   );
 
   const handleSubmit = (data: VaultsDepositCollateralFormData) => {
-    const transactionData = getTransactionArgs(data);
+    let { monetaryAmount } = getTransactionArgs(data);
 
-    transaction.execute(transactionData.monetaryAmount);
+    if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
+      monetaryAmount = transaction.calculateFeeAffectAmount(monetaryAmount);
+    }
+
+    transaction.execute(monetaryAmount);
   };
 
   const validationParams: VaultsDepositCollateralValidationParams = {
@@ -119,7 +123,7 @@ const DepositCollateralStep = ({
             </TransactionDetailsGroup>
           </TransactionDetails>
           <TransactionFeeDetails
-            {...transaction.fee}
+            fee={transaction.fee}
             selectProps={{
               ...form.getSelectFieldProps(VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD),
               modalRef: overlappingModalRef

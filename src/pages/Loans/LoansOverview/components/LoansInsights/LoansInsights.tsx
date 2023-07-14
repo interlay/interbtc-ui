@@ -128,7 +128,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
             <form onSubmit={form.handleSubmit}>
               <Flex direction='column' gap='spacing4'>
                 <TransactionFeeDetails
-                  {...transaction.fee}
+                  fee={transaction.fee}
                   selectProps={{
                     ...form.getSelectFieldProps(LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                     modalRef: overlappingModalRef

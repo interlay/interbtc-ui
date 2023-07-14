@@ -150,8 +150,15 @@ const RedeemForm = ({
     const args = getTransactionArgs(values);
 
     if (!args) return;
+    let [amount, ...rest] = args;
 
-    transaction.execute(...args);
+    if (transaction.fee.isEqualFeeCurrency(amount.currency)) {
+      amount = transaction.calculateFeeAffectAmount(amount);
+    }
+
+    console.log(transaction.calculateFeeAffectAmount(amount).toString());
+
+    transaction.execute(amount, ...rest);
   };
 
   const monetaryAmount = newSafeMonetaryAmount(amount || 0, WRAPPED_TOKEN, true);
@@ -313,7 +320,7 @@ const RedeemForm = ({
                 bridgeFee={bridgeFee}
                 bitcoinNetworkFee={currentInclusionFee}
                 feeDetailsProps={{
-                  ...transaction.fee,
+                  fee: transaction.fee,
                   selectProps: form.getSelectFieldProps(BTC_REDEEM_FEE_TOKEN, true)
                 }}
               />

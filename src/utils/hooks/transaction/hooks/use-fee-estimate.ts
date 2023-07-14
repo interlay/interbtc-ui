@@ -110,8 +110,6 @@ function useFeeEstimate<T extends Transaction>(type?: T, options?: FeeEstimateOp
         isEqualToActionCurrency: !!actionAmount,
         isValid
       };
-
-      // returning undefined means that action amount is not based on fee currency (i.e. amount being transfered)
     },
     [getBalance, pools]
   );

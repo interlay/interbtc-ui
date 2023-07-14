@@ -152,7 +152,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
           <form onSubmit={form.handleSubmit}>
             <Flex direction='column' gap='spacing4'>
               <TransactionFeeDetails
-                {...transaction.fee}
+                fee={transaction.fee}
                 selectProps={{
                   ...form.getSelectFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef

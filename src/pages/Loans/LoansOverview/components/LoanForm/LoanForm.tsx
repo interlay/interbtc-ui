@@ -141,7 +141,11 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
 
     if (!transactionData) return;
 
-    const { monetaryAmount } = transactionData;
+    let { monetaryAmount } = transactionData;
+
+    if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
+      monetaryAmount = transaction.calculateFeeAffectAmount(monetaryAmount);
+    }
 
     switch (variant) {
       case 'lend':
@@ -258,7 +262,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
             <LoanDetails variant={variant} asset={asset} prices={prices} />
           )}
           <TransactionFeeDetails
-            {...transaction.fee}
+            fee={transaction.fee}
             selectProps={{ ...form.getSelectFieldProps(LOAN_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
           />
           <AuthCTA type='submit' disabled={isBtnDisabled} size='large'>
