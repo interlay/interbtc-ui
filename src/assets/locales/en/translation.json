@@ -168,6 +168,7 @@
   "apr_breakdown": "APR Breakdown",
   "apy_breakdown": "APY Breakdown",
   "earned": "Earned",
+  "rewards_apr": "Rewards APR",
   "rewards_apr_ticker": "Rewards APR {{ticker}}",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",

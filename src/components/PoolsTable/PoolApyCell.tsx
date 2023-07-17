@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { formatPercentage } from '@/common/utils/utils';
 import { Flex } from '@/component-library';
 import { ApyDetails, ApyDetailsGroup, ApyDetailsGroupItem, Cell } from '@/components';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getFarmingApr } from '@/utils/helpers/pools';
 import { useGetPoolsTradingApr } from '@/utils/hooks/api/use-get-pools-trading-apr';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
@@ -47,12 +46,7 @@ const PoolApyCell = ({ pool, prices, totalLiquidityUSD, onClick }: PoolApyCellPr
     <ApyDetails>
       <ApyDetailsGroup title={t('apr_breakdown')}>
         <ApyDetailsGroupItem label={t('amm.pools.trading_fee_apr')} value={baseAprLabel} />
-        {hasRewards && (
-          <ApyDetailsGroupItem
-            label={t('rewards_apr_ticker', { ticker: GOVERNANCE_TOKEN.ticker })}
-            value={formatPercentage(farmingApr.toNumber())}
-          />
-        )}
+        {hasRewards && <ApyDetailsGroupItem label={t('rewards_apr')} value={formatPercentage(farmingApr.toNumber())} />}
       </ApyDetailsGroup>
     </ApyDetails>
   );
