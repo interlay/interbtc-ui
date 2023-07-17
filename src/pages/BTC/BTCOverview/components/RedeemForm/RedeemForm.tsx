@@ -25,10 +25,9 @@ import {
   btcRedeemSchema,
   useForm
 } from '@/lib/form';
-import { BridgeActions } from '@/types/bridge';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { RedeemData, useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
-import { BridgeVaultData, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
+import { BridgeVaultData, GetVaultType, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
@@ -83,7 +82,7 @@ const RedeemForm = ({
 
   const [selectedVault, setSelectedVault] = useState<BridgeVaultData>();
 
-  const { data: vaultsData, getAvailableVaults } = useGetVaults(BridgeActions.REDEEM);
+  const { data: vaultsData, getAvailableVaults } = useGetVaults(GetVaultType.REDEEM);
 
   const debouncedMonetaryAmount = safeBitcoinAmount(debouncedAmount || 0);
   const availableVaults = getAvailableVaults(debouncedMonetaryAmount);

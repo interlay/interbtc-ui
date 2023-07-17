@@ -1,6 +1,6 @@
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
-import { Key, useCallback, useMemo, useState } from 'react';
+import { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
@@ -26,11 +26,15 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
-const TransferForm = (): JSX.Element => {
+type TransferFormProps = {
+  ticker?: string;
+};
+
+const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const prices = useGetPrices();
-  const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
+  const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
   const { getBalance } = useGetBalances();
   const { items: selectItems } = useSelectCurrency();
 
@@ -103,6 +107,16 @@ const TransferForm = (): JSX.Element => {
       transaction.fee.setCurrency(feeTicker).estimate(destination, amount);
     }
   });
+
+  useEffect(() => {
+    if (!currencies || !ticker) return;
+
+    const currency = getCurrencyFromTicker(ticker);
+
+    setTransferToken(currency);
+    form.setFieldValue(TRANSFER_TOKEN_FIELD, ticker);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencies, getCurrencyFromTicker, ticker]);
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker, true);
