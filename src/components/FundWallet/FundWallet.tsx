@@ -20,7 +20,7 @@ const getData = (method: FundWalletMethod, entities: UseEntitiesResult, t: TFunc
       title: t('fund_wallet_modal.buy'),
       description: (
         <Flex direction='column' gap='spacing1'>
-          <P color='tertiary'>{t('fund_wallet_modal.buy_via_banxa')}</P>
+          <P color='tertiary'>{t('fund_wallet_modal.buy_via_banxa', { token: GOVERNANCE_TOKEN.ticker })}</P>
           <P color='tertiary'>{t('fund_wallet_modal.banxa_leading_solution')}</P>
         </Flex>
       ),
