@@ -26,10 +26,9 @@ import {
   btcIssueSchema,
   useForm
 } from '@/lib/form';
-import { BridgeActions } from '@/types/bridge';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { IssueData, useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
-import { BridgeVaultData, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
+import { BridgeVaultData, GetVaultType, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -64,7 +63,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const [selectedVault, setSelectedVault] = useState<BridgeVaultData>();
 
-  const { data: vaultsData, getAvailableVaults } = useGetVaults(BridgeActions.ISSUE);
+  const { data: vaultsData, getAvailableVaults } = useGetVaults(GetVaultType.ISSUE);
 
   const debouncedMonetaryAmount = safeBitcoinAmount(debouncedAmount || 0);
   const availableVaults = getAvailableVaults(debouncedMonetaryAmount);

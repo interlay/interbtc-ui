@@ -11,7 +11,7 @@ import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getPooledTickers } from '@/utils/helpers/pools';
 import { useGetLiquidityPools } from '@/utils/hooks/api/amm/use-get-liquidity-pools';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import useQueryParams from '@/utils/hooks/use-query-params';
+import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 import { SwapForm, SwapLiquidity } from './components';
 import { StyledWrapper } from './Swap.style';
@@ -19,7 +19,7 @@ import { StyledWrapper } from './Swap.style';
 const DEFAULT_PAIR: SwapPair = { input: RELAY_CHAIN_NATIVE_TOKEN };
 
 const Swap = (): JSX.Element => {
-  const query = useQueryParams();
+  const { data: queryParams } = usePageQueryParams();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: liquidityPools, refetch } = useGetLiquidityPools();
@@ -32,14 +32,14 @@ const Swap = (): JSX.Element => {
   useEffect(() => {
     if (!currencies) return;
 
-    const inputQuery = query.get(QUERY_PARAMETERS.SWAP.FROM);
-    const outputQuery = query.get(QUERY_PARAMETERS.SWAP.TO);
+    const inputQuery = queryParams[QUERY_PARAMETERS.SWAP.FROM];
+    const outputQuery = queryParams[QUERY_PARAMETERS.SWAP.TO];
 
     const fromCurrency = inputQuery ? getCurrencyFromTicker(inputQuery) : DEFAULT_PAIR.input;
     const toCurrency = outputQuery ? getCurrencyFromTicker(outputQuery) : DEFAULT_PAIR.output;
 
     setPair({ input: fromCurrency, output: toCurrency });
-  }, [currencies, query, getCurrencyFromTicker]);
+  }, [currencies, queryParams, getCurrencyFromTicker]);
 
   if (liquidityPools === undefined || pooledTickers === undefined) {
     return <FullLoadingSpinner />;
