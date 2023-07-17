@@ -1,5 +1,6 @@
 import { LoanAsset } from '@interlay/interbtc-api';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Flex } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
@@ -23,6 +24,8 @@ type CollateralFormProps = {
 };
 
 const CollateralForm = ({ asset, variant, isOpen, onSigning }: CollateralFormProps): JSX.Element | null => {
+  const { t } = useTranslation();
+
   const { refetch } = useGetAccountLendingStatistics();
 
   const overlappingModalRef = useRef<HTMLDivElement>(null);
@@ -79,7 +82,9 @@ const CollateralForm = ({ asset, variant, isOpen, onSigning }: CollateralFormPro
           }}
         />
         <AuthCTA type='submit' size='large' disabled={isBtnDisabled} loading={transaction.isLoading}>
-          {variant === 'enable' ? `Use ${asset.currency.ticker} as Collateral` : `Disable ${asset.currency.ticker}`}
+          {variant === 'enable'
+            ? t('use_ticker_as_collateral', { ticker: asset.currency.ticker })
+            : t('disable_ticker', { ticker: asset.currency.ticker })}
         </AuthCTA>
       </Flex>
     </form>

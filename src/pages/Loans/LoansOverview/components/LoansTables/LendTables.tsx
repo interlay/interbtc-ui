@@ -13,8 +13,6 @@ type UseAssetState = {
   position?: CollateralPosition;
 };
 
-const defaultAssetState: UseAssetState = { isOpen: false, type: undefined, data: undefined, position: undefined };
-
 type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
   positions: CollateralPosition[];
@@ -23,7 +21,7 @@ type LendTablesProps = {
 };
 
 const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTablesProps): JSX.Element => {
-  const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
+  const [selectedAsset, setAsset] = useState<UseAssetState>({ isOpen: false });
 
   const handleRowAction = (ticker: Key) => {
     const asset = assets[ticker as string];

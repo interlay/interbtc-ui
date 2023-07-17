@@ -588,7 +588,9 @@
     "my_borrow_positions": "My Borrow Positions",
     "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation.",
     "no_loan_positions": "No {{loanType}} positions",
-    "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here"
+    "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here",
+    "use_ticker_as_collateral": "Use {{ticker}} as Collateral",
+    "disable_ticker": "Disable {{ticker}}"
   },
   "amm": {
     "pools": {

@@ -60,6 +60,7 @@ type CollateralModalProps = Props & InheritAttrs;
 
 const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
+
   const { getLTV } = useGetLTV();
   const prices = useGetPrices();
 
@@ -69,7 +70,7 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
     return null;
   }
 
-  const { isCollateral: isCollateralActive, amount: lendPositionAmount, vaultCollateralAmount } = position || {};
+  const { isCollateral: isCollateralActive, amount: lendPositionAmount, vaultCollateralAmount } = position;
 
   const loanAction = isCollateralActive ? 'withdraw' : 'lend';
   const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount });
@@ -96,7 +97,7 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
       <ModalFooter>
         {variant === 'disable-error' || variant === 'disable-vault-collateral' ? (
           <CTA size='large' onPress={onClose}>
-            Dismiss
+            {t('dismiss')}
           </CTA>
         ) : (
           <CollateralForm asset={asset} onSigning={onClose} variant={variant} isOpen={isOpen} />

@@ -61,7 +61,7 @@ const LoanModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      aria-label={`${variant} ${asset?.currency?.ticker}`}
+      aria-label={`${variant} ${asset.currency.ticker}`}
       onClose={onClose}
       align='top'
       shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
