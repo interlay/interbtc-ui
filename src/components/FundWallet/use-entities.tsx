@@ -12,7 +12,6 @@ import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlin
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { useWallet } from '@/utils/hooks/use-wallet';
 
 const queryString = require('query-string');
 
@@ -24,12 +23,9 @@ type UseEntitiesResult = {
 };
 
 const useEntities = (): UseEntitiesResult => {
-  const wallet = useWallet();
-
   const banxaLink = {
     pathname: EXTERNAL_PAGES.BANXA,
     search: queryString.stringify({
-      [EXTERNAL_QUERY_PARAMETERS.BANXA.WALLET_ADDRESS]: wallet.account?.toString(),
       [EXTERNAL_QUERY_PARAMETERS.BANXA.FIAT_TYPE]: 'EUR',
       [EXTERNAL_QUERY_PARAMETERS.BANXA.COIN_TYPE]: GOVERNANCE_TOKEN.ticker
     })
