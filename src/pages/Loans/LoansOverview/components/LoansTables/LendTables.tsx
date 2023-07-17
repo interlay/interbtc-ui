@@ -61,14 +61,12 @@ const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTab
         position={selectedAsset.position}
         onClose={handleClose}
       />
-      {selectedAsset.data && selectedAsset.position && (
-        <CollateralModal
-          isOpen={selectedAsset.isOpen && selectedAsset.type === 'toggle-collateral'}
-          asset={selectedAsset.data}
-          position={selectedAsset.position}
-          onClose={handleClose}
-        />
-      )}
+      <CollateralModal
+        isOpen={selectedAsset.isOpen && selectedAsset.type === 'toggle-collateral'}
+        asset={selectedAsset.data}
+        position={selectedAsset.position}
+        onClose={handleClose}
+      />
     </>
   );
 };
