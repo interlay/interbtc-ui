@@ -152,7 +152,7 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
           <form onSubmit={form.handleSubmit}>
             <Flex direction='column' gap='spacing4'>
               <TransactionFeeDetails
-                {...transaction.fee}
+                fee={transaction.fee}
                 selectProps={{
                   ...form.getSelectFieldProps(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef

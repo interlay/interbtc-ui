@@ -143,7 +143,7 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
           <ReceivableAssets assetAmounts={pooledAmounts} prices={prices} />
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...transaction.fee}
+              fee={transaction.fee}
               selectProps={{
                 ...form.getSelectFieldProps(POOL_WITHDRAW_FEE_TOKEN_FIELD),
                 modalRef: overlappingModalRef
