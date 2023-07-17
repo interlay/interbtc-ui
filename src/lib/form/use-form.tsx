@@ -1,7 +1,9 @@
 import { chain } from '@react-aria/utils';
 import { FieldInputProps, FormikConfig, FormikErrors as FormErrors, FormikValues, useFormik } from 'formik';
-import { FocusEvent, Key, useCallback } from 'react';
+import { FocusEvent, Key, useCallback, useEffect } from 'react';
 import { useDebounce } from 'react-use';
+
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 const getFieldName = (nameOrOptions: any) => {
   const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
@@ -33,6 +35,8 @@ const useForm = <Values extends FormikValues = FormikValues>({
   onComplete,
   ...args
 }: UseFormArgs<Values>) => {
+  const { data: balances } = useGetBalances();
+
   const {
     validateForm,
     values,
@@ -54,6 +58,12 @@ const useForm = <Values extends FormikValues = FormikValues>({
     // do not run debounce if onComplete is not passed
     onComplete ? [values] : []
   );
+
+  useEffect(() => {
+    if (!balances) return;
+
+    validateForm();
+  }, [balances, validateForm]);
 
   // Handles when field gets forced blur to focus on modal
   // If so, we dont want to consider it as touched if it has not yet been touched on
