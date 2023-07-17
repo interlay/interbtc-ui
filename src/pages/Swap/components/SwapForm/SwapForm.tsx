@@ -68,9 +68,7 @@ const getAmountsUSD = (pair: SwapPair, prices?: Prices, trade?: Trade | null, in
 
   return {
     inputAmountUSD,
-    outputAmountUSD,
-    inputMonetary: monetaryAmount,
-    outputMonetary: trade?.outputAmount
+    outputAmountUSD
   };
 };
 
@@ -279,12 +277,7 @@ const SwapForm = ({
 
   const handleClosePriceImpactModal = () => setPriceImpactModal(false);
 
-  const { inputAmountUSD, outputAmountUSD, inputMonetary, outputMonetary } = getAmountsUSD(
-    pair,
-    prices,
-    trade,
-    form.values[SWAP_INPUT_AMOUNT_FIELD]
-  );
+  const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, form.values[SWAP_INPUT_AMOUNT_FIELD]);
 
   const selectItems = selectCurrency.items.filter((tokenData) => pooledTickers.has(tokenData.value));
 
@@ -347,8 +340,8 @@ const SwapForm = ({
         onConfirm={handleConfirmPriceImpactModal}
         inputValueUSD={inputAmountUSD}
         outputValueUSD={outputAmountUSD}
-        inputAmount={inputMonetary}
-        outputAmount={outputMonetary}
+        inputAmount={trade?.inputAmount}
+        outputAmount={trade?.outputAmount}
         pair={pair}
         priceImpact={priceImpact}
       />
