@@ -89,8 +89,7 @@ function useTransaction<T extends Transaction>(
         accountAddress: state.selectedAccount?.address as string
       };
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [typeOrOptions, feeData, customStatus, state.selectedAccount?.address]
+    [typeOrOptions, customStatus, state.selectedAccount?.address]
   );
 
   const handleExecute = useCallback(

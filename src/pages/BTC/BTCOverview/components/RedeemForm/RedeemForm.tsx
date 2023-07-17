@@ -25,6 +25,7 @@ import {
   btcRedeemSchema,
   useForm
 } from '@/lib/form';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { RedeemData, useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { BridgeVaultData, GetVaultType, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
@@ -150,13 +151,12 @@ const RedeemForm = ({
     const args = getTransactionArgs(values);
 
     if (!args) return;
+
     let [amount, ...rest] = args;
 
     if (transaction.fee.isEqualFeeCurrency(amount.currency)) {
       amount = transaction.calculateFeeAffectAmount(amount);
     }
-
-    console.log(transaction.calculateFeeAffectAmount(amount).toString());
 
     transaction.execute(amount, ...rest);
   };
@@ -279,9 +279,13 @@ const RedeemForm = ({
                 humanBalance={redeemBalance.toString()}
                 balanceLabel={t('available')}
                 valueUSD={amountUSD}
-                {...mergeProps(form.getFieldProps(BTC_REDEEM_AMOUNT_FIELD, false, true), {
-                  onChange: handleChangeIssueAmount
-                })}
+                {...mergeProps(
+                  form.getFieldProps(BTC_REDEEM_AMOUNT_FIELD, false, true),
+                  getTokenInputProps(redeemBalance),
+                  {
+                    onChange: handleChangeIssueAmount
+                  }
+                )}
               />
               {hasPremiumRedeemFeature && (
                 <PremiumRedeemCard

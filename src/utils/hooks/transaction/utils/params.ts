@@ -29,8 +29,6 @@ const getAmount = (
 ): MonetaryAmount<CurrencyExt> => {
   const isMaxAmount = balance.eq(actionAmount);
 
-  console.log(actionAmount.toString(), feeAmount.toString(), balance.toString());
-
   if (isMaxAmount) {
     return actionAmount.sub(feeAmount);
   }

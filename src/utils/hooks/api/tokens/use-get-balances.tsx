@@ -31,7 +31,6 @@ const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Pro
 
 type UseGetBalances = UseQueryResult<BalanceData | undefined> & {
   getBalance: (ticker: string) => ChainBalance | undefined;
-  // TODO: make not optional
   getAvailableBalance: (ticker: string) => ChainBalance['free'] | undefined;
 };
 

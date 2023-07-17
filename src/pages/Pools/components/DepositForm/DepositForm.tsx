@@ -16,6 +16,7 @@ import {
   useForm
 } from '@/lib/form';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -57,14 +58,10 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
   });
 
   const getAmounts = useCallback(
-    (values: DepositLiquidityPoolFormData, isEstimate?: boolean) => {
-      const amounts: MonetaryAmount<CurrencyExt>[] = pooledCurrencies.map((amount) =>
-        newSafeMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
-      );
-
+    (amounts: MonetaryAmount<CurrencyExt>[]) => {
       const feeCurrencyAmount = amounts.find((amount) => transaction.fee.isEqualFeeCurrency(amount.currency));
 
-      if (!isEstimate && feeCurrencyAmount && transaction.fee.data) {
+      if (feeCurrencyAmount && transaction.fee.data) {
         const newFeeCurrencyAmount = transaction.calculateFeeAffectAmount(feeCurrencyAmount);
 
         if (isCustomMode) {
@@ -78,14 +75,16 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
       return amounts;
     },
-    [isCustomMode, pool, pooledCurrencies, transaction]
+    [isCustomMode, pool, transaction]
   );
 
   const getTransactionArgs = useCallback(
-    async (values: DepositLiquidityPoolFormData, isEstimate?: boolean) => {
+    async (values: DepositLiquidityPoolFormData) => {
       if (!accountId) return;
 
-      const amounts = getAmounts(values, isEstimate);
+      const amounts: MonetaryAmount<CurrencyExt>[] = pooledCurrencies.map((amount) =>
+        newSafeMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
+      );
 
       try {
         const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
@@ -95,7 +94,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
         transaction.reject(error);
       }
     },
-    [accountId, getAmounts, pool, slippage, transaction]
+    [accountId, pool, pooledCurrencies, slippage, transaction]
   );
 
   const handleSubmit = async (data: DepositLiquidityPoolFormData) => {
@@ -105,7 +104,11 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
     const { accountId, amounts, deadline, pool } = transactionData;
 
-    return transaction.execute(amounts, pool, slippage, deadline, accountId);
+    const newAmounts = getAmounts(amounts);
+
+    newAmounts.forEach((amount) => console.log(amount.toString()));
+
+    return transaction.execute(newAmounts, pool, slippage, deadline, accountId);
   };
 
   const tokens = useMemo(
@@ -136,7 +139,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     validationSchema: depositLiquidityPoolSchema({ tokens }),
     onSubmit: handleSubmit,
     onComplete: async (values) => {
-      const transactionData = await getTransactionArgs(values, true);
+      const transactionData = await getTransactionArgs(values);
 
       if (!transactionData) return;
 
@@ -203,12 +206,12 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
                     aria-label={t('forms.field_amount', {
                       field: `${ticker} ${t('deposit').toLowerCase()}`
                     })}
-                    balance={balance?.toString() || 0}
-                    humanBalance={balance?.toHuman() || 0}
                     valueUSD={new Big(isNaN(Number(form.values[ticker])) ? 0 : form.values[ticker] || 0)
                       .mul(getTokenPrice(prices, ticker)?.usd || 0)
                       .toNumber()}
-                    {...mergeProps(form.getFieldProps(ticker, false, false), { onChange: handleChange })}
+                    {...mergeProps(form.getFieldProps(ticker, false, false), getTokenInputProps(balance), {
+                      onChange: handleChange
+                    })}
                   />
                   {!isLastItem && <StyledPlusDivider marginTop='spacing5' />}
                 </Fragment>

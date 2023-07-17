@@ -19,6 +19,8 @@ import { Actions, Transaction, TransactionArgs } from '../types';
 import { estimateTransactionFee, getActionAmount } from '../utils/fee';
 import { getActionData } from '../utils/params';
 
+// we are deducting the fee from the action amount when the user applies max,
+// so we only need to check if the balance can atleast cover for the fee amount.
 const isFeeValid = (
   amount: MonetaryAmount<CurrencyExt>,
   balance?: MonetaryAmount<CurrencyExt>,
@@ -28,8 +30,7 @@ const isFeeValid = (
     return true;
   }
 
-  // if the currency being trasfered is not the same as the one used for fees
-  // check if the
+  // when there isn't action amount involved, we check for greater or equal
   if (!actionAmount) {
     return balance.gte(amount);
   }
@@ -40,8 +41,9 @@ const isFeeValid = (
     return true;
   }
 
-  // TODO: should it be greater or equal?
-  return balance.gte(amount);
+  // when there is action amount involved, the balance needs to be greater than
+  // the fee amount, because there needs to be a minimum amount in action amount
+  return balance.gt(amount);
 };
 
 type EstimateFeeVariables = { params: Actions; currency: CurrencyExt };

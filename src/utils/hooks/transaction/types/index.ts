@@ -86,8 +86,6 @@ type Actions = XCMActions | LibActions;
 
 type TransactionActions = Actions & TransactionAction;
 
-type FeeEstimateActions = Actions;
-
 type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
 
 enum TransactionStatus {
@@ -100,7 +98,6 @@ enum TransactionStatus {
 export { Transaction, TransactionStatus };
 export type {
   Actions,
-  FeeEstimateActions,
   LibActions,
   TransactionAction,
   TransactionActions,
