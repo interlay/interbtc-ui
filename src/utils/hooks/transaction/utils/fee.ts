@@ -92,7 +92,8 @@ const estimateTransactionFee: (
     pools
   );
 
-  // final buffer
+  // final buffer so that the user won't be led to a failing transaction
+  // due to not enough funds
   return wrappedInSwapTxFee.mul(1.05);
 };
 

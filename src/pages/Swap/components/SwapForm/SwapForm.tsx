@@ -147,7 +147,7 @@ const SwapForm = ({
         feeData || (await transaction.fee.estimateAsync(tradeData, minimumAmountOut, accountId, deadline));
 
       if (feeEstimate.isEqualToActionCurrency) {
-        const newInputMonetaryAmount = transaction.calculateFeeAffectAmount(inputMonetaryAmount, feeEstimate);
+        const newInputMonetaryAmount = transaction.calculateAmountWithFeeDeducted(inputMonetaryAmount, feeEstimate);
 
         const trade = window.bridge.amm.getOptimalTrade(newInputMonetaryAmount, pair.output, liquidityPools);
 

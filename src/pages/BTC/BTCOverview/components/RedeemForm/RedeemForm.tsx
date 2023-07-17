@@ -155,7 +155,7 @@ const RedeemForm = ({
     let [amount, ...rest] = args;
 
     if (transaction.fee.isEqualFeeCurrency(amount.currency)) {
-      amount = transaction.calculateFeeAffectAmount(amount);
+      amount = transaction.calculateAmountWithFeeDeducted(amount);
     }
 
     transaction.execute(amount, ...rest);

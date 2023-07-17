@@ -79,7 +79,7 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
     let { amount, destination } = transactionData;
 
     if (transaction.fee.isEqualFeeCurrency(amount.currency)) {
-      amount = transaction.calculateFeeAffectAmount(amount);
+      amount = transaction.calculateAmountWithFeeDeducted(amount);
     }
 
     transaction.execute(destination, amount);

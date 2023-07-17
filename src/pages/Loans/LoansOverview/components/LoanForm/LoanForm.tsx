@@ -145,7 +145,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
     let { monetaryAmount } = transactionData;
 
     if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
-      monetaryAmount = transaction.calculateFeeAffectAmount(monetaryAmount);
+      monetaryAmount = transaction.calculateAmountWithFeeDeducted(monetaryAmount);
     }
 
     switch (variant) {

@@ -68,7 +68,7 @@ const DepositCollateralStep = ({
     let { monetaryAmount } = getTransactionArgs(data);
 
     if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
-      monetaryAmount = transaction.calculateFeeAffectAmount(monetaryAmount);
+      monetaryAmount = transaction.calculateAmountWithFeeDeducted(monetaryAmount);
     }
 
     transaction.execute(monetaryAmount);

@@ -31,7 +31,7 @@ type ReactQueryUseTransactionResult = Omit<
 type UseTransactionResult<T extends Transaction> = {
   reject: (error?: Error) => void;
   fee: UseFeeEstimateResult<T>;
-  calculateFeeAffectAmount: (
+  calculateAmountWithFeeDeducted: (
     amount: MonetaryAmount<CurrencyExt>,
     feeData?: FeeEstimateResult
   ) => MonetaryAmount<CurrencyExt>;

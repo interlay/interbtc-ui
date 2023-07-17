@@ -62,7 +62,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
       const feeCurrencyAmount = amounts.find((amount) => transaction.fee.isEqualFeeCurrency(amount.currency));
 
       if (feeCurrencyAmount && transaction.fee.data) {
-        const newFeeCurrencyAmount = transaction.calculateFeeAffectAmount(feeCurrencyAmount);
+        const newFeeCurrencyAmount = transaction.calculateAmountWithFeeDeducted(feeCurrencyAmount);
 
         if (isCustomMode) {
           return amounts.map((amount) =>
@@ -105,8 +105,6 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     const { accountId, amounts, deadline, pool } = transactionData;
 
     const newAmounts = getAmounts(amounts);
-
-    newAmounts.forEach((amount) => console.log(amount.toString()));
 
     return transaction.execute(newAmounts, pool, slippage, deadline, accountId);
   };

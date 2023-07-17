@@ -35,9 +35,10 @@ const isFeeValid = (
     return balance.gte(amount);
   }
 
-  const isActionAmountValid = actionAmount.gt(balance);
+  const isActionAmountInvalid = actionAmount.gt(balance);
 
-  if (!isActionAmountValid) {
+  // when action amount (i.e transfer amount) is invalid, it is not necessary to show invalid fee error
+  if (isActionAmountInvalid) {
     return true;
   }
 
@@ -159,21 +160,24 @@ function useFeeEstimate<T extends Transaction>(type?: T, options?: FeeEstimateOp
     mutate(estimateFeeVariablesRef.current);
   }, REFETCH_INTERVAL.MINUTE);
 
-  const handleFeeSelectionChange = (ticker: Key) => {
-    const currency = getCurrencyFromTicker(ticker as string);
+  const handleFeeSelectionChange = useCallback(
+    (ticker: Key) => {
+      const currency = getCurrencyFromTicker(ticker as string);
 
-    setFeeCurrency(currency);
+      setFeeCurrency(currency);
 
-    const { params } = estimateFeeVariablesRef.current || {};
+      const { params } = estimateFeeVariablesRef.current || {};
 
-    if (!params) return;
+      if (!params) return;
 
-    const variables = { params, currency };
+      const variables = { params, currency };
 
-    estimateFeeVariablesRef.current = variables;
+      estimateFeeVariablesRef.current = variables;
 
-    mutate(variables);
-  };
+      mutate(variables);
+    },
+    [getCurrencyFromTicker, mutate]
+  );
 
   const isEqualFeeCurrency = useCallback((currency: CurrencyExt) => isCurrencyEqual(currency, feeCurrency), [
     feeCurrency

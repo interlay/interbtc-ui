@@ -20,7 +20,7 @@ import {
   UseTransactionWithType
 } from '../types/hook';
 import { wrapWithTxFeeSwap } from '../utils/fee';
-import { getActionData, getAmount } from '../utils/params';
+import { getActionData, getAmountWithFeeDeducted } from '../utils/params';
 import { submitTransaction } from '../utils/submit';
 import { FeeEstimateResult, useFeeEstimate } from './use-fee-estimate';
 import { useTransactionNotifications } from './use-transaction-notifications';
@@ -118,7 +118,7 @@ function useTransaction<T extends Transaction>(
     }
   };
 
-  const calculateFeeAffectAmount = useCallback(
+  const calculateAmountWithFeeDeducted = useCallback(
     (amount: MonetaryAmount<CurrencyExt>, fee?: FeeEstimateResult) => {
       const feeResult = fee || feeData;
 
@@ -128,7 +128,7 @@ function useTransaction<T extends Transaction>(
         return amount;
       }
 
-      return getAmount(amount, feeResult.amount, balance);
+      return getAmountWithFeeDeducted(amount, feeResult.amount, balance);
     },
     [feeData, getAvailableBalance]
   );
@@ -138,7 +138,7 @@ function useTransaction<T extends Transaction>(
     reject: handleReject,
     execute: handleExecute,
     executeAsync: handleExecuteAsync,
-    calculateFeeAffectAmount,
+    calculateAmountWithFeeDeducted,
     fee: {
       ...feeEstimate,
       data: feeData
