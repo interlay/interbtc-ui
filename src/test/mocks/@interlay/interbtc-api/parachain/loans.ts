@@ -45,11 +45,13 @@ const WRAPPED_LOAN_AMOUNT = {
 const WRAPPED_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
   NON_COLLATERAL: {
     amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
-    isCollateral: false
+    isCollateral: false,
+    vaultCollateralAmount: newMonetaryAmount(0, WRAPPED_TOKEN)
   },
   COLLATERAL: {
     amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
-    isCollateral: true
+    isCollateral: true,
+    vaultCollateralAmount: newMonetaryAmount(0, WRAPPED_TOKEN)
   }
 };
 
@@ -94,11 +96,13 @@ const GOVERNANCE_LOAN_AMOUNT = {
 const GOVERNANCE_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
   NON_COLLATERAL: {
     amount: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
-    isCollateral: false
+    isCollateral: false,
+    vaultCollateralAmount: newMonetaryAmount(0, GOVERNANCE_TOKEN)
   },
   COLLATERAL: {
     amount: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
-    isCollateral: true
+    isCollateral: true,
+    vaultCollateralAmount: newMonetaryAmount(0, GOVERNANCE_TOKEN)
   }
 };
 
@@ -113,35 +117,12 @@ const GOVERNANCE_APY = {
   BORROW: '10.20'
 };
 
-const LOAN_POSITIONS = {
-  LEND: {
-    IBTC: {
-      currency: WRAPPED_TOKEN,
-      amount: DEFAULT_IBTC.MONETARY.MEDIUM,
-      isCollateral: true,
-      earnedInterest: DEFAULT_IBTC.MONETARY.VERY_SMALL,
-      vaultCollateralAmount: DEFAULT_IBTC.MONETARY.EMPTY
-    } as CollateralPosition,
-    INTR: {
-      currency: GOVERNANCE_TOKEN,
-      amount: DEFAULT_INTR.MONETARY.MEDIUM,
-      isCollateral: true,
-      earnedInterest: DEFAULT_INTR.MONETARY.SMALL,
-      vaultCollateralAmount: DEFAULT_INTR.MONETARY.EMPTY
-    } as CollateralPosition
-  },
-  BORROW: {
-    IBTC: {
-      currency: WRAPPED_TOKEN,
-      amount: DEFAULT_IBTC.MONETARY.SMALL,
-      accumulatedDebt: DEFAULT_IBTC.MONETARY.VERY_SMALL
-    },
-    INTR: {
-      currency: GOVERNANCE_TOKEN,
-      amount: DEFAULT_INTR.MONETARY.MEDIUM,
-      accumulatedDebt: DEFAULT_INTR.MONETARY.SMALL
-    }
-  }
+const THRESOLD = {
+  MIN: new Big(0),
+  LOW: new Big(0.25),
+  MEDIUM: new Big(0.5),
+  HIGH: new Big(0.75),
+  MAX: new Big(1)
 };
 
 const WRAPPED_ASSET: LoanAsset = {

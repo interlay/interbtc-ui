@@ -22,7 +22,7 @@ const DATA = { VESTING_SCHEDULES };
 // add here mocks that are being manipulated in tests
 const MODULE = {
   vestingSchedules: jest.fn().mockReturnValue(VESTING_SCHEDULES.EMPTY),
-  claimVesting: jest.fn().mockResolvedValue(EXTRINSIC)
+  claimVesting: jest.fn().mockReturnValue(EXTRINSIC)
 };
 
 // maps module to ApiPromise

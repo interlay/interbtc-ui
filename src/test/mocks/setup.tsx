@@ -18,7 +18,15 @@ afterAll(() => {
 
 // Removing transaction modal from showing on every single test
 jest.mock('@/utils/hooks/transaction/hooks/use-transaction-notifications', () => ({
-  useTransactionNotifications: () => ({ onReject: jest.fn(), mutationProps: {} })
+  useTransactionNotifications: () => ({
+    onReject: jest.fn(),
+    mutationProps: {
+      onMutate: jest.fn(),
+      onSuccess: jest.fn(),
+      onError: jest.fn(),
+      onSigning: jest.fn()
+    }
+  })
 }));
 
 // MEMO: mocking @react/aria overlay component because

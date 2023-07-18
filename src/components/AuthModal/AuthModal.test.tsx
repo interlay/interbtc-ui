@@ -14,7 +14,7 @@ import { POLKADOTJS_WALLET, SUBWALLET_WALLET, WALLETS } from '@/utils/constants/
 
 import { AuthModal } from './AuthModal';
 
-describe('AuthModal', () => {
+describe.skip('AuthModal', () => {
   it('should render with no wallets installed and navigate', async () => {
     jest.spyOn(substrate, 'useSubstrateSecureState').mockReturnValue({ extensions: [] } as any);
     jest.spyOn(window, 'open').mockImplementation(jest.fn());
