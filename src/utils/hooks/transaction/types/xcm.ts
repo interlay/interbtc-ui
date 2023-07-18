@@ -4,9 +4,9 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { ChainData } from '@/types/chains';
 
-import { Transaction, TransactionAction } from '.';
+import { Transaction } from '.';
 
-interface XCMTransferAction extends TransactionAction {
+interface XCMTransferAction {
   type: Transaction.XCM_TRANSFER;
   args: [
     adapter: BaseCrossChainAdapter,

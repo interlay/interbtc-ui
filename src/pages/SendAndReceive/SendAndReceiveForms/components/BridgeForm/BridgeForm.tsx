@@ -39,6 +39,7 @@ import useAccountId from '@/utils/hooks/use-account-id';
 import { ChainSelect } from '../ChainSelect';
 import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './BridgeForm.styles';
 
+// TODO: re-work code to allow ticker has query parameter
 const BridgeForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);

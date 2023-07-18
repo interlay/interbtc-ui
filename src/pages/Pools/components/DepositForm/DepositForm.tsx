@@ -1,4 +1,5 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
 import { ChangeEventHandler, Fragment, RefObject, useCallback, useMemo, useState } from 'react';
@@ -15,6 +16,7 @@ import {
   useForm
 } from '@/lib/form';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -26,8 +28,10 @@ import { PoolName } from '../PoolName';
 import { StyledPlusDivider, StyledTokenInput } from './DepositForm.styles';
 import { DepositOutputAssets } from './DepositOutputAssets';
 
-const isCustomAmountsMode = (form: ReturnType<typeof useForm>) =>
-  form.dirty && Object.values(form.touched).filter(Boolean).length > 0;
+const isCustomAmountsMode = (form: ReturnType<typeof useForm>, pool: LiquidityPool) =>
+  // If pool has no liquidity, the assets ratio is set by the user,
+  // therefore the value inputted is directly used.
+  (form.dirty && Object.values(form.touched).filter(Boolean).length > 0) || pool.isEmpty;
 
 type DepositFormProps = {
   pool: LiquidityPool;
@@ -41,6 +45,8 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
   const [slippage, setSlippage] = useState(0.1);
 
+  const [isCustomMode, setCustomMode] = useState(false);
+
   const accountId = useAccountId();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
@@ -51,11 +57,32 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     onSigning
   });
 
+  const getAmounts = useCallback(
+    (amounts: MonetaryAmount<CurrencyExt>[]) => {
+      const feeCurrencyAmount = amounts.find((amount) => transaction.fee.isEqualFeeCurrency(amount.currency));
+
+      if (feeCurrencyAmount && transaction.fee.data) {
+        const newFeeCurrencyAmount = transaction.calculateAmountWithFeeDeducted(feeCurrencyAmount);
+
+        if (isCustomMode) {
+          return amounts.map((amount) =>
+            transaction.fee.isEqualFeeCurrency(amount.currency) ? newFeeCurrencyAmount : amount
+          );
+        } else {
+          return pool.getLiquidityDepositInputAmounts(newFeeCurrencyAmount);
+        }
+      }
+
+      return amounts;
+    },
+    [isCustomMode, pool, transaction]
+  );
+
   const getTransactionArgs = useCallback(
     async (values: DepositLiquidityPoolFormData) => {
       if (!accountId) return;
 
-      const amounts = pooledCurrencies.map((amount) =>
+      const amounts: MonetaryAmount<CurrencyExt>[] = pooledCurrencies.map((amount) =>
         newSafeMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
       );
 
@@ -77,7 +104,9 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
     const { accountId, amounts, deadline, pool } = transactionData;
 
-    return transaction.execute(amounts, pool, slippage, deadline, accountId);
+    const newAmounts = getAmounts(amounts);
+
+    return transaction.execute(newAmounts, pool, slippage, deadline, accountId);
   };
 
   const tokens = useMemo(
@@ -114,16 +143,16 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
       const { accountId, amounts, deadline, pool } = transactionData;
 
-      const feeTicker = values[POOL_DEPOSIT_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate(amounts, pool, slippage, deadline, accountId);
+      return transaction.fee.estimate(amounts, pool, slippage, deadline, accountId);
     }
   });
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    // If pool has no liquidity, the assets ratio is set by the user,
-    // therefore the value inputted is directly used.
-    if (isCustomAmountsMode(form) || pool.isEmpty) return;
+  const handleChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const isCustom = isCustomAmountsMode(form, pool);
+
+    if (isCustom) {
+      return setCustomMode(true);
+    }
 
     if (!e.target.value || isNaN(Number(e.target.value))) {
       return form.setValues({ ...form.values, ...defaultValues });
@@ -175,12 +204,12 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
                     aria-label={t('forms.field_amount', {
                       field: `${ticker} ${t('deposit').toLowerCase()}`
                     })}
-                    balance={balance?.toString() || 0}
-                    humanBalance={balance?.toHuman() || 0}
                     valueUSD={new Big(isNaN(Number(form.values[ticker])) ? 0 : form.values[ticker] || 0)
                       .mul(getTokenPrice(prices, ticker)?.usd || 0)
                       .toNumber()}
-                    {...mergeProps(form.getFieldProps(ticker, false, false), { onChange: handleChange })}
+                    {...mergeProps(form.getFieldProps(ticker, false, false), getTokenInputProps(balance), {
+                      onChange: handleChange
+                    })}
                   />
                   {!isLastItem && <StyledPlusDivider marginTop='spacing5' />}
                 </Fragment>
@@ -196,7 +225,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
           )}
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...transaction.fee.detailsProps}
+              fee={transaction.fee}
               selectProps={{ ...form.getSelectFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
             />
             <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>

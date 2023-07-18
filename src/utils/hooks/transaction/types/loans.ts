@@ -2,51 +2,50 @@ import { CurrencyExt, InterBtcApi } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { Transaction } from '../types';
-import { TransactionAction } from '.';
 
-interface LoansClaimRewardsAction extends TransactionAction {
+interface LoansClaimRewardsAction {
   type: Transaction.LOANS_CLAIM_REWARDS;
   args: Parameters<InterBtcApi['loans']['claimAllSubsidyRewards']>;
 }
 
-interface LoansEnabledCollateralAction extends TransactionAction {
+interface LoansEnabledCollateralAction {
   type: Transaction.LOANS_ENABLE_COLLATERAL;
   args: Parameters<InterBtcApi['loans']['enableAsCollateral']>;
 }
 
-interface LoansDisabledCollateralAction extends TransactionAction {
+interface LoansDisabledCollateralAction {
   type: Transaction.LOANS_DISABLE_COLLATERAL;
   args: Parameters<InterBtcApi['loans']['disableAsCollateral']>;
 }
 
-interface LoansLendAction extends TransactionAction {
+interface LoansLendAction {
   type: Transaction.LOANS_LEND;
   args: Parameters<InterBtcApi['loans']['lend']>;
 }
 
-interface LoansWithdrawAction extends TransactionAction {
+interface LoansWithdrawAction {
   type: Transaction.LOANS_WITHDRAW;
   args: Parameters<InterBtcApi['loans']['withdraw']>;
 }
 
-interface LoansWithdrawAllAction extends TransactionAction {
+interface LoansWithdrawAllAction {
   type: Transaction.LOANS_WITHDRAW_ALL;
   args: Parameters<InterBtcApi['loans']['withdrawAll']>;
 }
 
-interface LoansBorrowAction extends TransactionAction {
+interface LoansBorrowAction {
   type: Transaction.LOANS_BORROW;
   args: Parameters<InterBtcApi['loans']['borrow']>;
 }
 
-interface LoansRepayAction extends TransactionAction {
+interface LoansRepayAction {
   type: Transaction.LOANS_REPAY;
   args: Parameters<InterBtcApi['loans']['repay']>;
 }
 
 type CustomLoansRepayAllArgs = [calculatedLimit: MonetaryAmount<CurrencyExt>];
 
-interface LoansRepayAllAction extends TransactionAction {
+interface LoansRepayAllAction {
   type: Transaction.LOANS_REPAY_ALL;
   args: [...Parameters<InterBtcApi['loans']['repayAll']>, ...CustomLoansRepayAllArgs];
 }
