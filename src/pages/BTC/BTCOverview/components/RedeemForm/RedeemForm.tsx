@@ -25,6 +25,7 @@ import {
   btcRedeemSchema,
   useForm
 } from '@/lib/form';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { RedeemData, useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { BridgeVaultData, GetVaultType, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
@@ -151,7 +152,13 @@ const RedeemForm = ({
 
     if (!args) return;
 
-    transaction.execute(...args);
+    let [amount, ...rest] = args;
+
+    if (transaction.fee.isEqualFeeCurrency(amount.currency)) {
+      amount = transaction.calculateAmountWithFeeDeducted(amount);
+    }
+
+    transaction.execute(amount, ...rest);
   };
 
   const monetaryAmount = newSafeMonetaryAmount(amount || 0, WRAPPED_TOKEN, true);
@@ -185,9 +192,7 @@ const RedeemForm = ({
 
       if (!args) return;
 
-      const feeTicker = values[BTC_REDEEM_FEE_TOKEN];
-
-      transaction.fee.setCurrency(feeTicker).estimate(...args);
+      transaction.fee.estimate(...args);
     }
   });
 
@@ -274,9 +279,13 @@ const RedeemForm = ({
                 humanBalance={redeemBalance.toString()}
                 balanceLabel={t('available')}
                 valueUSD={amountUSD}
-                {...mergeProps(form.getFieldProps(BTC_REDEEM_AMOUNT_FIELD, false, true), {
-                  onChange: handleChangeIssueAmount
-                })}
+                {...mergeProps(
+                  form.getFieldProps(BTC_REDEEM_AMOUNT_FIELD, false, true),
+                  getTokenInputProps(redeemBalance),
+                  {
+                    onChange: handleChangeIssueAmount
+                  }
+                )}
               />
               {hasPremiumRedeemFeature && (
                 <PremiumRedeemCard
@@ -315,7 +324,7 @@ const RedeemForm = ({
                 bridgeFee={bridgeFee}
                 bitcoinNetworkFee={currentInclusionFee}
                 feeDetailsProps={{
-                  ...transaction.fee.detailsProps,
+                  fee: transaction.fee,
                   selectProps: form.getSelectFieldProps(BTC_REDEEM_FEE_TOKEN, true)
                 }}
               />

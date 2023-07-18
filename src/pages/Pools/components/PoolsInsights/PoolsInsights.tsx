@@ -57,12 +57,10 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
     },
     validationSchema: claimRewardsPoolSchema(),
     onSubmit: handleSubmit,
-    onComplete: async (values) => {
+    onComplete: async () => {
       if (!accountPoolsData) return;
 
-      const feeTicker = values[POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate(accountPoolsData.claimableRewards);
+      return transaction.fee.estimate(accountPoolsData.claimableRewards);
     }
   });
 
@@ -154,7 +152,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
           <form onSubmit={form.handleSubmit}>
             <Flex direction='column' gap='spacing4'>
               <TransactionFeeDetails
-                {...transaction.fee.detailsProps}
+                fee={transaction.fee}
                 selectProps={{
                   ...form.getSelectFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef

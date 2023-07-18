@@ -1,7 +1,7 @@
 import { ExtrinsicData } from '@interlay/interbtc-api';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 
-import { Transaction, TransactionActions } from '../types';
+import { Actions, Transaction } from '../types';
 import { getLibExtrinsic } from './lib';
 import { getXCMExtrinsic } from './xcm';
 
@@ -12,11 +12,11 @@ import { getXCMExtrinsic } from './xcm';
  * in the types folder. In case you are adding a new type to the loans modules, go
  * to types/loans and add your new transaction as an action. This actions needs to also be added to the
  * types/index TransactionActions type. After that, you should be able to add it to the function.
- * @param {TransactionActions} params contains the type of transaction and
+ * @param {Actions} params contains the type of transaction and
  * the related args to call the mapped lib call
  * @return {Promise<ExtrinsicData>} every transaction return an extrinsic
  */
-const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> => {
+const getExtrinsic = async (params: Actions): Promise<ExtrinsicData> => {
   switch (params.type) {
     case Transaction.XCM_TRANSFER:
       return getXCMExtrinsic(params);

@@ -18,6 +18,7 @@ import {
   transferSchema,
   TransferValidationParams
 } from '@/lib/form/schemas';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -32,10 +33,9 @@ type TransferFormProps = {
 
 const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-
   const prices = useGetPrices();
   const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { getBalance } = useGetBalances();
+  const { getAvailableBalance } = useGetBalances();
   const { items: selectItems } = useSelectCurrency();
 
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
@@ -46,7 +46,7 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
     }
   });
 
-  const transferTokenBalance = transferToken && getBalance(transferToken.ticker)?.transferable;
+  const transferTokenBalance = transferToken && getAvailableBalance(transferToken.ticker);
 
   const minAmount = transferToken && newMonetaryAmount(1, transferToken);
 
@@ -76,7 +76,11 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
 
     if (!transactionData) return;
 
-    const { amount, destination } = transactionData;
+    let { amount, destination } = transactionData;
+
+    if (transaction.fee.isEqualFeeCurrency(amount.currency)) {
+      amount = transaction.calculateAmountWithFeeDeducted(amount);
+    }
 
     transaction.execute(destination, amount);
   };
@@ -102,9 +106,9 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
 
       if (!transactionData) return;
 
-      const { amount, destination, feeTicker } = transactionData;
+      const { amount, destination } = transactionData;
 
-      transaction.fee.setCurrency(feeTicker).estimate(destination, amount);
+      transaction.fee.estimate(destination, amount);
     }
   });
 
@@ -142,14 +146,15 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
             <TokenInput
               placeholder='0.00'
               label='Amount'
-              balance={transferTokenBalance?.toString() || 0}
-              humanBalance={transferTokenBalance?.toHuman() || 0}
               valueUSD={transferAmountUSD}
               selectProps={mergeProps(form.getSelectFieldProps(TRANSFER_TOKEN_FIELD, true), {
                 onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, TRANSFER_TOKEN_FIELD),
                 items: selectItems
               })}
-              {...mergeProps(form.getFieldProps(TRANSFER_AMOUNT_FIELD, false, true))}
+              {...mergeProps(
+                form.getFieldProps(TRANSFER_AMOUNT_FIELD, false, true),
+                getTokenInputProps(transferTokenBalance)
+              )}
             />
             <Input
               placeholder='Enter recipient account'
@@ -160,7 +165,7 @@ const TransferForm = ({ ticker }: TransferFormProps): JSX.Element => {
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...transaction.fee.detailsProps}
+              fee={transaction.fee}
               selectProps={form.getSelectFieldProps(TRANSFER_FEE_TOKEN_FIELD)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>

@@ -1,9 +1,8 @@
 import { InterBtcApi } from '@interlay/interbtc-api';
 
 import { Transaction } from '../types';
-import { TransactionAction } from '.';
 
-interface ReplaceRequestAction extends TransactionAction {
+interface ReplaceRequestAction {
   type: Transaction.REPLACE_REQUEST;
   args: Parameters<InterBtcApi['replace']['request']>;
 }

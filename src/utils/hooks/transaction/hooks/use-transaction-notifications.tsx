@@ -7,9 +7,9 @@ import { TransactionModalData } from '@/common/types/util.types';
 import { EXTERNAL_PAGES, EXTERNAL_URL_PARAMETERS } from '@/utils/constants/links';
 import { NotificationToastAction, NotificationToastType, useNotifications } from '@/utils/context/Notifications';
 
-import { TransactionActions, TransactionStatus } from './types';
+import { TransactionActions, TransactionStatus } from '../types';
+import { getTransactionDescription } from '../utils/description';
 import { TransactionResult } from './use-transaction';
-import { getTransactionDescription } from './utils/description';
 
 type TransactionNotificationsOptions = {
   showSuccessModal?: boolean;

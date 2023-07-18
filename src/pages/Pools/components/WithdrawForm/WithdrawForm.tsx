@@ -1,4 +1,5 @@
 import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
 import { RefObject, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,7 @@ import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains'
 import { POOL_WITHDRAW_AMOUNT_FIELD, POOL_WITHDRAW_FEE_TOKEN_FIELD, useForm } from '@/lib/form';
 import { WithdrawLiquidityPoolFormData, withdrawLiquidityPoolSchema } from '@/lib/form/schemas';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -97,9 +99,7 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
 
       const { accountId, amount, deadline, pool } = transactionData;
 
-      const feeTicker = values[POOL_WITHDRAW_FEE_TOKEN_FIELD];
-
-      return transaction.fee.setCurrency(feeTicker).estimate(amount, pool, slippage, deadline, accountId);
+      return transaction.fee.estimate(amount, pool, slippage, deadline, accountId);
     }
   });
 
@@ -136,16 +136,14 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
               aria-label={t('forms.field_amount', {
                 field: t('withdraw').toLowerCase()
               })}
-              balance={balance?.toString() || 0}
-              humanBalance={balance?.toHuman() || 0}
               valueUSD={pooledAmountsUSD}
-              {...form.getFieldProps(POOL_WITHDRAW_AMOUNT_FIELD)}
+              {...mergeProps(form.getFieldProps(POOL_WITHDRAW_AMOUNT_FIELD), getTokenInputProps(balance))}
             />
           </Flex>
           <ReceivableAssets assetAmounts={pooledAmounts} prices={prices} />
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...transaction.fee.detailsProps}
+              fee={transaction.fee}
               selectProps={{
                 ...form.getSelectFieldProps(POOL_WITHDRAW_FEE_TOKEN_FIELD),
                 modalRef: overlappingModalRef

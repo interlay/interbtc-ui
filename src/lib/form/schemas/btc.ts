@@ -5,14 +5,14 @@ import yup, { AddressType, MaxAmountValidationParams, MinAmountValidationParams 
 const BTC_ISSUE_AMOUNT_FIELD = 'issue-amount';
 const BTC_ISSUE_CUSTOM_VAULT_FIELD = 'issue-custom-vault';
 const BTC_ISSUE_CUSTOM_VAULT_SWITCH = 'issue-custom-vault-switch';
-const BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN = 'issue-griefing-collateral-token';
+const BTC_ISSUE_SECURITY_DEPOSIT_TOKEN = 'issue-security-deposit-token';
 const BTC_ISSUE_FEE_TOKEN = 'issue-fee-token';
 
 type BTCIssueFormData = {
   [BTC_ISSUE_AMOUNT_FIELD]?: string;
   [BTC_ISSUE_CUSTOM_VAULT_FIELD]?: string;
   [BTC_ISSUE_CUSTOM_VAULT_SWITCH]?: boolean;
-  [BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN]?: string;
+  [BTC_ISSUE_SECURITY_DEPOSIT_TOKEN]?: string;
   [BTC_ISSUE_FEE_TOKEN]?: string;
 };
 
@@ -38,7 +38,7 @@ const btcIssueSchema = (params: BTCIssueValidationParams): yup.ObjectSchema<any>
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'issue vault' }))
     }),
-    [BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN]: yup.string().required(),
+    [BTC_ISSUE_SECURITY_DEPOSIT_TOKEN]: yup.string().required(),
     [BTC_ISSUE_FEE_TOKEN]: yup.string().required()
   });
 
@@ -92,7 +92,7 @@ export {
   BTC_ISSUE_CUSTOM_VAULT_FIELD,
   BTC_ISSUE_CUSTOM_VAULT_SWITCH,
   BTC_ISSUE_FEE_TOKEN,
-  BTC_ISSUE_GRIEFING_COLLATERAL_TOKEN,
+  BTC_ISSUE_SECURITY_DEPOSIT_TOKEN,
   BTC_REDEEM_ADDRESS,
   BTC_REDEEM_AMOUNT_FIELD,
   BTC_REDEEM_CUSTOM_VAULT_FIELD,
