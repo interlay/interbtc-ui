@@ -3,9 +3,9 @@ import { toast } from 'react-toastify';
 
 import { isBridgeLoaded } from '@/common/actions/general.actions';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
+import InterlayHelmet from '@/legacy-components/InterlayHelmet';
 import { useSubstrateState } from '@/lib/substrate/context/hooks';
 import { ActionType, ApiStatus, KeyringStatus } from '@/lib/substrate/context/types';
-import InterlayHelmet from '@/parts/InterlayHelmet';
 
 interface SubstrateLoadingAndErrorHandlingWrapperProps {
   children: React.ReactNode;

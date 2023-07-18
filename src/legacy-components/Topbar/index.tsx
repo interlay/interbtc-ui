@@ -21,7 +21,7 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { POLKADOT } from '@/utils/constants/relay-chain-names';
-import { NotificationToastType, useNotifications } from '@/utils/context/Notifications';
+import { NotificationToastType, useNotifications } from '@/context/Notifications';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';

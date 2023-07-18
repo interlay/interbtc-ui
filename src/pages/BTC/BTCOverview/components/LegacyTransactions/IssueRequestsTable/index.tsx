@@ -26,7 +26,7 @@ import InterlayTable, {
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import { useIssueRequests } from '@/services/hooks/issue-requests';
+import { useIssueRequests } from '@/hooks/issue-requests';
 import { issuesCountQuery } from '@/services/queries/issues';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';

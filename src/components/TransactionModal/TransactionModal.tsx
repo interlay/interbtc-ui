@@ -17,7 +17,7 @@ import {
   P,
   TextLink
 } from '@/component-library';
-import { NotificationToastType, useNotifications } from '@/utils/context/Notifications';
+import { NotificationToastType, useNotifications } from '@/context/Notifications';
 import { TransactionStatus } from '@/utils/hooks/transaction/types';
 
 import { StyledCard, StyledCheckCircle, StyledXCircle } from './TransactionModal.style';

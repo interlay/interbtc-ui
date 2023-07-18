@@ -21,7 +21,7 @@ import App from './App';
 import { GeoblockingWrapper } from './components/Geoblock/Geoblock';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
-import { NotificationsProvider } from './utils/context/Notifications';
+import { NotificationsProvider } from './context/Notifications';
 
 configGlobalBig();
 

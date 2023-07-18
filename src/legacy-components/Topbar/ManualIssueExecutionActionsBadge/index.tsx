@@ -2,7 +2,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
 import { CTALink } from '@/component-library';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import { useManualIssueRequests } from '@/services/hooks/issue-requests';
+import { useManualIssueRequests } from '@/hooks/issue-requests';
 import { PAGES } from '@/utils/constants/links';
 
 const ManualIssueExecutionActionsBadge = (): JSX.Element => {

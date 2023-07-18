@@ -11,7 +11,7 @@ import { Route, Router } from 'react-router-dom';
 import { createStore } from 'redux';
 
 import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/lib/substrate';
-import { NotificationsProvider } from '@/utils/context/Notifications';
+import { NotificationsProvider } from '@/context/Notifications';
 
 import { rootReducer } from '../common/reducers';
 
