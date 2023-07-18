@@ -17,7 +17,6 @@ type Props = {
   rounded?: BorderRadius;
   padding?: Spacing;
   shadowed?: boolean;
-
   onPress?: (e: PressEvent) => void;
 };
 
