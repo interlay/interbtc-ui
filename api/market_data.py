@@ -35,10 +35,9 @@ def add_header(response):
 def coingecko(args):
     headers_dict = {
         "content-type": "application/json",
-        "accept": "application/json",
-        "x-cg-pro-api-key": api_key,
+        "accept": "application/json"
     }
-    url = "https://pro-api.coingecko.com/api/v3/simple/price"
+    url = "https://api.coingecko.com/api/v3/simple/price"
     resp = requests.get(url, params=args, headers=headers_dict)
     data = resp.json()
     return data
@@ -64,7 +63,11 @@ def dia(asset):
         }
       }
     except KeyError:
-      return { asset: None }
+      try:
+        return coingecko({"ids": [asset], "vs_currencies": ["usd"]})
+      except Exception as e:
+        print("Coingecko error", e)
+        return { asset: None }
 
 
 @app.route("/marketdata/price", methods=["GET"])
