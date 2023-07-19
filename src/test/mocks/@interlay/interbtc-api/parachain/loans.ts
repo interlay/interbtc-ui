@@ -18,27 +18,27 @@ import { EXTRINSIC_DATA } from '../extrinsic';
 const WRAPPED_LOAN_AMOUNT = {
   EMPTY: {
     VALUE: '0',
-    MONETARY: newMonetaryAmount(0, WRAPPED_TOKEN)
+    MONETARY: newMonetaryAmount(0, WRAPPED_TOKEN, true)
   },
   VERY_SMALL: {
     VALUE: '0.0001',
-    MONETARY: newMonetaryAmount(0.0001, WRAPPED_TOKEN)
+    MONETARY: newMonetaryAmount(0.0001, WRAPPED_TOKEN, true)
   },
   SMALL: {
     VALUE: '0.001',
-    MONETARY: newMonetaryAmount(0.001, WRAPPED_TOKEN)
+    MONETARY: newMonetaryAmount(0.001, WRAPPED_TOKEN, true)
   },
   MEDIUM: {
     VALUE: '0.1',
-    MONETARY: newMonetaryAmount(0.1, WRAPPED_TOKEN)
+    MONETARY: newMonetaryAmount(0.1, WRAPPED_TOKEN, true)
   },
   LARGE: {
     VALUE: '1',
-    MONETARY: newMonetaryAmount(1, WRAPPED_TOKEN)
+    MONETARY: newMonetaryAmount(1, WRAPPED_TOKEN, true)
   },
   VERY_LARGE: {
     VALUE: '10',
-    MONETARY: newMonetaryAmount(10, WRAPPED_TOKEN)
+    MONETARY: newMonetaryAmount(10, WRAPPED_TOKEN, true)
   }
 };
 
@@ -46,12 +46,12 @@ const WRAPPED_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosit
   NON_COLLATERAL: {
     amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: false,
-    vaultCollateralAmount: newMonetaryAmount(0, WRAPPED_TOKEN)
+    vaultCollateralAmount: WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY
   },
   COLLATERAL: {
     amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: true,
-    vaultCollateralAmount: newMonetaryAmount(0, WRAPPED_TOKEN)
+    vaultCollateralAmount: WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY
   }
 };
 
@@ -69,27 +69,27 @@ const WRAPPED_APY = {
 const GOVERNANCE_LOAN_AMOUNT = {
   EMPTY: {
     VALUE: '0',
-    MONETARY: newMonetaryAmount(0, GOVERNANCE_TOKEN)
+    MONETARY: newMonetaryAmount(0, GOVERNANCE_TOKEN, true)
   },
   VERY_SMALL: {
     VALUE: '1',
-    MONETARY: newMonetaryAmount(1, GOVERNANCE_TOKEN)
+    MONETARY: newMonetaryAmount(1, GOVERNANCE_TOKEN, true)
   },
   SMALL: {
     VALUE: '10',
-    MONETARY: newMonetaryAmount(10, GOVERNANCE_TOKEN)
+    MONETARY: newMonetaryAmount(10, GOVERNANCE_TOKEN, true)
   },
   MEDIUM: {
     VALUE: '1000',
-    MONETARY: newMonetaryAmount(1000, GOVERNANCE_TOKEN)
+    MONETARY: newMonetaryAmount(1000, GOVERNANCE_TOKEN, true)
   },
   LARGE: {
     VALUE: '10000',
-    MONETARY: newMonetaryAmount(10000, GOVERNANCE_TOKEN)
+    MONETARY: newMonetaryAmount(10000, GOVERNANCE_TOKEN, true)
   },
   VERY_LARGE: {
     VALUE: '1000000',
-    MONETARY: newMonetaryAmount(1000000, GOVERNANCE_TOKEN)
+    MONETARY: newMonetaryAmount(1000000, GOVERNANCE_TOKEN, true)
   }
 };
 
@@ -194,34 +194,59 @@ const LOAN_POSITIONS = {
   }
 };
 
-const ASSETS: TickerToData<LoanAsset> = {
-  [WRAPPED_ASSET.currency.ticker]: WRAPPED_ASSET,
-  [GOVERNANCE_ASSET.currency.ticker]: GOVERNANCE_ASSET
+const ASSETS: Record<'NORMAL' | 'EMPTY_CAPACITY' | 'INACTIVE', TickerToData<LoanAsset>> = {
+  NORMAL: {
+    [WRAPPED_ASSET.currency.ticker]: WRAPPED_ASSET,
+    [GOVERNANCE_ASSET.currency.ticker]: GOVERNANCE_ASSET
+  },
+  EMPTY_CAPACITY: {
+    [WRAPPED_ASSET.currency.ticker]: {
+      ...WRAPPED_ASSET,
+      supplyCap: WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY,
+      availableCapacity: WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY
+    },
+    [GOVERNANCE_ASSET.currency.ticker]: {
+      ...GOVERNANCE_ASSET,
+      supplyCap: GOVERNANCE_LOAN_AMOUNT.EMPTY.MONETARY,
+      availableCapacity: GOVERNANCE_LOAN_AMOUNT.EMPTY.MONETARY
+    }
+  },
+  INACTIVE: {
+    [WRAPPED_ASSET.currency.ticker]: { ...WRAPPED_ASSET, isActive: false },
+    [GOVERNANCE_ASSET.currency.ticker]: { ...GOVERNANCE_ASSET, isActive: false }
+  }
 };
 
-const INACTIVE_ASSETS: TickerToData<LoanAsset> = {
-  [WRAPPED_ASSET.currency.ticker]: { ...WRAPPED_ASSET, isActive: false },
-  [GOVERNANCE_ASSET.currency.ticker]: { ...GOVERNANCE_ASSET, isActive: false }
+const LTV_THRESHOLD: Record<'MIN' | 'MEDIUM' | 'HIGH', ReturnType<LendingStats['calculateLtvAndThresholdsChange']>> = {
+  MIN: {
+    ltv: THRESOLD.LOW,
+    collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
+    liquidationThresholdWeightedAverage: THRESOLD.HIGH
+  },
+  MEDIUM: {
+    ltv: THRESOLD.LOW,
+    collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
+    liquidationThresholdWeightedAverage: THRESOLD.HIGH
+  },
+  MEDIUM: {
+    ltv: THRESOLD.LOW,
+    collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
+    liquidationThresholdWeightedAverage: THRESOLD.HIGH
+  }
 };
 
-const LTV_THRESHOLD = {
-  ltv: THRESOLD.LOW,
-  collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
-  liquidationThresholdWeightedAverage: THRESOLD.HIGH
-};
-
-const COMMON_STATS = {
+const COMMON_STATS: Omit<LendingStats, 'ltv'> = {
   collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
   liquidationThresholdWeightedAverage: THRESOLD.HIGH,
   totalLentBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
   borrowLimitBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
   totalBorrowedBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY,
   totalCollateralBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
-  calculateBorrowLimitBtcChange: jest.fn().mockReturnValue(LTV_THRESHOLD),
-  calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.LARGE.MONETARY)
+  calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(LTV_THRESHOLD),
+  calculateBorrowLimitBtcChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.LARGE.MONETARY)
 };
 
-const LENDING_STATS: Record<'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV', LendingStats> = {
+const LENDING_STATS: Record<'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV' | 'LOW_BORROW_LIMIT', LendingStats> = {
   LOW_LTV: {
     ...COMMON_STATS,
     ltv: THRESOLD.MIN
@@ -233,6 +258,11 @@ const LENDING_STATS: Record<'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV', LendingStats>
   HIGH_LTV: {
     ...COMMON_STATS,
     ltv: THRESOLD.HIGH
+  },
+  LOW_BORROW_LIMIT: {
+    ...COMMON_STATS,
+    ltv: THRESOLD.MEDIUM,
+    borrowLimitBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY
   }
 };
 
@@ -242,7 +272,7 @@ const ACCOUNT_REWARDS: Record<'EMPTY' | 'FULL', AccruedRewards> = {
       [WRAPPED_ASSET.currency.ticker]: { lend: null, borrow: null },
       [GOVERNANCE_ASSET.currency.ticker]: { lend: null, borrow: null }
     },
-    total: newMonetaryAmount(0, GOVERNANCE_TOKEN)
+    total: GOVERNANCE_LOAN_AMOUNT.EMPTY.MONETARY
   },
   FULL: {
     perMarket: {
@@ -262,7 +292,6 @@ const ACCOUNT_REWARDS: Record<'EMPTY' | 'FULL', AccruedRewards> = {
 const DATA = {
   LTV_THRESHOLD,
   ASSETS,
-  INACTIVE_ASSETS,
   LOAN_POSITIONS,
   WRAPPED_LOAN,
   GOVERNANCE_LOAN,
@@ -279,7 +308,7 @@ const MODULE: Record<keyof LoansAPI, jest.Mock<any, any>> = {
   getLendTokenExchangeRates: jest.fn(),
   getLendTokens: jest.fn().mockResolvedValue([]),
   getLiquidationThresholdLiquidity: jest.fn(),
-  getLoanAssets: jest.fn().mockResolvedValue(ASSETS),
+  getLoanAssets: jest.fn().mockResolvedValue(ASSETS.NORMAL),
   getLoansMarkets: jest.fn(),
   getUndercollateralizedBorrowers: jest.fn(),
   // MUTATIONS

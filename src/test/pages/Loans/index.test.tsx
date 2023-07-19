@@ -16,7 +16,7 @@ const {
   claimAllSubsidyRewards,
   getAccruedRewardsOfAccount
 } = MOCK_LOANS.MODULE;
-const { LOAN_POSITIONS, ASSETS, LENDING_STATS, INACTIVE_ASSETS, ACCOUNT_REWARDS } = MOCK_LOANS.DATA;
+const { LOAN_POSITIONS, ASSETS, LENDING_STATS, ACCOUNT_REWARDS } = MOCK_LOANS.DATA;
 
 const path = '/lending';
 
@@ -24,7 +24,7 @@ describe('Loans page', () => {
   beforeEach(() => {
     getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.EMPTY);
     getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.EMPTY);
-    getLoanAssets.mockReturnValue(ASSETS);
+    getLoanAssets.mockReturnValue(ASSETS.NORMAL);
     getLendingStats.mockReturnValue(LENDING_STATS.LOW_LTV);
   });
 
@@ -32,7 +32,7 @@ describe('Loans page', () => {
     it.each([TABLES.LEND.MARKET, TABLES.BORROW.MARKET])(
       'should not be able to open inactive market on %s table',
       async (tableName) => {
-        getLoanAssets.mockReturnValue(INACTIVE_ASSETS);
+        getLoanAssets.mockReturnValue(ASSETS.INACTIVE);
 
         await render(<App />, { path });
 
