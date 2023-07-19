@@ -35,12 +35,12 @@ const getAmountWithFeeDeducted = (
     return newMonetaryAmount(0, actionAmount.currency);
   }
 
-  const isActionGreatThanBalance = actionAmount.gt(balance);
+  const isActionAmountGreaterThanBalance = actionAmount.gt(balance);
 
   // if the action amount is greater than the balance, the user
   // should not able to conduct the transaction but amount affected by the fee should
   // be return anyway (specially relevant for swap)
-  if (isActionGreatThanBalance) {
+  if (isActionAmountGreaterThanBalance) {
     return actionAmount.sub(feeAmount);
   }
 
