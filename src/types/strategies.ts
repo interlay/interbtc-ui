@@ -1,3 +1,18 @@
-type StrategyRisk = 'low' | 'medium' | 'high';
+import { CurrencyExt } from '@interlay/interbtc-api';
+import Big from 'big.js';
 
-export type { StrategyRisk };
+enum StrategyRisk {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high'
+}
+
+type StrategyData = {
+  interestType: 'apy' | 'apr';
+  interestPercentage: Big;
+  risk: StrategyRisk;
+  currency: CurrencyExt;
+};
+
+export { StrategyRisk };
+export type { StrategyData };

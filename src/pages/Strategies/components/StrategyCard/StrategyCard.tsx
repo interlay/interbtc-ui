@@ -1,23 +1,17 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
-import Big from 'big.js';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercentage } from '@/common/utils/utils';
 import { Card, CardProps, CoinIcon, Flex, H1, P, Strong } from '@/component-library';
-import { StrategyRisk } from '@/types/strategies';
+import { StrategyData, StrategyRisk } from '@/types/strategies';
 
 import { StrategyTag } from '../StrategyTag';
 import { StyledEarningCard, StyledEarnSection } from './StrategyCard.style';
 
 type Props = {
-  currency: CurrencyExt;
-  interestType: 'apy' | 'apr';
-  interestPercentage: Big;
   title: ReactNode;
   description: ReactNode;
-  risk: StrategyRisk;
-};
+} & StrategyData;
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
 
@@ -41,7 +35,7 @@ const StrategyCard = ({
     <Card {...props} alignItems='center' gap='spacing4'>
       <Flex alignSelf='flex-start' gap='spacing1'>
         <StrategyTag variant='risk' risk={risk} />
-        <StrategyTag variant='passive-income' />
+        {(risk === StrategyRisk.LOW || risk === StrategyRisk.MEDIUM) && <StrategyTag variant='passive-income' />}
       </Flex>
       <CoinIcon size='xl2' ticker={currency.ticker} />
       <H1 weight='bold' size='base' align='center' rows={1}>
