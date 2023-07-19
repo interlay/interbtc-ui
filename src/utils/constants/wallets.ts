@@ -1,7 +1,9 @@
 enum WalletName {
-  PolkadotJS = 'polkadot-js',
   Talisman = 'talisman',
-  SubWallet = 'subwallet-js'
+  Nova = 'nova',
+  SubWallet = 'subwallet-js',
+  ParitySignerCompanion = 'parity-signer-companion',
+  PolkadotJS = 'polkadot-js'
 }
 
 type WalletData = {
@@ -10,27 +12,45 @@ type WalletData = {
   url: string;
 };
 
+const NOVA_WALLET = {
+  title: 'Nova',
+  extensionName: WalletName.Nova,
+  url: 'https://novawallet.io/'
+};
+
+const PARITY_SIGNER_COMPANION = {
+  title: 'Parity Signer Companion',
+  extensionName: WalletName.ParitySignerCompanion,
+  url: 'https://github.com/paritytech/parity-signer-companion#installation'
+};
+
 const POLKADOTJS_WALLET = {
   title: 'Polkadot.js',
   extensionName: WalletName.PolkadotJS,
   url: 'https://polkadot.js.org/extension/'
 };
 
-const TALISMAN_WALLET = {
-  title: 'Talisman',
-  extensionName: WalletName.Talisman,
-
-  url: 'https://talisman.xyz/'
-};
-
 const SUBWALLET_WALLET = {
   title: 'SubWallet',
   extensionName: WalletName.SubWallet,
-
   url: 'https://subwallet.app/'
 };
 
-const WALLETS = [POLKADOTJS_WALLET, TALISMAN_WALLET, SUBWALLET_WALLET];
+const TALISMAN_WALLET = {
+  title: 'Talisman',
+  extensionName: WalletName.Talisman,
+  url: 'https://talisman.xyz/'
+};
 
-export { POLKADOTJS_WALLET, SUBWALLET_WALLET, TALISMAN_WALLET, WalletName, WALLETS };
+const WALLETS = [TALISMAN_WALLET, NOVA_WALLET, SUBWALLET_WALLET, PARITY_SIGNER_COMPANION, POLKADOTJS_WALLET];
+
+export {
+  NOVA_WALLET,
+  PARITY_SIGNER_COMPANION,
+  POLKADOTJS_WALLET,
+  SUBWALLET_WALLET,
+  TALISMAN_WALLET,
+  WalletName,
+  WALLETS
+};
 export type { WalletData };

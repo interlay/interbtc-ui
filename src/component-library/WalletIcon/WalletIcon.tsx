@@ -4,11 +4,13 @@ import { WalletName } from '@/utils/constants/wallets';
 
 import { IconProps } from '../Icon';
 import { FallbackIcon } from './FallbackIcon';
-import { PolkadotJS, SubWallet, Talisman } from './icons';
+import { Nova, ParitySignerCompanion, PolkadotJS, SubWallet, Talisman } from './icons';
 
 type WalletComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
 const wallet: Record<string, WalletComponent> = {
+  [WalletName.Nova]: Nova,
+  [WalletName.ParitySignerCompanion]: ParitySignerCompanion,
   [WalletName.PolkadotJS]: PolkadotJS,
   [WalletName.SubWallet]: SubWallet,
   [WalletName.Talisman]: Talisman

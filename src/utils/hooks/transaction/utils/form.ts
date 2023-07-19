@@ -6,6 +6,6 @@ import { UseFeeEstimateResult } from '../types/hook';
 const isTransactionFormDisabled = <T extends Transaction>(
   form: ReturnType<typeof useForm>,
   fee: UseFeeEstimateResult<T>
-): boolean => isFormDisabled(form) || !(fee.data && fee.data.isValid);
+): boolean => isFormDisabled(form) || fee.isLoading || !(fee.data && fee.data.isValid);
 
 export { isTransactionFormDisabled };

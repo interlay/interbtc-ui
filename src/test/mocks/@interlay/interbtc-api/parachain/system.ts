@@ -1,26 +1,37 @@
+import { SystemAPI } from '@interlay/interbtc-api';
+
 // Change to isError or isShutdown in order to simulate parachain being down.
-const SYSTEM_STATUS_RUNNING = { isRunning: true };
+const STATUS_CODE = { isRunning: true };
 
-const mockSystemGetStatusCode = jest.fn(() => SYSTEM_STATUS_RUNNING);
+const FUTURE_BLOCK_NUMBER = 0;
 
-const DEFAULT_DEADLINE_BLOCK_NUMBER = 0;
+const CURRENT_ACTIVE_BLOCK_NUMBER = 1;
 
-const mockGetFutureBlockNumber = jest.fn().mockResolvedValue(DEFAULT_DEADLINE_BLOCK_NUMBER);
+const CURRENT_BLOCK_NUMBER = 0;
 
-const DEFAULT_CURRENT_ACTIVE_BLOCK_NUMBER = 1;
-
-const mockGetCurrentActiveBlockNumber = jest.fn().mockResolvedValue(DEFAULT_CURRENT_ACTIVE_BLOCK_NUMBER);
-
-const DEFAULT_CURRENT_BLOCK_NUMBER = 0;
-
-const mockGetCurrentBlockNumber = jest.fn().mockReturnValue(DEFAULT_CURRENT_BLOCK_NUMBER);
-
-export {
-  DEFAULT_CURRENT_ACTIVE_BLOCK_NUMBER,
-  DEFAULT_CURRENT_BLOCK_NUMBER,
-  DEFAULT_DEADLINE_BLOCK_NUMBER,
-  mockGetCurrentActiveBlockNumber,
-  mockGetCurrentBlockNumber,
-  mockGetFutureBlockNumber,
-  mockSystemGetStatusCode
+const DATA = {
+  STATUS_CODE,
+  BLOCK_NUMBER: {
+    CURRENT: CURRENT_BLOCK_NUMBER,
+    CURRENT_ACTIVE: CURRENT_ACTIVE_BLOCK_NUMBER,
+    FUTURE: FUTURE_BLOCK_NUMBER
+  }
 };
+
+const MODULE: Record<keyof SystemAPI, jest.Mock<any, any>> = {
+  getCurrentActiveBlockNumber: jest.fn().mockResolvedValue(CURRENT_ACTIVE_BLOCK_NUMBER),
+  getCurrentBlockNumber: jest.fn().mockResolvedValue(CURRENT_BLOCK_NUMBER),
+  getFutureBlockNumber: jest.fn().mockResolvedValue(FUTURE_BLOCK_NUMBER),
+  getStatusCode: jest.fn().mockResolvedValue(STATUS_CODE),
+  getBlockHash: jest.fn(),
+  setCode: jest.fn(),
+  subscribeToCurrentBlockHeads: jest.fn(),
+  subscribeToFinalizedBlockHeads: jest.fn()
+};
+
+const MOCK_SYSTEM = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_SYSTEM };

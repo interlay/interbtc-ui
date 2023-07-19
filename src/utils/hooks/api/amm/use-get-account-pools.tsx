@@ -5,8 +5,8 @@ import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
+import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
 import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import useAccountId from '../../use-account-id';

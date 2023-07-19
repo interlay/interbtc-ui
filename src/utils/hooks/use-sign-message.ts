@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import { showSignTermsModalAction } from '@/common/actions/general.actions';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
-import { SIGNER_API_URL } from '@/constants';
+import { SIGNER_API_URL, TC_VERSION } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import { NotificationToastType, useNotifications } from '../context/Notifications';
@@ -24,7 +24,7 @@ const postSignature = async (account: KeyringPair) => {
     throw new Error('Failed to sign message');
   }
 
-  return fetch(`${SIGNER_API_URL}/${account.address}`, {
+  return fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({ version: TC_VERSION })}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -50,6 +50,8 @@ type UseSignMessageResult = {
   };
 };
 
+const shouldCheckSignature = !!TC_VERSION;
+
 const useSignMessage = (): UseSignMessageResult => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -57,22 +59,28 @@ const useSignMessage = (): UseSignMessageResult => {
 
   const dispatch = useDispatch();
   const [signatures, setSignatures] = useLocalStorage(LocalStorageKey.TC_SIGNATURES);
+
   const { selectedAccount } = useSubstrateSecureState();
 
   const setSignature = useCallback(
-    (address: string, hasSignature: boolean) => setSignatures({ ...signatures, [address]: hasSignature }),
+    (address: string, hasSignature: boolean) =>
+      setSignatures({ ...signatures, [address]: { isSigned: hasSignature, version: TC_VERSION } }),
     [setSignatures, signatures]
   );
 
   const getSignature = useCallback(
     async (account: KeyringPair): Promise<boolean> => {
-      const storedSignature = signatures?.[account.address];
+      const signatureData = signatures?.[account.address];
 
-      if (storedSignature !== undefined) {
-        return storedSignature;
+      // if the stored value is boolean, we will force to fetch, so we can migrate to lastest structure
+      const hasStoredSignature =
+        typeof signatureData === 'object' ? signatureData?.version === TC_VERSION && signatureData.isSigned : undefined;
+
+      if (hasStoredSignature !== undefined) {
+        return hasStoredSignature;
       }
 
-      const res = await fetch(`${SIGNER_API_URL}/${account.address}`, {
+      const res = await fetch(`${SIGNER_API_URL}/${account.address}?${new URLSearchParams({ version: TC_VERSION })}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -95,11 +103,10 @@ const useSignMessage = (): UseSignMessageResult => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    enabled: !!selectedAccount,
+    enabled: !!selectedAccount && shouldCheckSignature,
     queryFn: () => selectedAccount && getSignature(selectedAccount)
   });
 
-  // TODO: add new notification
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
     onError: (_, variables) => {
       setSignature(variables.address, false);
@@ -130,13 +137,13 @@ const useSignMessage = (): UseSignMessageResult => {
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
-    if (!account || !SIGNER_API_URL || hasSignature) return;
+    if (!account || !SIGNER_API_URL || hasSignature || !shouldCheckSignature) return;
 
     signMessageMutation.mutate(account);
   };
 
   const handleOpenSignTermModal = async (account: KeyringPair) => {
-    if (!SIGNER_API_URL) return;
+    if (!SIGNER_API_URL || !shouldCheckSignature) return;
 
     // Cancel possible ongoing unwanted account
     queryClient.cancelQueries({ queryKey });
@@ -152,7 +159,7 @@ const useSignMessage = (): UseSignMessageResult => {
   };
 
   return {
-    hasSignature: !!hasSignature,
+    hasSignature: shouldCheckSignature ? !!hasSignature : true,
     modal: {
       buttonProps: { onPress: () => handleSignMessage(selectedAccount), loading: signMessageMutation.isLoading }
     },

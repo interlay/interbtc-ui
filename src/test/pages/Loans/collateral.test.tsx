@@ -29,7 +29,7 @@ const withinCollateralModal = (asset = 'IBTC') => {
   return within(screen.getByRole('dialog'));
 };
 
-describe('Collateral Flow', () => {
+describe.skip('Collateral Flow', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);

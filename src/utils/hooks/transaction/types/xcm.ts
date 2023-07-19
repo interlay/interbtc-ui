@@ -1,16 +1,17 @@
-import { ChainName } from '@interlay/bridge';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { Transaction, TransactionAction } from '.';
+import { ChainData } from '@/types/chains';
 
-interface XCMTransferAction extends TransactionAction {
+import { Transaction } from '.';
+
+interface XCMTransferAction {
   type: Transaction.XCM_TRANSFER;
   args: [
     adapter: BaseCrossChainAdapter,
-    fromChain: ChainName,
-    toChain: ChainName,
+    fromChain: ChainData,
+    toChain: ChainData,
     destinatary: string,
     transferAmount: MonetaryAmount<CurrencyExt>
   ];
