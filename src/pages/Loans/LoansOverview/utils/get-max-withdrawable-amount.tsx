@@ -8,12 +8,14 @@ const getMaxWithdrawableAmountByBorrowLimit = (
   position: CollateralPosition,
   lendingStats: LendingStats
 ): MonetaryAmount<CurrencyExt> => {
-  const { amount, isCollateral } = position;
+  const { amount, isCollateral, vaultCollateralAmount } = position;
   const { collateralThreshold, exchangeRate, currency } = asset;
   const { borrowLimitBtc } = lendingStats;
 
   if (!isCollateral) {
-    return amount;
+    // MEMO: If the position is not used as loan collateral it can be used
+    // as vault collateral.
+    return amount.sub(vaultCollateralAmount);
   }
 
   const positionAmountBtc = exchangeRate.toBase(amount);

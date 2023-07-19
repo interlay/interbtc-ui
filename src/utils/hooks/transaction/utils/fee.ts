@@ -14,7 +14,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { getExtrinsic } from '../extrinsics';
-import { Transaction, TransactionActions } from '../types';
+import { Actions, Transaction } from '../types';
 
 // 50% on top of trade to be safe (slippage, different weight)
 const OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER = 1.5;
@@ -76,7 +76,7 @@ const getTxFeeSwapData = async (
 const estimateTransactionFee: (
   feeCurrency: CurrencyExt,
   pools: Array<LiquidityPool>,
-  params: TransactionActions
+  params: Actions
 ) => Promise<MonetaryAmount<CurrencyExt>> = async (feeCurrency, pools, params) => {
   const baseExtrinsicData = await getExtrinsic(params);
   const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
@@ -92,13 +92,15 @@ const estimateTransactionFee: (
     pools
   );
 
-  return wrappedInSwapTxFee;
+  // final buffer so that the user won't be led to a failing transaction
+  // due to not enough funds
+  return wrappedInSwapTxFee.mul(1.05);
 };
 
 const wrapWithTxFeeSwap = (
   feeAmount: MonetaryAmount<CurrencyExt> | undefined,
   baseExtrinsicData: ExtrinsicData,
-  pools: Array<LiquidityPool>
+  pools: Array<LiquidityPool> = []
 ): ExtrinsicData => {
   if (feeAmount === undefined || isCurrencyEqual(feeAmount.currency, GOVERNANCE_TOKEN)) {
     return baseExtrinsicData;
@@ -120,57 +122,68 @@ const wrapWithTxFeeSwap = (
   return { extrinsic: wrappedCall };
 };
 
-// MEMO: if we ever need toadd QTOKENS as a possible fee
-// token, we will need to handle it here for loan withdraw and
-// withdrawAll
-const getActionAmount = (
-  params: TransactionActions,
-  feeCurrency: CurrencyExt
-): MonetaryAmount<CurrencyExt> | undefined => {
-  let amounts: MonetaryAmount<CurrencyExt>[] | undefined;
-
+const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined => {
   switch (params.type) {
     case Transaction.REDEEM_REQUEST: {
       const [amount] = params.args;
-      amounts = [amount];
-      break;
+      return [amount];
     }
     case Transaction.TOKENS_TRANSFER: {
       const [, amount] = params.args;
-      amounts = [amount];
-      break;
+      return [amount];
     }
     /* START - AMM */
     case Transaction.AMM_SWAP: {
       const [trade] = params.args;
-      amounts = [trade.inputAmount];
-      break;
+      return [trade.inputAmount];
     }
     case Transaction.AMM_ADD_LIQUIDITY: {
       const [pooledAmounts] = params.args;
-      amounts = pooledAmounts;
-      break;
+      return pooledAmounts;
     }
     case Transaction.AMM_REMOVE_LIQUIDITY: {
       const [amount] = params.args;
-      amounts = [amount];
-      break;
+      return [amount];
     }
     /* END - AMM */
     /* START - LOANS */
     case Transaction.LOANS_REPAY:
     case Transaction.LOANS_LEND: {
       const [, amount] = params.args;
-      amounts = [amount];
-      break;
+      return [amount];
     }
     case Transaction.LOANS_REPAY_ALL: {
       const [, calculatedLimit] = params.args;
-      amounts = [calculatedLimit];
-      break;
+      return [calculatedLimit];
     }
     /* END - LOANS */
+    case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
+      const [amount] = params.args;
+      return [amount];
+    }
+    // transactions that do not envolve action amount, should
+    // be declared here
+    case Transaction.ISSUE_REQUEST:
+    case Transaction.ISSUE_EXECUTE:
+    case Transaction.LOANS_BORROW:
+    case Transaction.LOANS_CLAIM_REWARDS:
+    case Transaction.LOANS_WITHDRAW:
+    case Transaction.LOANS_WITHDRAW_ALL:
+    case Transaction.LOANS_ENABLE_COLLATERAL:
+    case Transaction.LOANS_DISABLE_COLLATERAL:
+    case Transaction.AMM_CLAIM_REWARDS:
+      return undefined;
   }
+
+  // helps find transactions that are missing handling here
+  throw new Error(`Transaction ${params.type} is not handled in fee estimate`);
+};
+
+// MEMO: if we ever need toadd QTOKENS as a possible fee
+// token, we will need to handle it here for loan withdraw and
+// withdrawAll
+const getActionAmount = (params: Actions, feeCurrency: CurrencyExt): MonetaryAmount<CurrencyExt> | undefined => {
+  const amounts = getAmount(params);
 
   if (!amounts) return;
 

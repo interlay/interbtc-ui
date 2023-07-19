@@ -23,10 +23,8 @@ import { BitcoinNetwork } from '@/types/bitcoin';
 import { POLKADOT } from '@/utils/constants/relay-chain-names';
 import { NotificationToastType, useNotifications } from '@/utils/context/Notifications';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
-import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
@@ -36,7 +34,6 @@ const Topbar = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
-  const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
   const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const { selectProps } = useSignMessage();
   const notifications = useNotifications();
@@ -109,7 +106,7 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        {isBanxaEnabled ? <FundWallet /> : <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />}
+        <FundWallet />
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_FAUCET_URL && governanceTokenBalanceIsZero && (

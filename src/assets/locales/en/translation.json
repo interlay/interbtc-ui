@@ -75,9 +75,9 @@
   "locked_btc": "Locked BTC",
   "issue": "Issue",
   "redeem": "Redeem",
-  "nav_bridge": "Bridge",
+  "nav_btc": "BTC",
   "nav_strategies": "Strategies",
-  "nav_transfer": "Transfer / Bridge",
+  "nav_send_and_receive": "Send and Receive",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
   "nav_pools": "Pools",
@@ -632,10 +632,10 @@
   },
   "fund_wallet_modal": {
     "buy": "Buy",
-    "buy_via_banxa": "Purchase KINT via Banxa.",
+    "buy_via_banxa": "Purchase {{ticker}} via Banxa.",
     "banxa_leading_solution": "Banxa is the leading global Web3 on-and-off ramp solution.",
     "exchange": "Exchange",
-    "please_check_terms": "Please check the individual terms and conditions of each exchange before you buy / trade {{token}}."
+    "please_check_terms": "Please check the individual terms and conditions of each exchange before you buy / trade {{ticker}}."
   },
   "wallet": {
     "available_assets": "Available assets",
@@ -726,7 +726,7 @@
     "claiming_vesting": "Claiming vesting",
     "claimed_vesting": "Claimed vesting"
   },
-  "bridge": {
+  "btc": {
     "max_issuable": "Max issuable",
     "max_redeemable": "Max redeemable",
     "in_single_request": "In single request",
