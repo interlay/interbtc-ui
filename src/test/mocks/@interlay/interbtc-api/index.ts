@@ -5,17 +5,16 @@ import { Interlay, Polkadot } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
-import { mockFaucet } from './faucet';
 import {
+  MOCK_AMM,
+  MOCK_SYSTEM,
+  MOCK_TRANSACTION,
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
   mockChainType,
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
-  mockGetCurrentActiveBlockNumber,
-  mockGetCurrentBlockNumber,
-  mockGetFutureBlockNumber,
   mockGetStableBitcoinConfirmations,
   mockGetStableParachainConfirmations,
   mockIssueGetDustValue,
@@ -31,7 +30,6 @@ import {
   mockRedeemGetPremiumRedeemFeeRate,
   mockRedeemRequest,
   mockSystemChain,
-  mockSystemGetStatusCode,
   mockTokensBalance,
   mockTokensSubscribeToBalance,
   mockTokensTotal,
@@ -40,17 +38,6 @@ import {
   mockVaultsGetVaultsWithIssuableTokens,
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
-import {
-  mockAddLiquidity,
-  mockClaimFarmingRewards,
-  mockGetClaimableFarmingRewards,
-  mockGetLiquidityPools,
-  mockGetLiquidityProvidedByAccount,
-  mockGetLpTokens,
-  mockGetOptimalTrade,
-  mockRemoveLiquidity,
-  mockSwap
-} from './parachain/amm';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
 import {
@@ -73,16 +60,12 @@ import {
 } from './parachain/loans';
 import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
 
-type RecursivePartial<T> = {
-  [P in keyof T]?: RecursivePartial<T[P]>;
-};
-
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
 
 const mockCollateralCurrencies = [Polkadot, Interlay];
 
 // To mock new lib methods extend this object.
-const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
+const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
   removeAccount: jest.fn(),
   setAccount: mockSetAccount,
   api: {
@@ -97,6 +80,11 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     query: {
       vesting: {
         vestingSchedules: mockVestingSchedules as any
+      },
+      oracle: {
+        aggregate: {
+          keys: jest.fn().mockReturnValue([])
+        }
       }
     },
     tx: {
@@ -154,12 +142,7 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getCurrentInclusionFee: mockRedeemGetCurrentInclusionFee,
     request: mockRedeemRequest
   },
-  system: {
-    getStatusCode: mockSystemGetStatusCode,
-    getFutureBlockNumber: mockGetFutureBlockNumber,
-    getCurrentActiveBlockNumber: mockGetCurrentActiveBlockNumber,
-    getCurrentBlockNumber: mockGetCurrentBlockNumber
-  },
+  system: MOCK_SYSTEM.MODULE,
   tokens: {
     balance: mockTokensBalance,
     total: mockTokensTotal,
@@ -171,21 +154,12 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getPremiumRedeemVaults: mockVaultsGetPremiumRedeemVaults,
     getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
   },
-  amm: {
-    getLiquidityPools: mockGetLiquidityPools,
-    getLiquidityProvidedByAccount: mockGetLiquidityProvidedByAccount,
-    getClaimableFarmingRewards: mockGetClaimableFarmingRewards,
-    addLiquidity: mockAddLiquidity,
-    removeLiquidity: mockRemoveLiquidity,
-    getLpTokens: mockGetLpTokens,
-    getOptimalTrade: mockGetOptimalTrade,
-    swap: mockSwap,
-    claimFarmingRewards: mockClaimFarmingRewards
-  },
+  amm: MOCK_AMM.MODULE,
   escrow: {
     getStakedBalance: mockGetStakedBalance,
     votingBalance: mockVotingBalance
-  }
+  },
+  transaction: MOCK_TRANSACTION.MODULE
 };
 
 jest.mock('@interlay/interbtc-api', () => {
@@ -196,12 +170,11 @@ jest.mock('@interlay/interbtc-api', () => {
     currencyIdToMonetaryCurrency: jest.fn(),
     newAccountId: jest.fn().mockReturnValue('a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc'),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
-    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
-    FaucetClient: mockFaucet,
+    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi),
+    FaucetClient: jest.fn().mockImplementation(() => ({ fundAccount: jest.fn() })),
     newExtrinsicStatus: jest.fn()
   };
 });
 
-export * from './parachain';
 export * from './parachain';
 export { mockInterBtcApi, mockSetAccount };

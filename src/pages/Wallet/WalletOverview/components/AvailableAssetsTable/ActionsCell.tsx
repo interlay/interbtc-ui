@@ -1,4 +1,5 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
+import { mergeProps } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
@@ -6,10 +7,9 @@ import { showBuyModal } from '@/common/actions/general.actions';
 import { CTA, CTALink, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { PAGES, QUERY_PARAMETERS, QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-
-const queryString = require('query-string');
+import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 type ActionsCellProps = {
   currency: CurrencyExt;
@@ -30,6 +30,8 @@ const ActionsCell = ({
 }: ActionsCellProps): JSX.Element | null => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  const { getLinkProps } = usePageQueryParams();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,40 +54,37 @@ const ActionsCell = ({
       <Flex justifyContent={isMobile ? undefined : 'flex-end'} gap='spacing1'>
         {isWrappedToken && (
           <CTALink
-            {...commonCTAProps}
-            to={{
-              pathname: PAGES.BRIDGE,
-              search: queryString.stringify({
-                [QUERY_PARAMETERS.TAB]: 'issue'
+            {...mergeProps(
+              commonCTAProps,
+              getLinkProps(PAGES.BTC, {
+                [QUERY_PARAMETERS.TAB]: QUERY_PARAMETERS_VALUES.BRIDGE.TAB.ISSUE
               })
-            }}
+            )}
           >
             {t('issue')}
           </CTALink>
         )}
         {isRedeemable && (
           <CTALink
-            {...commonCTAProps}
-            to={{
-              pathname: PAGES.BRIDGE,
-              search: queryString.stringify({
-                [QUERY_PARAMETERS.TAB]: 'redeem'
+            {...mergeProps(
+              commonCTAProps,
+              getLinkProps(PAGES.BTC, {
+                [QUERY_PARAMETERS.TAB]: QUERY_PARAMETERS_VALUES.BRIDGE.TAB.REDEEM
               })
-            }}
+            )}
           >
             {t('redeem')}
           </CTALink>
         )}
         {isPooledAsset && (
           <CTALink
-            {...commonCTAProps}
-            to={{
-              pathname: PAGES.SWAP,
-              search: queryString.stringify({
+            {...mergeProps(
+              commonCTAProps,
+              getLinkProps(PAGES.SWAP, {
                 [QUERY_PARAMETERS.SWAP.FROM]: currency.ticker,
                 [QUERY_PARAMETERS.SWAP.TO]: isWrappedToken ? undefined : WRAPPED_TOKEN.ticker
               })
-            }}
+            )}
           >
             {t('amm.swap')}
           </CTALink>
@@ -104,13 +103,12 @@ const ActionsCell = ({
         )}
         {!isWrappedToken && (
           <CTALink
-            {...commonCTAProps}
-            to={{
-              pathname: PAGES.TRANSFER,
-              search: queryString.stringify({
-                [QUERY_PARAMETERS.TAB]: 'crossChainTransfer'
+            {...mergeProps(
+              commonCTAProps,
+              getLinkProps(PAGES.SEND_AND_RECEIVE, {
+                [QUERY_PARAMETERS.TAB]: QUERY_PARAMETERS_VALUES.TRANSFER.TAB.BRIDGE
               })
-            }}
+            )}
           >
             Bridge
           </CTALink>

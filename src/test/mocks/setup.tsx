@@ -2,10 +2,10 @@ import './@interlay/interbtc-api';
 import './@polkadot/api';
 import './@polkadot/extension-dapp';
 import './@polkadot/ui-keyring';
-import './intersectionObserver';
 import './fetch';
+import './hooks';
+import './intersectionObserver';
 import './substrate';
-import './utils';
 
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { FocusScope } from '@react-aria/focus';
@@ -15,6 +15,11 @@ import ReactDOM from 'react-dom';
 afterAll(() => {
   if (global.gc) global.gc();
 });
+
+// Removing transaction modal from showing on every single test
+jest.mock('@/utils/hooks/transaction/hooks/use-transaction-notifications', () => ({
+  useTransactionNotifications: () => ({ onReject: jest.fn(), mutationProps: {} })
+}));
 
 // MEMO: mocking @react/aria overlay component because
 // of a error around `createTreeWalker`

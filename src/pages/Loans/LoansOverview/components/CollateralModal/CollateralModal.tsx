@@ -1,4 +1,5 @@
-import { CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { useEffect, useRef } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
@@ -19,7 +20,7 @@ import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
 import { StyledDescription } from './CollateralModal.style';
 
-type CollateralModalVariant = 'enable' | 'disable' | 'disable-error';
+type CollateralModalVariant = 'enable' | 'disable' | 'disable-error' | 'disable-vault-collateral';
 
 const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: LoanAsset) =>
   ({
@@ -40,10 +41,21 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
       description:
         'This asset is required to support your borrowed assets. Either repay borrowed assets, or supply another asset as collateral.',
       buttonLabel: `Dismiss`
+    },
+    'disable-vault-collateral': {
+      title: 'Already used as vault collateral',
+      description:
+        'This asset is already used as vault collateral and therefore can not be used as collateral for lending.',
+      buttonLabel: `Dismiss`
     }
   }[variant]);
 
-const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): CollateralModalVariant => {
+const getModalVariant = (
+  isCollateralActive: boolean,
+  ltvStatus: Status | undefined,
+  vaultCollateralAmount: MonetaryAmount<CurrencyExt>
+): CollateralModalVariant => {
+  if (!vaultCollateralAmount.isZero()) return 'disable-vault-collateral';
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
   if (!ltvStatus || ltvStatus !== 'success') return 'disable-error';
@@ -60,7 +72,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type CollateralModalProps = Props & InheritAttrs;
 
-const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
+const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useGetAccountLendingStatistics();
   const { getLTV } = useGetLTV();
@@ -73,11 +85,11 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
     onSuccess: refetch
   });
 
-  const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
+  const { isCollateral: isCollateralActive, amount: lendPositionAmount, vaultCollateralAmount } = position;
 
   const loanAction = isCollateralActive ? 'withdraw' : 'lend';
   const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount });
-  const variant = getModalVariant(isCollateralActive, currentLTV?.status);
+  const variant = getModalVariant(isCollateralActive, currentLTV?.status, vaultCollateralAmount);
 
   const handleSubmit = () => {
     if (variant === 'enable') {
@@ -93,13 +105,11 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
     },
     validationSchema: toggleCollateralLoanSchema(),
     onSubmit: handleSubmit,
-    onComplete: async (values) => {
-      const feeTicker = values[LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD];
-
+    onComplete: async () => {
       if (variant === 'enable') {
-        return transaction.fee.setCurrency(feeTicker).estimate(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
+        return transaction.fee.estimate(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
       } else {
-        return transaction.fee.setCurrency(feeTicker).estimate(Transaction.LOANS_DISABLE_COLLATERAL, asset.currency);
+        return transaction.fee.estimate(Transaction.LOANS_DISABLE_COLLATERAL, asset.currency);
       }
     }
   });
@@ -107,11 +117,11 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   // Doing this call on mount so that the form becomes dirty
   // TODO: find better approach
   useEffect(() => {
-    if (variant === 'disable-error') return;
+    if (variant === 'disable-error' || variant === 'disable-vault-collateral' || !isOpen) return;
 
     form.setFieldValue(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOpen, variant]);
 
   const content = getContentMap(t, variant, asset);
 
@@ -119,6 +129,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   return (
     <Modal
+      isOpen={isOpen}
       onClose={onClose}
       shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
       {...props}
@@ -127,11 +138,13 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
       <ModalBody>
         <Flex direction='column' gap='spacing8'>
           <StyledDescription color='tertiary'>{content.description}</StyledDescription>
-          <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
+          {variant !== 'disable-vault-collateral' && (
+            <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
+          )}
         </Flex>
       </ModalBody>
       <ModalFooter>
-        {variant === 'disable-error' ? (
+        {variant === 'disable-error' || variant === 'disable-vault-collateral' ? (
           <CTA size='large' onPress={onClose}>
             {content.buttonLabel}
           </CTA>
@@ -139,9 +152,9 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
           <form onSubmit={form.handleSubmit}>
             <Flex direction='column' gap='spacing4'>
               <TransactionFeeDetails
-                {...transaction.fee.detailsProps}
+                fee={transaction.fee}
                 selectProps={{
-                  ...form.getFieldProps(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
+                  ...form.getSelectFieldProps(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef
                 }}
               />

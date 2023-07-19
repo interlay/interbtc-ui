@@ -129,7 +129,7 @@ const getTranslationArgs = (
       const [destination, amount] = params.args;
 
       return {
-        key: isPast ? 'transaction.transfered_amount_to_address' : 'transaction.transfering_amount_to_address',
+        key: isPast ? 'transaction.transferred_amount_to_address' : 'transaction.transferring_amount_to_address',
         args: {
           amount: amount.toHuman(),
           currency: amount.currency.ticker,
@@ -145,13 +145,13 @@ const getTranslationArgs = (
 
       return {
         key: isPast
-          ? 'transaction.transfered_amount_from_chain_to_chain'
-          : 'transaction.transfering_amount_from_chain_to_chain',
+          ? 'transaction.transferred_amount_from_chain_to_chain'
+          : 'transaction.transferring_amount_from_chain_to_chain',
         args: {
           amount: transferAmount.toHuman(),
           currency: transferAmount.currency.ticker,
-          fromChain: fromChain.toUpperCase(),
-          toChain: toChain.toUpperCase()
+          fromChain: fromChain.display,
+          toChain: toChain.display
         }
       };
     }

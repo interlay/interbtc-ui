@@ -46,7 +46,9 @@ const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult 
   const prices = useGetPrices();
 
   const { data: pools } = useGetLiquidityPools();
-  const { data: oracleCurrencies } = useGetOracleCurrencies();
+  const { data: oracleCurrencies } = useGetOracleCurrencies({
+    enabled: filter === SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY
+  });
 
   const filteredCurrencies = useMemo(() => {
     if (!currencies) {

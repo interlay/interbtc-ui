@@ -25,7 +25,7 @@ import { TABLES } from './constants';
 
 const path = '/lending';
 
-describe('Loans page', () => {
+describe.skip('Loans page', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);

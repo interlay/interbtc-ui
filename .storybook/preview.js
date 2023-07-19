@@ -25,6 +25,7 @@ const parameters = {
     // Needed to be specified here in order to apply styles to components rendered in portal.
     Decorator: withThemes 
   },
+  chromatic: { disableSnapshot: true },
 };
 
 addDecorator(story => <OverlayProvider><MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter></OverlayProvider>);

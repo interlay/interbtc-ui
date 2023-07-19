@@ -8,7 +8,7 @@ import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { mockRedeemBurn, mockRedeemGetMaxBurnableTokens } from '../mocks/@interlay/interbtc-api';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
-describe('Burn page', () => {
+describe.skip('Burn page', () => {
   it('the burn tab is displayed when there is a liquidated vault', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 

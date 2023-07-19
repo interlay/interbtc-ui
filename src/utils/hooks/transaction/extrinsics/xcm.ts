@@ -14,7 +14,7 @@ const getXCMExtrinsic = async (params: XCMActions): Promise<ExtrinsicData> => {
       const transferAmountDecimals = transferAmount.currency.decimals;
       const tx = adapter.createTx({
         amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
-        to: toChain,
+        to: toChain.id,
         token: transferAmount.currency.ticker,
         address
       } as CrossChainTransferParams);

@@ -1,11 +1,11 @@
-import { InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { InterbtcPrimitivesVaultId, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import { useGetExchangeRate } from '../use-get-exchange-rate';
@@ -41,7 +41,7 @@ const getRedeemData = async (): Promise<RedeemData> => {
     window.bridge.vaults.getVaultsWithRedeemableTokens()
   ]);
 
-  const redeemLimit = vaultsWithRedeemableTokens.values().next().value;
+  const redeemLimit = vaultsWithRedeemableTokens.values().next().value || newMonetaryAmount(0, WRAPPED_TOKEN);
 
   const premiumRedeemLimit = premiumRedeemVaults.values().next().value;
 
