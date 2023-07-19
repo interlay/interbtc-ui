@@ -26,9 +26,9 @@ import * as constants from './constants';
 import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
-const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
+const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
-const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
+const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
@@ -36,8 +36,8 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
-const Swap = React.lazy(() => import(/* webpackChunkName: 'amm' */ '@/pages/AMM'));
-const Pools = React.lazy(() => import(/* webpackChunkName: 'amm/pools' */ '@/pages/AMM/Pools'));
+const Swap = React.lazy(() => import(/* webpackChunkName: 'amm' */ '@/pages/Swap'));
+const Pools = React.lazy(() => import(/* webpackChunkName: 'amm/pools' */ '@/pages/Pools'));
 const Wallet = React.lazy(() => import(/* webpackChunkName: 'wallet' */ '@/pages/Wallet'));
 const Onboarding = React.lazy(() => import(/* webpackChunkName: 'onboarding' */ '@/pages/Onboarding'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
@@ -184,11 +184,11 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TX}>
                     <TX />
                   </Route>
-                  <Route path={PAGES.BRIDGE}>
-                    <Bridge />
+                  <Route path={PAGES.BTC}>
+                    <BTC />
                   </Route>
-                  <Route path={PAGES.TRANSFER}>
-                    <Transfer />
+                  <Route path={PAGES.SEND_AND_RECEIVE}>
+                    <SendAndReceive />
                   </Route>
                   <Route path={PAGES.LOANS}>
                     <Loans />
@@ -196,11 +196,9 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.SWAP}>
                     <Swap />
                   </Route>
-
                   <Route path={PAGES.POOLS}>
                     <Pools />
                   </Route>
-
                   <Route path={PAGES.WALLET}>
                     <Wallet />
                   </Route>

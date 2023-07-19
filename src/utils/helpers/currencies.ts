@@ -1,11 +1,18 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, isForeignAsset, isLendToken } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 // Squid query by currency ticker for native assets and by id for foreign assets.
 // We need to differentiate because those are handled differently on squid side.
-// TODO: Need to refactor when we want to support lend tokens as collateral for vaults.
-const getCurrencyEqualityCondition = (currency: CurrencyExt): string =>
-  'foreignAsset' in currency ? `asset_eq: ${currency.foreignAsset.id}` : `token_eq: ${currency.ticker}`;
+
+const getCurrencyEqualityCondition = (currency: CurrencyExt): string => {
+  if (isForeignAsset(currency)) {
+    return `asset_eq: ${currency.foreignAsset.id}`;
+  }
+  if (isLendToken(currency)) {
+    return `lendTokenId_eq: ${currency.lendToken.id}`;
+  }
+  return `token_eq: ${currency.ticker}`;
+};
 
 const pickSmallerAmount = (
   amount0: MonetaryAmount<CurrencyExt>,

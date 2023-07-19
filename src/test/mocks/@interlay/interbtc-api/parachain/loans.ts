@@ -57,13 +57,15 @@ const DEFAULT_POSITIONS = {
       currency: WRAPPED_TOKEN,
       amount: DEFAULT_IBTC.MONETARY.MEDIUM,
       isCollateral: true,
-      earnedInterest: DEFAULT_IBTC.MONETARY.VERY_SMALL
+      earnedInterest: DEFAULT_IBTC.MONETARY.VERY_SMALL,
+      vaultCollateralAmount: DEFAULT_IBTC.MONETARY.EMPTY
     } as CollateralPosition,
     INTR: {
       currency: GOVERNANCE_TOKEN,
       amount: DEFAULT_INTR.MONETARY.MEDIUM,
       isCollateral: true,
-      earnedInterest: DEFAULT_INTR.MONETARY.SMALL
+      earnedInterest: DEFAULT_INTR.MONETARY.SMALL,
+      vaultCollateralAmount: DEFAULT_INTR.MONETARY.EMPTY
     } as CollateralPosition
   },
   BORROW: {

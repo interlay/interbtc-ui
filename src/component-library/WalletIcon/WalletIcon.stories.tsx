@@ -7,20 +7,24 @@ import { WalletIcon, WalletIconProps } from './WalletIcon';
 const Template: Story<WalletIconProps> = (args) => (
   <Flex gap='spacing4' wrap>
     <Flex direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
-      <WalletIcon {...args} name='subwallet-js' />
-      <Span size='xs'>SubWallet</Span>
+      <WalletIcon {...args} name='nova' />
+      <Span size='xs'>Nova</Span>
     </Flex>
     <Flex direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
-      <WalletIcon {...args} name='talisman' />
-      <Span size='xs'>Talisman</Span>
+      <WalletIcon {...args} name='parity-signer-companion' />
+      <Span size='xs'>Parity Signer Companion</Span>
     </Flex>
     <Flex direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
       <WalletIcon {...args} name='polkadot-js' />
       <Span size='xs'>Polkadot.js</Span>
     </Flex>
     <Flex direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
-      <WalletIcon {...args} name='parity-signer-companion' />
-      <Span size='xs'>Parity Signer Companion</Span>
+      <WalletIcon {...args} name='subwallet-js' />
+      <Span size='xs'>SubWallet</Span>
+    </Flex>
+    <Flex direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
+      <WalletIcon {...args} name='talisman' />
+      <Span size='xs'>Talisman</Span>
     </Flex>
   </Flex>
 );

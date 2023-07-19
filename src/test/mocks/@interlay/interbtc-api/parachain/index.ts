@@ -1,3 +1,4 @@
+export * from './amm';
 export * from './api';
 export * from './btcRelay';
 export * from './electrsAPI';
@@ -7,4 +8,5 @@ export * from './oracle';
 export * from './redeem';
 export * from './system';
 export * from './tokens';
+export * from './transaction';
 export * from './vaults';

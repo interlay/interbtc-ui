@@ -16,11 +16,13 @@ tickers = {
 # map coingecko ids to dia ids
 dia_assets = {
     "bitcoin": "/Bitcoin/0x0000000000000000000000000000000000000000",
+    "ethereum": "/Ethereum/0x0000000000000000000000000000000000000000",
     "interlay": "/Interlay/0x0000000000000000000000000000000000000000",
     "polkadot": "/Polkadot/0x0000000000000000000000000000000000000000",
     "kusama": "/Kusama/0x0000000000000000000000000000000000000000",
     "kintsugi": "/Kintsugi/Token:KINT",
     "acala-dollar": "/Acala/Token:AUSD",
+    "karura": "/Bifrost/518",
     "tether": "/Ethereum/0xdAC17F958D2ee523a2206206994597C13D831ec7"
 }
 
@@ -33,10 +35,9 @@ def add_header(response):
 def coingecko(args):
     headers_dict = {
         "content-type": "application/json",
-        "accept": "application/json",
-        "x-cg-pro-api-key": api_key,
+        "accept": "application/json"
     }
-    url = "https://pro-api.coingecko.com/api/v3/simple/price"
+    url = "https://api.coingecko.com/api/v3/simple/price"
     resp = requests.get(url, params=args, headers=headers_dict)
     data = resp.json()
     return data
@@ -62,7 +63,11 @@ def dia(asset):
         }
       }
     except KeyError:
-      return { asset: None }
+      try:
+        return coingecko({"ids": [asset], "vs_currencies": ["usd"]})
+      except Exception as e:
+        print("Coingecko error", e)
+        return { asset: None }
 
 
 @app.route("/marketdata/price", methods=["GET"])
