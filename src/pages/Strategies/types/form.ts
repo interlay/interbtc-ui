@@ -1,13 +1,9 @@
+import { StrategyType } from './strategies';
+
 type StrategyFormType = 'deposit' | 'withdraw';
-type StrategyRiskVariant = 'low' | 'high';
 
-interface StrategyDepositFormData {
-  deposit?: string;
+interface StrategyFormProps {
+  strategyType: StrategyType;
 }
 
-interface StrategyWithdrawalFormData {
-  withdraw?: string;
-  withdrawAsWrapped?: boolean;
-}
-
-export type { StrategyDepositFormData, StrategyFormType, StrategyRiskVariant, StrategyWithdrawalFormData };
+export type { StrategyFormProps, StrategyFormType };

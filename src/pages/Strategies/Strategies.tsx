@@ -2,15 +2,10 @@ import { withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 
-import { StrategyForm } from './components/StrategyForm';
-import { StyledStrategiesLayout } from './Strategies.style';
+import { StrategyPage } from './components';
 
 const Strategies = (): JSX.Element => {
-  return (
-    <StyledStrategiesLayout>
-      <StrategyForm riskVariant='low' />
-    </StyledStrategiesLayout>
-  );
+  return <StrategyPage />;
 };
 
 export default withErrorBoundary(Strategies, {

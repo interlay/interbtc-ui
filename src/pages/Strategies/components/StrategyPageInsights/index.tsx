@@ -1,0 +1,1 @@
+export { StrategyPageInsights } from './StrategyPageInsights';

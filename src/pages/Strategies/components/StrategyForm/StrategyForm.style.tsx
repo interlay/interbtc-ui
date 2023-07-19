@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Dl, Flex, theme } from '@/component-library';
 
 const StyledStrategyForm = styled(Flex)`
-  margin-top: ${theme.spacing.spacing8};
   background: ${theme.colors.bgPrimary};
   padding: ${theme.spacing.spacing6};
   border-radius: ${theme.rounded.md};

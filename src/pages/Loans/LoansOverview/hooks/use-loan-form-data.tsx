@@ -57,12 +57,16 @@ type UseLoanFormData = {
 
 const useLoanFormData = (
   loanAction: BorrowAction | LendAction,
-  asset: LoanAsset,
+  asset: LoanAsset | undefined,
   position?: CollateralPosition | BorrowPosition
-): UseLoanFormData => {
+): UseLoanFormData | Record<string, never> => {
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
   const { data: statistics } = useGetAccountLendingStatistics();
+
+  if (asset === undefined) {
+    return {};
+  }
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
@@ -98,3 +102,4 @@ const useLoanFormData = (
 };
 
 export { useLoanFormData };
+export type { UseLoanFormData };

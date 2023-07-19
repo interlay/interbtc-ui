@@ -1,0 +1,1 @@
+export { StrategyPageHeader } from './StrategyPageHeader';

@@ -1,19 +1,14 @@
-import { StrategyFormType } from '@/pages/Strategies/types/form';
-
 import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
 type StrategyValidationParams = MaxAmountValidationParams & MinAmountValidationParams;
 
 const StrategySchema = (
-  StrategyFormType: StrategyFormType,
+  strategyFormField: string,
+  action: string,
   params: StrategyValidationParams
 ): yup.ObjectSchema<any> => {
   return yup.object().shape({
-    [StrategyFormType]: yup
-      .string()
-      .requiredAmount(StrategyFormType)
-      .maxAmount(params)
-      .minAmount(params, StrategyFormType)
+    [strategyFormField]: yup.string().requiredAmount(action).maxAmount(params).minAmount(params, action)
   });
 };
 
