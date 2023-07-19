@@ -17,7 +17,6 @@ const {
   withdraw,
   withdrawAll
 } = MOCK_LOANS.MODULE;
-
 const { LOAN_POSITIONS, ASSETS, LENDING_STATS, WRAPPED_LOAN } = MOCK_LOANS.DATA;
 
 const path = '/lending';
@@ -91,7 +90,7 @@ describe('Withdraw Flow', () => {
     expect(withdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
   });
 
-  it.only('should partially withdraw while applying max withdraw when there is low borrow limit', async () => {
+  it('should partially withdraw while applying max withdraw when there is low borrow limit', async () => {
     getLendingStats.mockReturnValue(LENDING_STATS.LOW_BORROW_LIMIT);
 
     await render(<App />, { path });
@@ -115,7 +114,7 @@ describe('Withdraw Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), WRAPPED_LOAN.AMOUNT.MEDIUM.VALUE);
 
@@ -135,21 +134,28 @@ describe('Withdraw Flow', () => {
     });
   });
 
-  it('should display liquidation alert', async () => {
-    mockCalculateLtvAndThresholdsChange.mockReturnValue({
-      collateralThresholdWeightedAverage: new Big(0.5),
-      liquidationThresholdWeightedAverage: new Big(0.75),
-      ltv: new Big(0.75)
-    });
+  it('should not be able to withdraw due to balance being used as vault collateral', async () => {
+    getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.FULL_VAULT_COLLATERAL);
 
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), WRAPPED_LOAN.AMOUNT.MEDIUM.VALUE);
+
+    // TODO: should remove this when form ticker is revised
+    userEvent.tab();
 
     await waitFor(() => {
-      expect(tabPanel.getByRole('alert')).toBeInTheDocument();
+      expect(tabPanel.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
+    });
+
+    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(withdraw).not.toHaveBeenCalled();
+      expect(withdrawAll).not.toHaveBeenCalled();
     });
   });
 });

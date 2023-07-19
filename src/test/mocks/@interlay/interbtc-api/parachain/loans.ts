@@ -42,7 +42,7 @@ const WRAPPED_LOAN_AMOUNT = {
   }
 };
 
-const WRAPPED_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosition> = {
+const WRAPPED_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL' | 'VAULT_COLLATERAL', CollateralPosition> = {
   NON_COLLATERAL: {
     amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: false,
@@ -52,6 +52,11 @@ const WRAPPED_LOAN_LEND: Record<'NON_COLLATERAL' | 'COLLATERAL', CollateralPosit
     amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
     isCollateral: true,
     vaultCollateralAmount: WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY
+  },
+  VAULT_COLLATERAL: {
+    amount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
+    isCollateral: false,
+    vaultCollateralAmount: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY
   }
 };
 
@@ -117,7 +122,7 @@ const GOVERNANCE_APY = {
   BORROW: '10.20'
 };
 
-const THRESOLD = {
+const THRESHOLD = {
   MIN: new Big(0),
   LOW: new Big(0.25),
   MEDIUM: new Big(0.5),
@@ -133,8 +138,8 @@ const WRAPPED_ASSET: LoanAsset = {
   lendReward: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
   borrowReward: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
   availableCapacity: WRAPPED_LOAN_AMOUNT.VERY_LARGE.MONETARY,
-  collateralThreshold: THRESOLD.MEDIUM,
-  liquidationThreshold: THRESOLD.HIGH,
+  collateralThreshold: THRESHOLD.MEDIUM,
+  liquidationThreshold: THRESHOLD.HIGH,
   isActive: true,
   totalBorrows: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
   borrowCap: WRAPPED_LOAN_AMOUNT.VERY_LARGE.MONETARY,
@@ -160,8 +165,8 @@ const GOVERNANCE_ASSET: LoanAsset = {
   lendReward: null,
   borrowReward: null,
   availableCapacity: GOVERNANCE_LOAN_AMOUNT.VERY_SMALL.MONETARY,
-  collateralThreshold: THRESOLD.MEDIUM,
-  liquidationThreshold: THRESOLD.HIGH,
+  collateralThreshold: THRESHOLD.MEDIUM,
+  liquidationThreshold: THRESHOLD.HIGH,
   isActive: true,
   totalBorrows: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
   borrowCap: GOVERNANCE_LOAN_AMOUNT.VERY_LARGE.MONETARY,
@@ -185,7 +190,8 @@ const LOAN_POSITIONS = {
     AVERAGE: [WRAPPED_LOAN.POSITIONS.LEND.NON_COLLATERAL],
     AVERAGE_COLLATERAL: [WRAPPED_LOAN.POSITIONS.LEND.COLLATERAL],
     FULL: [WRAPPED_LOAN.POSITIONS.LEND.NON_COLLATERAL, GOVERNANCE_LOAN.POSITIONS.LEND.NON_COLLATERAL],
-    FULL_COLLATERAL: [WRAPPED_LOAN.POSITIONS.LEND.COLLATERAL, GOVERNANCE_LOAN.POSITIONS.LEND.COLLATERAL]
+    FULL_COLLATERAL: [WRAPPED_LOAN.POSITIONS.LEND.COLLATERAL, GOVERNANCE_LOAN.POSITIONS.LEND.COLLATERAL],
+    FULL_VAULT_COLLATERAL: [WRAPPED_LOAN.POSITIONS.LEND.VAULT_COLLATERAL]
   },
   BORROW: {
     EMPTY: [],
@@ -217,52 +223,62 @@ const ASSETS: Record<'NORMAL' | 'EMPTY_CAPACITY' | 'INACTIVE', TickerToData<Loan
   }
 };
 
+const COMMON_THRESHOLDS = {
+  collateralThresholdWeightedAverage: THRESHOLD.MEDIUM,
+  liquidationThresholdWeightedAverage: THRESHOLD.HIGH
+};
+
 const LTV_THRESHOLD: Record<'MIN' | 'MEDIUM' | 'HIGH', ReturnType<LendingStats['calculateLtvAndThresholdsChange']>> = {
   MIN: {
-    ltv: THRESOLD.LOW,
-    collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
-    liquidationThresholdWeightedAverage: THRESOLD.HIGH
+    ...COMMON_THRESHOLDS,
+    ltv: THRESHOLD.LOW
   },
   MEDIUM: {
-    ltv: THRESOLD.LOW,
-    collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
-    liquidationThresholdWeightedAverage: THRESOLD.HIGH
+    ...COMMON_THRESHOLDS,
+    ltv: THRESHOLD.MEDIUM
   },
-  MEDIUM: {
-    ltv: THRESOLD.LOW,
-    collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
-    liquidationThresholdWeightedAverage: THRESOLD.HIGH
+  HIGH: {
+    ...COMMON_THRESHOLDS,
+    ltv: THRESHOLD.HIGH
   }
 };
 
 const COMMON_STATS: Omit<LendingStats, 'ltv'> = {
-  collateralThresholdWeightedAverage: THRESOLD.MEDIUM,
-  liquidationThresholdWeightedAverage: THRESOLD.HIGH,
+  collateralThresholdWeightedAverage: THRESHOLD.MEDIUM,
+  liquidationThresholdWeightedAverage: THRESHOLD.HIGH,
   totalLentBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
   borrowLimitBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
   totalBorrowedBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY,
   totalCollateralBtc: WRAPPED_LOAN_AMOUNT.LARGE.MONETARY,
-  calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(LTV_THRESHOLD),
+  calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(LTV_THRESHOLD.MIN),
   calculateBorrowLimitBtcChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.LARGE.MONETARY)
 };
 
-const LENDING_STATS: Record<'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV' | 'LOW_BORROW_LIMIT', LendingStats> = {
+const LENDING_STATS: Record<
+  'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV' | 'LOW_BORROW_LIMIT' | 'LIQUIDATION',
+  LendingStats
+> = {
   LOW_LTV: {
     ...COMMON_STATS,
-    ltv: THRESOLD.MIN
+    ltv: THRESHOLD.MIN
   },
   MEDIUM_LTV: {
     ...COMMON_STATS,
-    ltv: THRESOLD.MEDIUM
+    ltv: THRESHOLD.MEDIUM
   },
   HIGH_LTV: {
     ...COMMON_STATS,
-    ltv: THRESOLD.HIGH
+    ltv: THRESHOLD.HIGH
   },
   LOW_BORROW_LIMIT: {
     ...COMMON_STATS,
-    ltv: THRESOLD.MEDIUM,
+    ltv: THRESHOLD.MEDIUM,
     borrowLimitBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY
+  },
+  LIQUIDATION: {
+    ...COMMON_STATS,
+    ltv: THRESHOLD.LOW,
+    calculateLtvAndThresholdsChange: jest.fn().mockReturnValue(LTV_THRESHOLD.HIGH)
   }
 };
 
