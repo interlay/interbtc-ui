@@ -85,7 +85,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}`) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
+      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}`)
     ],
     graphqlFetcher<GraphqlReturn<any>>()
   );
@@ -102,7 +102,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
       REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition
     ],
     redeemsFetcher,
     {

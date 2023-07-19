@@ -7,6 +7,7 @@ import { P, Switch, TextLink, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
+import { INTERLAY_GET_ASSETS_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { FEE_TICKERS } from '@/utils/constants/currency';
 import { EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -66,7 +67,7 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
             external
             icon
             to={{
-              pathname: 'https://docs.interlay.io/#/guides/assets',
+              pathname: INTERLAY_GET_ASSETS_LINK,
               search: queryString.stringify({
                 [EXTERNAL_QUERY_PARAMETERS.DOCS.ASSET.ID]: currency.ticker.toLowerCase()
               })

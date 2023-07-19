@@ -19,23 +19,28 @@ const getTableRow = (tableName: ElementName, rowName: ElementName) => {
 
 const withinTableRow = (tableName: string, asset: string) => within(getTableRow(tableName, asset));
 
-const getTableModal = (tableName: ElementName, rowName: ElementName) => {
+const getTableModal = async (tableName: ElementName, rowName: ElementName) => {
   const row = getTableRow(tableName, rowName);
 
   userEvent.click(row);
 
+  await waitFor(() => {
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
   return screen.getByRole('dialog');
 };
 
-const withinTableModal = (tableName: ElementName, rowName: ElementName) => within(getTableModal(tableName, rowName));
+const withinTableModal = async (tableName: ElementName, rowName: ElementName) =>
+  within(await getTableModal(tableName, rowName));
 
-const getModalTabPanel = (
+const getModalTabPanel = async (
   tableName: ElementName,
   rowName: ElementName,
   tabName: ElementName,
   shouldClickTab?: boolean
 ) => {
-  const modal = withinTableModal(tableName, rowName);
+  const modal = await withinTableModal(tableName, rowName);
 
   if (shouldClickTab) {
     userEvent.click(
@@ -50,14 +55,14 @@ const getModalTabPanel = (
   });
 };
 
-const withinModalTabPanel = (
+const withinModalTabPanel = async (
   tableName: ElementName,
   rowName: ElementName,
   tabName: ElementName,
   shouldClickTab?: boolean
-) => within(getModalTabPanel(tableName, rowName, tabName, shouldClickTab));
+) => within(await getModalTabPanel(tableName, rowName, tabName, shouldClickTab));
 
-const submitForm = async (tabPanel: ReturnType<typeof withinModalTabPanel>, buttonLabel: string) => {
+const submitForm = async (tabPanel: ReturnType<typeof within>, buttonLabel: string) => {
   await waitFor(() => {
     expect(tabPanel.getByRole('button', { name: new RegExp(buttonLabel, 'i') })).not.toBeDisabled();
   });

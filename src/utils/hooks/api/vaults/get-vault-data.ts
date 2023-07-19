@@ -67,12 +67,13 @@ interface VaultData {
   };
 }
 
+// note: returns percentage, so range is 0-100
 const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number => {
   if (!issuableTokens.gt(0)) return 0;
 
   const backedTokens = vaultExt.getBackedTokens().toBig();
 
-  if (!backedTokens.gt(0)) return 1;
+  if (!backedTokens.gt(0)) return 100;
 
   const totalTokens = issuableTokens.add(backedTokens);
 
@@ -153,7 +154,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     },
     body: JSON.stringify({
       query: redeemCountQuery(
-        `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
+        `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending`
       )
     })
   });

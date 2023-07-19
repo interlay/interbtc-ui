@@ -6,7 +6,7 @@ enum LocalStorageKey {
 }
 
 type LocalStorageValueTypes = {
-  [LocalStorageKey.TC_SIGNATURES]: Record<string, boolean>;
+  [LocalStorageKey.TC_SIGNATURES]: { [account: string]: { version: string; isSigned: boolean } | boolean };
   [LocalStorageKey.WALLET_WELCOME_BANNER]: boolean;
 };
 

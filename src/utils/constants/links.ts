@@ -12,9 +12,9 @@ const URL_PARAMETERS = Object.freeze({
 
 const PAGES = Object.freeze({
   HOME: '/',
-  BRIDGE: '/bridge',
+  BTC: '/btc',
   STRATEGIES: '/strategies',
-  TRANSFER: '/transfer',
+  SEND_AND_RECEIVE: '/send-and-receive',
   TX: '/tx',
   STAKING: '/staking',
   DASHBOARD: '/dashboard',
@@ -70,6 +70,10 @@ const QUERY_PARAMETERS = Object.freeze({
   SWAP: {
     FROM: 'from',
     TO: 'to'
+  },
+  TRANSFER: {
+    TICKER: 'ticker',
+    XCM_TICKER: 'xcmTicker'
   }
 });
 
@@ -86,4 +90,28 @@ const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
   }
 });
 
-export { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS, EXTERNAL_URL_PARAMETERS, PAGES, QUERY_PARAMETERS, URL_PARAMETERS };
+const QUERY_PARAMETERS_VALUES = Object.freeze({
+  BRIDGE: {
+    TAB: {
+      ISSUE: 'issue',
+      REDEEM: 'redeem',
+      BURN: 'burn'
+    }
+  },
+  TRANSFER: {
+    TAB: {
+      TRANSFER: 'transfer',
+      BRIDGE: 'bridge'
+    }
+  }
+});
+
+export {
+  EXTERNAL_PAGES,
+  EXTERNAL_QUERY_PARAMETERS,
+  EXTERNAL_URL_PARAMETERS,
+  PAGES,
+  QUERY_PARAMETERS,
+  QUERY_PARAMETERS_VALUES,
+  URL_PARAMETERS
+};

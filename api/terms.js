@@ -35,9 +35,10 @@ const terms = async (request, response) => {
   }
 
   const wallet = request.url.match(pattern).groups.wallet;
+  const version = request.query.version;
 
   if (request.method === 'GET') {
-    const result = await pool.query('select exists(select 1 from signed_terms where wallet_id=$1)', [wallet])
+    const result = await pool.query('select exists(select 1 from signed_terms where wallet_id=$1 and version=$2)', [wallet, version])
     return response.send(result.rows[0]);
   } else if (request.method === 'POST') {
     try {
@@ -45,7 +46,7 @@ const terms = async (request, response) => {
       // const { signed_message } = JSON.parse(request.body);
       // const { isValid } = signatureVerify(MESSAGE, signed_message, wallet);
 
-      const result = await pool.query('insert into signed_terms (wallet_id) values ($1)', [wallet])
+      const result = await pool.query('insert into signed_terms (wallet_id, version) values ($1, $2)', [wallet, version])
       return response.status(201);
     } catch (error) {
       if (error.code === '23505') {

@@ -1,6 +1,6 @@
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { useId } from '@react-aria/utils';
+import { mergeProps, useId } from '@react-aria/utils';
 import { RefObject, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +22,7 @@ import {
   VaultsDepositCollateralFormData,
   VaultsDepositCollateralValidationParams
 } from '@/lib/form';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
@@ -64,9 +65,13 @@ const DepositCollateralStep = ({
   );
 
   const handleSubmit = (data: VaultsDepositCollateralFormData) => {
-    const transactionData = getTransactionArgs(data);
+    let { monetaryAmount } = getTransactionArgs(data);
 
-    transaction.execute(transactionData.monetaryAmount);
+    if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
+      monetaryAmount = transaction.calculateAmountWithFeeDeducted(monetaryAmount);
+    }
+
+    transaction.execute(monetaryAmount);
   };
 
   const validationParams: VaultsDepositCollateralValidationParams = {
@@ -84,9 +89,7 @@ const DepositCollateralStep = ({
     onComplete: (values) => {
       const transactionData = getTransactionArgs(values);
 
-      const feeTicker = values[VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD];
-
-      transaction.fee.setCurrency(feeTicker).estimate(transactionData.monetaryAmount);
+      transaction.fee.estimate(transactionData.monetaryAmount);
     }
   });
 
@@ -106,9 +109,10 @@ const DepositCollateralStep = ({
             placeholder='0.00'
             ticker={collateral.currency.ticker}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, collateral.price.usd) ?? 0}
-            balance={collateral.balance.raw.toString()}
-            humanBalance={collateral.balance.raw.toHuman()}
-            {...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD, false, true)}
+            {...mergeProps(
+              form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD, false, true),
+              getTokenInputProps(collateral.balance.raw)
+            )}
           />
         </ModalBody>
         <ModalFooter>
@@ -121,9 +125,9 @@ const DepositCollateralStep = ({
             </TransactionDetailsGroup>
           </TransactionDetails>
           <TransactionFeeDetails
-            {...transaction.fee.detailsProps}
+            fee={transaction.fee}
             selectProps={{
-              ...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD),
+              ...form.getSelectFieldProps(VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD),
               modalRef: overlappingModalRef
             }}
           />

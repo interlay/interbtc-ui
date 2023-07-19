@@ -9,7 +9,6 @@ import { StoreType } from '@/common/types/util.types';
 import { PRICES_API, REFETCH_INTERVAL } from '@/utils/constants/api';
 import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 
-import { FeatureFlags, useFeatureFlag } from '../use-feature-flag';
 import { useGetCurrencies } from './use-get-currencies';
 
 // MEMO: Returns `undefined` for currencies without coingecko ID.
@@ -72,10 +71,7 @@ const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices, lendTokenP
     return { ...acc, [currency.ticker]: prices[coingeckoId] };
   }, {});
 
-const getPrices = async (
-  currencies: CurrencyExt[] | undefined,
-  isLendingEnabled: boolean
-): Promise<Prices | undefined> => {
+const getPrices = async (currencies: CurrencyExt[] | undefined): Promise<Prices | undefined> => {
   if (!currencies) {
     return;
   }
@@ -86,7 +82,7 @@ const getPrices = async (
 
   const [pricesByCoingeckoId, lendTokenPrices] = await Promise.all([
     fetchPricesFromCoingecko(endpoint),
-    isLendingEnabled ? window.bridge.loans.getLendTokenExchangeRates() : {}
+    window.bridge.loans.getLendTokenExchangeRates()
   ]);
 
   return getPricesByTicker(allCurrencies, pricesByCoingeckoId, lendTokenPrices);
@@ -104,17 +100,12 @@ type Prices = {
 const useGetPrices = (): Prices | undefined => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: currencies, isSuccess: isGetCurrenciesSuccess } = useGetCurrencies(bridgeLoaded);
-  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
 
   // TODO: error prone because the key computation is not complete
-  const { data, error } = useQuery<Prices | undefined, Error>(
-    ['prices'],
-    () => getPrices(currencies, isLendingEnabled),
-    {
-      enabled: isGetCurrenciesSuccess,
-      refetchInterval: REFETCH_INTERVAL.MINUTE
-    }
-  );
+  const { data, error } = useQuery<Prices | undefined, Error>(['prices'], () => getPrices(currencies), {
+    enabled: isGetCurrenciesSuccess,
+    refetchInterval: REFETCH_INTERVAL.MINUTE
+  });
 
   useEffect(() => {
     if (!error) return;
