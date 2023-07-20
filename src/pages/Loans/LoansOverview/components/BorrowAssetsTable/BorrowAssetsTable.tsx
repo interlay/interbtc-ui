@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { Cell, Table, TableProps } from '@/components';
-import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
-import { LoanTablePlaceholder } from '@/components/LoanPositionsTable/LoanTablePlaceholder';
+import { LoanApyCell, LoanTablePlaceholder } from '@/components/LoanPositionsTable';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -57,7 +56,7 @@ const BorrowAssetsTable = ({ assets, onRowAction, ...props }: BorrowAssetsTableP
         const asset = <StyledAssetCell ticker={currency.ticker} />;
 
         const apy = (
-          <ApyCell
+          <LoanApyCell
             apy={borrowApy}
             currency={currency}
             rewardsPerYear={borrowReward}
