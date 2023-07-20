@@ -325,7 +325,6 @@ const ACCOUNT_REWARDS: Record<'EMPTY' | 'FULL', AccruedRewards> = {
 };
 
 const DATA = {
-  LTV_THRESHOLD,
   ASSETS,
   LOAN_POSITIONS,
   WRAPPED_LOAN,
