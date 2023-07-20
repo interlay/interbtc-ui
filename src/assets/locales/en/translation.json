@@ -49,7 +49,7 @@
   "update": "Update",
   "collateralization": "Collateralization",
   "fees_earned": "Fees earned",
-  "apy": "APR",
+  "apy": "APY",
   "apr": "APR",
   "here": "here",
   "refresh_page.": "Once you create a new account please refresh the page.",
@@ -75,24 +75,6 @@
   "locked_btc": "Locked BTC",
   "issue": "Issue",
   "redeem": "Redeem",
-  "nav_btc": "BTC",
-  "nav_strategies": "Strategies",
-  "nav_send_and_receive": "Send and Receive",
-  "nav_lending": "Lending",
-  "nav_swap": "Swap",
-  "nav_pools": "Pools",
-  "nav_staking": "Staking",
-  "nav_stats": "Stats",
-  "nav_dashboard": "Dashboard",
-  "nav_vaults": "Vaults",
-  "nav_crowdloan": "Claim {{governanceTokenSymbol}}",
-  "nav_feedback": "Feedback",
-  "nav_docs": "Docs",
-  "nav_terms_and_conditions": "Terms and Conditions",
-  "nav_use_wrapped": "Use {{wrappedTokenSymbol}}",
-  "nav_governance": "Governance",
-  "nav_wallet": "Wallet",
-  "nav_onboarding": "Onboarding",
   "report_bug": "Report a bug:",
   "request_funds": "Faucet",
   "request_btc": "BTC Faucet",
@@ -165,7 +147,32 @@
   "claim_rewards": "Claim Rewards",
   "tx_fees": "Tx fees",
   "view_subscan": "View Subscan",
-
+  "apr_breakdown": "APR Breakdown",
+  "apy_breakdown": "APY Breakdown",
+  "earned": "Earned",
+  "rewards_apr": "Rewards APR",
+  "rewards_apr_ticker": "Rewards APR {{ticker}}",
+  "wallet": "Wallet",
+  "navigation": {
+    "btc": "BTC",
+    "strategies": "Strategies",
+    "send_and_receive": "Send and Receive",
+    "lending": "Lending",
+    "swap": "Swap",
+    "pools": "Pools",
+    "staking": "Staking",
+    "stats": "Stats",
+    "dashboard": "Dashboard",
+    "vaults": "Vaults",
+    "crowdloan": "Claim {{governanceTokenSymbol}}",
+    "feedback": "Feedback",
+    "docs": "Docs",
+    "terms_and_conditions": "Terms and Conditions",
+    "use_wrapped": "Use {{wrappedTokenSymbol}}",
+    "governance": "Governance",
+    "wallet": "Wallet",
+    "onboarding": "Onboarding"
+  },
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -575,7 +582,6 @@
     "please_select_a_wallet": "Please select a wallet"
   },
   "loans": {
-    "brand_name": "Interlend",
     "withdraw": "Withdraw",
     "withdrawing": "Withdrawing",
     "borrow": "Borrow",
@@ -590,7 +596,15 @@
     "no_loan_positions": "No {{loanType}} positions",
     "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here",
     "use_ticker_as_collateral": "Use {{ticker}} as Collateral",
-    "disable_ticker": "Disable {{ticker}}"
+    "disable_ticker": "Disable {{ticker}}",
+    "owed": "Owed",
+    "lend_apy_ticker": "Lend APY {{ticker}}",
+    "borrow_apy_ticker": "Borrow APY {{ticker}}",
+    "borrowed": "Borrowed",
+    "supplied": "Supplied",
+    "total_supplied": "Total Supplied",
+    "apy_earned": "APY / Earned",
+    "apy_accrued": "APY / Accrued"
   },
   "amm": {
     "pools": {
@@ -599,7 +613,8 @@
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
-      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please."
+      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please.",
+      "trading_fee_apr": "Trading Fee APR"
     },
     "swap": "Swap",
     "select_token": "Select Token",
@@ -639,7 +654,7 @@
     "exchange": "Exchange",
     "please_check_terms": "Please check the individual terms and conditions of each exchange before you buy / trade {{ticker}}."
   },
-  "wallet": {
+  "wallet_page": {
     "available_assets": "Available assets",
     "get_asset": "Get {{token}}",
     "no_assets_available": "No assets available",

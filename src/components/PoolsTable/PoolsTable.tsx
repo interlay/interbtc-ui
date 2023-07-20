@@ -1,18 +1,17 @@
 import { LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
-import { ReactNode, useMemo } from 'react';
+import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatPercentage, formatUSD } from '@/common/utils/utils';
+import { formatUSD } from '@/common/utils/utils';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
-import { getFarmingApr } from '@/utils/helpers/pools';
 import { DateRangeVolume, useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
-import { useGetPoolsTradingApr } from '@/utils/hooks/api/use-get-pools-trading-apr';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../DataGrid';
+import { PoolApyCell } from './PoolApyCell';
 
 enum PoolsTableColumns {
   POOL_NAME = 'poolName',
@@ -43,7 +42,6 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const prices = useGetPrices();
   const titleId = useId();
   const { getDexTotalVolumeUSD } = useGetDexVolumes(DateRangeVolume.D7);
-  const { getTradingAprOfPool } = useGetPoolsTradingApr();
 
   const isAccountPools = variant === 'account-pools';
 
@@ -61,7 +59,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const rows: PoolsTableRow[] = useMemo(
     () =>
       pools.map(({ data, amount: accountLPTokenAmount }) => {
-        const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply, isEmpty } = data;
+        const { pooledCurrencies, lpToken, totalSupply, isEmpty } = data;
         const poolName = (
           <AssetCell
             aria-label={lpToken.ticker}
@@ -72,10 +70,14 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
 
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 
-        const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
-        const tradingApr = getTradingAprOfPool(data);
-        const aprAmount = farmingApr.add(tradingApr);
-        const apr = <Cell label={isEmpty ? 'N/A' : formatPercentage(aprAmount.toNumber())} />;
+        const apr = (
+          <PoolApyCell
+            pool={data}
+            prices={prices}
+            totalLiquidityUSD={totalLiquidityUSD}
+            onClick={() => onRowAction?.(lpToken.ticker as Key)}
+          />
+        );
 
         // TODO: revert alignItems prop when `sevenDayVolume` is adressed
         const totalLiquidity = <Cell label={formatUSD(totalLiquidityUSD, { compact: true })} alignItems='flex-start' />;
@@ -105,7 +107,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
           accountLiquidity
         };
       }),
-    [getDexTotalVolumeUSD, isAccountPools, pools, prices, variant, getTradingAprOfPool]
+    [getDexTotalVolumeUSD, isAccountPools, onRowAction, pools, prices, variant]
   );
 
   return (

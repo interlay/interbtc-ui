@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { Cell, Table, TableProps } from '@/components';
-import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
-import { LoanTablePlaceholder } from '@/components/LoanPositionsTable/LoanTablePlaceholder';
+import { LoanApyCell, LoanTablePlaceholder } from '@/components/LoanPositionsTable';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -27,14 +26,6 @@ type BorrowAssetsTableRow = {
   [BorrowAssetsColumns.TOTAL_BORROWED]: ReactNode;
 };
 
-// TODO: translations
-const borrowAssetsColumns = [
-  { name: 'Asset', uid: BorrowAssetsColumns.ASSET },
-  { name: 'APY', uid: BorrowAssetsColumns.APY },
-  { name: 'Capacity', uid: BorrowAssetsColumns.CAPACITY },
-  { name: 'Total Borrowed', uid: BorrowAssetsColumns.TOTAL_BORROWED }
-];
-
 type Props = {
   assets: TickerToData<LoanAsset>;
 };
@@ -48,13 +39,24 @@ const BorrowAssetsTable = ({ assets, onRowAction, ...props }: BorrowAssetsTableP
   const { t } = useTranslation();
   const prices = useGetPrices();
 
+  // TODO: translations
+  const borrowAssetsColumns = useMemo(
+    () => [
+      { name: t('asset'), uid: BorrowAssetsColumns.ASSET },
+      { name: t('apy'), uid: BorrowAssetsColumns.APY },
+      { name: t('available'), uid: BorrowAssetsColumns.CAPACITY },
+      { name: t('loans.borrowed'), uid: BorrowAssetsColumns.TOTAL_BORROWED }
+    ],
+    [t]
+  );
+
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>
       Object.values(assets).map(({ borrowApy, currency, availableCapacity, totalBorrows, borrowReward }) => {
         const asset = <StyledAssetCell ticker={currency.ticker} />;
 
         const apy = (
-          <ApyCell
+          <LoanApyCell
             apy={borrowApy}
             currency={currency}
             rewardsPerYear={borrowReward}

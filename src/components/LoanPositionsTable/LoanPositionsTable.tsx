@@ -10,7 +10,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Table, TableProps } from '../DataGrid';
-import { ApyCell } from './ApyCell';
+import { LoanApyCell } from './LoanApyCell';
 import { LoanTablePlaceholder } from './LoanTablePlaceholder';
 
 enum LoanPositionTableColumns {
@@ -59,24 +59,24 @@ const LoanPositionsTable = ({
   const columns = useMemo(() => {
     if (isLending) {
       const lendingColumns = [
-        { name: 'Asset', uid: LoanPositionTableColumns.ASSET },
-        { name: 'APY / Earned', uid: LoanPositionTableColumns.APY },
-        { name: 'Supplied', uid: LoanPositionTableColumns.AMOUNT }
+        { name: t('asset'), uid: LoanPositionTableColumns.ASSET },
+        { name: t('loans.apy_earned'), uid: LoanPositionTableColumns.APY },
+        { name: t('loans.supplied'), uid: LoanPositionTableColumns.AMOUNT }
       ];
 
       if (showCollateral) {
-        lendingColumns.push({ name: 'Collateral', uid: LoanPositionTableColumns.COLLATERAL });
+        lendingColumns.push({ name: t('collateral'), uid: LoanPositionTableColumns.COLLATERAL });
       }
 
       return lendingColumns;
     }
 
     return [
-      { name: 'Asset', uid: LoanPositionTableColumns.ASSET },
-      { name: 'APY / Accrued', uid: LoanPositionTableColumns.APY },
-      { name: 'Borrowed', uid: LoanPositionTableColumns.AMOUNT }
+      { name: t('asset'), uid: LoanPositionTableColumns.ASSET },
+      { name: t('loans.apy_accrued'), uid: LoanPositionTableColumns.APY },
+      { name: t('loans.borrowed'), uid: LoanPositionTableColumns.AMOUNT }
     ];
-  }, [isLending, showCollateral]);
+  }, [isLending, showCollateral, t]);
 
   const rows: LoanPositionTableRow[] = useMemo(
     () =>
@@ -99,7 +99,7 @@ const LoanPositionsTable = ({
             };
 
         const apy = (
-          <ApyCell
+          <LoanApyCell
             {...apyCellProps}
             currency={currency}
             prices={prices}

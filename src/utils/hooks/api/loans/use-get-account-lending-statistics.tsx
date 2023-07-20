@@ -1,12 +1,4 @@
-import {
-  BorrowPosition,
-  CollateralPosition,
-  CurrencyExt,
-  LendingStats,
-  LoanAsset,
-  TickerToData
-} from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { BorrowPosition, CollateralPosition, LendingStats, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useMemo } from 'react';
 
@@ -17,7 +9,6 @@ import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 
 import { Prices, useGetPrices } from '../use-get-prices';
 import { useGetAccountPositions } from './use-get-account-positions';
-import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
 
 interface AccountLendingStatistics extends LendingStats {
   supplyAmountUSD: Big;
@@ -78,12 +69,12 @@ const getAccountPositionsStats = (
   assets: TickerToData<LoanAsset>,
   lendPositions: CollateralPosition[],
   borrowPositions: BorrowPosition[],
-  subsidyRewards: MonetaryAmount<CurrencyExt>,
   prices: Prices,
   lendingStats: LendingStats
 ): AccountLendingStatistics => {
   const { totalLentBtc, totalBorrowedBtc, totalCollateralBtc } = lendingStats;
   // Convert from BTC to USD values.
+
   const supplyAmountUSD = convertMonetaryBtcToUSD(totalLentBtc, prices);
   const borrowAmountUSD = convertMonetaryBtcToUSD(totalBorrowedBtc, prices);
   const collateralizedAmountUSD = convertMonetaryBtcToUSD(totalCollateralBtc, prices);
@@ -109,8 +100,6 @@ const useGetAccountLendingStatistics = (): UseGetAccountLendingStatistics => {
 
   const prices = useGetPrices();
 
-  const { data: subsidyRewards, refetch: subsidyRewardsRefetch } = useGetAccountSubsidyRewards();
-
   const lendingStats = useMemo(() => {
     if (!lendPositions || !borrowPositions || !loanAssets) {
       return undefined;
@@ -119,26 +108,18 @@ const useGetAccountLendingStatistics = (): UseGetAccountLendingStatistics => {
   }, [lendPositions, borrowPositions, loanAssets]);
 
   const statistics = useMemo(() => {
-    if (!loanAssets || !lendPositions || !borrowPositions || !subsidyRewards || !prices || !lendingStats) {
+    if (!loanAssets || !lendPositions || !borrowPositions || !prices || !lendingStats) {
       return undefined;
     }
 
-    return getAccountPositionsStats(
-      loanAssets,
-      lendPositions,
-      borrowPositions,
-      subsidyRewards.total,
-      prices,
-      lendingStats
-    );
-  }, [lendPositions, borrowPositions, prices, subsidyRewards, loanAssets, lendingStats]);
+    return getAccountPositionsStats(loanAssets, lendPositions, borrowPositions, prices, lendingStats);
+  }, [lendPositions, borrowPositions, prices, loanAssets, lendingStats]);
 
   return {
     data: statistics,
     refetch: () => {
       positionsRefetch();
       loanAssetsRefetch();
-      subsidyRewardsRefetch();
     }
   };
 };
