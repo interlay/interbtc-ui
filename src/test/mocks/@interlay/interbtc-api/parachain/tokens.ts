@@ -7,14 +7,13 @@ const BALANCE_VALUE = 1000000000000;
 
 const BALANCE_FN = {
   EMPTY: (currency: CurrencyExt): ChainBalance => new ChainBalance(currency, 0, 0, 0),
-  CUSTOM: (amount: MonetaryAmount<CurrencyExt>) => (currency: CurrencyExt): ChainBalance => {
-    return new ChainBalance(
+  CUSTOM: (amount: MonetaryAmount<CurrencyExt>) => (currency: CurrencyExt): ChainBalance =>
+    new ChainBalance(
       currency,
       amount._rawAmount.toString(),
       amount._rawAmount.toString(),
       amount._rawAmount.toString()
-    );
-  },
+    ),
   FULL: (currency: CurrencyExt): ChainBalance => new ChainBalance(currency, BALANCE_VALUE, BALANCE_VALUE, BALANCE_VALUE)
 };
 

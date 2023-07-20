@@ -23,8 +23,7 @@ WithBalance.args = {
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'Amount',
-  isDisabled: false,
-  errorMessage: 'test'
+  isDisabled: false
 };
 
 const WithoutBalance = Template.bind({});

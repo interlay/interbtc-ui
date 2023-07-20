@@ -61,31 +61,3 @@ const MOCK_API = {
   PROMISE
 };
 export { MOCK_API };
-
-// export { mockApiCreateType, mockChainType, mockSystemChain };
-
-// {
-//     createType: mockApiCreateType,
-//     rpc: {
-//       system: {
-//         chain: mockSystemChain,
-//         chainType: mockChainType
-//       }
-//     },
-//     on: jest.fn(),
-//     query: {
-//       vesting: {
-//         vestingSchedules: mockVestingSchedules as any
-//       },
-//       oracle: {
-//         aggregate: {
-//           keys: jest.fn().mockReturnValue([])
-//         }
-//       }
-//     },
-//     tx: {
-//       vesting: {
-//         claim: mockClaimVesting
-//       }
-//     }
-//   },
