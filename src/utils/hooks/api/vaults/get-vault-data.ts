@@ -67,12 +67,13 @@ interface VaultData {
   };
 }
 
+// note: returns percentage, so range is 0-100
 const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number => {
   if (!issuableTokens.gt(0)) return 0;
 
   const backedTokens = vaultExt.getBackedTokens().toBig();
 
-  if (!backedTokens.gt(0)) return 1;
+  if (!backedTokens.gt(0)) return 100;
 
   const totalTokens = issuableTokens.add(backedTokens);
 

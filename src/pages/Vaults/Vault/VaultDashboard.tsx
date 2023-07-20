@@ -57,7 +57,7 @@ const VaultDashboard = (): JSX.Element => {
     <ProgressCircle
       aria-label='BTC remaining capacity'
       diameter='65'
-      value={(1 - Number(vault.remainingCapacity.ratio)) * 100}
+      value={100 - Number(vault.remainingCapacity.ratio)}
     />
   );
 
