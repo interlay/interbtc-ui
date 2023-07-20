@@ -200,7 +200,7 @@ const LOAN_POSITIONS = {
   }
 };
 
-const ASSETS: Record<'NORMAL' | 'EMPTY_CAPACITY' | 'INACTIVE', TickerToData<LoanAsset>> = {
+const ASSETS: Record<'NORMAL' | 'EMPTY_CAPACITY' | 'OVER_BORROWED' | 'INACTIVE', TickerToData<LoanAsset>> = {
   NORMAL: {
     [WRAPPED_ASSET.currency.ticker]: WRAPPED_ASSET,
     [GOVERNANCE_ASSET.currency.ticker]: GOVERNANCE_ASSET
@@ -215,6 +215,18 @@ const ASSETS: Record<'NORMAL' | 'EMPTY_CAPACITY' | 'INACTIVE', TickerToData<Loan
       ...GOVERNANCE_ASSET,
       supplyCap: GOVERNANCE_LOAN_AMOUNT.EMPTY.MONETARY,
       availableCapacity: GOVERNANCE_LOAN_AMOUNT.EMPTY.MONETARY
+    }
+  },
+  OVER_BORROWED: {
+    [WRAPPED_ASSET.currency.ticker]: {
+      ...WRAPPED_ASSET,
+      borrowCap: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY,
+      totalBorrows: WRAPPED_LOAN_AMOUNT.MEDIUM.MONETARY
+    },
+    [GOVERNANCE_ASSET.currency.ticker]: {
+      ...GOVERNANCE_ASSET,
+      borrowCap: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY,
+      totalBorrows: GOVERNANCE_LOAN_AMOUNT.MEDIUM.MONETARY
     }
   },
   INACTIVE: {
@@ -255,7 +267,7 @@ const COMMON_STATS: Omit<LendingStats, 'ltv'> = {
 };
 
 const LENDING_STATS: Record<
-  'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV' | 'LOW_BORROW_LIMIT' | 'LIQUIDATION',
+  'LOW_LTV' | 'MEDIUM_LTV' | 'HIGH_LTV' | 'LOW_BORROW_LIMIT' | 'MIN_BORROW_LIMIT' | 'LIQUIDATION',
   LendingStats
 > = {
   LOW_LTV: {
@@ -273,7 +285,14 @@ const LENDING_STATS: Record<
   LOW_BORROW_LIMIT: {
     ...COMMON_STATS,
     ltv: THRESHOLD.MEDIUM,
-    borrowLimitBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY
+    borrowLimitBtc: WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY,
+    calculateBorrowLimitBtcChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.VERY_SMALL.MONETARY)
+  },
+  MIN_BORROW_LIMIT: {
+    ...COMMON_STATS,
+    ltv: THRESHOLD.MEDIUM,
+    borrowLimitBtc: WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY,
+    calculateBorrowLimitBtcChange: jest.fn().mockReturnValue(WRAPPED_LOAN_AMOUNT.EMPTY.MONETARY)
   },
   LIQUIDATION: {
     ...COMMON_STATS,

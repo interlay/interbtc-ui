@@ -4,7 +4,7 @@ import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { MOCK_LOANS } from '@/test/mocks/@interlay/interbtc-api';
 
-import { render, userEvent } from '../../test-utils';
+import { render, userEvent, waitFor } from '../../test-utils';
 import { submitForm, withinModalTabPanel } from '../utils/table';
 import { waitForFeeEstimate, waitForTransactionExecute } from '../utils/transaction';
 import { TABLES } from './constants';
@@ -51,95 +51,86 @@ describe('Borrow Flow', () => {
     expect(borrow).toHaveBeenCalledWith(WRAPPED_TOKEN, WRAPPED_LOAN.AMOUNT.VERY_SMALL.MONETARY);
   });
 
-  // it('should not be able to borrow due to borrow limit', async () => {
-  //   mockCalculateBorrowLimitBtcChange.mockReturnValue(DEFAULT_IBTC.MONETARY.VERY_SMALL);
-  //   mockGetLendingStats.mockReturnValue({ ...DEFAULT_LENDING_STATS, borrowLimitBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL });
+  it('should not be able to borrow due to borrow limit', async () => {
+    getLendingStats.mockReturnValue(LENDING_STATS.MIN_BORROW_LIMIT);
 
-  //   await render(<App />, { path });
+    await render(<App />, { path });
 
-  //   const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.MARKET, WRAPPED_LOAN.ASSET.currency.ticker, tab);
 
-  //   // If there is collateral, modal LTV meter should be rendered
-  //   expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
+    // If there is collateral, modal LTV meter should be rendered
+    expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
 
-  //   userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), WRAPPED_LOAN.AMOUNT.VERY_SMALL.VALUE);
 
-  //   await waitFor(() => {
-  //     expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
-  //   });
+    userEvent.tab();
 
-  //   userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
+    await waitFor(() => {
+      expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
+    });
 
-  //   await waitFor(() => {
-  //     expect(mockBorrow).not.toHaveBeenCalled();
-  //   });
-  // });
+    userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
 
-  // it('should not be able to borrow due lack of available capacity', async () => {
-  //   mockGetLoanAssets.mockReturnValue({
-  //     ...DEFAULT_ASSETS,
-  //     IBTC: { ...DEFAULT_IBTC_LOAN_ASSET, availableCapacity: DEFAULT_IBTC.MONETARY.VERY_SMALL }
-  //   });
+    await waitFor(() => {
+      expect(borrow).not.toHaveBeenCalled();
+    });
+  });
 
-  //   await render(<App />, { path });
+  it('should not be able to borrow due lack of available capacity', async () => {
+    getLoanAssets.mockReturnValue(ASSETS.EMPTY_CAPACITY);
 
-  //   const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    await render(<App />, { path });
 
-  //   userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.MARKET, WRAPPED_LOAN.ASSET.currency.ticker, tab);
 
-  //   await waitFor(() => {
-  //     expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
-  //   });
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), WRAPPED_LOAN.AMOUNT.VERY_SMALL.VALUE);
 
-  //   userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
+    userEvent.tab();
 
-  //   await waitFor(() => {
-  //     expect(mockBorrow).not.toHaveBeenCalled();
-  //   });
-  // });
+    await waitFor(() => {
+      expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
+    });
 
-  // it('should not be able to borrow due too many borrows', async () => {
-  //   mockGetLoanAssets.mockReturnValue({
-  //     ...DEFAULT_ASSETS,
-  //     IBTC: {
-  //       ...DEFAULT_IBTC_LOAN_ASSET,
-  //       borrowCap: DEFAULT_IBTC.MONETARY.MEDIUM,
-  //       totalBorrows: DEFAULT_IBTC.MONETARY.MEDIUM
-  //     }
-  //   });
+    userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
 
-  //   await render(<App />, { path });
+    await waitFor(() => {
+      expect(borrow).not.toHaveBeenCalled();
+    });
+  });
 
-  //   const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+  it('should not be able to borrow due too many borrows', async () => {
+    getLoanAssets.mockReturnValue(ASSETS.OVER_BORROWED);
 
-  //   userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    await render(<App />, { path });
 
-  //   await waitFor(() => {
-  //     expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
-  //   });
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.MARKET, WRAPPED_LOAN.ASSET.currency.ticker, tab);
 
-  //   userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), WRAPPED_LOAN.AMOUNT.VERY_SMALL.VALUE);
 
-  //   await waitFor(() => {
-  //     expect(mockBorrow).not.toHaveBeenCalled();
-  //   });
-  // });
+    userEvent.tab();
 
-  // it('should display liquidation alert', async () => {
-  //   mockCalculateLtvAndThresholdsChange.mockReturnValue({
-  //     collateralThresholdWeightedAverage: new Big(0.5),
-  //     liquidationThresholdWeightedAverage: new Big(0.75),
-  //     ltv: new Big(0.75)
-  //   });
+    await waitFor(() => {
+      expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
+    });
 
-  //   await render(<App />, { path });
+    userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
 
-  //   const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    await waitFor(() => {
+      expect(borrow).not.toHaveBeenCalled();
+    });
+  });
 
-  //   userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+  it('should display liquidation alert', async () => {
+    getLendingStats.mockReturnValue(LENDING_STATS.LIQUIDATION);
 
-  //   await waitFor(() => {
-  //     expect(tabPanel.getByRole('alert')).toBeInTheDocument();
-  //   });
-  // });
+    await render(<App />, { path });
+
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.MARKET, WRAPPED_LOAN.ASSET.currency.ticker, tab);
+
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), WRAPPED_LOAN.AMOUNT.VERY_SMALL.VALUE);
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('alert')).toBeInTheDocument();
+    });
+  });
 });
