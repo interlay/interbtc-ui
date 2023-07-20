@@ -125,7 +125,23 @@ const TransactionDetails = ({
           })}
         </Alert>
       )}
-      {bitcoinNetworkFee && <TransactionFeeDetails label={t('btc.bitcoin_network_fee')} amount={bitcoinNetworkFee} />}
+      {bitcoinNetworkFee && (
+        <BaseTransactionDetails>
+          <TransactionDetailsGroup>
+            <TransactionDetailsDt tooltipLabel={t('btc.fee_paids_to_vaults_relayers_maintainers')}>
+              {t('btc.bitcoin_network_fee')}
+            </TransactionDetailsDt>
+            <TransactionDetailsDd>
+              {bitcoinNetworkFee.toHuman()} {bitcoinNetworkFee.currency.ticker} (
+              {displayMonetaryAmountInUSDFormat(
+                bitcoinNetworkFee,
+                getTokenPrice(prices, bitcoinNetworkFee.currency.ticker)?.usd
+              )}
+              )
+            </TransactionDetailsDd>
+          </TransactionDetailsGroup>
+        </BaseTransactionDetails>
+      )}
       {feeDetailsProps && <TransactionFeeDetails {...feeDetailsProps} />}
     </Flex>
   );

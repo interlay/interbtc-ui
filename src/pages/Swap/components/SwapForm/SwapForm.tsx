@@ -23,11 +23,12 @@ import {
 import { SwapPair } from '@/types/swap';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
+import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { FeeEstimateResult, Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
@@ -67,9 +68,7 @@ const getAmountsUSD = (pair: SwapPair, prices?: Prices, trade?: Trade | null, in
 
   return {
     inputAmountUSD,
-    outputAmountUSD,
-    inputMonetary: monetaryAmount,
-    outputMonetary: trade?.outputAmount
+    outputAmountUSD
   };
 };
 
@@ -120,16 +119,44 @@ const SwapForm = ({
       form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);
       setTrade(undefined);
     },
-    onSuccess: onSwap
+    onSuccess: onSwap,
+    onFeeChange: (data) => {
+      const previousFeeData = transaction.fee.data;
+
+      // checks previous fee because it could be affecting the trade amounts
+      // only computes another trade when fee currency is equal to input currency
+      if (previousFeeData?.isEqualToActionCurrency || data.isEqualToActionCurrency) {
+        handleChangeTrade(data);
+      }
+    }
   });
 
-  const handleChangeTrade = () => {
+  const handleChangeTrade = async (feeData?: FeeEstimateResult) => {
     if (!pair.input || !pair.output || !inputAmount) {
       return setTrade(undefined);
     }
 
     const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
     const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
+
+    if (trade) {
+      const transactionData = await getTransactionArgs(trade);
+
+      if (!transactionData) return;
+
+      const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
+
+      const feeEstimate =
+        feeData || (await transaction.fee.estimateAsync(tradeData, minimumAmountOut, accountId, deadline));
+
+      if (feeEstimate.isEqualToActionCurrency) {
+        const newInputMonetaryAmount = transaction.calculateAmountWithFeeDeducted(inputMonetaryAmount, feeEstimate);
+
+        const trade = window.bridge.amm.getOptimalTrade(newInputMonetaryAmount, pair.output, liquidityPools);
+
+        return setTrade(trade);
+      }
+    }
 
     setTrade(trade);
   };
@@ -176,7 +203,7 @@ const SwapForm = ({
   const handleSwap = async () => {
     const transactionData = await getTransactionArgs(trade);
 
-    if (!transactionData) return;
+    if (!transactionData || !transaction.fee.data || !inputBalance) return;
 
     const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
 
@@ -233,26 +260,6 @@ const SwapForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair]);
 
-  const feeToken = form.values[SWAP_FEE_TOKEN_FIELD];
-
-  useEffect(() => {
-    const estimateFee = async () => {
-      const transactionData = await getTransactionArgs(trade);
-
-      if (!transactionData) return;
-
-      const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
-
-      transaction.fee.setCurrency(feeToken).estimate(tradeData, minimumAmountOut, accountId, deadline);
-    };
-
-    if (!trade) return;
-
-    estimateFee();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trade, feeToken]);
-
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => setInputAmount(e.target.value);
 
   const handlePairChange = (pair: SwapPair) => onChangePair(pair);
@@ -273,12 +280,7 @@ const SwapForm = ({
 
   const handleClosePriceImpactModal = () => setPriceImpactModal(false);
 
-  const { inputAmountUSD, outputAmountUSD, inputMonetary, outputMonetary } = getAmountsUSD(
-    pair,
-    prices,
-    trade,
-    form.values[SWAP_INPUT_AMOUNT_FIELD]
-  );
+  const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, form.values[SWAP_INPUT_AMOUNT_FIELD]);
 
   const selectItems = selectCurrency.items.filter((tokenData) => pooledTickers.has(tokenData.value));
 
@@ -300,34 +302,33 @@ const SwapForm = ({
                 <TokenInput
                   placeholder='0.00'
                   label={t('amm.from')}
-                  balance={inputBalance?.toString() || 0}
-                  humanBalance={inputBalance?.toHuman() || 0}
                   valueUSD={inputAmountUSD}
                   selectProps={mergeProps(form.getSelectFieldProps(SWAP_INPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_INPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
-                  {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, true), { onChange: handleChangeInput })}
+                  {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, true), getTokenInputProps(inputBalance), {
+                    onChange: handleChangeInput
+                  })}
                 />
                 <SwapDivider onPress={handlePairSwap} />
                 <TokenInput
                   placeholder='0.00'
                   label={t('amm.to')}
                   isDisabled
-                  balance={outputBalance?.toString() || 0}
-                  humanBalance={outputBalance?.toHuman() || 0}
                   valueUSD={outputAmountUSD}
                   value={trade?.outputAmount.toString() || ''}
                   selectProps={mergeProps(form.getSelectFieldProps(SWAP_OUTPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
+                  {...getTokenInputProps(outputBalance)}
                 />
               </Flex>
               <Flex direction='column' gap='spacing2'>
                 {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
                 <TransactionFeeDetails
-                  {...transaction.fee.detailsProps}
+                  fee={transaction.fee}
                   selectProps={form.getSelectFieldProps(SWAP_FEE_TOKEN_FIELD)}
                 />
               </Flex>
@@ -342,8 +343,8 @@ const SwapForm = ({
         onConfirm={handleConfirmPriceImpactModal}
         inputValueUSD={inputAmountUSD}
         outputValueUSD={outputAmountUSD}
-        inputAmount={inputMonetary}
-        outputAmount={outputMonetary}
+        inputAmount={trade?.inputAmount}
+        outputAmount={trade?.outputAmount}
         pair={pair}
         priceImpact={priceImpact}
       />
