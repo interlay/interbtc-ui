@@ -27,14 +27,6 @@ type BorrowAssetsTableRow = {
   [BorrowAssetsColumns.TOTAL_BORROWED]: ReactNode;
 };
 
-// TODO: translations
-const borrowAssetsColumns = [
-  { name: 'Asset', uid: BorrowAssetsColumns.ASSET },
-  { name: 'APY', uid: BorrowAssetsColumns.APY },
-  { name: 'Capacity', uid: BorrowAssetsColumns.CAPACITY },
-  { name: 'Total Borrowed', uid: BorrowAssetsColumns.TOTAL_BORROWED }
-];
-
 type Props = {
   assets: TickerToData<LoanAsset>;
 };
@@ -47,6 +39,17 @@ const BorrowAssetsTable = ({ assets, onRowAction, ...props }: BorrowAssetsTableP
   const titleId = useId();
   const { t } = useTranslation();
   const prices = useGetPrices();
+
+  // TODO: translations
+  const borrowAssetsColumns = useMemo(
+    () => [
+      { name: t('asset'), uid: BorrowAssetsColumns.ASSET },
+      { name: t('apy'), uid: BorrowAssetsColumns.APY },
+      { name: t('available'), uid: BorrowAssetsColumns.CAPACITY },
+      { name: t('loans.borrowed'), uid: BorrowAssetsColumns.TOTAL_BORROWED }
+    ],
+    [t]
+  );
 
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>

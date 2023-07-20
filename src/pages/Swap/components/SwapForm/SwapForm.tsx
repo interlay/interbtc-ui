@@ -121,8 +121,11 @@ const SwapForm = ({
     },
     onSuccess: onSwap,
     onFeeChange: (data) => {
-      // if input currency is being used for fees
-      if (data.isEqualToActionCurrency) {
+      const previousFeeData = transaction.fee.data;
+
+      // checks previous fee because it could be affecting the trade amounts
+      // only computes another trade when fee currency is equal to input currency
+      if (previousFeeData?.isEqualToActionCurrency || data.isEqualToActionCurrency) {
         handleChangeTrade(data);
       }
     }

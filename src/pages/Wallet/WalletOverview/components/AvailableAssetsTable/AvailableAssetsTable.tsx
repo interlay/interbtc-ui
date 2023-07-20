@@ -73,7 +73,7 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
               })
             }}
           >
-            {t('wallet.get_asset', { token: currency.ticker })}
+            {t('wallet_page.get_asset', { token: currency.ticker })}
           </TextLink>
         );
 
@@ -146,10 +146,10 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
   return (
     <DataGrid
       actions={actions}
-      title={t('wallet.available_assets')}
+      title={t('wallet_page.available_assets')}
       columns={columns}
       rows={rows}
-      placeholder={<P weight='bold'>{t('wallet.no_assets_available')}</P>}
+      placeholder={<P weight='bold'>{t('wallet_page.no_assets_available')}</P>}
     />
   );
 };
