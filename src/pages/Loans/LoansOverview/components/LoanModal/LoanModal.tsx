@@ -41,14 +41,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type LoanModalProps = Props & InheritAttrs;
 
-const LoanModal = ({
-  variant = 'lend',
-  asset,
-  position,
-  onClose,
-  isOpen,
-  ...props
-}: LoanModalProps): JSX.Element | null => {
+const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: LoanModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const overlappingModalRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +53,6 @@ const LoanModal = ({
 
   return (
     <Modal
-      isOpen={isOpen}
       aria-label={`${variant} ${asset.currency.ticker}`}
       onClose={onClose}
       align='top'
