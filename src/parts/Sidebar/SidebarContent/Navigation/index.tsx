@@ -69,55 +69,55 @@ const Navigation = ({
   const PRIMARY_NAVIGATION_ITEMS = React.useMemo(
     () => [
       {
-        name: 'nav_wallet',
+        name: 'navigation.wallet',
         link: PAGES.WALLET,
         icon: UserIcon
       },
       {
-        name: 'nav_strategies',
+        name: 'navigation.strategies',
         link: PAGES.STRATEGIES,
         icon: BanknotesIcon,
         disabled: !isStrategiesEnabled
       },
       {
-        name: `nav_btc`,
+        name: `navigation.btc`,
         link: PAGES.BTC,
         icon: ArrowPathIcon,
         hidden: false
       },
       {
-        name: 'nav_send_and_receive',
+        name: 'navigation.send_and_receive',
         link: PAGES.SEND_AND_RECEIVE,
         icon: ArrowsRightLeftIcon
       },
       {
-        name: 'nav_lending',
+        name: 'navigation.lending',
         link: PAGES.LOANS,
         icon: PresentationChartBarIcon
       },
       {
-        name: 'nav_swap',
+        name: 'navigation.swap',
         link: PAGES.SWAP,
         icon: ArrowPathRoundedSquareIcon
       },
       {
-        name: 'nav_pools',
+        name: 'navigation.pools',
         link: PAGES.POOLS,
         icon: Square3Stack3DIcon
       },
       {
-        name: 'nav_staking',
+        name: 'navigation.staking',
         link: PAGES.STAKING,
         icon: CircleStackIcon
       },
       {
-        name: 'nav_stats',
+        name: 'navigation.stats',
         link: PAGES.DASHBOARD,
         icon: ChartBarSquareIcon,
         hidden: false
       },
       {
-        name: 'nav_vaults',
+        name: 'navigation.vaults',
         link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, selectedAccount?.address ?? '')}`,
         icon: CpuChipIcon,
         hidden: !vaultClientLoaded
@@ -135,12 +135,12 @@ const Navigation = ({
   const SECONDARY_NAVIGATION_ITEMS = React.useMemo(
     () => [
       {
-        name: 'nav_onboarding',
+        name: 'navigation.onboarding',
         link: PAGES.ONBOARDING,
         hidden: !isOnboardingEnabled
       },
       {
-        name: 'nav_use_wrapped',
+        name: 'navigation.use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,
         hidden: !USE_WRAPPED_CURRENCY_LINK,
         external: true,
@@ -150,7 +150,7 @@ const Navigation = ({
         }
       },
       {
-        name: 'nav_crowdloan',
+        name: 'navigation.crowdloan',
         link: CROWDLOAN_LINK,
         external: true,
         // This will suppress the link on testnet
@@ -161,7 +161,7 @@ const Navigation = ({
         }
       },
       {
-        name: 'nav_docs',
+        name: 'navigation.docs',
         link: INTERLAY_DOCS_LINK,
         external: true,
         rest: {
@@ -170,7 +170,7 @@ const Navigation = ({
         }
       },
       {
-        name: 'nav_governance',
+        name: 'navigation.governance',
         link: GOVERNANCE_LINK,
         external: true,
         hidden: !GOVERNANCE_LINK,
@@ -180,7 +180,7 @@ const Navigation = ({
         }
       },
       {
-        name: 'nav_terms_and_conditions',
+        name: 'navigation.terms_and_conditions',
         link: TERMS_AND_CONDITIONS_LINK,
         external: true,
         hidden: !TERMS_AND_CONDITIONS_LINK,
