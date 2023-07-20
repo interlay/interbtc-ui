@@ -103,6 +103,8 @@ describe('Swap Page', () => {
 
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
+    await waitForFeeEstimate(swap);
+
     await waitFor(() => {
       expect(
         screen.getByRole('textbox', {
@@ -110,8 +112,6 @@ describe('Swap Page', () => {
         })
       ).toHaveValue(TRADE.outputAmount.toString());
     });
-
-    await waitForFeeEstimate(swap);
 
     expect(getFutureBlockNumber).toHaveBeenCalledTimes(1);
 
@@ -201,6 +201,8 @@ describe('Swap Page', () => {
 
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
+    await waitForFeeEstimate(swap);
+
     await waitFor(() => {
       expect(
         screen.getByRole('textbox', {
@@ -208,8 +210,6 @@ describe('Swap Page', () => {
         })
       ).toHaveValue(TRADE.outputAmount.toString());
     });
-
-    await waitForFeeEstimate(swap);
 
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 

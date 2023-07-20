@@ -81,8 +81,8 @@ const CollateralForm = ({ asset, variant, isOpen, onSigning }: CollateralFormPro
         />
         <AuthCTA type='submit' size='large' disabled={isBtnDisabled} loading={transaction.isLoading}>
           {variant === 'enable'
-            ? t('use_ticker_as_collateral', { ticker: asset.currency.ticker })
-            : t('disable_ticker', { ticker: asset.currency.ticker })}
+            ? t('loans.use_ticker_as_collateral', { ticker: asset.currency.ticker })
+            : t('loans.disable_ticker', { ticker: asset.currency.ticker })}
         </AuthCTA>
       </Flex>
     </form>
