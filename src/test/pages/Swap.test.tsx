@@ -12,6 +12,8 @@ const { getLiquidityProvidedByAccount, swap } = MOCK_AMM.MODULE;
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
 const { getFutureBlockNumber } = MOCK_SYSTEM.MODULE;
 
+jest.useFakeTimers();
+
 const path = '/swap';
 
 jest.mock('../../parts/Layout', () => {
