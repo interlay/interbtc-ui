@@ -42,11 +42,14 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
   const { getAvailableBalance } = useGetBalances();
 
   const columns = [
-    { name: t('wallet.total_governance_locked', { token: GOVERNANCE_TOKEN.ticker }), uid: StakingTableColumns.ASSET },
-    { name: t('unlocks'), uid: StakingTableColumns.UNLOCKS },
-    { name: t('wallet.available_to_stake'), uid: StakingTableColumns.AVAILABLE },
     {
-      name: t('wallet.voting_power_governance', { token: VOTE_GOVERNANCE_TOKEN.ticker }),
+      name: t('wallet_page.total_governance_locked', { token: GOVERNANCE_TOKEN.ticker }),
+      uid: StakingTableColumns.ASSET
+    },
+    { name: t('unlocks'), uid: StakingTableColumns.UNLOCKS },
+    { name: t('wallet_page.available_to_stake'), uid: StakingTableColumns.AVAILABLE },
+    {
+      name: t('wallet_page.voting_power_governance', { token: VOTE_GOVERNANCE_TOKEN.ticker }),
       uid: StakingTableColumns.VOTING_POWER
     }
   ];

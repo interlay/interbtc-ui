@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { Actions, Transaction } from '../types';
@@ -27,6 +27,23 @@ const getAmountWithFeeDeducted = (
   feeAmount: MonetaryAmount<CurrencyExt>,
   balance: MonetaryAmount<CurrencyExt>
 ): MonetaryAmount<CurrencyExt> => {
+  const isFeeGreaterThanActionAmount = feeAmount.gte(actionAmount);
+
+  // since our fees are low, this would mean that the user
+  // is trying to deal with very small action amount
+  if (isFeeGreaterThanActionAmount) {
+    return newMonetaryAmount(0, actionAmount.currency);
+  }
+
+  const isActionAmountGreaterThanBalance = actionAmount.gt(balance);
+
+  // if the action amount is greater than the balance, the user
+  // should not able to conduct the transaction but amount affected by the fee should
+  // be return anyway (specially relevant for swap)
+  if (isActionAmountGreaterThanBalance) {
+    return actionAmount.sub(feeAmount);
+  }
+
   const isMaxAmount = balance.eq(actionAmount);
 
   // when the action amount is the max balance, the fee
