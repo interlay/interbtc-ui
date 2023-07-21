@@ -1,24 +1,14 @@
-import Big from 'big.js';
 import { withErrorBoundary } from 'react-error-boundary';
 
 import { Card, P } from '@/component-library';
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import MainContainer from '@/parts/MainContainer';
-import { StrategyData, StrategyRisk } from '@/types/strategies';
+import { StrategyType } from '@/types/strategies';
 
 import { StrategyCard } from './components';
 import { StyledList } from './Strategies.style';
 
-const STRATEGIES: StrategyData[] = [
-  { currency: WRAPPED_TOKEN, interestPercentage: new Big(3.22), interestType: 'apy', risk: StrategyRisk.LOW }
-];
-
 const Strategies = (): JSX.Element => {
-  const handlePress = () => {
-    // window.open(`${PAGES.STRATEGIES}/...`)
-  };
-
   return (
     <MainContainer>
       <Card>
@@ -29,18 +19,8 @@ const Strategies = (): JSX.Element => {
         </P>
       </Card>
       <StyledList>
-        {STRATEGIES.map((startegy, key) => (
-          <StrategyCard
-            key={key}
-            risk={startegy.risk}
-            isPressable
-            onPress={handlePress}
-            currency={startegy.currency}
-            interestType={startegy.interestType}
-            interestPercentage={startegy.interestPercentage}
-            title='BTC Passive Income'
-            description='Generate passive income by offering your IBTC to lending markets and benefit from automatic compounding rewards.'
-          />
+        {Object.values(StrategyType).map((strategyType) => (
+          <StrategyCard key={strategyType} strategyType={strategyType} />
         ))}
         <Card alignItems='center' justifyContent='center'>
           <P size='xs'>More Strategies coming soon</P>

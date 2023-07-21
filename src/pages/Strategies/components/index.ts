@@ -1,3 +1,3 @@
 export { StrategyCard } from './StrategyCard';
 export { StrategyForm } from './StrategyForm';
-export { StrategyPage } from './StrategyPage';
+export { default as StrategyPage } from './StrategyPage';

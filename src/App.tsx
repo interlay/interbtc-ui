@@ -28,6 +28,9 @@ import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
+const StrategyPage = React.lazy(
+  () => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies/components/StrategyPage')
+);
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
@@ -203,9 +206,14 @@ const App = (): JSX.Element => {
                     <Wallet />
                   </Route>
                   {isStrategiesEnabled && (
-                    <Route path={PAGES.STRATEGIES}>
-                      <Strategies />
-                    </Route>
+                    <>
+                      <Route exact path={PAGES.STRATEGIES}>
+                        <Strategies />
+                      </Route>
+                      <Route path={PAGES.STRATEGY_PAGE}>
+                        <StrategyPage />
+                      </Route>
+                    </>
                   )}
                   {isOnboardingEnabled && (
                     <Route path={PAGES.ONBOARDING}>

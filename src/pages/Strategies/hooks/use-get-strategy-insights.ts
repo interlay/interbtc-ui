@@ -2,15 +2,14 @@ import { CurrencyExt, isCurrencyEqual, LoanAsset, TickerToData } from '@interlay
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { StrategyType } from '@/types/strategies';
 import { AccountPositionsData, useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
-
-import { StrategyType } from '../types';
 
 type UseGetStrategyInsights =
   | {
       depositedAmount: MonetaryAmount<CurrencyExt>;
-      apy: number;
+      interest: number;
       earnedAmount: MonetaryAmount<CurrencyExt>;
     }
   | Record<string, never>;
@@ -21,7 +20,7 @@ const getStrategyInsights = (
   loanPositions: Partial<AccountPositionsData> | undefined
 ): UseGetStrategyInsights => {
   switch (strategyType) {
-    case StrategyType.LOW_RISK_SIMPLE_WRAPPED: {
+    case StrategyType.BTC_LOW_RISK: {
       const wrappedLendPosition = loanPositions?.lendPositions?.find(({ amount: { currency } }) =>
         isCurrencyEqual(currency, WRAPPED_TOKEN)
       );
@@ -34,7 +33,7 @@ const getStrategyInsights = (
         depositedAmount: wrappedLendPosition.amount,
         // TODO: add real earned amount once it's added on lib side
         earnedAmount: new MonetaryAmount(WRAPPED_TOKEN, 0),
-        apy: loanAssets[WRAPPED_TOKEN.ticker].lendApy.toNumber()
+        interest: loanAssets[WRAPPED_TOKEN.ticker].lendApy.toNumber()
       };
     }
   }

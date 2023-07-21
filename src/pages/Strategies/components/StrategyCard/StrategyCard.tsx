@@ -1,58 +1,56 @@
-import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { formatPercentage } from '@/common/utils/utils';
 import { Card, CardProps, CoinIcon, Flex, H1, P, Strong } from '@/component-library';
-import { StrategyData, StrategyRisk } from '@/types/strategies';
+import { STRATEGIES, StrategyType } from '@/types/strategies';
+import { PAGES } from '@/utils/constants/links';
 
+import { useGetStrategyInsights } from '../../hooks/use-get-strategy-insights';
 import { StrategyTag } from '../StrategyTag';
 import { StyledEarningCard, StyledEarnSection } from './StrategyCard.style';
 
 type Props = {
-  title: ReactNode;
-  description: ReactNode;
-} & StrategyData;
+  strategyType: StrategyType;
+};
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type StrategyCardProps = Props & InheritAttrs;
 
-const StrategyCard = ({
-  interestType,
-  interestPercentage,
-  currency,
-  description,
-  risk,
-  title,
-  ...props
-}: StrategyCardProps): JSX.Element => {
+const StrategyCard = ({ strategyType, ...props }: StrategyCardProps): JSX.Element => {
   const { t } = useTranslation();
+  const { interest } = useGetStrategyInsights(strategyType);
+  const { descriptionCard, title, currency, risk, path, tags } = STRATEGIES[strategyType];
 
-  const interestTypeLabel = interestType === 'apr' ? t('apr') : t('apy');
-  const interestPercentageLable = formatPercentage(interestPercentage.toNumber());
+  const interestPercentageLable = formatPercentage(interest);
 
   return (
-    <Card {...props} alignItems='center' gap='spacing4'>
-      <Flex alignSelf='flex-start' gap='spacing1'>
-        <StrategyTag variant='risk' risk={risk} />
-        {(risk === StrategyRisk.LOW || risk === StrategyRisk.MEDIUM) && <StrategyTag variant='passive-income' />}
-      </Flex>
-      <CoinIcon size='xl2' ticker={currency.ticker} />
-      <H1 weight='bold' size='base' align='center' rows={1}>
-        {title}
-      </H1>
-      <StyledEarningCard justifyContent='center'>
-        <StyledEarnSection size='xs' align='center'>
-          Earn up to
-          <Strong size='base'>
-            {interestPercentageLable} {interestTypeLabel}
-          </Strong>
-        </StyledEarnSection>
-      </StyledEarningCard>
-      <P color='tertiary' size='xs' align='center'>
-        {description}
-      </P>
-    </Card>
+    <Link to={`${PAGES.STRATEGIES}/${path}`}>
+      <Card {...props} alignItems='center' gap='spacing4'>
+        <Flex alignSelf='flex-start' gap='spacing1'>
+          <StrategyTag risk={risk} />
+          {tags.map((tag) => (
+            <StrategyTag key={tag}>{tag}</StrategyTag>
+          ))}
+        </Flex>
+        <CoinIcon size='xl2' ticker={currency.ticker} />
+        <H1 weight='bold' size='base' align='center' rows={1}>
+          {title}
+        </H1>
+        <StyledEarningCard justifyContent='center'>
+          <StyledEarnSection size='xs' align='center'>
+            Earn up to
+            <Strong size='base'>
+              {interestPercentageLable} {t('apy')}
+            </Strong>
+          </StyledEarnSection>
+        </StyledEarningCard>
+        <P color='tertiary' size='xs' align='center'>
+          {descriptionCard}
+        </P>
+      </Card>
+    </Link>
   );
 };
 

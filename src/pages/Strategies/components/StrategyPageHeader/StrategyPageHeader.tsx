@@ -1,10 +1,10 @@
 import { CoinIcon } from '@/component-library';
+import { STRATEGIES, StrategyType } from '@/types/strategies';
 
-import { STRATEGY_INFORMATION, StrategyType } from '../../types';
 import { StrategyPageInsights } from '../StrategyPageInsights';
+import { StrategyTag } from '../StrategyTag';
 import {
   StyledStrategyPageHeader,
-  StyledStrategyPageHeaderTag,
   StyledStrategyPageHeaderTags,
   StyledStrategyPageHeaderTitle
 } from './StrategyPageHeader.style';
@@ -14,15 +14,16 @@ type Props = {
 };
 
 const StrategyPageHeader = ({ strategyType }: Props): JSX.Element => {
-  const { title, currency, tags } = STRATEGY_INFORMATION[strategyType];
+  const { title, currency, tags, risk } = STRATEGIES[strategyType];
   return (
     <StyledStrategyPageHeader>
       <StyledStrategyPageHeaderTitle>
         <CoinIcon ticker={currency.ticker} /> {title}
       </StyledStrategyPageHeaderTitle>
       <StyledStrategyPageHeaderTags>
+        <StrategyTag risk={risk} />
         {tags.map((tag) => (
-          <StyledStrategyPageHeaderTag key={tag}>{tag}</StyledStrategyPageHeaderTag>
+          <StrategyTag key={tag}>{tag}</StrategyTag>
         ))}
       </StyledStrategyPageHeaderTags>
       <StrategyPageInsights strategyType={strategyType} />

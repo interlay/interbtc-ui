@@ -3,10 +3,10 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { UseLoanFormData, useLoanFormData } from '@/pages/Loans/LoansOverview/hooks/use-loan-form-data';
+import { StrategyType } from '@/types/strategies';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 
-import { StrategyType } from '../types';
 import { StrategyFormType } from '../types/form';
 
 interface UseSimplePassiveIncomeData {
@@ -16,7 +16,7 @@ interface UseSimplePassiveIncomeData {
 
 const getStrategyParams = (strategyType: StrategyType) => {
   switch (strategyType) {
-    case StrategyType.LOW_RISK_SIMPLE_WRAPPED:
+    case StrategyType.BTC_LOW_RISK:
       return {
         currency: WRAPPED_TOKEN
       };
@@ -31,7 +31,7 @@ const getStrategyLimitAmounts = (
   maxAmount: MonetaryAmount<CurrencyExt> | undefined;
 } => {
   switch (strategyType) {
-    case StrategyType.LOW_RISK_SIMPLE_WRAPPED:
+    case StrategyType.BTC_LOW_RISK:
       return { minAmount: loanFormData.assetAmount?.min, maxAmount: loanFormData.assetAmount?.available };
   }
 };

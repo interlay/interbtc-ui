@@ -1,4 +1,4 @@
-import { StrategyType } from './strategies';
+import { StrategyType } from '@/types/strategies';
 
 type StrategyFormType = 'deposit' | 'withdraw';
 
