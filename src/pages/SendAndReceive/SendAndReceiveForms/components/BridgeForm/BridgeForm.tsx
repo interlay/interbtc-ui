@@ -238,7 +238,7 @@ const BridgeForm = (): JSX.Element => {
         </div>
         <AccountSelect
           label='Destination'
-          accounts={accounts}
+          items={accounts}
           {...mergeProps(form.getSelectFieldProps(BRIDGE_TO_ACCOUNT_FIELD, false), {
             onChange: handleDestinationAccountChange
           })}
