@@ -133,4 +133,4 @@ const useGetVaults = <T extends GetVaultType>(
 };
 
 export { GetVaultType, useGetVaults };
-export type { BridgeVaultData, UseGetBridgeVaultResult };
+export type { BridgeVaultData, GetBridgeVaultData, UseGetBridgeVaultResult };

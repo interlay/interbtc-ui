@@ -1,26 +1,26 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { FeeAPI } from '@interlay/interbtc-api';
 import Big from 'big.js';
 
-import {
-  DEFAULT_ISSUE_BRIDGE_FEE_RATE,
-  DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE,
-  DEFAULT_REDEEM_BRIDGE_FEE_RATE
-} from '@/config/parachain';
+const ISSUE_FEE = new Big(1);
 
-const mockFeeGetIssueFee = jest.fn(() => new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
+const GRIEFING_COLLATERAL_RATE = new Big(1);
 
-const mockFeeGetIssueGriefingCollateralRate = jest.fn(() => new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
-
-const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
-
-const mockRedeemGetFeeRate = jest.fn(() => new Big(DEFAULT_REDEEM_BRIDGE_FEE_RATE));
-
-const mockRedeemGetCurrentInclusionFee = jest.fn(() => new BitcoinAmount(0.0000038));
-
-export {
-  mockFeeGetIssueFee,
-  mockFeeGetIssueGriefingCollateralRate,
-  mockRedeemGetCurrentInclusionFee,
-  mockRedeemGetFeeRate,
-  mockRedeemGetPremiumRedeemFeeRate
+const DATA = {
+  ISSUE_FEE,
+  GRIEFING_COLLATERAL_RATE
 };
+
+const MODULE: Record<keyof FeeAPI, jest.Mock<any, any>> = {
+  calculateAPY: jest.fn(),
+  getGriefingCollateral: jest.fn(),
+  getIssueFee: jest.fn().mockResolvedValue(ISSUE_FEE),
+  getIssueGriefingCollateralRate: jest.fn().mockResolvedValue(GRIEFING_COLLATERAL_RATE),
+  getReplaceGriefingCollateralRate: jest.fn()
+};
+
+const MOCK_FEE = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_FEE };

@@ -8,32 +8,18 @@ import { Signer } from '@polkadot/types/types';
 import {
   MOCK_AMM,
   MOCK_API,
+  MOCK_FEE,
+  MOCK_ISSUE,
   MOCK_LOANS,
   MOCK_SYSTEM,
   MOCK_TOKENS,
   MOCK_TRANSACTION,
+  MOCK_VAULTS,
   mockBtcRelayGetLatestBlockHeight,
   mockElectrsAPIGetLatestBlockHeight,
-  mockFeeGetIssueFee,
-  mockFeeGetIssueGriefingCollateralRate,
   mockGetStableBitcoinConfirmations,
   mockGetStableParachainConfirmations,
-  mockIssueGetDustValue,
-  mockIssueGetRequestLimits,
-  mockIssueRequest,
-  mockOracleGetExchangeRate,
-  mockRedeemBurn,
-  mockRedeemGetBurnExchangeRate,
-  mockRedeemGetCurrentInclusionFee,
-  mockRedeemGetDustValue,
-  mockRedeemGetFeeRate,
-  mockRedeemGetMaxBurnableTokens,
-  mockRedeemGetPremiumRedeemFeeRate,
-  mockRedeemRequest,
-  mockVaultsGet,
-  mockVaultsGetPremiumRedeemVaults,
-  mockVaultsGetVaultsWithIssuableTokens,
-  mockVaultsGetVaultsWithRedeemableTokens
+  mockOracleGetExchangeRate
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
@@ -56,37 +42,15 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     getStableBitcoinConfirmations: mockGetStableBitcoinConfirmations
   },
   electrsAPI: { getLatestBlockHeight: mockElectrsAPIGetLatestBlockHeight },
-  fee: {
-    getIssueFee: mockFeeGetIssueFee,
-    getIssueGriefingCollateralRate: mockFeeGetIssueGriefingCollateralRate
-  },
-  issue: {
-    getDustValue: mockIssueGetDustValue,
-    getRequestLimits: mockIssueGetRequestLimits,
-    request: mockIssueRequest
-  },
+  fee: MOCK_FEE.MODULE,
+  issue: MOCK_ISSUE.MODULE,
   loans: MOCK_LOANS.MODULE,
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
   },
-  redeem: {
-    getMaxBurnableTokens: mockRedeemGetMaxBurnableTokens,
-    getBurnExchangeRate: mockRedeemGetBurnExchangeRate,
-    burn: mockRedeemBurn,
-    getDustValue: mockRedeemGetDustValue,
-    getPremiumRedeemFeeRate: mockRedeemGetPremiumRedeemFeeRate,
-    getFeeRate: mockRedeemGetFeeRate,
-    getCurrentInclusionFee: mockRedeemGetCurrentInclusionFee,
-    request: mockRedeemRequest
-  },
   system: MOCK_SYSTEM.MODULE,
   tokens: MOCK_TOKENS.MODULE,
-  vaults: {
-    get: mockVaultsGet,
-    getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens,
-    getPremiumRedeemVaults: mockVaultsGetPremiumRedeemVaults,
-    getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
-  },
+  vaults: MOCK_VAULTS.MODULE,
   amm: MOCK_AMM.MODULE,
   escrow: {
     getStakedBalance: mockGetStakedBalance,
@@ -100,6 +64,7 @@ jest.mock('@interlay/interbtc-api', () => {
 
   return {
     ...actualInterBtcApi,
+    getIssueRequestsFromExtrinsicResult: jest.fn(),
     currencyIdToMonetaryCurrency: jest.fn(),
     newAccountId: jest.fn().mockReturnValue('a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc'),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),

@@ -1,46 +1,59 @@
-import '@testing-library/jest-dom';
+// const MOCK_COLLATERAL_AMOUNT = '1000000000000';
+import { CurrencyExt, InterbtcPrimitivesVaultId, VaultsAPI } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 
-import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
+import { DEFAULT_ADDRESS } from '@/test/mocks/@polkadot/constants';
 
-import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { MOCK_PRIMITIVES } from '../interbtc-primitives';
+import { MOCK_ISSUE } from './issue';
 
-const MOCK_COLLATERAL_AMOUNT = '1000000000000';
-
-const mockVaultsGet = jest.fn((_accountId: AccountId, collateralCurrency: CollateralCurrencyExt) => ({
-  backingCollateral: newMonetaryAmount(MOCK_COLLATERAL_AMOUNT, collateralCurrency)
-}));
-
-const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => ({
-  accountId: vaultAddress,
-  currencies: {
-    collateral: collateralToken,
-    wrapped: WRAPPED_TOKEN
+const VAULTS_ID: Record<'RELAY' | 'GOVERNANCE', InterbtcPrimitivesVaultId> = {
+  RELAY: {
+    accountId: DEFAULT_ADDRESS,
+    currencies: {
+      collateral: MOCK_PRIMITIVES.RELAY_CHAIN_NATIVE_TOKEN,
+      wrapped: MOCK_PRIMITIVES.WRAPPED_TOKEN
+    }
+  },
+  GOVERNANCE: {
+    accountId: DEFAULT_ADDRESS,
+    currencies: {
+      collateral: MOCK_PRIMITIVES.GOVERNANCE_TOKEN,
+      wrapped: MOCK_PRIMITIVES.WRAPPED_TOKEN
+    }
   }
-});
-
-const MOCK_VAULT_ADDRESS = '5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE';
-
-const MOCK_COLLATERAL_TOKEN = RELAY_CHAIN_NATIVE_TOKEN;
-
-const MOCK_BITCOIN_AMOUNT = 100;
-
-const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() =>
-  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
-);
-
-const mockVaultsGetPremiumRedeemVaults = jest.fn(() =>
-  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
-);
-
-const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() =>
-  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
-);
-
-export {
-  mockVaultsGet,
-  mockVaultsGetPremiumRedeemVaults,
-  mockVaultsGetVaultsWithIssuableTokens,
-  mockVaultsGetVaultsWithRedeemableTokens
 };
+
+const VAULTS_AMOUNT = {
+  EMPTY: new BitcoinAmount(0),
+  FULL: new BitcoinAmount(MOCK_ISSUE.DATA.REQUEST_LIMIT.FULL.singleVaultMaxIssuable._rawAmount.toString())
+};
+
+const VAULTS_TOKENS = {
+  EMPTY: new Map<InterbtcPrimitivesVaultId, MonetaryAmount<CurrencyExt>>([
+    [VAULTS_ID.RELAY, VAULTS_AMOUNT.EMPTY],
+    [VAULTS_ID.GOVERNANCE, VAULTS_AMOUNT.EMPTY]
+  ]),
+  FULL: new Map<InterbtcPrimitivesVaultId, MonetaryAmount<CurrencyExt>>([
+    // [VAULTS_ID.RELAY, VAULTS_AMOUNT.EMPTY]
+    [VAULTS_ID.GOVERNANCE, VAULTS_AMOUNT.FULL]
+  ])
+};
+
+const DATA = { VAULTS_ID, VAULTS_AMOUNT, VAULTS_TOKENS };
+
+const MODULE: Pick<
+  Record<keyof VaultsAPI, jest.Mock<any, any>>,
+  'getVaultsWithRedeemableTokens' | 'getVaultsWithIssuableTokens' | 'getPremiumRedeemVaults'
+> = {
+  getVaultsWithRedeemableTokens: jest.fn().mockResolvedValue(VAULTS_TOKENS.FULL),
+  getVaultsWithIssuableTokens: jest.fn().mockResolvedValue(VAULTS_TOKENS.FULL),
+  getPremiumRedeemVaults: jest.fn().mockRejectedValue(undefined)
+};
+
+const MOCK_VAULTS = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_VAULTS };

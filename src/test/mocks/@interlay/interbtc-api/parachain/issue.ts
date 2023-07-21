@@ -1,16 +1,51 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { IssueAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 
-import { DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/parachain';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 
-const mockIssueGetDustValue = jest.fn(() => new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT));
+import { EXTRINSIC_DATA } from '../extrinsic';
 
-const mockIssueGetRequestLimits = jest.fn(() => ({
-  singleVaultMaxIssuable: newMonetaryAmount(0.56527153, WRAPPED_TOKEN, true),
-  totalMaxIssuable: newMonetaryAmount(4.93817337, WRAPPED_TOKEN, true)
-}));
+const REQUEST_LIMIT: Record<'EMPTY' | 'FULL', IssueLimits> = {
+  EMPTY: {
+    singleVaultMaxIssuable: newMonetaryAmount(0, WRAPPED_TOKEN),
+    totalMaxIssuable: newMonetaryAmount(0, WRAPPED_TOKEN)
+  },
+  FULL: {
+    singleVaultMaxIssuable: newMonetaryAmount(1, WRAPPED_TOKEN, true),
+    totalMaxIssuable: newMonetaryAmount(2, WRAPPED_TOKEN, true)
+  }
+};
 
-const mockIssueRequest = jest.fn();
+const DUST_VALUE = newMonetaryAmount(0.0001, WRAPPED_TOKEN);
 
-export { mockIssueGetDustValue, mockIssueGetRequestLimits, mockIssueRequest };
+const DATA = {
+  REQUEST_LIMIT,
+  DUST_VALUE
+};
+
+const MODULE: Record<keyof IssueAPI, jest.Mock<any, any>> = {
+  getRequestLimits: jest.fn().mockResolvedValue(REQUEST_LIMIT.FULL),
+  getDustValue: jest.fn().mockResolvedValue(DUST_VALUE),
+  getFeeRate: jest.fn(),
+  getFeesToPay: jest.fn(),
+  getIssuePeriod: jest.fn(),
+  getRequestById: jest.fn(),
+  getRequestsByIds: jest.fn(),
+  getVaultIssuableAmount: jest.fn(),
+  setIssuePeriod: jest.fn(),
+  cancel: jest.fn(),
+  execute: jest.fn(),
+  list: jest.fn(),
+  request: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  requestAdvanced: jest.fn(),
+  buildCancelIssueExtrinsic: jest.fn(),
+  buildExecuteIssueExtrinsic: jest.fn(),
+  buildRequestIssueExtrinsic: jest.fn()
+};
+
+const MOCK_ISSUE = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_ISSUE };
