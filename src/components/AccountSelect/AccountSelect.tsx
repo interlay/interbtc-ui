@@ -1,19 +1,15 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import { Item, Select, SelectProps } from '@/component-library';
+import { Select, SelectProps } from '@/component-library';
 
-import { AccountLabel } from './AccountLabel';
+import { AccountItem } from './AccountItem';
 
 type AccountSelectProps = Omit<SelectProps<'modal', InjectedAccountWithMeta>, 'children' | 'type'>;
 
 const AccountSelect = (props: AccountSelectProps): JSX.Element => {
   return (
-    <Select<'modal', any> {...props} type='modal' modalTitle='select account' size='large'>
-      {(data: InjectedAccountWithMeta) => (
-        <Item key={data.address} textValue={data.address}>
-          <AccountLabel address={data.address} name={data.meta.name} />
-        </Item>
-      )}
+    <Select<'modal', any> {...props} type='modal' modalTitle='Select Account' size='large'>
+      {(data: InjectedAccountWithMeta) => <AccountItem address={data.address} name={data.meta.name} />}
     </Select>
   );
 };
