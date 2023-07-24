@@ -1,16 +1,16 @@
 import { LoanPositionsTable, PoolsTable } from '@/components';
+import { useGetAccountPools } from '@/hooks/api/amm/use-get-account-pools';
+import { useGetLiquidityPools } from '@/hooks/api/amm/use-get-liquidity-pools';
+import { useGetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
+import { useGetAccountVotingBalance } from '@/hooks/api/escrow/use-get-account-voting-balance';
+import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import useAccountId from '@/hooks/use-account-id';
+import { LocalStorageKey, useLocalStorage } from '@/hooks/use-local-storage';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import MainContainer from '@/parts/MainContainer';
+import MainContainer from '@/legacy-components/MainContainer';
 import { getPooledTickers } from '@/utils/helpers/pools';
-import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
-import { useGetLiquidityPools } from '@/utils/hooks/api/amm/use-get-liquidity-pools';
-import { useGetAccountStakingData } from '@/utils/hooks/api/escrow/use-get-account-staking-data';
-import { useGetAccountVotingBalance } from '@/utils/hooks/api/escrow/use-get-account-voting-balance';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import useAccountId from '@/utils/hooks/use-account-id';
-import { LocalStorageKey, useLocalStorage } from '@/utils/hooks/use-local-storage';
 
 import { AvailableAssetsTable, StakingTable, WalletInsights, WelcomeBanner } from './components';
 

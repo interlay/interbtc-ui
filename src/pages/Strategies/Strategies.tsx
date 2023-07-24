@@ -4,7 +4,7 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { Card, P } from '@/component-library';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import MainContainer from '@/parts/MainContainer';
+import MainContainer from '@/legacy-components/MainContainer';
 import { StrategyData, StrategyRisk } from '@/types/strategies';
 
 import { StrategyCard } from './components';

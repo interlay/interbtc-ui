@@ -6,10 +6,10 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { useTransaction } from '@/hooks/transaction';
 import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useTransaction } from '@/utils/hooks/transaction';
 
 import { StrategyDepositFormData } from '../../../types/form';
 import { StrategyFormBaseProps } from '../StrategyForm';

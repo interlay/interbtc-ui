@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import MainContainer from '@/parts/MainContainer';
+import MainContainer from '@/legacy-components/MainContainer';
 import { PAGES } from '@/utils/constants/links';
 
 const Home = React.lazy(() => import(/* webpackChunkName: 'home' */ './sub-pages/Home'));

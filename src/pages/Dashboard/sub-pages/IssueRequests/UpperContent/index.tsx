@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import Panel from '@/legacy-components/Panel';
 import IssuedChart from '@/pages/Dashboard/IssuedChart';
@@ -16,7 +17,6 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import Stats, { StatsDd, StatsDt } from '../../../Stats';
 

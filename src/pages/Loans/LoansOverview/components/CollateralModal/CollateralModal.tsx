@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';

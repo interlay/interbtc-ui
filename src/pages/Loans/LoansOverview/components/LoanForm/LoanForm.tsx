@@ -7,6 +7,10 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
+import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   LOAN_AMOUNT_FIELD,
   LOAN_FEE_TOKEN_FIELD,
@@ -17,10 +21,6 @@ import {
 } from '@/lib/form';
 import { LoanAction } from '@/types/loans';
 import { getTokenInputProps } from '@/utils/helpers/input';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';

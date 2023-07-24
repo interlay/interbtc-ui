@@ -15,6 +15,7 @@ import {
   RelayChainNativeTokenLogoIcon,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import Hr2 from '@/legacy-components/hrs/Hr2';
@@ -26,7 +27,6 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 interface Props {
   // TODO: should type properly (`Relay`)

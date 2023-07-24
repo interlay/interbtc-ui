@@ -3,9 +3,9 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 type UseDepositCollateral = {
   collateral: {

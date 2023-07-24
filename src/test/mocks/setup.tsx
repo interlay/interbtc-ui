@@ -17,7 +17,7 @@ afterAll(() => {
 });
 
 // Removing transaction modal from showing on every single test
-jest.mock('@/utils/hooks/transaction/hooks/use-transaction-notifications', () => ({
+jest.mock('@/hooks/transaction/hooks/use-transaction-notifications', () => ({
   useTransactionNotifications: () => ({
     onReject: jest.fn(),
     mutationProps: {

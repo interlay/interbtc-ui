@@ -6,10 +6,10 @@ import { useCopyToClipboard } from 'react-use';
 import { DocumentDuplicate } from '@/assets/icons';
 import { shortAddress } from '@/common/utils/utils';
 import { CTA, Divider, Flex, P, Span, Tooltip, WalletIcon } from '@/component-library';
+import { useCopyTooltip } from '@/hooks/use-copy-tooltip';
 import { KeyringPair } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
-import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 
 import { StyledAccountItem, StyledCopyItem, StyledP } from './AuthModal.style';
 import { AuthModalSteps } from './types';

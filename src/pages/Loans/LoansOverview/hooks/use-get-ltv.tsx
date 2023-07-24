@@ -4,9 +4,9 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { MeterRanges, Status } from '@/component-library';
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { PositionsThresholdsData } from '@/hooks/api/loans/use-get-account-positions';
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { PositionsThresholdsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 
 type LTVData = {
   value: number;

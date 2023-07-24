@@ -3,7 +3,7 @@ import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
 import { PoolsTable } from '@/components';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { AccountLiquidityPool } from '@/hooks/api/amm/use-get-account-pools';
 
 import { PoolModal } from '../PoolModal/PoolModal';
 

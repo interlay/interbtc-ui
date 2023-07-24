@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import Panel from '@/legacy-components/Panel';
 import cumulativeVolumesFetcher, {
@@ -18,7 +19,6 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import Stats, { StatsDd, StatsDt } from '../../../Stats';
 import RedeemedChart from './RedeemedChart';

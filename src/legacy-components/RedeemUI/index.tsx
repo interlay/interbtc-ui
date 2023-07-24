@@ -6,6 +6,7 @@ import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { Flex } from '@/component-library';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -13,7 +14,6 @@ import PrimaryColorSpan from '@/legacy-components/PrimaryColorSpan';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';

@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { Cell, Table, TableProps } from '@/components';
 import { LoanApyCell, LoanTablePlaceholder } from '@/components/LoanPositionsTable';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledAssetCell } from './BorrowAssetsTable.style';
 

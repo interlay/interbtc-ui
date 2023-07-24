@@ -27,14 +27,18 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   VoteGovernanceTokenMonetaryAmount
 } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { useSignMessage } from '@/hooks/use-sign-message';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
+import MainContainer from '@/legacy-components/MainContainer';
 import Panel from '@/legacy-components/Panel';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
   STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
@@ -43,10 +47,6 @@ import {
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import BalancesUI from './BalancesUI';
 import ClaimRewardsButton from './ClaimRewardsButton';

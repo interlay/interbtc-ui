@@ -3,8 +3,8 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big, { BigSource } from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 function shortAddress(address: string): string {
   if (address.length < 12) return address;

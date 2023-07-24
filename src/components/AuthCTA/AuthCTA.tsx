@@ -5,8 +5,8 @@ import { useDispatch } from 'react-redux';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { CTA, CTAProps } from '@/component-library';
 import { SIGNER_API_URL } from '@/constants';
+import { useSignMessage } from '@/hooks/use-sign-message';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 enum AuthStatus {
   UNAUTH,

@@ -14,8 +14,6 @@ import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/con
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
-import Layout from '@/parts/Layout';
-import Wrapper from '@/parts/Wrapper';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
@@ -23,8 +21,10 @@ import { PAGES } from '@/utils/constants/links';
 
 import { TransactionModal } from './components/TransactionModal';
 import * as constants from './constants';
+import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
+import Layout from './legacy-components/Layout';
 import TestnetBanner from './legacy-components/TestnetBanner';
-import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
+import Wrapper from './legacy-components/Wrapper';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));

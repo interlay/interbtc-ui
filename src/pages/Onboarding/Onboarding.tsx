@@ -11,10 +11,10 @@ import { AuthModal, SignTermsModal } from '@/components';
 import { INTERLAY_DISCORD_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { SS58_FORMAT } from '@/constants';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useSignMessage } from '@/hooks/use-sign-message';
+import MainContainer from '@/legacy-components/MainContainer';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
-import MainContainer from '@/parts/MainContainer';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import { Tutorial } from './components';
 import { StyledWrapper } from './Onboarding.style';

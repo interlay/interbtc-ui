@@ -1,4 +1,4 @@
-import MainContainer from '@/parts/MainContainer';
+import MainContainer from '@/legacy-components/MainContainer';
 
 import { ManualIssueExecutionActionsTable } from './components/ManualIssueExecutionActionsTable';
 

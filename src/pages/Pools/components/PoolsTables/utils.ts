@@ -2,8 +2,8 @@ import { CurrencyExt, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
+import { Prices } from '@/hooks/api/use-get-prices';
 import { calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 const getFarmingApr = (
   rewardAmountsYearly: Array<MonetaryAmount<CurrencyExt>>,

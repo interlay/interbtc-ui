@@ -1,7 +1,7 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
-import MainContainer from '@/parts/MainContainer';
+import { usePageQueryParams } from '@/hooks/use-page-query-params';
+import MainContainer from '@/legacy-components/MainContainer';
 import { QUERY_PARAMETERS, QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
-import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 import { BridgeForm, TransferForm } from './components';
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './SendAndReceiveForms.styles';

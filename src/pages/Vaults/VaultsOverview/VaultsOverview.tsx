@@ -6,12 +6,12 @@ import { useParams } from 'react-router-dom';
 import { StoreType } from '@/common/types/util.types';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Grid, GridItem } from '@/component-library';
+import { useGetVaultData } from '@/hooks/api/vaults/use-get-vault-data';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
+import MainContainer from '@/legacy-components/MainContainer';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 
 import { CreateVaults, InfoBox, VaultCard, VaultsHeader } from './components';
 

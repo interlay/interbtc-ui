@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import IssuedChart from '@/pages/Dashboard/IssuedChart';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { PAGES } from '@/utils/constants/links';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import DashboardCard from '../../../cards/DashboardCard';
 import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../../Stats';

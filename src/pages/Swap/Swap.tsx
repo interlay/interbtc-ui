@@ -4,14 +4,14 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import { useGetLiquidityPools } from '@/hooks/api/amm/use-get-liquidity-pools';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { usePageQueryParams } from '@/hooks/use-page-query-params';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import MainContainer from '@/parts/MainContainer';
+import MainContainer from '@/legacy-components/MainContainer';
 import { SwapPair } from '@/types/swap';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getPooledTickers } from '@/utils/helpers/pools';
-import { useGetLiquidityPools } from '@/utils/hooks/api/amm/use-get-liquidity-pools';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 import { SwapForm, SwapLiquidity } from './components';
 import { StyledWrapper } from './Swap.style';

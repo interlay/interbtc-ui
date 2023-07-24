@@ -14,6 +14,13 @@ import {
 import { Flex, Input, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { RedeemData, useGetRedeemData } from '@/hooks/api/bridge/use-get-redeem-data';
+import { BridgeVaultData, GetVaultType, useGetVaults } from '@/hooks/api/bridge/use-get-vaults';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { TransactionArgs } from '@/hooks/transaction/types';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   BTC_REDEEM_ADDRESS,
   BTC_REDEEM_AMOUNT_FIELD,
@@ -27,13 +34,6 @@ import {
 } from '@/lib/form';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { RedeemData, useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
-import { BridgeVaultData, GetVaultType, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { TransactionArgs } from '@/utils/hooks/transaction/types';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { LegacyRedeemModal } from '../LegacyRedeemModal';
 import { RequestLimitsCard } from '../RequestLimitsCard';

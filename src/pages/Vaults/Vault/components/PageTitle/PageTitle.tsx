@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 
 import { P } from '@/component-library';
-import TimerIncrement from '@/parts/TimerIncrement';
+import TimerIncrement from '@/legacy-components/TimerIncrement';
 
 import { StyledTitle, StyledWrapper } from './PageTitle.styles';
 

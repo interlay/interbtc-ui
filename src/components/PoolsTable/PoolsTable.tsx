@@ -5,10 +5,10 @@ import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatUSD } from '@/common/utils/utils';
+import { DateRangeVolume, useGetDexVolumes } from '@/hooks/api/use-get-dex-volume';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
-import { DateRangeVolume, useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../DataGrid';
 import { PoolApyCell } from './PoolApyCell';

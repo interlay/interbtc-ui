@@ -2,13 +2,13 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
+import useCurrentActiveBlockNumber from '@/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/hooks/use-stable-parachain-confirmations';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import RedeemUI from '@/legacy-components/RedeemUI';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 
 // MEMO: /tx/redeem/0xb1887a4e14567610aa9ca880e29c14a00a0def0f89843bf2fe9feb3b0690635f

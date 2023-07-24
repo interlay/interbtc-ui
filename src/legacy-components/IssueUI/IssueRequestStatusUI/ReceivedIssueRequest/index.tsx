@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 
 import { formatNumber } from '@/common/utils/utils';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import useCurrentActiveBlockNumber from '@/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/hooks/use-stable-parachain-confirmations';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import RequestWrapper from '@/legacy-components/RequestWrapper';
 import Ring48, { Ring48Title, Ring48Value } from '@/legacy-components/Ring48';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 
