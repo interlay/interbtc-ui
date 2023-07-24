@@ -46,13 +46,18 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
 };
 
 const initXCMBridge = async () => {
+  console.log('query running');
   const XCMProvider = new ApiProvider();
   const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
   await firstValueFrom(XCMProvider.connectFromChain(chains, XCMEndpoints));
 
   // Set Apis
-  await Promise.all(chains.map((chain: ChainName) => XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain))));
+  await Promise.all(
+    chains.map((chain: ChainName) => {
+      return XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain));
+    })
+  );
 
   return { provider: XCMProvider, bridge: XCMBridge };
 };
@@ -64,7 +69,10 @@ const useXCMBridge = (): UseXCMBridge => {
     queryKey,
     queryFn: initXCMBridge,
     refetchInterval: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity
   });
 
   const { data, error } = queryResult;
