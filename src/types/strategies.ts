@@ -1,4 +1,6 @@
+import { PresentationChartBarIcon } from '@heroicons/react/24/outline';
 import { CurrencyExt } from '@interlay/interbtc-api';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 
@@ -12,6 +14,11 @@ enum StrategyType {
   BTC_LOW_RISK = 'BTC_LOW_RISK'
 }
 
+interface InfographicsNode {
+  icon: ForwardRefExoticComponent<RefAttributes<SVGSVGElement>>;
+  text: string;
+}
+
 interface Strategy {
   path: string;
   currency: CurrencyExt;
@@ -19,7 +26,7 @@ interface Strategy {
   tags: string[];
   descriptionCard: string;
   description: string;
-  infographicsUrl: string;
+  infographicsMiddleNode: InfographicsNode;
   risk: StrategyRisk;
 }
 
@@ -38,10 +45,13 @@ const STRATEGIES: Strategies = {
       'Generate passive income by offering your IBTC to lending markets and benefit from automatic compounding rewards.',
     description:
       'Discover a straightforward and low-risk approach to generate passive income. This strategy lends out deposited IBTC to borrowers, allowing you to earn interest effortlessly.',
-    infographicsUrl: ' ',
+    infographicsMiddleNode: {
+      icon: PresentationChartBarIcon,
+      text: `Provide ${WRAPPED_TOKEN.ticker} to borrow market`
+    },
     risk: StrategyRisk.LOW
   }
 };
 
 export { STRATEGIES, StrategyRisk, StrategyType };
-export type { Strategies, Strategy };
+export type { InfographicsNode, Strategies, Strategy };

@@ -7,6 +7,7 @@ import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 
 import { StrategyForm } from '..';
 import { StrategyPageHeader } from '../StrategyPageHeader';
+import { StrategyPageInfographics } from '../StrategyPageInfographics/StrategyPageInfographics';
 import {
   StyledStrategyPageInfoCard,
   StyledStrategyPageInformation,
@@ -35,7 +36,7 @@ const StrategyPage = (): JSX.Element => {
         <StyledStrategyPageInformation>
           <StyledStrategyPageInfoCard>
             <Text $weight='bold'>How does it work?</Text>
-            {/* TODO: add infographics <img /> */}
+            <StrategyPageInfographics strategyType={strategyType} />
             {STRATEGIES[strategyType].description}
           </StyledStrategyPageInfoCard>
           <StyledStrategyPageInfoCard>

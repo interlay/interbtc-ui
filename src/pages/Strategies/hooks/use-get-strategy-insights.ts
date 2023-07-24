@@ -1,4 +1,4 @@
-import { CurrencyExt, isCurrencyEqual, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual, LoanAsset, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -25,14 +25,14 @@ const getStrategyInsights = (
         isCurrencyEqual(currency, WRAPPED_TOKEN)
       );
 
-      if (!wrappedLendPosition || !loanAssets) {
+      if (!loanAssets) {
         return {};
       }
 
       return {
-        depositedAmount: wrappedLendPosition.amount,
+        depositedAmount: wrappedLendPosition?.amount || newMonetaryAmount(0, WRAPPED_TOKEN),
         // TODO: add real earned amount once it's added on lib side
-        earnedAmount: new MonetaryAmount(WRAPPED_TOKEN, 0),
+        earnedAmount: newMonetaryAmount(0, WRAPPED_TOKEN),
         interest: loanAssets[WRAPPED_TOKEN.ticker].lendApy.toNumber()
       };
     }
