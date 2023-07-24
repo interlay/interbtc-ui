@@ -5,7 +5,6 @@ import { Notification, StoreType, TransactionModalData } from './util.types';
 
 // GENERAL ACTIONS
 export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
-export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
@@ -21,11 +20,6 @@ export const UPDATE_TRANSACTION_MODAL_STATUS = 'UPDATE_TRANSACTION_MODAL_STATUS'
 
 export interface IsBridgeLoaded {
   type: typeof IS_BRIDGE_LOADED;
-  isLoaded: boolean;
-}
-
-export interface IsFaucetLoaded {
-  type: typeof IS_FAUCET_LOADED;
   isLoaded: boolean;
 }
 
