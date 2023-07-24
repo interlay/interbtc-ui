@@ -51,6 +51,7 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
                 <ListItem
                   key={item.key}
                   textValue={item.textValue}
+                  aria-label={item['aria-label']}
                   alignItems='center'
                   justifyContent='space-between'
                   gap='spacing2'

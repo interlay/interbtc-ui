@@ -34,4 +34,9 @@ jest.mock('@/utils/hooks/api/use-get-prices', () => ({
   useGetPrices: jest.fn().mockReturnValue(mockPrices)
 }));
 
+jest.mock('@/utils/hooks/api/oracle/use-get-oracle-currencies', () => ({
+  ...jest.requireActual('@/utils/hooks/api/oracle/use-get-oracle-currencies'),
+  useGetOracleCurrencies: jest.fn().mockReturnValue({ data: [] })
+}));
+
 export { mockgetDexTotalVolumeUSD, mockGetDexVolumeByTicker };

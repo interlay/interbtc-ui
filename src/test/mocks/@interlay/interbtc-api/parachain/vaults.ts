@@ -1,11 +1,13 @@
-// const MOCK_COLLATERAL_AMOUNT = '1000000000000';
 import { CurrencyExt, InterbtcPrimitivesVaultId, VaultsAPI } from '@interlay/interbtc-api';
-import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
+import { MonetaryAmount } from '@interlay/monetary-js';
 
+import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import { DEFAULT_ADDRESS } from '@/test/mocks/@polkadot/constants';
 
 import { MOCK_PRIMITIVES } from '../interbtc-primitives';
 import { MOCK_ISSUE } from './issue';
+
+const { ISSUE_AMOUNTS } = MOCK_ISSUE.DATA;
 
 const VAULTS_ID: Record<'RELAY' | 'GOVERNANCE', InterbtcPrimitivesVaultId> = {
   RELAY: {
@@ -24,23 +26,23 @@ const VAULTS_ID: Record<'RELAY' | 'GOVERNANCE', InterbtcPrimitivesVaultId> = {
   }
 };
 
-const VAULTS_AMOUNT = {
-  EMPTY: new BitcoinAmount(0),
-  FULL: new BitcoinAmount(MOCK_ISSUE.DATA.REQUEST_LIMIT.FULL.singleVaultMaxIssuable._rawAmount.toString())
+const VAULT_COLLATERAL: Record<'RELAY' | 'GOVERNANCE', CurrencyExt> = {
+  RELAY: RELAY_CHAIN_NATIVE_TOKEN,
+  GOVERNANCE: GOVERNANCE_TOKEN
 };
 
 const VAULTS_TOKENS = {
   EMPTY: new Map<InterbtcPrimitivesVaultId, MonetaryAmount<CurrencyExt>>([
-    [VAULTS_ID.RELAY, VAULTS_AMOUNT.EMPTY],
-    [VAULTS_ID.GOVERNANCE, VAULTS_AMOUNT.EMPTY]
+    [VAULTS_ID.RELAY, ISSUE_AMOUNTS.EMPTY],
+    [VAULTS_ID.GOVERNANCE, ISSUE_AMOUNTS.EMPTY]
   ]),
   FULL: new Map<InterbtcPrimitivesVaultId, MonetaryAmount<CurrencyExt>>([
-    // [VAULTS_ID.RELAY, VAULTS_AMOUNT.EMPTY]
-    [VAULTS_ID.GOVERNANCE, VAULTS_AMOUNT.FULL]
+    [VAULTS_ID.RELAY, ISSUE_AMOUNTS.FULL],
+    [VAULTS_ID.GOVERNANCE, ISSUE_AMOUNTS.HALF]
   ])
 };
 
-const DATA = { VAULTS_ID, VAULTS_AMOUNT, VAULTS_TOKENS };
+const DATA = { VAULTS_ID, VAULTS_TOKENS, VAULT_COLLATERAL };
 
 const MODULE: Pick<
   Record<keyof VaultsAPI, jest.Mock<any, any>>,

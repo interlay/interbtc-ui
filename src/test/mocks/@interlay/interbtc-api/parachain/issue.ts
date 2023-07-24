@@ -1,24 +1,32 @@
 import { IssueAPI, newMonetaryAmount } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
+import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import { EXTRINSIC_DATA } from '../extrinsic';
 
+const ISSUE_AMOUNTS: Record<'EMPTY' | 'HALF' | 'FULL', MonetaryAmount<Currency>> = {
+  EMPTY: new BitcoinAmount(0),
+  HALF: new BitcoinAmount(0.5),
+  FULL: new BitcoinAmount(1)
+};
+
 const REQUEST_LIMIT: Record<'EMPTY' | 'FULL', IssueLimits> = {
   EMPTY: {
-    singleVaultMaxIssuable: newMonetaryAmount(0, WRAPPED_TOKEN),
-    totalMaxIssuable: newMonetaryAmount(0, WRAPPED_TOKEN)
+    singleVaultMaxIssuable: ISSUE_AMOUNTS.EMPTY,
+    totalMaxIssuable: ISSUE_AMOUNTS.EMPTY
   },
   FULL: {
-    singleVaultMaxIssuable: newMonetaryAmount(1, WRAPPED_TOKEN, true),
-    totalMaxIssuable: newMonetaryAmount(2, WRAPPED_TOKEN, true)
+    singleVaultMaxIssuable: ISSUE_AMOUNTS.FULL,
+    totalMaxIssuable: ISSUE_AMOUNTS.FULL.add(ISSUE_AMOUNTS.HALF)
   }
 };
 
 const DUST_VALUE = newMonetaryAmount(0.0001, WRAPPED_TOKEN);
 
 const DATA = {
+  ISSUE_AMOUNTS,
   REQUEST_LIMIT,
   DUST_VALUE
 };

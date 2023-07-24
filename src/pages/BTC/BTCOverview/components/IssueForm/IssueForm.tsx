@@ -128,6 +128,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
       }
 
       const securityDeposit = getCurrencyFromTicker(securityDepositTicker);
+
       return [
         monetaryAmount,
         vault.vaultId.accountId,
