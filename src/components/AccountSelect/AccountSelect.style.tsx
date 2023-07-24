@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-import { Flex, Span, theme } from '@/component-library';
+import { Flex } from '@/component-library/Flex';
+import { Span } from '@/component-library/Text';
+import { theme } from '@/component-library/theme';
 
 type StyledListItemSelectedLabelProps = {
   $isSelected: boolean;
