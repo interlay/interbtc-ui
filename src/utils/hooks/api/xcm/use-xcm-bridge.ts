@@ -28,7 +28,7 @@ type XCMBridgeData = {
 type XCMTokenData = {
   balance: string;
   balanceUSD: string;
-  destFee: FixedPointNumber;
+  destFee: FixedPointNumber | undefined;
   originFee: string;
   minTransferAmount: Big;
   value: string;
@@ -104,35 +104,40 @@ const useXCMBridge = (): UseXCMBridge => {
 
       const inputConfigs = await Promise.all(
         tokens.map(async (token) => {
-          const inputConfig = await firstValueFrom(
-            data.bridge.findAdapter(from).subscribeInputConfigs({
-              to,
-              token,
-              address: destinationAddress,
-              signer: originAddress
-            })
-          );
+          const inputConfig =
+            !destinationAddress || !originAddress
+              ? undefined
+              : await firstValueFrom(
+                  data.bridge.findAdapter(from).subscribeInputConfigs({
+                    to,
+                    token,
+                    address: destinationAddress,
+                    signer: originAddress
+                  })
+                );
 
           // TODO: resolve type mismatch with BaseCrossChainAdapter and remove `any`
           const originAdapter = data.bridge.findAdapter(from) as any;
 
-          const maxInputToBig = Big(inputConfig.maxInput.toString());
-          const minInputToBig = Big(inputConfig.minInput.toString());
+          const maxInputToBig = inputConfig ? Big(inputConfig.maxInput.toString()) : Big(0);
+          const minInputToBig = inputConfig ? Big(inputConfig.minInput.toString()) : Big(0);
 
           // Never show less than zero
-          const transferableBalance = inputConfig.maxInput.isLessThan(inputConfig.minInput) ? 0 : maxInputToBig;
+          const transferableBalance = inputConfig?.maxInput.isLessThan(inputConfig?.minInput) ? 0 : maxInputToBig;
           const currency = XCMBridge.findAdapter(from).getToken(token, from);
 
           const nativeToken = originAdapter.getNativeToken();
 
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
-          const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
+          const originFee = inputConfig
+            ? atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt)
+            : atomicToBaseAmount(0, nativeToken as CurrencyExt);
 
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            destFee: inputConfig.destFee.balance,
+            destFee: inputConfig?.destFee.balance,
             originFee: `${originFee.toString()} ${nativeToken.symbol}`,
             minTransferAmount: minInputToBig,
             value: token

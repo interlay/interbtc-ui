@@ -111,8 +111,6 @@ const BridgeForm = (): JSX.Element => {
   };
 
   const handleDestinationChainChange = async (chain: ChainName) => {
-    if (!accountId) return;
-
     setTokenData(chain);
   };
 
@@ -127,12 +125,12 @@ const BridgeForm = (): JSX.Element => {
 
   const setTokenData = useCallback(
     async (destination: ChainName) => {
-      if (!accountId || !form) return;
+      if (!form) return;
 
       const tokens = await getAvailableTokens(
         form.values[BRIDGE_FROM_FIELD] as ChainName,
         destination,
-        accountId.toString(),
+        accountId ? accountId.toString() : '',
         form.values[BRIDGE_TO_ACCOUNT_FIELD] as string
       );
 
@@ -180,7 +178,6 @@ const BridgeForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!destinationChains?.length) return;
-    if (!accountId) return;
 
     setTokenData(destinationChains[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,7 +186,6 @@ const BridgeForm = (): JSX.Element => {
   // TODO: When we refactor account select this should be handled there so
   // that it's consitent across the application
   useEffect(() => {
-    if (!accountId) return;
     form.setFieldValue(BRIDGE_TO_ACCOUNT_FIELD, accountId?.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
@@ -252,7 +248,7 @@ const BridgeForm = (): JSX.Element => {
           </TransactionDetailsGroup>
           <TransactionDetailsGroup>
             <TransactionDetailsDt>Destination chain transfer fee estimate</TransactionDetailsDt>
-            <TransactionDetailsDd size='xs'>{`${currentToken?.destFee.toString()} ${
+            <TransactionDetailsDd size='xs'>{`${currentToken?.destFee?.toString()} ${
               currentToken?.value
             }`}</TransactionDetailsDd>
           </TransactionDetailsGroup>
