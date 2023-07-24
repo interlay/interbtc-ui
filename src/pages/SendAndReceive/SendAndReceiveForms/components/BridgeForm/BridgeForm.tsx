@@ -30,6 +30,7 @@ import {
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ChainData, Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { findWallet } from '@/utils/helpers/wallet';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge';
@@ -39,7 +40,6 @@ import useAccountId from '@/utils/hooks/use-account-id';
 import { ChainSelect } from '../ChainSelect';
 import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './BridgeForm.styles';
 
-// TODO: re-work code to allow ticker has query parameter
 const BridgeForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
@@ -50,7 +50,11 @@ const BridgeForm = (): JSX.Element => {
   const { getCurrencyFromTicker } = useGetCurrencies(true);
 
   const accountId = useAccountId();
-  const { accounts } = useSubstrateSecureState();
+  const { selectedAccount, accounts } = useSubstrateSecureState();
+
+  // TODO: Workaround until we update account handling.
+  const wallet = selectedAccount && findWallet(selectedAccount.meta.source);
+  const walletAccounts = accounts.filter(({ meta: { source } }) => source === wallet?.extensionName);
 
   const { data, getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
 
@@ -183,8 +187,6 @@ const BridgeForm = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
 
-  // TODO: When we refactor account select this should be handled there so
-  // that it's consitent across the application
   useEffect(() => {
     form.setFieldValue(BRIDGE_TO_ACCOUNT_FIELD, accountId?.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -234,7 +236,7 @@ const BridgeForm = (): JSX.Element => {
         </div>
         <AccountSelect
           label='Destination'
-          items={accounts}
+          items={walletAccounts}
           {...mergeProps(form.getSelectFieldProps(BRIDGE_TO_ACCOUNT_FIELD, false), {
             onChange: handleDestinationAccountChange
           })}
