@@ -1,40 +1,23 @@
 import { CollateralCurrencyExt } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 
-import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
-
-import { Notification, ParachainStatus, StoreType, TransactionModalData } from './util.types';
+import { Notification, StoreType, TransactionModalData } from './util.types';
 
 // GENERAL ACTIONS
 export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
 export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
-export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
 export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const SHOW_SIGN_TERMS_MODAL = 'SHOW_SIGN_TERMS_MODAL';
-export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
-export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export const SHOW_BUY_MODAL = 'SHOW_BUY_MODAL';
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const SHOW_TRANSACTION_MODAL = 'SHOW_TRANSACTION_MODAL';
 export const UPDATE_TRANSACTION_MODAL_STATUS = 'UPDATE_TRANSACTION_MODAL_STATUS';
-
-export interface UpdateTotals {
-  type: typeof UPDATE_TOTALS;
-  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
-  totalWrappedTokenAmount: BitcoinAmount;
-}
-
-export interface UpdateHeights {
-  type: typeof UPDATE_HEIGHTS;
-  btcRelayHeight: number;
-  bitcoinHeight: number;
-}
 
 export interface IsBridgeLoaded {
   type: typeof IS_BRIDGE_LOADED;
@@ -54,16 +37,6 @@ export interface IsVaultClientLoaded {
 export interface InitState {
   type: typeof INIT_STATE;
   state: StoreType;
-}
-
-export interface InitGeneralDataAction {
-  type: typeof INIT_GENERAL_DATA_ACTION;
-  totalWrappedTokenAmount: BitcoinAmount;
-  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
-  totalGovernanceTokenAmount: GovernanceTokenMonetaryAmount;
-  btcRelayHeight: number;
-  bitcoinHeight: number;
-  parachainStatus: ParachainStatus;
 }
 
 export interface UpdateBalancePolkaBTC {
@@ -115,15 +88,12 @@ export interface UpdateTransactionModal {
 
 export type GeneralActions =
   | IsBridgeLoaded
-  | InitGeneralDataAction
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC
   | UpdateWrappedTokenTransferableBalance
   | UpdateCollateralTokenBalance
   | UpdateCollateralTokenTransferableBalance
   | ShowAccountModal
-  | UpdateHeights
-  | UpdateTotals
   | ShowBuyModal
   | ShowSignTermsModal
   | AddNotification

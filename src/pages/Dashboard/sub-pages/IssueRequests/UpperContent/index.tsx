@@ -1,12 +1,11 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import Panel from '@/legacy-components/Panel';
@@ -17,11 +16,12 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetTotalLockedTokens } from '@/utils/hooks/api/tokens/use-get-total-locked-tokens';
 
 import Stats, { StatsDd, StatsDt } from '../../../Stats';
 
 const UpperContent = (): JSX.Element => {
-  const { totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);
+  const { data: totalLockedData } = useGetTotalLockedTokens();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -61,13 +61,13 @@ const UpperContent = (): JSX.Element => {
             </StatsDt>
             <StatsDd>
               {t('dashboard.issue.total_interbtc', {
-                amount: totalWrappedTokenAmount.toHuman(8),
+                amount: totalLockedData?.wrapped.toHuman(8) || 0,
                 wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
               })}
             </StatsDd>
             <StatsDd>
               {displayMonetaryAmountInUSDFormat(
-                totalWrappedTokenAmount,
+                totalLockedData?.relay || newMonetaryAmount(0, WRAPPED_TOKEN),
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}
             </StatsDd>
