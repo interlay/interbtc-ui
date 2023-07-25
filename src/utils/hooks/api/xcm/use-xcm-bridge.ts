@@ -124,6 +124,7 @@ const useXCMBridge = (): UseXCMBridge => {
 
           const nativeToken = originAdapter.getNativeToken();
 
+          // Return 0 for all values if no input config data has been returned
           const maxInputToBig = inputConfig ? Big(inputConfig.maxInput.toString()) : Big(0);
           const minInputToBig = inputConfig ? Big(inputConfig.minInput.toString()) : Big(0);
 
