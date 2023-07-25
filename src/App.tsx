@@ -19,12 +19,10 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
-import { TransactionModal } from './components/TransactionModal';
+import { Layout, TransactionModal, Wrapper } from './components';
 import * as constants from './constants';
 import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
-import Layout from './legacy-components/Layout';
 import TestnetBanner from './legacy-components/TestnetBanner';
-import Wrapper from './legacy-components/Wrapper';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));

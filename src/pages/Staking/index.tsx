@@ -16,7 +16,7 @@ import {
   formatNumber,
   formatPercentage
 } from '@/common/utils/utils';
-import { AuthCTA } from '@/components';
+import { AuthCTA, MainContainer } from '@/components';
 import { BLOCK_TIME } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -33,7 +33,6 @@ import { Transaction, useTransaction } from '@/hooks/transaction';
 import { useSignMessage } from '@/hooks/use-sign-message';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import MainContainer from '@/legacy-components/MainContainer';
 import Panel from '@/legacy-components/Panel';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';

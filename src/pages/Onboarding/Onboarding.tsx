@@ -7,13 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import { Card, CTA, CTALink, Flex, H1, H2, P, Strong } from '@/component-library';
-import { AuthModal, SignTermsModal } from '@/components';
+import { AuthModal, MainContainer, SignTermsModal } from '@/components';
 import { INTERLAY_DISCORD_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { SS58_FORMAT } from '@/constants';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useSignMessage } from '@/hooks/use-sign-message';
-import MainContainer from '@/legacy-components/MainContainer';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 
 import { Tutorial } from './components';

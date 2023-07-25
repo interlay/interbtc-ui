@@ -65,4 +65,4 @@ const MaintenanceBanner = (): JSX.Element | null => {
   );
 };
 
-export default MaintenanceBanner;
+export { MaintenanceBanner };

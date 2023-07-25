@@ -1,4 +1,4 @@
-import { LoanPositionsTable, PoolsTable } from '@/components';
+import { LoanPositionsTable, MainContainer, PoolsTable } from '@/components';
 import { useGetAccountPools } from '@/hooks/api/amm/use-get-account-pools';
 import { useGetLiquidityPools } from '@/hooks/api/amm/use-get-liquidity-pools';
 import { useGetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
@@ -9,7 +9,6 @@ import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import useAccountId from '@/hooks/use-account-id';
 import { LocalStorageKey, useLocalStorage } from '@/hooks/use-local-storage';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import MainContainer from '@/legacy-components/MainContainer';
 import { getPooledTickers } from '@/utils/helpers/pools';
 
 import { AvailableAssetsTable, StakingTable, WalletInsights, WelcomeBanner } from './components';

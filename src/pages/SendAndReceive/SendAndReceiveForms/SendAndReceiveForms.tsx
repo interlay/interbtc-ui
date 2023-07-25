@@ -1,6 +1,6 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
+import { MainContainer } from '@/components';
 import { usePageQueryParams } from '@/hooks/use-page-query-params';
-import MainContainer from '@/legacy-components/MainContainer';
 import { QUERY_PARAMETERS, QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
 
 import { BridgeForm, TransferForm } from './components';

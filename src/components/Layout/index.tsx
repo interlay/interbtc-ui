@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import MaintenanceBanner from '../MaintenanceBanner';
-import Sidebar from '../Sidebar';
-import Topbar from '../Topbar';
+import Sidebar from '../../legacy-components/Sidebar';
+import Topbar from '../../legacy-components/Topbar';
+import { MaintenanceBanner } from '../MaintenanceBanner';
 
 interface Props {
   className?: string;
@@ -21,4 +21,4 @@ const Layout = ({ className, children }: Props): JSX.Element => {
   );
 };
 
-export default Layout;
+export { Layout };

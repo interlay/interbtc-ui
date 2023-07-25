@@ -1,11 +1,11 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
+import { MainContainer } from '@/components';
 import { useGetIssueData } from '@/hooks/api/bridge/use-get-issue-data';
 import { useGetIssueRequestLimit } from '@/hooks/api/bridge/use-get-issue-request-limits';
 import { useGetMaxBurnableTokens } from '@/hooks/api/bridge/use-get-max-burnable-tokens';
 import { useGetRedeemData } from '@/hooks/api/bridge/use-get-redeem-data';
 import { usePageQueryParams } from '@/hooks/use-page-query-params';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import MainContainer from '@/legacy-components/MainContainer';
 import { QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
 
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './BTCOverview.styles';
