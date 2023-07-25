@@ -52,7 +52,8 @@ const BridgeForm = (): JSX.Element => {
   const accountId = useAccountId();
   const { selectedAccount, accounts } = useSubstrateSecureState();
 
-  // TODO: Workaround until we update account handling.
+  // TODO: Workaround until we update account handling. This is the same
+  // way we filter accounts in the top bar.
   const wallet = selectedAccount && findWallet(selectedAccount.meta.source);
   const walletAccounts = accounts.filter(({ meta: { source } }) => source === wallet?.extensionName);
 
