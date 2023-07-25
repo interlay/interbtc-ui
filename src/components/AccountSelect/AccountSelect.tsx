@@ -8,7 +8,7 @@ type AccountSelectProps = Omit<SelectProps<'modal', InjectedAccountWithMeta>, 'c
 
 const AccountSelect = ({ ...props }: AccountSelectProps): JSX.Element => {
   return (
-    <Select<'modal', InjectedAccountWithMeta> {...props} type='modal' modalTitle='select account' size='large'>
+    <Select<'modal', InjectedAccountWithMeta> {...props} type='modal' modalTitle='Select Account' size='large'>
       {(data: InjectedAccountWithMeta) => (
         <Item key={data.address} textValue={data.address}>
           <AccountItem address={data.address} name={data.meta.name} />
