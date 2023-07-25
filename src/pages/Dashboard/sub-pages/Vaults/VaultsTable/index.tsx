@@ -14,9 +14,14 @@ import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, formatPercentage } from '@/common/utils/utils';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import * as constants from '@/constants';
+import { useGetCollateralCurrenciesData } from '@/hooks/api/use-get-collateral-currencies-data';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/hooks/api/use-get-identities';
+import useCurrentActiveBlockNumber from '@/hooks/use-current-active-block-number';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SectionTitle from '@/legacy-components/SectionTitle';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import InterlayTable, {
   InterlayTableContainer,
@@ -26,15 +31,10 @@ import InterlayTable, {
   InterlayThead,
   InterlayTr
 } from '@/legacy-components/UI/InterlayTable';
-import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getCollateralization, getVaultStatusLabel } from '@/utils/helpers/vaults';
-import { useGetCollateralCurrenciesData } from '@/utils/hooks/api/use-get-collateral-currencies-data';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 
 interface CollateralizationCellProps {
   settledCollateralization: Big | undefined;

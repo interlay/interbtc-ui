@@ -16,10 +16,12 @@ jest.useFakeTimers();
 
 const path = '/swap';
 
-jest.mock('../../parts/Layout', () => {
+jest.mock('@/components/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
   MockedLayout.displayName = 'MockedLayout';
-  return MockedLayout;
+  return {
+    Layout: MockedLayout
+  };
 });
 
 describe('Swap Page', () => {

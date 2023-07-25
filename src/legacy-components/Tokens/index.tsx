@@ -6,10 +6,10 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { TokenType } from '@/common/types/util.types';
 import { CoinIcon } from '@/component-library';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import { SelectVariants } from '@/legacy-components/Select';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import TokenSelector from './TokenSelector';
 

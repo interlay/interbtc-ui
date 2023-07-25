@@ -14,6 +14,8 @@ import {
   TransactionDetailsGroup,
   TransactionFeeDetails
 } from '@/components';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   depositCollateralVaultsSchema,
   useForm,
@@ -24,8 +26,6 @@ import {
 } from '@/lib/form';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 

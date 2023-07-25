@@ -13,6 +13,10 @@ import { CoinIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetCollateralCurrencies } from '@/hooks/api/use-get-collateral-currencies';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -23,10 +27,6 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 

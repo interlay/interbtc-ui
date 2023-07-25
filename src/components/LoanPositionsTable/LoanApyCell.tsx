@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Flex } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyDetails, ApyDetailsGroup, ApyDetailsGroupItem } from '../ApyDetails';
 import { Cell } from '../DataGrid';

@@ -6,10 +6,10 @@ import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { CardProps } from '@/component-library';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { VaultData } from '@/hooks/api/vaults/get-vault-data';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import useAccountId from '@/hooks/use-account-id';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
-import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { InsightListItem, InsightsList } from '../InsightsList';
 import {

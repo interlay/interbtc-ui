@@ -11,6 +11,8 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import useQueryParams from '@/hooks/use-query-params';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -18,8 +20,6 @@ import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import useQueryParams from '@/utils/hooks/use-query-params';
 
 // TODO: issue requests should not be typed here but further above in the app
 interface Props {

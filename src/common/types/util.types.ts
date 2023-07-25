@@ -3,7 +3,7 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { u256 } from '@polkadot/types/primitive';
 import { CombinedState, Store } from 'redux';
 
-import { TransactionStatus } from '@/utils/hooks/transaction/types';
+import { TransactionStatus } from '@/hooks/transaction/types';
 
 import { rootReducer } from '../reducers/index';
 import { GeneralActions, RedeemActions, VaultActions } from './actions.types';

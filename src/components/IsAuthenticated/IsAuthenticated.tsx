@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
 import { SIGNER_API_URL } from '@/constants';
+import { useSignMessage } from '@/hooks/use-sign-message';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 type IsAuthenticatedProps = { children: ReactNode };
 

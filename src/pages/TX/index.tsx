@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import MainContainer from '@/parts/MainContainer';
+import { MainContainer } from '@/components';
 import { TXType } from '@/types/general.d';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 

@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { Switch } from '@/component-library';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { LoanType } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Table, TableProps } from '../DataGrid';
 import { LoanApyCell } from './LoanApyCell';

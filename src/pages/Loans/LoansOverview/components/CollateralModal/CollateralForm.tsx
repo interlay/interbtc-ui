@@ -4,15 +4,15 @@ import { useTranslation } from 'react-i18next';
 
 import { Flex } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD,
   toggleCollateralLoanSchema,
   ToggleCollateralLoansFormData,
   useForm
 } from '@/lib/form';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { CollateralModalVariant } from './CollateralModal';
 

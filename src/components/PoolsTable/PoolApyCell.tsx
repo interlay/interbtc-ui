@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { formatPercentage } from '@/common/utils/utils';
 import { Flex } from '@/component-library';
 import { ApyDetails, ApyDetailsGroup, ApyDetailsGroupItem, Cell } from '@/components';
+import { useGetPoolsTradingApr } from '@/hooks/api/use-get-pools-trading-apr';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getFarmingApr } from '@/utils/helpers/pools';
-import { useGetPoolsTradingApr } from '@/utils/hooks/api/use-get-pools-trading-apr';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledTooltip } from './PoolsTable.style';
 

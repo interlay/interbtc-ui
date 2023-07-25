@@ -12,9 +12,9 @@ import {
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { useTransaction } from '@/hooks/transaction';
 import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useTransaction } from '@/utils/hooks/transaction';
 
 import { StrategyWithdrawalFormData } from '../../../types/form';
 import { StrategyFormBaseProps } from '../StrategyForm';

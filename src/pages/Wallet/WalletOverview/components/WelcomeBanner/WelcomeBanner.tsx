@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Flex } from '@/component-library';
 import { INTERLAY_GET_ASSETS_LINK, INTERLAY_WHITEPAPPER } from '@/config/links';
 import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { FeatureFlags, useFeatureFlag } from '@/hooks/use-feature-flag';
 import { PAGES } from '@/utils/constants/links';
-import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 
 import {
   StyledCard,

@@ -15,6 +15,11 @@ import {
   TransactionDetailsDt,
   TransactionDetailsGroup
 } from '@/components';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { useXCMBridge, XCMTokenData } from '@/hooks/api/xcm/use-xcm-bridge';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import useAccountId from '@/hooks/use-account-id';
 import {
   BRIDGE_AMOUNT_FIELD,
   BRIDGE_FROM_FIELD,
@@ -31,11 +36,6 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import { ChainData, Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { findWallet } from '@/utils/helpers/wallet';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { ChainSelect } from '../ChainSelect';
 import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './BridgeForm.styles';

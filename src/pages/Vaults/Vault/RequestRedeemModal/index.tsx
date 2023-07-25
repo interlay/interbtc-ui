@@ -10,12 +10,12 @@ import { displayMonetaryAmount } from '@/common/utils/utils';
 import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { BTC_ADDRESS_REGEX } from '@/constants';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
 import ErrorMessage from '@/legacy-components/ErrorMessage';
 import NumberInput from '@/legacy-components/NumberInput';
 import TextField from '@/legacy-components/TextField';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';

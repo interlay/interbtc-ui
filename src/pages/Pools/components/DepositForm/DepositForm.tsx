@@ -8,6 +8,11 @@ import { useTranslation } from 'react-i18next';
 import { newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Alert, Flex } from '@/component-library';
 import { AuthCTA, SlippageManager, TransactionFeeDetails } from '@/components';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
+import useAccountId from '@/hooks/use-account-id';
 import {
   DepositLiquidityPoolFormData,
   depositLiquidityPoolSchema,
@@ -18,11 +23,6 @@ import {
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
 import { StyledPlusDivider, StyledTokenInput } from './DepositForm.styles';

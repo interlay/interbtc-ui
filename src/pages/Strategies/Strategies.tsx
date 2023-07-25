@@ -2,9 +2,9 @@ import Big from 'big.js';
 import { withErrorBoundary } from 'react-error-boundary';
 
 import { Card, P } from '@/component-library';
+import { MainContainer } from '@/components';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import MainContainer from '@/parts/MainContainer';
 import { StrategyData, StrategyRisk } from '@/types/strategies';
 
 import { StrategyCard } from './components';

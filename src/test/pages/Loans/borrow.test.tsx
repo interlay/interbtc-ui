@@ -21,10 +21,12 @@ const { LOAN_POSITIONS, ASSETS, LENDING_STATS, WRAPPED_LOAN } = MOCK_LOANS.DATA;
 const path = '/lending';
 const tab = 'borrow';
 
-jest.mock('../../../parts/Layout', () => {
+jest.mock('@/components/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
   MockedLayout.displayName = 'MockedLayout';
-  return MockedLayout;
+  return {
+    Layout: MockedLayout
+  };
 });
 
 describe('Borrow Flow', () => {

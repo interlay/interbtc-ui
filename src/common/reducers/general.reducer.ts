@@ -2,7 +2,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
-import { TransactionStatus } from '@/utils/hooks/transaction/types';
+import { TransactionStatus } from '@/hooks/transaction/types';
 
 import {
   ADD_NOTIFICATION,
