@@ -30,6 +30,7 @@ import {
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ChainData, Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { findWallet } from '@/utils/helpers/wallet';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge';
@@ -39,7 +40,6 @@ import useAccountId from '@/utils/hooks/use-account-id';
 import { ChainSelect } from '../ChainSelect';
 import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './BridgeForm.styles';
 
-// TODO: re-work code to allow ticker has query parameter
 const BridgeForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
@@ -50,7 +50,12 @@ const BridgeForm = (): JSX.Element => {
   const { getCurrencyFromTicker } = useGetCurrencies(true);
 
   const accountId = useAccountId();
-  const { accounts } = useSubstrateSecureState();
+  const { selectedAccount, accounts } = useSubstrateSecureState();
+
+  // TODO: Workaround until we update account handling. This is the same
+  // way we filter accounts in the top bar.
+  const wallet = selectedAccount && findWallet(selectedAccount.meta.source);
+  const walletAccounts = accounts.filter(({ meta: { source } }) => source === wallet?.extensionName);
 
   const { data, getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
 
@@ -111,8 +116,6 @@ const BridgeForm = (): JSX.Element => {
   };
 
   const handleDestinationChainChange = async (chain: ChainName) => {
-    if (!accountId) return;
-
     setTokenData(chain);
   };
 
@@ -127,12 +130,12 @@ const BridgeForm = (): JSX.Element => {
 
   const setTokenData = useCallback(
     async (destination: ChainName) => {
-      if (!accountId || !form) return;
+      if (!form) return;
 
       const tokens = await getAvailableTokens(
         form.values[BRIDGE_FROM_FIELD] as ChainName,
         destination,
-        accountId.toString(),
+        accountId ? accountId.toString() : '',
         form.values[BRIDGE_TO_ACCOUNT_FIELD] as string
       );
 
@@ -180,16 +183,12 @@ const BridgeForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!destinationChains?.length) return;
-    if (!accountId) return;
 
     setTokenData(destinationChains[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
 
-  // TODO: When we refactor account select this should be handled there so
-  // that it's consitent across the application
   useEffect(() => {
-    if (!accountId) return;
     form.setFieldValue(BRIDGE_TO_ACCOUNT_FIELD, accountId?.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
@@ -238,7 +237,7 @@ const BridgeForm = (): JSX.Element => {
         </div>
         <AccountSelect
           label='Destination'
-          accounts={accounts}
+          items={walletAccounts}
           {...mergeProps(form.getSelectFieldProps(BRIDGE_TO_ACCOUNT_FIELD, false), {
             onChange: handleDestinationAccountChange
           })}
@@ -252,7 +251,7 @@ const BridgeForm = (): JSX.Element => {
           </TransactionDetailsGroup>
           <TransactionDetailsGroup>
             <TransactionDetailsDt>Destination chain transfer fee estimate</TransactionDetailsDt>
-            <TransactionDetailsDd size='xs'>{`${currentToken?.destFee.toString()} ${
+            <TransactionDetailsDd size='xs'>{`${currentToken?.destFee?.toString()} ${
               currentToken?.value
             }`}</TransactionDetailsDd>
           </TransactionDetailsGroup>

@@ -52,7 +52,11 @@ const initXCMBridge = async () => {
   await firstValueFrom(XCMProvider.connectFromChain(chains, XCMEndpoints));
 
   // Set Apis
-  await Promise.all(chains.map((chain: ChainName) => XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain))));
+  await Promise.all(
+    chains.map((chain: ChainName) => {
+      return XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain));
+    })
+  );
 
   return { provider: XCMProvider, bridge: XCMBridge };
 };
@@ -64,7 +68,10 @@ const useXCMBridge = (): UseXCMBridge => {
     queryKey,
     queryFn: initXCMBridge,
     refetchInterval: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity
   });
 
   const { data, error } = queryResult;
@@ -94,37 +101,48 @@ const useXCMBridge = (): UseXCMBridge => {
 
       const tokens = XCMBridge.router.getAvailableTokens({ from, to });
 
+      // Input configs can only be returned when there is both an origin
+      // and a destination address. This may not always be the case, e.g.
+      // no connected wallet.
+      const getInputConfig = originAddress && destinationAddress;
+
       const inputConfigs = await Promise.all(
         tokens.map(async (token) => {
-          const inputConfig = await firstValueFrom(
-            data.bridge.findAdapter(from).subscribeInputConfigs({
-              to,
-              token,
-              address: destinationAddress,
-              signer: originAddress
-            })
-          );
+          const inputConfig =
+            getInputConfig &&
+            (await firstValueFrom(
+              data.bridge.findAdapter(from).subscribeInputConfigs({
+                to,
+                token,
+                address: destinationAddress,
+                signer: originAddress
+              })
+            ));
 
           // TODO: resolve type mismatch with BaseCrossChainAdapter and remove `any`
           const originAdapter = data.bridge.findAdapter(from) as any;
 
-          const maxInputToBig = Big(inputConfig.maxInput.toString());
-          const minInputToBig = Big(inputConfig.minInput.toString());
-
-          // Never show less than zero
-          const transferableBalance = inputConfig.maxInput.isLessThan(inputConfig.minInput) ? 0 : maxInputToBig;
-          const currency = XCMBridge.findAdapter(from).getToken(token, from);
-
           const nativeToken = originAdapter.getNativeToken();
 
+          // Return 0 for all values if no input config data has been returned
+          const maxInputToBig = inputConfig ? Big(inputConfig.maxInput.toString()) : Big(0);
+          const minInputToBig = inputConfig ? Big(inputConfig.minInput.toString()) : Big(0);
+
+          // Never show less than zero
+          const transferableBalance =
+            !inputConfig || inputConfig.maxInput.isLessThan(inputConfig?.minInput) ? '0' : maxInputToBig.toString();
+          const currency = XCMBridge.findAdapter(from).getToken(token, from);
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
-          const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
+          const originFee = inputConfig
+            ? atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt)
+            : atomicToBaseAmount(0, nativeToken as CurrencyExt);
+          const destFee = inputConfig ? inputConfig?.destFee.balance : 0;
 
           return {
-            balance: transferableBalance.toString(),
+            balance: transferableBalance,
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            destFee: inputConfig.destFee.balance,
+            destFee,
             originFee: `${originFee.toString()} ${nativeToken.symbol}`,
             minTransferAmount: minInputToBig,
             value: token
