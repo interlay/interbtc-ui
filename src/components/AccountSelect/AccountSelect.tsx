@@ -6,7 +6,8 @@ import { AccountItem } from './AccountItem';
 
 type AccountSelectProps = Omit<SelectProps<'modal', InjectedAccountWithMeta>, 'children' | 'type'>;
 
-const AccountSelect = (props: AccountSelectProps): JSX.Element => {
+const AccountSelect = ({ ...props }: AccountSelectProps): JSX.Element => {
+  // TODO: using InjectedAccountWithMeta triggers a TS error
   return (
     <Select<'modal', any> {...props} type='modal' modalTitle='select account' size='large'>
       {(data: InjectedAccountWithMeta) => (
