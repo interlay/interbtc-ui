@@ -1,6 +1,6 @@
 import './i18n';
 
-import { FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
+import { FaucetClient } from '@interlay/interbtc-api';
 import { Keyring } from '@polkadot/keyring';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -8,9 +8,8 @@ import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import { initGeneralDataAction, isFaucetLoaded, isVaultClientLoaded } from '@/common/actions/general.actions';
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { isFaucetLoaded, isVaultClientLoaded } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
@@ -90,58 +89,6 @@ const App = (): JSX.Element => {
     }
   );
   useErrorHandler(vaultsError);
-
-  // Initializes data on app bootstrap
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!bridgeLoaded) return;
-
-    (async () => {
-      try {
-        const [
-          totalWrappedTokenAmount,
-          totalLockedCollateralTokenAmount,
-          totalGovernanceTokenAmount,
-          btcRelayHeight,
-          bitcoinHeight,
-          state
-        ] = await Promise.all([
-          window.bridge.tokens.total(WRAPPED_TOKEN),
-          window.bridge.tokens.total(RELAY_CHAIN_NATIVE_TOKEN),
-          window.bridge.tokens.total(GOVERNANCE_TOKEN),
-          window.bridge.btcRelay.getLatestBlockHeight(),
-          window.bridge.electrsAPI.getLatestBlockHeight(),
-          window.bridge.system.getStatusCode()
-        ]);
-
-        const parachainStatus = (state: SecurityStatusCode) => {
-          if (state.isError) {
-            return ParachainStatus.Error;
-          } else if (state.isRunning) {
-            return ParachainStatus.Running;
-          } else if (state.isShutdown) {
-            return ParachainStatus.Shutdown;
-          } else {
-            return ParachainStatus.Loading;
-          }
-        };
-
-        dispatch(
-          initGeneralDataAction(
-            totalWrappedTokenAmount,
-            totalLockedCollateralTokenAmount,
-            totalGovernanceTokenAmount,
-            btcRelayHeight,
-            bitcoinHeight,
-            parachainStatus(state)
-          )
-        );
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('[App React.useEffect 2] error.message => ', error.message);
-      }
-    })();
-  }, [dispatch, bridgeLoaded]);
 
   React.useEffect(() => {
     if (!setSelectedAccount) return;

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { CoinIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
@@ -47,7 +47,7 @@ const LegacyBurnForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, parachainStatus } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
   const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
 
@@ -278,13 +278,7 @@ const LegacyBurnForm = (): JSX.Element | null => {
             )}
           />
 
-          <AuthCTA
-            fullWidth
-            size='large'
-            type='submit'
-            loading={transaction.isLoading}
-            disabled={parachainStatus === ParachainStatus.Loading || parachainStatus === ParachainStatus.Shutdown}
-          >
+          <AuthCTA fullWidth size='large' type='submit' loading={transaction.isLoading}>
             {t('burn')}
           </AuthCTA>
         </form>
