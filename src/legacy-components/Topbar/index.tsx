@@ -104,7 +104,7 @@ const Topbar = (): JSX.Element => {
 
   return (
     <>
-      <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
+      <header className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
         <FundWallet />
         {selectedAccount !== undefined && (
@@ -150,7 +150,7 @@ const Topbar = (): JSX.Element => {
         <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
           {accountLabel}
         </InterlayDefaultContainedButton>
-      </div>
+      </header>
       <AuthModal
         isOpen={showAccountModal}
         onClose={handleAccountModalClose}
