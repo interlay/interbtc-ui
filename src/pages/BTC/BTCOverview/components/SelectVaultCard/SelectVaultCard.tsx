@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { Card, SwitchProps } from '@/component-library';
-import { BridgeVaultData } from '@/utils/hooks/api/bridge/use-get-vaults';
+import { BridgeVaultData } from '@/hooks/api/bridge/use-get-vaults';
 
 import { VaultSelect, VaultSelectProps } from './VaultSelect';
 import { StyledSwitch } from './VaultSelect.style';

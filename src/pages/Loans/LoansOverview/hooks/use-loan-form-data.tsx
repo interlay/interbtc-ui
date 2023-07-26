@@ -8,11 +8,11 @@ import {
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getMaxBorrowableAmount } from '../utils/get-max-borrowable-amount';
 import { getMaxLendableAmount } from '../utils/get-max-lendable-amount';

@@ -1,13 +1,16 @@
 import { BorrowPosition, CollateralPosition, CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, RefObject, useCallback, useState } from 'react';
+import { RefObject, useCallback } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
-import { useDebounce } from 'react-use';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
+import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   LOAN_AMOUNT_FIELD,
   LOAN_FEE_TOKEN_FIELD,
@@ -18,16 +21,18 @@ import {
 } from '@/lib/form';
 import { LoanAction } from '@/types/loans';
 import { getTokenInputProps } from '@/utils/helpers/input';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanDetails } from '../LoanDetails';
 import { StyledFormWrapper } from './LoanForm.style';
+
+const isMaxWithdrawAmount = (amount: MonetaryAmount<CurrencyExt>, position?: BorrowPosition | CollateralPosition) =>
+  !!position?.amount.eq(amount);
+
+const isMaxRepayAmount = (amount: MonetaryAmount<CurrencyExt>, maxAmount: MonetaryAmount<CurrencyExt>) =>
+  maxAmount.eq(amount);
 
 // The borrow limit component is only displayed when
 // loan form is openned while lending an asset that is
@@ -86,9 +91,6 @@ type LoanFormProps = {
 };
 
 const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan }: LoanFormProps): JSX.Element => {
-  const [inputAmount, setInputAmount] = useState<string>();
-  const [isMaxAmount, setMaxAmount] = useState(false);
-
   const { t } = useTranslation();
   const {
     refetch,
@@ -98,32 +100,6 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
   const { assetAmount, assetPrice } = useLoanFormData(variant, asset, position);
 
   const { content } = getData(t, variant);
-
-  // withdraw has `withdraw` and `withdrawAll`
-  // repay has `repay` and `repayAll`
-  // They both are considered a multi action variant
-  const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
-
-  const handleMaxAmount = (amount: MonetaryAmount<CurrencyExt>) => {
-    // Comparing if the provided amount is equal to the amount
-    // available for the action, which is only relevant for
-    // when the action is `withdraw` or `repay`
-    const isMaxAmount = variant === 'withdraw' ? !!position?.amount.eq(amount) : assetAmount.max.eq(amount);
-
-    setMaxAmount(isMaxAmount);
-  };
-
-  useDebounce(
-    () => {
-      if (!inputAmount || !hasMultiActionVariant) return;
-
-      const inputMonetary = newMonetaryAmount(inputAmount, asset.currency, true);
-
-      handleMaxAmount(inputMonetary);
-    },
-    300,
-    [inputAmount]
-  );
 
   const transaction = useTransaction({ onSigning: onChangeLoan, onSuccess: refetch });
 
@@ -151,20 +127,26 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
     switch (variant) {
       case 'lend':
         return transaction.execute(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
-      case 'withdraw':
-        if (isMaxAmount) {
+      case 'withdraw': {
+        const isWithdrawAll = isMaxWithdrawAmount(monetaryAmount, position);
+
+        if (isWithdrawAll) {
           return transaction.execute(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
         } else {
           return transaction.execute(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
         }
+      }
       case 'borrow':
         return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
-      case 'repay':
-        if (isMaxAmount) {
+      case 'repay': {
+        const isRepayAll = isMaxRepayAmount(monetaryAmount, assetAmount.max);
+
+        if (isRepayAll) {
           return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, assetAmount.available);
         } else {
           return transaction.execute(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
         }
+      }
     }
   };
 
@@ -188,7 +170,9 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
         case 'lend':
           return transaction.fee.estimate(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
         case 'withdraw': {
-          if (isMaxAmount) {
+          const isWithdrawAll = isMaxWithdrawAmount(monetaryAmount, position);
+
+          if (isWithdrawAll) {
             return transaction.fee.estimate(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
           } else {
             return transaction.fee.estimate(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
@@ -198,7 +182,9 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
           return transaction.fee.estimate(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
 
         case 'repay': {
-          if (isMaxAmount) {
+          const isRepayAll = isMaxRepayAmount(monetaryAmount, assetAmount.max);
+
+          if (isRepayAll) {
             return (
               transaction.fee
                 // passing the limit calculated, so it can be used in the validation in transaction hook
@@ -216,19 +202,6 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
 
   const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
-  const handleClickBalance = () => {
-    if (!hasMultiActionVariant) return;
-
-    handleMaxAmount(assetAmount.available);
-  };
-
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!hasMultiActionVariant) return;
-
-    setMaxAmount(false);
-    setInputAmount(e.target.value);
-  };
-
   const showBorrowLimit = shouldShowBorrowLimit(variant, hasCollateral, position);
 
   return (
@@ -241,11 +214,9 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
             aria-label={content.fieldAriaLabel}
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
-            onClickBalance={handleClickBalance}
             {...mergeProps(
               form.getFieldProps(LOAN_AMOUNT_FIELD, false, true),
-              getTokenInputProps(assetAmount.available),
-              { onChange: handleChange }
+              getTokenInputProps(assetAmount.available)
             )}
           />
           {showBorrowLimit && (

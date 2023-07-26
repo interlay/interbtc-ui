@@ -10,13 +10,13 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import useCumulativeCollateralVolumes from '@/hooks/use-cumulative-collateral-volumes';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import DashboardCard from '../../../cards/DashboardCard';
 import LineChart from '../../../LineChart';

@@ -2,7 +2,7 @@ import Identicon from '@polkadot/react-identicon';
 
 import { CoinIcon, Flex } from '@/component-library';
 import { useSelectModalContext } from '@/component-library/Select/SelectModalContext';
-import { BridgeVaultData } from '@/utils/hooks/api/bridge/use-get-vaults';
+import { BridgeVaultData } from '@/hooks/api/bridge/use-get-vaults';
 
 import {
   StyledListLabelWrapper,

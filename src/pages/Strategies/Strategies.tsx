@@ -1,8 +1,8 @@
 import { withErrorBoundary } from 'react-error-boundary';
 
 import { Card, P } from '@/component-library';
+import { MainContainer } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import MainContainer from '@/parts/MainContainer';
 import { StrategyType } from '@/types/strategies';
 
 import { StrategyCard } from './components';

@@ -4,6 +4,7 @@ import { useQueryClient } from 'react-query';
 
 import { BLOCK_TIME } from '@/config/parachain';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
 } from '@/legacy-components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
@@ -11,7 +12,6 @@ import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip'
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
   const unlockDate = add(new Date(), {

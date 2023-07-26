@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmount, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Alert, DlGroup, Dt } from '@/component-library';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { useAccountBorrowLimit } from '@/pages/Loans/LoansOverview/hooks/use-get-account-borrow-limit';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { LTVMeter } from '../LTVMeter.tsx';

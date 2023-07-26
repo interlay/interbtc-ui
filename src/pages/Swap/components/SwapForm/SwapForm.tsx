@@ -11,6 +11,12 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import { SlippageManager, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { Prices, useGetPrices } from '@/hooks/api/use-get-prices';
+import { FeeEstimateResult, Transaction, useTransaction } from '@/hooks/transaction';
+import useAccountId from '@/hooks/use-account-id';
+import { useSelectCurrency } from '@/hooks/use-select-currency';
 import {
   SWAP_FEE_TOKEN_FIELD,
   SWAP_INPUT_AMOUNT_FIELD,
@@ -25,12 +31,6 @@ import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { FeeEstimateResult, Transaction, useTransaction } from '@/utils/hooks/transaction';
-import useAccountId from '@/utils/hooks/use-account-id';
-import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import { PriceImpactModal } from '../PriceImpactModal';
 import { SwapInfo } from '../SwapInfo';

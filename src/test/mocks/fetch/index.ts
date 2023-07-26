@@ -4,7 +4,6 @@ import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
 import { issuesQuery } from '@/services/queries/issues';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
-import { PRICES_API } from '@/utils/constants/api';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import { DEFAULT_ACCOUNT_1 } from '../substrate/mocks';
@@ -18,23 +17,11 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   throw new Error('Something went wrong!');
 }
 
-const MOCK_TOKEN_PRICES = {
-  bitcoin: { usd: 20306 },
-  polkadot: { usd: 7.19 },
-  'kintsugi-btc': { usd: 20128 },
-  kusama: { usd: 48.74 },
-  interlay: { usd: mockGovernanceTokenPriceInUsd },
-  kintsugi: { usd: mockGovernanceTokenPriceInUsd }
-};
-
 // Can mock all fetch calls here based on URL and input.
 // This function can be also changed inside the test.
 const mockFetch = jest.fn((input, _init?) => {
   let result: unknown;
   switch (true) {
-    case input.includes(PRICES_API.URL):
-      result = MOCK_TOKEN_PRICES;
-      break;
     case input.includes(SIGNER_API_URL):
       result = {
         exists: true
@@ -116,4 +103,4 @@ const mockFetch = jest.fn((input, _init?) => {
 // TODO: need to mock with `msw`
 global.fetch = mockFetch as any;
 
-export { MOCK_TOKEN_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };
+export { mockFetch, mockGovernanceTokenPriceInUsd };

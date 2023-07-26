@@ -14,7 +14,7 @@ import { SelectTrigger } from './SelectTrigger';
 
 type SelectType = 'listbox' | 'modal';
 
-type SelectObject = Record<string, unknown>;
+type SelectObject = Record<any, any>;
 
 // TODO: listbox to be implemented
 type Props<F extends SelectType = 'listbox', T = SelectObject> = {

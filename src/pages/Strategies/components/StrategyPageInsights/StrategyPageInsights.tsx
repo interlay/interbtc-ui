@@ -1,9 +1,9 @@
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
 import { StyledDd, StyledDt } from '@/component-library/Text/Dl/Dl.style';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { STRATEGIES, StrategyType } from '@/types/strategies';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetStrategyInsights } from '../../hooks/use-get-strategy-insights';
 

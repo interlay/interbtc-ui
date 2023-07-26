@@ -2,9 +2,9 @@ import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 
 import { formatUSD } from '@/common/utils/utils';
 import { Card, CardProps, CoinPair, Dd, Dl, DlGroup, Dt, Flex, H2 } from '@/component-library';
+import { DateRangeVolume, useGetDexVolumes } from '@/hooks/api/use-get-dex-volume';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
-import { DateRangeVolume, useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 type Props = {
   input: CurrencyExt;

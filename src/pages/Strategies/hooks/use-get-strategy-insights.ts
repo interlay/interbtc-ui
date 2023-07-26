@@ -2,9 +2,9 @@ import { CurrencyExt, isCurrencyEqual, LoanAsset, newMonetaryAmount, TickerToDat
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { AccountPositionsData, useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
 import { StrategyType } from '@/types/strategies';
-import { AccountPositionsData, useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 
 type UseGetStrategyInsights =
   | {

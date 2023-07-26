@@ -2,10 +2,10 @@ import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
 import { UseLoanFormData, useLoanFormData } from '@/pages/Loans/LoansOverview/hooks/use-loan-form-data';
 import { StrategyType } from '@/types/strategies';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 
 import { StrategyFormType } from '../types/form';
 

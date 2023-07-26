@@ -11,7 +11,7 @@ import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
-import { DEFAULT_EXTRINSIC } from './extrinsic';
+import { EXTRINSIC_DATA } from '../extrinsic';
 
 const LP_TOKEN_A_NAME = `LP ${GOVERNANCE_TOKEN.ticker}-${RELAY_CHAIN_NATIVE_TOKEN.ticker}`;
 
@@ -154,10 +154,10 @@ const MODULE: Record<keyof AMMAPI, jest.Mock<any, any>> = {
   getLpTokens: jest.fn().mockResolvedValue(LP_TOKENS),
   getOptimalTrade: jest.fn().mockReturnValue(TRADE),
   // MUTATIONS
-  addLiquidity: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  removeLiquidity: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  claimFarmingRewards: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC),
-  swap: jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC)
+  addLiquidity: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  removeLiquidity: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  claimFarmingRewards: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  swap: jest.fn().mockResolvedValue(EXTRINSIC_DATA)
 };
 
 const MOCK_AMM = {

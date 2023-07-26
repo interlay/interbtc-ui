@@ -5,6 +5,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Modal, ModalBody } from '@/component-library';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import { Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
@@ -12,7 +13,6 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const USER_BTC_ADDRESS = 'user-btc-address';
 

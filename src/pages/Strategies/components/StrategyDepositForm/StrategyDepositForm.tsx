@@ -6,6 +6,8 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
 import {
   STRATEGY_DEPOSIT_AMOUNT_FIELD,
@@ -13,8 +15,6 @@ import {
   StrategyDepositFormData
 } from '@/lib/form/schemas/strategies';
 import { useStrategyFormData } from '@/pages/Strategies/hooks/use-strategy-form-data';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { StrategyFormProps } from '../../types';
 import { StyledStrategyFormContent } from '../StrategyForm/StrategyForm.style';

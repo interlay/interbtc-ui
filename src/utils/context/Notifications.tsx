@@ -14,7 +14,7 @@ import {
   TransactionToastProps
 } from '@/components';
 
-import { useWallet } from '../hooks/use-wallet';
+import { useWallet } from '../../hooks/use-wallet';
 
 // Allows the introduction of diferent
 // notifications toast beyond transactions

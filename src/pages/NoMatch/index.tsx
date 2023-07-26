@@ -1,4 +1,4 @@
-import MainContainer from '@/parts/MainContainer';
+import { MainContainer } from '@/components';
 
 // TODO: should polish
 const NoMatch = (): JSX.Element => <MainContainer>404</MainContainer>;

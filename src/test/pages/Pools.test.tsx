@@ -21,10 +21,12 @@ const {
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
 const { getFutureBlockNumber } = MOCK_SYSTEM.MODULE;
 
-jest.mock('../../parts/Layout', () => {
+jest.mock('@/components/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
   MockedLayout.displayName = 'MockedLayout';
-  return MockedLayout;
+  return {
+    Layout: MockedLayout
+  };
 });
 
 const path = '/pools';

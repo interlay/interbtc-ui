@@ -4,10 +4,10 @@ import Big from 'big.js';
 import { useMemo, useState } from 'react';
 
 import { CardProps, CTA, MeterRanges } from '@/component-library';
+import { VaultData } from '@/hooks/api/vaults/get-vault-data';
 import RequestIssueModal from '@/pages/Vaults/Vault/RequestIssueModal';
 import RequestRedeemModal from '@/pages/Vaults/Vault/RequestRedeemModal';
 import UpdateCollateralModal, { CollateralUpdateStatus } from '@/pages/Vaults/Vault/UpdateCollateralModal';
-import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
 import { VaultActions } from '../../types';
 import { CollateralThresholds } from './CollateralThresholds';

@@ -7,12 +7,11 @@ import { LoanModal } from '../LoanModal';
 import { StyledLendAssetsTable, StyledLendPositionsTable } from './LoansTables.style';
 
 type UseAssetState = {
+  isOpen: boolean;
   type?: 'toggle-collateral' | 'change-loan';
   data?: LoanAsset;
   position?: CollateralPosition;
 };
-
-const defaultAssetState: UseAssetState = { type: undefined, data: undefined, position: undefined };
 
 type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
@@ -22,23 +21,23 @@ type LendTablesProps = {
 };
 
 const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTablesProps): JSX.Element => {
-  const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
+  const [selectedAsset, setAsset] = useState<UseAssetState>({ isOpen: false });
 
   const handleRowAction = (ticker: Key) => {
     const asset = assets[ticker as string];
     const position = getPosition(positions, ticker as string);
 
-    setAsset({ type: 'change-loan', data: asset, position });
+    setAsset({ isOpen: true, type: 'change-loan', data: asset, position });
   };
 
   const handlePressCollateralSwitch = (ticker: string) => {
     const asset = assets[ticker];
     const position = getPosition(positions, ticker);
 
-    setAsset({ type: 'toggle-collateral', data: asset, position });
+    setAsset({ isOpen: true, type: 'toggle-collateral', data: asset, position });
   };
 
-  const handleClose = () => setAsset(defaultAssetState);
+  const handleClose = () => setAsset((s) => ({ ...s, isOpen: false }));
 
   return (
     <>
@@ -55,19 +54,17 @@ const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTab
       <StyledLendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='lend'
-        isOpen={selectedAsset.type === 'change-loan'}
+        isOpen={selectedAsset.isOpen && selectedAsset.type === 'change-loan'}
         asset={selectedAsset.data}
         position={selectedAsset.position}
         onClose={handleClose}
       />
-      {selectedAsset.data && selectedAsset.position && (
-        <CollateralModal
-          isOpen={selectedAsset.type === 'toggle-collateral'}
-          asset={selectedAsset.data}
-          position={selectedAsset.position}
-          onClose={handleClose}
-        />
-      )}
+      <CollateralModal
+        isOpen={selectedAsset.isOpen && selectedAsset.type === 'toggle-collateral'}
+        asset={selectedAsset.data}
+        position={selectedAsset.position}
+        onClose={handleClose}
+      />
     </>
   );
 };

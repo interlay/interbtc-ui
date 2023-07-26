@@ -3,9 +3,14 @@ import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
 import { PoolsTable } from '@/components';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { AccountLiquidityPool } from '@/hooks/api/amm/use-get-account-pools';
 
 import { PoolModal } from '../PoolModal/PoolModal';
+
+type ModalState = {
+  isOpen: boolean;
+  data?: LiquidityPool;
+};
 
 type PoolsTablesProps = {
   pools: LiquidityPool[];
@@ -13,14 +18,14 @@ type PoolsTablesProps = {
 };
 
 const PoolsTables = ({ pools, accountPools }: PoolsTablesProps): JSX.Element => {
-  const [liquidityPool, setLiquidityPool] = useState<LiquidityPool>();
+  const [state, setState] = useState<ModalState>({ isOpen: false });
 
   const handleRowAction = (ticker: Key) => {
     const pool = pools.find((pool) => pool.lpToken.ticker === ticker);
-    setLiquidityPool(pool);
+    setState({ isOpen: true, data: pool });
   };
 
-  const handleClose = () => setLiquidityPool(undefined);
+  const handleClose = () => setState((s) => ({ ...s, isOpen: false }));
 
   const otherPools = accountPools
     ? pools.filter(
@@ -42,7 +47,7 @@ const PoolsTables = ({ pools, accountPools }: PoolsTablesProps): JSX.Element => 
           />
         )}
       </Flex>
-      <PoolModal isOpen={!!liquidityPool} pool={liquidityPool} onClose={handleClose} />
+      <PoolModal isOpen={state.isOpen} pool={state.data} onClose={handleClose} />
     </>
   );
 };
