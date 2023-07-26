@@ -1,6 +1,7 @@
 import './i18n';
 
 import { Keyring } from '@polkadot/keyring';
+import { getWallets } from '@talismn/connect-wallets';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -77,6 +78,19 @@ const App = (): JSX.Element => {
       }
     }
   }, [setSelectedAccount, extensions.length]);
+
+  // get an array of wallets which are installed
+  const installedWallets = getWallets().filter((wallet) => wallet.installed);
+
+  console.log(getWallets());
+
+  // get talisman from the array of installed wallets
+  const talismanWallet = installedWallets.find((wallet) => wallet.extensionName === 'subwallet');
+
+  // enable the wallet
+  if (talismanWallet) {
+    console.log(talismanWallet.enable('myCoolDapp'));
+  }
 
   return (
     <Layout>
