@@ -7,9 +7,9 @@ import { showBuyModal } from '@/common/actions/general.actions';
 import { CTA, CTALink, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { usePageQueryParams } from '@/hooks/use-page-query-params';
 import { PAGES, QUERY_PARAMETERS, QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 type ActionsCellProps = {
   currency: CurrencyExt;

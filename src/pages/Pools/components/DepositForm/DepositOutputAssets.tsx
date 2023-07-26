@@ -10,8 +10,8 @@ import {
   newSafeMonetaryAmount
 } from '@/common/utils/utils';
 import { Dd, Dl, Dt, Flex, P } from '@/component-library';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
 import { StyledDlGroup } from './DepositForm.styles';

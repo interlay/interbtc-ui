@@ -1,14 +1,63 @@
+import { ApiPromise } from '@polkadot/api';
 import { Text, TypeRegistry } from '@polkadot/types';
 import { Registry } from '@polkadot/types/types';
+import Big from 'big.js';
 
-const mockApiCreateType = jest.fn(<T extends unknown>(type: string, data: T) => data);
+import { EXTRINSIC } from '../extrinsic';
 
-const mockRegistry = ({ chainDecimals: [], chainSS58: 0, chainTokens: [] } as unknown) as Registry;
-
-const mockSystemChain = jest.fn().mockReturnValue(new Text(mockRegistry, 'interBTC')) as any;
+const REGISTRY = ({ chainDecimals: [], chainSS58: 0, chainTokens: [] } as unknown) as Registry;
+const SYSTEM_CHAIN = new Text(REGISTRY, 'interBTC');
 
 const registry = new TypeRegistry();
+const CHAIN_TYPE = registry.createType('ChainType', 'Live');
 
-const mockChainType = jest.fn().mockReturnValue(registry.createType('ChainType', 'Live')) as any;
+const VESTING_SCHEDULES = {
+  EMPTY: [],
+  FULL: [{ start: new Big(0), period: new Big(0), periodCount: new Big(1), perPeriod: new Big(1) }]
+};
 
-export { mockApiCreateType, mockChainType, mockSystemChain };
+// add here data that is being used in tests
+const DATA = { VESTING_SCHEDULES };
+
+// add here mocks that are being manipulated in tests
+const MODULE = {
+  vestingSchedules: jest.fn().mockReturnValue(VESTING_SCHEDULES.EMPTY),
+  claimVesting: jest.fn().mockReturnValue(EXTRINSIC)
+};
+
+// maps module to ApiPromise
+const PROMISE: Partial<Record<keyof ApiPromise, unknown>> = {
+  on: jest.fn(),
+  createType: jest.fn().mockImplementation((_, data) => data),
+  rpc: {
+    system: {
+      chain: jest.fn().mockReturnValue(SYSTEM_CHAIN),
+      chainType: jest.fn().mockReturnValue(CHAIN_TYPE)
+    }
+  },
+  query: {
+    vesting: {
+      vestingSchedules: MODULE.vestingSchedules
+    },
+    oracle: {
+      aggregate: {
+        keys: jest.fn().mockReturnValue([])
+      }
+    }
+  },
+  tx: {
+    vesting: {
+      claim: MODULE.claimVesting
+    },
+    multiTransactionPayment: {
+      withFeeSwapPath: jest.fn().mockReturnValue(EXTRINSIC)
+    }
+  }
+};
+
+const MOCK_API = {
+  DATA,
+  MODULE,
+  PROMISE
+};
+export { MOCK_API };

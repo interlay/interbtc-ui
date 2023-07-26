@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { useGetCollateralCurrencies } from '@/hooks/api/use-get-collateral-currencies';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import Hr1 from '@/legacy-components/hrs/Hr1';
+import PageTitle from '@/legacy-components/PageTitle';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import PageTitle from '@/parts/PageTitle';
-import TimerIncrement from '@/parts/TimerIncrement';
+import TimerIncrement from '@/legacy-components/TimerIncrement';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
 import CollateralizationCard from '../../cards/CollateralizationCard';

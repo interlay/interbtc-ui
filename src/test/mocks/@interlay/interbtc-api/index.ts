@@ -7,11 +7,12 @@ import { Signer } from '@polkadot/types/types';
 
 import {
   MOCK_AMM,
+  MOCK_API,
+  MOCK_LOANS,
   MOCK_SYSTEM,
+  MOCK_TOKENS,
   MOCK_TRANSACTION,
-  mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
-  mockChainType,
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
@@ -29,10 +30,6 @@ import {
   mockRedeemGetMaxBurnableTokens,
   mockRedeemGetPremiumRedeemFeeRate,
   mockRedeemRequest,
-  mockSystemChain,
-  mockTokensBalance,
-  mockTokensSubscribeToBalance,
-  mockTokensTotal,
   mockVaultsGet,
   mockVaultsGetPremiumRedeemVaults,
   mockVaultsGetVaultsWithIssuableTokens,
@@ -40,25 +37,6 @@ import {
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
-import {
-  mockBorrow,
-  mockClaimAllSubsidyRewards,
-  mockDisableAsCollateral,
-  mockEnableAsCollateral,
-  mockGetAccountSubsidyRewards,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendingStats,
-  mockGetLendPositionsOfAccount,
-  mockGetLendTokenExchangeRates,
-  mockGetLendTokens,
-  mockGetLoanAssets,
-  mockLend,
-  mockRepay,
-  mockRepayAll,
-  mockWithdraw,
-  mockWithdrawAll
-} from './parachain/loans';
-import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
 
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
 
@@ -68,31 +46,7 @@ const mockCollateralCurrencies = [Polkadot, Interlay];
 const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
   removeAccount: jest.fn(),
   setAccount: mockSetAccount,
-  api: {
-    createType: mockApiCreateType,
-    rpc: {
-      system: {
-        chain: mockSystemChain,
-        chainType: mockChainType
-      }
-    },
-    on: jest.fn(),
-    query: {
-      vesting: {
-        vestingSchedules: mockVestingSchedules as any
-      },
-      oracle: {
-        aggregate: {
-          keys: jest.fn().mockReturnValue([])
-        }
-      }
-    },
-    tx: {
-      vesting: {
-        claim: mockClaimVesting
-      }
-    }
-  },
+  api: MOCK_API.PROMISE,
   assetRegistry: {
     getForeignAssets: mockGetForeignAssets
   },
@@ -111,24 +65,7 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     getRequestLimits: mockIssueGetRequestLimits,
     request: mockIssueRequest
   },
-  loans: {
-    getLendTokens: mockGetLendTokens,
-    getLendPositionsOfAccount: mockGetLendPositionsOfAccount,
-    getBorrowPositionsOfAccount: mockGetBorrowPositionsOfAccount,
-    getLoanAssets: mockGetLoanAssets,
-    getAccruedRewardsOfAccount: mockGetAccountSubsidyRewards,
-    lend: mockLend,
-    withdraw: mockWithdraw,
-    withdrawAll: mockWithdrawAll,
-    borrow: mockBorrow,
-    repay: mockRepay,
-    repayAll: mockRepayAll,
-    enableAsCollateral: mockEnableAsCollateral,
-    disableAsCollateral: mockDisableAsCollateral,
-    claimAllSubsidyRewards: mockClaimAllSubsidyRewards,
-    getLendingStats: mockGetLendingStats,
-    getLendTokenExchangeRates: mockGetLendTokenExchangeRates
-  },
+  loans: MOCK_LOANS.MODULE,
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
   },
@@ -143,11 +80,7 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     request: mockRedeemRequest
   },
   system: MOCK_SYSTEM.MODULE,
-  tokens: {
-    balance: mockTokensBalance,
-    total: mockTokensTotal,
-    subscribeToBalance: mockTokensSubscribeToBalance
-  },
+  tokens: MOCK_TOKENS.MODULE,
   vaults: {
     get: mockVaultsGet,
     getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens,

@@ -147,6 +147,11 @@
   "claim_rewards": "Claim Rewards",
   "tx_fees": "Tx fees",
   "view_subscan": "View Subscan",
+  "apr_breakdown": "APR Breakdown",
+  "apy_breakdown": "APY Breakdown",
+  "earned": "Earned",
+  "rewards_apr": "Rewards APR",
+  "rewards_apr_ticker": "Rewards APR {{ticker}}",
   "wallet": "Wallet",
   "navigation": {
     "btc": "BTC",
@@ -590,6 +595,11 @@
     "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation.",
     "no_loan_positions": "No {{loanType}} positions",
     "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here",
+    "use_ticker_as_collateral": "Use {{ticker}} as Collateral",
+    "disable_ticker": "Disable {{ticker}}",
+    "owed": "Owed",
+    "lend_apy_ticker": "Lend APY {{ticker}}",
+    "borrow_apy_ticker": "Borrow APY {{ticker}}",
     "borrowed": "Borrowed",
     "supplied": "Supplied",
     "total_supplied": "Total Supplied",
@@ -603,7 +613,8 @@
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
-      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please."
+      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please.",
+      "trading_fee_apr": "Trading Fee APR"
     },
     "swap": "Swap",
     "select_token": "Select Token",

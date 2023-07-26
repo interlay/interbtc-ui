@@ -1,43 +1,38 @@
 import '@testing-library/jest-dom';
 
-import { newMonetaryAmount } from '@interlay/interbtc-api';
-import Big from 'big.js';
-
 import App from '@/App';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import {
-  DEFAULT_ASSETS,
-  DEFAULT_BORROW_POSITIONS,
-  DEFAULT_LEND_POSITIONS,
-  DEFAULT_LENDING_STATS,
-  DEFAULT_POSITIONS,
-  mockClaimAllSubsidyRewards,
-  mockGetAccountSubsidyRewards,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendingStats,
-  mockGetLendPositionsOfAccount,
-  mockGetLoanAssets
-} from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
+import { MOCK_LOANS } from '@/test/mocks/@interlay/interbtc-api';
 
-import { render, screen, userEvent, waitFor } from '../../test-utils';
+import { render, screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
 import { getTableRow, withinTable } from '../utils/table';
+import { getFeeTokenSelect, waitForFeeEstimate, waitForTransactionExecute } from '../utils/transaction';
 import { TABLES } from './constants';
+
+const {
+  getBorrowPositionsOfAccount,
+  getLendPositionsOfAccount,
+  getLoanAssets,
+  getLendingStats,
+  claimAllSubsidyRewards,
+  getAccruedRewardsOfAccount
+} = MOCK_LOANS.MODULE;
+const { LOAN_POSITIONS, ASSETS, LENDING_STATS, ACCOUNT_REWARDS } = MOCK_LOANS.DATA;
 
 const path = '/lending';
 
-describe.skip('Loans page', () => {
+describe('Loans page', () => {
   beforeEach(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetLoanAssets.mockReturnValue(DEFAULT_ASSETS);
-    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
+    getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.EMPTY);
+    getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.EMPTY);
+    getLoanAssets.mockReturnValue(ASSETS.NORMAL);
+    getLendingStats.mockReturnValue(LENDING_STATS.LOW_LTV);
   });
 
   describe('Tables Section', () => {
     it.each([TABLES.LEND.MARKET, TABLES.BORROW.MARKET])(
       'should not be able to open inactive market on %s table',
       async (tableName) => {
-        mockGetLoanAssets.mockReturnValue({ IBTC: { ...DEFAULT_ASSETS.IBTC, isActive: false } });
+        getLoanAssets.mockReturnValue(ASSETS.INACTIVE);
 
         await render(<App />, { path });
 
@@ -50,16 +45,13 @@ describe.skip('Loans page', () => {
     );
 
     it.each([TABLES.LEND.POSITION, TABLES.BORROW.POSITION])('should not display %s table', async (tableName) => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
-      mockGetLendPositionsOfAccount.mockReturnValue([]);
-
       await render(<App />, { path });
 
       expect(screen.queryByRole('grid', { name: new RegExp(tableName, 'i') })).not.toBeInTheDocument();
     });
 
     it('should not display my borrow positions table but instead a placeholder', async () => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
+      getLendPositionsOfAccount.mockResolvedValue(LOAN_POSITIONS.LEND.AVERAGE);
 
       await render(<App />, { path });
 
@@ -72,17 +64,13 @@ describe.skip('Loans page', () => {
 
   describe('LTV Section', () => {
     it('should not render when there no positions open', async () => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
-      mockGetLendPositionsOfAccount.mockReturnValue([]);
-
       await render(<App />, { path });
 
       expect(screen.queryByRole('meter', { name: /ltv meter/i })).not.toBeInTheDocument();
     });
 
     it('should not render when there is a non-collateral lend position', async () => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
-      mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
+      getLendPositionsOfAccount.mockResolvedValue(LOAN_POSITIONS.LEND.AVERAGE);
 
       await render(<App />, { path });
 
@@ -90,8 +78,7 @@ describe.skip('Loans page', () => {
     });
 
     it('should render when there is a lend position as collateral', async () => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
-      mockGetLendPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.LEND.IBTC]);
+      getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE_COLLATERAL);
 
       await render(<App />, { path });
 
@@ -102,18 +89,18 @@ describe.skip('Loans page', () => {
     });
 
     it('should display low risk', async () => {
+      getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.FULL_COLLATERAL);
+      getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
+
       await render(<App />, { path });
 
       expect(screen.getByText(/low risk/i)).toBeInTheDocument();
     });
 
     it('should display medium risk', async () => {
-      mockGetLendingStats.mockReturnValue({
-        ...DEFAULT_LENDING_STATS,
-        collateralThresholdWeightedAverage: new Big(0.5),
-        liquidationThresholdWeightedAverage: new Big(0.75),
-        ltv: new Big(0.5)
-      });
+      getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.FULL_COLLATERAL);
+      getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
+      getLendingStats.mockReturnValue(LENDING_STATS.MEDIUM_LTV);
 
       await render(<App />, { path });
 
@@ -121,12 +108,9 @@ describe.skip('Loans page', () => {
     });
 
     it('should display liquidation risk', async () => {
-      mockGetLendingStats.mockReturnValue({
-        ...DEFAULT_LENDING_STATS,
-        collateralThresholdWeightedAverage: new Big(0.5),
-        liquidationThresholdWeightedAverage: new Big(0.75),
-        ltv: new Big(0.75)
-      });
+      getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.FULL_COLLATERAL);
+      getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
+      getLendingStats.mockReturnValue(LENDING_STATS.HIGH_LTV);
 
       await render(<App />, { path });
 
@@ -136,15 +120,31 @@ describe.skip('Loans page', () => {
 
   describe('Rewards', () => {
     it('should be able to claim', async () => {
+      getAccruedRewardsOfAccount.mockResolvedValue(ACCOUNT_REWARDS.FULL);
+
       await render(<App />, { path });
 
       userEvent.click(screen.getByRole('button', { name: /claim/i }));
 
-      await waitFor(() => expect(mockClaimAllSubsidyRewards).toHaveBeenCalledTimes(1));
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: /claim rewards/i })).toBeInTheDocument();
+      });
+
+      await waitForFeeEstimate(claimAllSubsidyRewards);
+
+      const modal = within(screen.getByRole('dialog', { name: /claim rewards/i }));
+
+      expect(getFeeTokenSelect(modal)).toBeInTheDocument();
+
+      userEvent.click(modal.getByRole('button', { name: /claim rewards/i }));
+
+      await waitForElementToBeRemoved(screen.getByRole('dialog', { name: /claim rewards/i }));
+
+      await waitForTransactionExecute(claimAllSubsidyRewards);
     });
 
     it('should not be able to claim', async () => {
-      mockGetAccountSubsidyRewards.mockReturnValue(newMonetaryAmount(0, GOVERNANCE_TOKEN));
+      getAccruedRewardsOfAccount.mockResolvedValue(ACCOUNT_REWARDS.EMPTY);
 
       await render(<App />, { path });
 

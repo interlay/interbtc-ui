@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CheckCircle, XCircle } from '@/assets/icons';
 import { CTA, Divider, Flex, FlexProps, LoadingSpinner, P } from '@/component-library';
-import { useCountdown } from '@/utils/hooks/use-countdown';
+import { useCountdown } from '@/hooks/use-countdown';
 
 import { StyledProgressBar, StyledWrapper } from './NotificationToast.styles';
 

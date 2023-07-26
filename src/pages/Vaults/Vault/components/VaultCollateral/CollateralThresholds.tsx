@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 
 import { formatPercentage } from '@/common/utils/utils';
-import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
+import { VaultData } from '@/hooks/api/vaults/get-vault-data';
 
 import { ThresholdDd, ThresholdDl, ThresholdDt, ThresholdItem } from './VaultCollateral.styles';
 

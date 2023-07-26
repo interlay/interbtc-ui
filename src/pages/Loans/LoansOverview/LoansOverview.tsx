@@ -1,10 +1,10 @@
 import { Flex } from '@/component-library';
+import { MainContainer } from '@/components';
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
+import useAccountId from '@/hooks/use-account-id';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import MainContainer from '@/parts/MainContainer';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { LoansInsights, LoansTables, LTVSection } from './components';
 

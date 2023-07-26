@@ -8,11 +8,11 @@ import {
   getLastMidnightTimestamps
 } from '@/common/utils/utils';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import useCumulativeCollateralVolumes from '@/hooks/use-cumulative-collateral-volumes';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
 import LineChart from '@/pages/Dashboard/LineChart';
 import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';
-import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 

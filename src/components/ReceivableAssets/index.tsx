@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatNumber, formatUSD } from '@/common/utils/utils';
 import { CoinIcon, Dd, Dl, DlGroup, Dt, Flex, P } from '@/component-library';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 type ReceivableAssetsProps = {
   assetAmounts: MonetaryAmount<CurrencyExt>[];

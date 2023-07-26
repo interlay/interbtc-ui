@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { CheckCircle, XCircle } from '@/assets/icons';
 import { Notification } from '@/common/types/util.types';
 import { Flex, P } from '@/component-library';
-import { TransactionStatus } from '@/utils/hooks/transaction/types';
+import { TransactionStatus } from '@/hooks/transaction/types';
 
 import { StyledListItem } from './NotificationsPopover.styles';
 

@@ -3,11 +3,11 @@ import { TFunction, useTranslation } from 'react-i18next';
 
 import { CTAProps } from '@/component-library';
 import { AuthCTA } from '@/components';
+import { Transaction } from '@/hooks/transaction';
+import { UseFeeEstimateResult } from '@/hooks/transaction/types/hook';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import { SWAP_INPUT_AMOUNT_FIELD, SWAP_INPUT_TOKEN_FIELD, SWAP_OUTPUT_TOKEN_FIELD, useForm } from '@/lib/form';
 import { SwapPair } from '@/types/swap';
-import { Transaction } from '@/utils/hooks/transaction';
-import { UseFeeEstimateResult } from '@/utils/hooks/transaction/types/hook';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 const getProps = (
   pair: SwapPair,

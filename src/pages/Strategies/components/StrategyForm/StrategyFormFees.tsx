@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt } from '@/component-library';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDl } from './StrategyForm.style';
 
