@@ -19,7 +19,7 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
-import { Layout, TransactionModal, Wrapper } from './components';
+import { Layout, TransactionModal } from './components';
 import * as constants from './constants';
 import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
 import TestnetBanner from './legacy-components/TestnetBanner';
@@ -156,77 +156,75 @@ const App = (): JSX.Element => {
   }, [setSelectedAccount, extensions.length]);
 
   return (
-    <Wrapper>
-      <Layout>
-        {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
-        <Route
-          render={({ location }) => (
-            <React.Suspense fallback={<FullLoadingSpinner />}>
-              {bridgeLoaded ? (
-                <Switch location={location}>
-                  <Route exact path={PAGES.VAULTS}>
-                    <Vaults />
+    <Layout>
+      {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
+      <Route
+        render={({ location }) => (
+          <React.Suspense fallback={<FullLoadingSpinner />}>
+            {bridgeLoaded ? (
+              <Switch location={location}>
+                <Route exact path={PAGES.VAULTS}>
+                  <Vaults />
+                </Route>
+                <Route exact path={PAGES.VAULT}>
+                  <Vault />
+                </Route>
+                <Route path={PAGES.VAULT}>
+                  <Vaults />
+                </Route>
+                <Route path={PAGES.DASHBOARD}>
+                  <Dashboard />
+                </Route>
+                <Route path={PAGES.STAKING}>
+                  <Staking />
+                </Route>
+                <Route path={PAGES.TX}>
+                  <TX />
+                </Route>
+                <Route path={PAGES.BTC}>
+                  <BTC />
+                </Route>
+                <Route path={PAGES.SEND_AND_RECEIVE}>
+                  <SendAndReceive />
+                </Route>
+                <Route path={PAGES.LOANS}>
+                  <Loans />
+                </Route>
+                <Route path={PAGES.SWAP}>
+                  <Swap />
+                </Route>
+                <Route path={PAGES.POOLS}>
+                  <Pools />
+                </Route>
+                <Route path={PAGES.WALLET}>
+                  <Wallet />
+                </Route>
+                {isStrategiesEnabled && (
+                  <Route path={PAGES.STRATEGIES}>
+                    <Strategies />
                   </Route>
-                  <Route exact path={PAGES.VAULT}>
-                    <Vault />
+                )}
+                {isOnboardingEnabled && (
+                  <Route path={PAGES.ONBOARDING}>
+                    <Onboarding />
                   </Route>
-                  <Route path={PAGES.VAULT}>
-                    <Vaults />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD}>
-                    <Dashboard />
-                  </Route>
-                  <Route path={PAGES.STAKING}>
-                    <Staking />
-                  </Route>
-                  <Route path={PAGES.TX}>
-                    <TX />
-                  </Route>
-                  <Route path={PAGES.BTC}>
-                    <BTC />
-                  </Route>
-                  <Route path={PAGES.SEND_AND_RECEIVE}>
-                    <SendAndReceive />
-                  </Route>
-                  <Route path={PAGES.LOANS}>
-                    <Loans />
-                  </Route>
-                  <Route path={PAGES.SWAP}>
-                    <Swap />
-                  </Route>
-                  <Route path={PAGES.POOLS}>
-                    <Pools />
-                  </Route>
-                  <Route path={PAGES.WALLET}>
-                    <Wallet />
-                  </Route>
-                  {isStrategiesEnabled && (
-                    <Route path={PAGES.STRATEGIES}>
-                      <Strategies />
-                    </Route>
-                  )}
-                  {isOnboardingEnabled && (
-                    <Route path={PAGES.ONBOARDING}>
-                      <Onboarding />
-                    </Route>
-                  )}
-                  <Route path={PAGES.ACTIONS}>
-                    <Actions />
-                  </Route>
-                  <Redirect exact from={PAGES.HOME} to={PAGES.WALLET} />
-                  <Route path='*'>
-                    <NoMatch />
-                  </Route>
-                </Switch>
-              ) : (
-                <FullLoadingSpinner />
-              )}
-            </React.Suspense>
-          )}
-        />
-      </Layout>
+                )}
+                <Route path={PAGES.ACTIONS}>
+                  <Actions />
+                </Route>
+                <Redirect exact from={PAGES.HOME} to={PAGES.WALLET} />
+                <Route path='*'>
+                  <NoMatch />
+                </Route>
+              </Switch>
+            ) : (
+              <FullLoadingSpinner />
+            )}
+          </React.Suspense>
+        )}
+      />
       <TransactionModal />
-    </Wrapper>
+    </Layout>
   );
 };
 

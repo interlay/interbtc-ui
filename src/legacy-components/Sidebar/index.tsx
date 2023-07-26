@@ -66,7 +66,7 @@ const Sidebar = ({ className, children }: Props): JSX.Element => {
         <div className={clsx(ON_SMALL_SCREEN_CLASS_NAME, 'pl-1', 'pt-1', 'sm:pl-3', 'sm:pt-3')}>
           <OpenButton onClick={handleOpen} />
         </div>
-        <main className={clsx('flex-1', 'relative', 'z-0', 'overflow-y-auto', 'focus:outline-none')}>{children}</main>
+        <div className={clsx('flex-1', 'relative', 'z-0', 'overflow-y-auto', 'focus:outline-none')}>{children}</div>
       </div>
     </div>
   );
