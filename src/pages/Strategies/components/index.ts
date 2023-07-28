@@ -1,3 +1,6 @@
+export type { StrategyCardProps } from './StrategyCard';
 export { StrategyCard } from './StrategyCard';
 export { StrategyForm } from './StrategyForm';
-export { default as StrategyPage } from './StrategyPage';
+export { StrategyInfographics } from './StrategyInfographics';
+export { StrategyInsights } from './StrategyInsights';
+export { StrategyTag } from './StrategyTag';

@@ -8,6 +8,7 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
+import { useGetLoanLimitsAmount } from '@/hooks/api/loans/use-get-loan-limits-amount';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
@@ -21,8 +22,8 @@ import {
 } from '@/lib/form';
 import { LoanAction } from '@/types/loans';
 import { getTokenInputProps } from '@/utils/helpers/input';
+import { getTokenPrice } from '@/utils/helpers/prices';
 
-import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanDetails } from '../LoanDetails';
@@ -97,7 +98,9 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { assetAmount, assetPrice } = useLoanFormData(variant, asset, position);
+  const { minAmount, maxAmount } = useGetLoanLimitsAmount(variant, asset, position);
+
+  const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
   const { content } = getData(t, variant);
 
@@ -139,10 +142,10 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
       case 'borrow':
         return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
       case 'repay': {
-        const isRepayAll = isMaxRepayAmount(monetaryAmount, assetAmount.max);
+        const isRepayAll = isMaxRepayAmount(monetaryAmount, maxAmount);
 
         if (isRepayAll) {
-          return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, assetAmount.available);
+          return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, maxAmount);
         } else {
           return transaction.execute(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
         }
@@ -151,8 +154,8 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
   };
 
   const schemaParams: LoanValidationParams = {
-    minAmount: assetAmount.min,
-    maxAmount: assetAmount.available
+    minAmount,
+    maxAmount
   };
 
   const form = useForm<LoanFormData>({
@@ -182,13 +185,13 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
           return transaction.fee.estimate(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
 
         case 'repay': {
-          const isRepayAll = isMaxRepayAmount(monetaryAmount, assetAmount.max);
+          const isRepayAll = isMaxRepayAmount(monetaryAmount, maxAmount);
 
           if (isRepayAll) {
             return (
               transaction.fee
                 // passing the limit calculated, so it can be used in the validation in transaction hook
-                .estimate(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, assetAmount.available)
+                .estimate(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, maxAmount)
             );
           } else {
             return transaction.fee.estimate(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
@@ -214,10 +217,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
             aria-label={content.fieldAriaLabel}
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
-            {...mergeProps(
-              form.getFieldProps(LOAN_AMOUNT_FIELD, false, true),
-              getTokenInputProps(assetAmount.available)
-            )}
+            {...mergeProps(form.getFieldProps(LOAN_AMOUNT_FIELD, false, true), getTokenInputProps(maxAmount))}
           />
           {showBorrowLimit && (
             <BorrowLimit
@@ -227,7 +227,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
               asset={asset}
               actionAmount={monetaryAmount}
               prices={prices}
-              remainingDebt={variant === 'repay' ? assetAmount.max : undefined}
+              remainingDebt={variant === 'repay' ? maxAmount : undefined}
             />
           )}
         </Flex>

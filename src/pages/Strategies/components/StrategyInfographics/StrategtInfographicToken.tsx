@@ -1,6 +1,6 @@
 import { CoinIcon, Flex, FlexProps, IconSize } from '@/component-library';
 
-import { StyledStack } from './BaseInfographics.styles';
+import { StyledStack } from './StrategyInfographics.styles';
 
 type Props = {
   size: IconSize;
@@ -9,9 +9,9 @@ type Props = {
 
 type InheritAttrs = Omit<FlexProps, keyof Props>;
 
-type InfographicsPropsToken = Props & InheritAttrs;
+type StrategyInfographicsPropsToken = Props & InheritAttrs;
 
-const BaseInfographicsToken = ({ ticker, size, ...props }: InfographicsPropsToken): JSX.Element => {
+const StrategyInfographicsToken = ({ ticker, size, ...props }: StrategyInfographicsPropsToken): JSX.Element => {
   if (typeof ticker === 'string') {
     return (
       <Flex {...props}>
@@ -31,5 +31,5 @@ const BaseInfographicsToken = ({ ticker, size, ...props }: InfographicsPropsToke
   );
 };
 
-export { BaseInfographicsToken };
-export type { InfographicsPropsToken };
+export { StrategyInfographicsToken };
+export type { StrategyInfographicsPropsToken };

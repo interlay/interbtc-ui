@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { Flex, IconSize, Span, theme } from '@/component-library';
 
-import { BaseInfographicsItem } from './BaseInfographicsItem';
+import { StrategyInfographicsItem } from './StrategyInfographicsItem';
 
 type StyledGridProps = {
   $isCyclic?: boolean;
@@ -23,7 +23,6 @@ type StyledLabelProp = {
 const StyledGrid = styled.div<StyledGridProps>`
   display: grid;
   grid-template-columns: 1fr min-content 1fr 1fr min-content 1fr 1fr min-content 1fr;
-  grid-template-rows: auto auto auto;
   grid-template-areas: ${({ $isCyclic }) => `
   '. start-icon first-right-arrow first-right-arrow middle-icon second-right-arrow second-right-arrow end-icon .'
   'start-label start-label start-label middle-label middle-label middle-label end-label end-label end-label'
@@ -37,7 +36,7 @@ const StyledGrid = styled.div<StyledGridProps>`
   gap: ${theme.spacing.spacing1};
 `;
 
-const StyledBaseInfographicsItem = styled(BaseInfographicsItem)<StyledItemProps>`
+const StyledInfographicsItem = styled(StrategyInfographicsItem)<StyledItemProps>`
   grid-area: ${({ $gridArea }) => $gridArea};
 `;
 
@@ -138,10 +137,10 @@ const StyledSubIcon = styled.span<StyledSubIconProps>`
 `;
 
 export {
-  StyledBaseInfographicsItem,
   StyledEndArrow,
   StyledGrid,
   StyledIcon,
+  StyledInfographicsItem,
   StyledItemContainer,
   StyledLabel,
   StyledRightArrow,

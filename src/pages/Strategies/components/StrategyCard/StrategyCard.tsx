@@ -1,40 +1,50 @@
+import Big from 'big.js';
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { formatPercentage } from '@/common/utils/utils';
 import { Card, CardProps, CoinIcon, Flex, H1, P, Strong } from '@/component-library';
-import { STRATEGIES, StrategyType } from '@/types/strategies';
 import { PAGES } from '@/utils/constants/links';
 
-import { useGetStrategyInsights } from '../../hooks/use-get-strategy-insights';
+import { StrategyRisk, StrategyType } from '../../types';
 import { StrategyTag } from '../StrategyTag';
 import { StyledEarningCard, StyledEarnSection } from './StrategyCard.style';
 
 type Props = {
-  strategyType: StrategyType;
+  type: StrategyType;
+  title: ReactNode;
+  description: ReactNode;
+  ticker: string;
+  risk: StrategyRisk;
+  interestRate: Big;
 };
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type StrategyCardProps = Props & InheritAttrs;
 
-const StrategyCard = ({ strategyType, ...props }: StrategyCardProps): JSX.Element => {
+const StrategyCard = ({
+  type,
+  title,
+  description,
+  ticker,
+  risk,
+  interestRate,
+  ...props
+}: StrategyCardProps): JSX.Element => {
   const { t } = useTranslation();
-  const { interest } = useGetStrategyInsights(strategyType);
-  const { descriptionCard, title, currency, risk, path, tags } = STRATEGIES[strategyType];
 
-  const interestPercentageLable = formatPercentage(interest);
+  const interestPercentageLable = formatPercentage(interestRate.toNumber());
 
   return (
-    <Link to={`${PAGES.STRATEGIES}/${path}`}>
+    <Link to={`${PAGES.STRATEGIES}/${type}`}>
       <Card {...props} alignItems='center' gap='spacing4'>
         <Flex alignSelf='flex-start' gap='spacing1'>
           <StrategyTag risk={risk} />
-          {tags.map((tag) => (
-            <StrategyTag key={tag}>{tag}</StrategyTag>
-          ))}
+          {risk === StrategyRisk.LOW && <StrategyTag>Passive Income</StrategyTag>}
         </Flex>
-        <CoinIcon size='xl2' ticker={currency.ticker} />
+        <CoinIcon size='xl2' ticker={ticker} />
         <H1 weight='bold' size='base' align='center' rows={1}>
           {title}
         </H1>
@@ -47,7 +57,7 @@ const StrategyCard = ({ strategyType, ...props }: StrategyCardProps): JSX.Elemen
           </StyledEarnSection>
         </StyledEarningCard>
         <P color='tertiary' size='xs' align='center'>
-          {descriptionCard}
+          {description}
         </P>
       </Card>
     </Link>

@@ -15,12 +15,6 @@ const StyledDl = styled(Dl)`
   border-radius: ${theme.rounded.rg};
 `;
 
-const StyledStrategyFormContent = styled(Flex)`
-  margin-top: ${theme.spacing.spacing8};
-  flex-direction: column;
-  gap: ${theme.spacing.spacing8};
-`;
-
 const StyledSwitchLabel = styled('label')`
   display: flex;
   flex-direction: row;
@@ -30,4 +24,4 @@ const StyledSwitchLabel = styled('label')`
   font-weight: ${theme.fontWeight.bold};
 `;
 
-export { StyledDl, StyledStrategyForm, StyledStrategyFormContent, StyledSwitchLabel };
+export { StyledDl, StyledStrategyForm, StyledSwitchLabel };

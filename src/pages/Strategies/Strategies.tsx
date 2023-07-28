@@ -1,14 +1,24 @@
 import { withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 
-import { Card, P } from '@/component-library';
+import { Card, P, TextLink } from '@/component-library';
 import { MainContainer } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import { StrategyType } from '@/types/strategies';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 
 import { StrategyCard } from './components';
+import { getContent } from './helpers/content';
+import { useGetStrategies } from './hooks/use-get-strategies';
 import { StyledList } from './Strategies.style';
 
 const Strategies = (): JSX.Element => {
+  const { t } = useTranslation();
+  const { data: strategies } = useGetStrategies();
+
+  if (!strategies) {
+    return <FullLoadingSpinner />;
+  }
+
   return (
     <MainContainer>
       <Card>
@@ -19,11 +29,26 @@ const Strategies = (): JSX.Element => {
         </P>
       </Card>
       <StyledList>
-        {Object.values(StrategyType).map((strategyType) => (
-          <StrategyCard key={strategyType} strategyType={strategyType} />
-        ))}
+        {strategies.map((strategy) => {
+          const { title, summary } = getContent(t, strategy.type);
+
+          return (
+            <StrategyCard
+              key={strategy.type}
+              risk={strategy.risk}
+              ticker={strategy.currency.ticker}
+              interestRate={strategy.interest}
+              type={strategy.type}
+              title={title}
+              description={summary}
+            />
+          );
+        })}
         <Card alignItems='center' justifyContent='center'>
           <P size='xs'>More Strategies coming soon</P>
+          <TextLink size='xs' underlined to={'#'}>
+            Request strategies
+          </TextLink>
         </Card>
       </StyledList>
     </MainContainer>

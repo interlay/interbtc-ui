@@ -4,10 +4,9 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
-import { UseLoanFormData, useLoanFormData } from '@/pages/Loans/LoansOverview/hooks/use-loan-form-data';
-import { StrategyType } from '@/types/strategies';
+import { useGetLoanLimitsAmount, UseGetLoanLimitsAmountData } from '@/hooks/api/loans/use-get-loan-limits-amount';
 
-import { StrategyFormType } from '../types/form';
+import { StrategyFormType, StrategyType } from '../types';
 
 interface UseSimplePassiveIncomeData {
   minAmount: MonetaryAmount<CurrencyExt>;
@@ -25,14 +24,14 @@ const getStrategyParams = (strategyType: StrategyType) => {
 
 const getStrategyLimitAmounts = (
   strategyType: StrategyType,
-  loanFormData: UseLoanFormData | Record<string, never>
+  loanFormData: UseGetLoanLimitsAmountData | Record<string, never>
 ): {
   minAmount: MonetaryAmount<CurrencyExt> | undefined;
   maxAmount: MonetaryAmount<CurrencyExt> | undefined;
 } => {
   switch (strategyType) {
     case StrategyType.BTC_LOW_RISK:
-      return { minAmount: loanFormData.assetAmount?.min, maxAmount: loanFormData.assetAmount?.available };
+      return { minAmount: loanFormData.minAmount, maxAmount: loanFormData.maxAmount };
   }
 };
 
@@ -43,7 +42,7 @@ const useStrategyFormData = (strategyType: StrategyType, formType: StrategyFormT
   const { currency } = getStrategyParams(strategyType);
   const lendPosition = data?.lendPositions?.find((position) => position.amount.currency.ticker === currency.ticker);
 
-  const loanFormData = useLoanFormData(
+  const loanFormData = useGetLoanLimitsAmount(
     formType === 'deposit' ? 'lend' : 'withdraw',
     loanAssets?.[currency.ticker],
     lendPosition

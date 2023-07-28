@@ -1,13 +1,13 @@
 import { HTMLAttributes, ReactNode } from 'react';
 
 import {
-  StyledBaseInfographicsItem,
   StyledEndArrow,
   StyledGrid,
+  StyledInfographicsItem,
   StyledLabel,
   StyledRightArrow
-} from './BaseInfographics.styles';
-import { VariantIcons } from './BaseInfographicsIcon';
+} from './StrategyInfographics.styles';
+import { VariantIcons } from './StrategyInfographicsIcon';
 
 type ItemData = {
   icon?: VariantIcons;
@@ -24,33 +24,18 @@ type Props = {
 
 type InheritAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type BaseInfographicsProps = Props & InheritAttrs;
+type StrategyInfographicsProps = Props & InheritAttrs;
 
-const BaseInfographics = ({ items, isCyclic, endCycleLabel, ...props }: BaseInfographicsProps): JSX.Element => {
+const StrategyInfographics = ({ items, isCyclic, endCycleLabel, ...props }: StrategyInfographicsProps): JSX.Element => {
   const [itemA, itemB, itemC] = items;
 
   return (
     <StyledGrid $isCyclic={isCyclic} {...props}>
-      <StyledBaseInfographicsItem
-        $gridArea='start-icon'
-        icon={itemA.icon}
-        ticker={itemA.ticker}
-        subIcon={itemA.subIcon}
-      />
+      <StyledInfographicsItem $gridArea='start-icon' icon={itemA.icon} ticker={itemA.ticker} subIcon={itemA.subIcon} />
       <StyledRightArrow $gridArea='first-right-arrow' />
-      <StyledBaseInfographicsItem
-        $gridArea='middle-icon'
-        icon={itemB.icon}
-        ticker={itemB.ticker}
-        subIcon={itemB.subIcon}
-      />
+      <StyledInfographicsItem $gridArea='middle-icon' icon={itemB.icon} ticker={itemB.ticker} subIcon={itemB.subIcon} />
       <StyledRightArrow $gridArea='second-right-arrow' />
-      <StyledBaseInfographicsItem
-        $gridArea='end-icon'
-        icon={itemC.icon}
-        ticker={itemC.ticker}
-        subIcon={itemC.subIcon}
-      />
+      <StyledInfographicsItem $gridArea='end-icon' icon={itemC.icon} ticker={itemC.ticker} subIcon={itemC.subIcon} />
       <StyledLabel $gridArea='start-label' size='xs' align='center'>
         {itemA.label}
       </StyledLabel>
@@ -72,5 +57,5 @@ const BaseInfographics = ({ items, isCyclic, endCycleLabel, ...props }: BaseInfo
   );
 };
 
-export { BaseInfographics };
-export type { BaseInfographicsProps, ItemData };
+export { StrategyInfographics };
+export type { ItemData, StrategyInfographicsProps };

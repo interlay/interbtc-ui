@@ -3,7 +3,7 @@ import { mergeProps } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { TokenInput } from '@/component-library';
+import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
@@ -16,14 +16,17 @@ import {
 } from '@/lib/form/schemas/strategies';
 import { useStrategyFormData } from '@/pages/Strategies/hooks/use-strategy-form-data';
 
-import { StrategyFormProps } from '../../types';
-import { StyledStrategyFormContent } from '../StrategyForm/StrategyForm.style';
+import { StrategyType } from '../../types';
 
-const StrategyWithdrawalForm = ({ strategyType }: StrategyFormProps): JSX.Element => {
+type StrategyWithdrawalFormProps = {
+  type: StrategyType;
+};
+
+const StrategyWithdrawalForm = ({ type }: StrategyWithdrawalFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   const transaction = useTransaction(Transaction.LOANS_WITHDRAW);
-  const { maxAmount, minAmount } = useStrategyFormData(strategyType, 'withdraw');
+  const { maxAmount, minAmount } = useStrategyFormData(type, 'withdraw');
 
   const handleSubmit = (values: StrategyWithdrawFormData) => {
     const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];
@@ -70,7 +73,7 @@ const StrategyWithdrawalForm = ({ strategyType }: StrategyFormProps): JSX.Elemen
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <StyledStrategyFormContent>
+      <Flex direction='column' justifyContent='space-between'>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
@@ -81,14 +84,16 @@ const StrategyWithdrawalForm = ({ strategyType }: StrategyFormProps): JSX.Elemen
           valueUSD={inputUSDValue ?? undefined}
           {...mergeProps(form.getFieldProps(STRATEGY_WITHDRAW_AMOUNT_FIELD))}
         />
-        <TransactionFeeDetails
-          fee={transaction.fee}
-          selectProps={{ ...form.getSelectFieldProps(STRATEGY_WITHDRAW_FEE_TOKEN_FIELD) }}
-        />
-        <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-          {t('withdraw')}
-        </AuthCTA>
-      </StyledStrategyFormContent>
+        <Flex direction='column'>
+          <TransactionFeeDetails
+            fee={transaction.fee}
+            selectProps={{ ...form.getSelectFieldProps(STRATEGY_WITHDRAW_FEE_TOKEN_FIELD) }}
+          />
+          <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
+            {t('withdraw')}
+          </AuthCTA>
+        </Flex>
+      </Flex>
     </form>
   );
 };

@@ -768,5 +768,11 @@
     "signature_submission_successful": "Signature submission successful",
     "funding_account_failed": "Funding account failed",
     "funding_account_successful": "Funding account successful"
+  },
+  "strategies": {
+    "btc_passive_income": "BTC Passive Income",
+    "passive_income": "Passive Income",
+    "generate_passive_income_by_offering_ticker": "Generate passive income by offering your {{ticker}} to lending markets and benefit from automatic compounding rewards.",
+    "low_risk_approach_generate_passive_income": "Discover a straightforward and low-risk approach to generate passive income. This strategy lends out deposited {{ticker}} to borrowers, allowing you to earn interest effortlessly"
   }
 }

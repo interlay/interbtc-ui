@@ -1,7 +1,7 @@
 import { ArrowPathRoundedSquare, PresentationChartBar } from '@/assets/icons';
 import { IconProps } from '@/component-library/Icon';
 
-import { StyledIcon } from './BaseInfographics.styles';
+import { StyledIcon } from './StrategyInfographics.styles';
 
 const icons = ['presentation', 'swap'] as const;
 
@@ -18,9 +18,9 @@ type Props = {
 
 type InheritAttrs = Omit<IconProps, keyof Props>;
 
-type BaseInfographicsIconProps = Props & InheritAttrs;
+type StrategyInfographicsIconProps = Props & InheritAttrs;
 
-const BaseInfographicsIcon = ({ variant, size, ...props }: BaseInfographicsIconProps): JSX.Element => {
+const StrategyInfographicsIcon = ({ variant, size, ...props }: StrategyInfographicsIconProps): JSX.Element => {
   const Icon = mapIcons[variant];
 
   return (
@@ -30,5 +30,5 @@ const BaseInfographicsIcon = ({ variant, size, ...props }: BaseInfographicsIconP
   );
 };
 
-export { BaseInfographicsIcon };
+export { StrategyInfographicsIcon };
 export type { VariantIcons };

@@ -3,7 +3,7 @@ import { mergeProps } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { TokenInput } from '@/component-library';
+import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
@@ -16,12 +16,15 @@ import {
 } from '@/lib/form/schemas/strategies';
 import { useStrategyFormData } from '@/pages/Strategies/hooks/use-strategy-form-data';
 
-import { StrategyFormProps } from '../../types';
-import { StyledStrategyFormContent } from '../StrategyForm/StrategyForm.style';
+import { StrategyType } from '../../types';
 
-const StrategyDepositForm = ({ strategyType }: StrategyFormProps): JSX.Element => {
+type StrategyDepositFormProps = {
+  type: StrategyType;
+};
+
+const StrategyDepositForm = ({ type }: StrategyDepositFormProps): JSX.Element => {
   const prices = useGetPrices();
-  const { maxAmount, minAmount } = useStrategyFormData(strategyType, 'deposit');
+  const { maxAmount, minAmount } = useStrategyFormData(type, 'deposit');
   const { t } = useTranslation();
   const transaction = useTransaction(Transaction.LOANS_LEND);
 
@@ -67,7 +70,7 @@ const StrategyDepositForm = ({ strategyType }: StrategyFormProps): JSX.Element =
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <StyledStrategyFormContent>
+      <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
@@ -77,14 +80,16 @@ const StrategyDepositForm = ({ strategyType }: StrategyFormProps): JSX.Element =
           valueUSD={inputUSDValue ?? undefined}
           {...mergeProps(form.getFieldProps(STRATEGY_DEPOSIT_AMOUNT_FIELD))}
         />
-        <TransactionFeeDetails
-          fee={transaction.fee}
-          selectProps={{ ...form.getSelectFieldProps(STRATEGY_DEPOSIT_FEE_TOKEN_FIELD) }}
-        />
-        <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-          {t('deposit')}
-        </AuthCTA>
-      </StyledStrategyFormContent>
+        <Flex direction='column' gap='spacing4'>
+          <TransactionFeeDetails
+            fee={transaction.fee}
+            selectProps={{ ...form.getSelectFieldProps(STRATEGY_DEPOSIT_FEE_TOKEN_FIELD) }}
+          />
+          <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
+            {t('deposit')}
+          </AuthCTA>
+        </Flex>
+      </Flex>
     </form>
   );
 };
