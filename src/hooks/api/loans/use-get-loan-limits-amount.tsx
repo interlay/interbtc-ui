@@ -1,16 +1,17 @@
-import {
-  BorrowPosition,
-  CollateralPosition,
-  CurrencyExt,
-  LendingStats,
-  LoanAsset,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
-import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
+import {
+  BorrowAction,
+  BorrowPosition,
+  CollateralPosition,
+  LendAction,
+  LendingStats,
+  LoanAction,
+  LoanAsset
+} from '@/types/loans';
 import { pickSmallerAmount } from '@/utils/helpers/currencies';
 
 /**
@@ -103,20 +104,12 @@ const getMaxWithdrawableAmount = (
   return pickSmallerAmount(maxWithdrawableAmountByBorrowLimit, availableCapacity);
 };
 
-type GetMaxAmountParams = {
-  action: LoanAction;
-  asset: LoanAsset;
-  assetBalance?: MonetaryAmount<CurrencyExt>;
-  position?: CollateralPosition | BorrowPosition;
-  lendingStats?: LendingStats;
-};
-
-const getMaxCalculatedAmount = ({
-  action,
-  asset,
-  position,
-  lendingStats
-}: GetMaxAmountParams): MonetaryAmount<CurrencyExt> => {
+const getMaxCalculatedAmount = (
+  action: LoanAction,
+  asset: LoanAsset,
+  position?: CollateralPosition | BorrowPosition,
+  lendingStats?: LendingStats
+): MonetaryAmount<CurrencyExt> => {
   switch (action) {
     case 'lend':
       return getMaxLendableAmount(asset);
@@ -138,30 +131,15 @@ type UseGetLoanLimitsAmountData = {
 
 const useGetLoanLimitsAmount = (
   action: BorrowAction | LendAction,
-  asset?: LoanAsset,
+  asset: LoanAsset,
   position?: CollateralPosition | BorrowPosition
-): UseGetLoanLimitsAmountData | Record<string, never> => {
+): UseGetLoanLimitsAmountData => {
   const { getAvailableBalance } = useGetBalances();
   const { data: statistics } = useGetAccountLendingStatistics();
 
-  if (!asset) {
-    return {};
-  }
+  const maxCalculatedAmount = getMaxCalculatedAmount(action, asset, position, statistics);
 
-  const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
-
-  const assetBalance = getAvailableBalance(asset.currency.ticker) || zeroAssetAmount;
-
-  const minAmount = newMonetaryAmount(1, assetBalance.currency);
-
-  const maxAmountParams: GetMaxAmountParams = {
-    action,
-    asset,
-    assetBalance,
-    position,
-    lendingStats: statistics
-  };
-  const maxCalculatedAmount = getMaxCalculatedAmount(maxAmountParams);
+  const assetBalance = getAvailableBalance(asset.currency.ticker) || newMonetaryAmount(0, asset.currency);
 
   const maxAmount =
     action === 'lend' || action === 'repay'
@@ -171,7 +149,7 @@ const useGetLoanLimitsAmount = (
       : maxCalculatedAmount;
 
   return {
-    minAmount,
+    minAmount: newMonetaryAmount(1, asset.currency),
     maxAmount
   };
 };

@@ -15,16 +15,17 @@ import { StyledFlex, StyledStrategyForm } from './Strategy.styles';
 
 const StrategyPage = (): JSX.Element | null => {
   const { t } = useTranslation();
-  const { [URL_PARAMETERS.STRATEGY_TYPE]: strategyType } = useParams<Record<string, any>>();
+  const { [URL_PARAMETERS.STRATEGY.TYPE]: strategyType } = useParams<Record<string, StrategyType>>();
   const { replace } = useHistory();
   const { data: strategies, getStrategy } = useGetStrategies();
-  const { data: position } = useGetStrategyPosition(strategyType);
 
-  if (!strategies || !position) {
+  const strategy = getStrategy(strategyType);
+
+  const { data: position, isLoading: isPositionLoading } = useGetStrategyPosition(strategy);
+
+  if (!strategies || isPositionLoading) {
     return <FullLoadingSpinner />;
   }
-
-  const strategy = getStrategy(strategyType as StrategyType);
 
   if (!strategy) {
     // If strategy URL is invalid redirect to strategy landing page.
@@ -33,7 +34,7 @@ const StrategyPage = (): JSX.Element | null => {
     return null;
   }
 
-  const { title, description, infographics } = getContent(t, strategyType);
+  const { title, description, infographics } = getContent(strategy, t);
 
   return (
     <MainContainer>
@@ -48,11 +49,12 @@ const StrategyPage = (): JSX.Element | null => {
           {strategy.risk === StrategyRisk.LOW && <StrategyTag>Passive Income</StrategyTag>}
         </Flex>
       </Flex>
-      <StrategyInsights position={position} stratetgy={strategy} />
+      <StrategyInsights stratetgy={strategy} position={position} />
+      {/* TODO: layout will change when adding leverage strat */}
       <Flex gap='spacing6'>
         <StyledStrategyForm flex='1' strategy={strategy} position={position} />
         <StyledFlex flex='1' direction='column' gap='spacing6'>
-          <Card gap='spacing4'>
+          <Card role='article' gap='spacing4'>
             <H2 size='s' weight='bold'>
               How does it work?
             </H2>

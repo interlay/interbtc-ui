@@ -1,12 +1,14 @@
-import { BorrowPosition, CollateralPosition, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { gql, GraphQLClient } from 'graphql-request';
+import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { SQUID_URL } from '@/constants';
+import { BorrowPosition, CollateralPosition } from '@/types/loans';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import useAccountId from '../../use-account-id';
@@ -24,7 +26,10 @@ interface CollateralPositionWithEarnedAmount extends CollateralPosition {
   earnedAmount?: MonetaryAmount<CurrencyExt>;
 }
 
-type UseGetAccountPositions = {
+type UseGetAccountPositionsResult = {
+  isLoading: boolean;
+  getBorrowPosition: (currency: CurrencyExt) => BorrowPosition | undefined;
+  getLendPosition: (currency: CurrencyExt) => CollateralPositionWithEarnedAmount | undefined;
   data: Partial<AccountPositionsData> & {
     hasCollateral: boolean;
   };
@@ -32,11 +37,13 @@ type UseGetAccountPositions = {
 };
 
 interface UseGetLendPositionsOfAccount {
+  isLoading: boolean;
   data: Array<CollateralPositionWithEarnedAmount> | undefined;
   refetch: () => void;
 }
 
 interface UseGetBorrowPositionsOfAccount {
+  isLoading: boolean;
   data: Array<BorrowPosition> | undefined;
   refetch: () => void;
 }
@@ -111,7 +118,7 @@ const getLendPositionsOfAccount = async (
 const useGetLendPositionsOfAccount = (): UseGetLendPositionsOfAccount => {
   const accountId = useAccountId();
 
-  const { data, error, refetch } = useQuery({
+  const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['getLendPositionsOfAccount', accountId],
     queryFn: () => getLendPositionsOfAccount(accountId),
     enabled: !!accountId,
@@ -120,13 +127,13 @@ const useGetLendPositionsOfAccount = (): UseGetLendPositionsOfAccount => {
 
   useErrorHandler(error);
 
-  return { data, refetch };
+  return { data, isLoading, refetch };
 };
 
 const useGetBorrowPositionsOfAccount = (): UseGetBorrowPositionsOfAccount => {
   const accountId = useAccountId();
 
-  const { data, error, refetch } = useQuery({
+  const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['getBorrowPositionsOfAccount', accountId],
     queryFn: async () => {
       if (!accountId) {
@@ -141,15 +148,38 @@ const useGetBorrowPositionsOfAccount = (): UseGetBorrowPositionsOfAccount => {
 
   useErrorHandler(error);
 
-  return { data, refetch };
+  return { data, isLoading, refetch };
 };
 
-const useGetAccountPositions = (): UseGetAccountPositions => {
-  const { data: lendPositions, refetch: lendPositionsRefetch } = useGetLendPositionsOfAccount();
+const useGetAccountPositions = (): UseGetAccountPositionsResult => {
+  const {
+    data: lendPositions,
+    isLoading: isLendPositionsLoading,
+    refetch: lendPositionsRefetch
+  } = useGetLendPositionsOfAccount();
 
-  const { data: borrowPositions, refetch: borrowPositionsRefetch } = useGetBorrowPositionsOfAccount();
+  const {
+    data: borrowPositions,
+    isLoading: isBorrowPositionsLoading,
+    refetch: borrowPositionsRefetch
+  } = useGetBorrowPositionsOfAccount();
+
+  const getBorrowPosition = useCallback(
+    (currency: CurrencyExt) => {
+      return borrowPositions?.find((position) => isCurrencyEqual(position.amount.currency, currency));
+    },
+    [borrowPositions]
+  );
+
+  const getLendPosition = useCallback(
+    (currency: CurrencyExt) => {
+      return lendPositions?.find((position) => isCurrencyEqual(position.amount.currency, currency));
+    },
+    [lendPositions]
+  );
 
   return {
+    isLoading: isLendPositionsLoading || isBorrowPositionsLoading,
     data: {
       borrowPositions: borrowPositions,
       lendPositions: lendPositions,
@@ -158,7 +188,9 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
     refetch: () => {
       lendPositionsRefetch();
       borrowPositionsRefetch();
-    }
+    },
+    getBorrowPosition,
+    getLendPosition
   };
 };
 

@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useCallback, useMemo } from 'react';
 
@@ -12,7 +12,8 @@ type StrategyData = {
   type: StrategyType;
   risk: StrategyRisk;
   currency: CurrencyExt;
-  interest: Big;
+  interestRate: Big;
+  loanAsset: LoanAsset;
 };
 
 type UseGetStrategiesResult = {
@@ -29,17 +30,19 @@ const useGetStrategies = (): UseGetStrategiesResult => {
     () =>
       loanAssets &&
       loanPositions &&
+      // eslint-disable-next-line array-callback-return
       Object.values(StrategyType).map((type) => {
         switch (type) {
           case StrategyType.BTC_LOW_RISK: {
             const currency = WRAPPED_TOKEN;
+            const loanAsset = loanAssets[currency.ticker];
 
             return {
-              // TODO: add real earned amount once it's added on lib side
               type,
               currency,
-              interest: loanAssets[currency.ticker].lendApy,
-              risk: StrategyRisk.LOW
+              risk: StrategyRisk.LOW,
+              interestRate: loanAsset.lendApy,
+              loanAsset
             };
           }
         }

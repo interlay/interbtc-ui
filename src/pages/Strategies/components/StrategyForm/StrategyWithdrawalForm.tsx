@@ -8,27 +8,33 @@ import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
-import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
+import { isFormDisabled, useForm } from '@/lib/form';
 import {
   STRATEGY_WITHDRAW_AMOUNT_FIELD,
   STRATEGY_WITHDRAW_FEE_TOKEN_FIELD,
-  StrategyWithdrawFormData
+  StrategyWithdrawFormData,
+  strategyWithdrawSchema
 } from '@/lib/form/schemas/strategies';
 
 import { StrategyData } from '../../hooks/use-get-strategies';
 import { useGetStrategyLimitsAmount } from '../../hooks/use-get-strategy-limits-amount';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
+import { StrategyFormType } from '../../types';
 
 type StrategyWithdrawalFormProps = {
   strategy: StrategyData;
   position?: StrategyPositionData;
 };
 
-const StrategyWithdrawalForm = ({ strategy }: StrategyWithdrawalFormProps): JSX.Element => {
+const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const transaction = useTransaction(Transaction.LOANS_WITHDRAW);
-  const { maxAmount, minAmount } = useGetStrategyLimitsAmount(strategy.type, 'deposit');
+  const transaction = useTransaction(Transaction.LOANS_WITHDRAW, {
+    onSuccess: () => {
+      form.resetForm();
+    }
+  });
+  const { maxAmount, minAmount } = useGetStrategyLimitsAmount(StrategyFormType.DEPOSIT, strategy, position);
 
   const handleSubmit = (values: StrategyWithdrawFormData) => {
     const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];
@@ -47,7 +53,7 @@ const StrategyWithdrawalForm = ({ strategy }: StrategyWithdrawalFormProps): JSX.
       [STRATEGY_WITHDRAW_AMOUNT_FIELD]: '',
       [STRATEGY_WITHDRAW_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     },
-    validationSchema: StrategySchema(STRATEGY_WITHDRAW_AMOUNT_FIELD, 'withdraw', {
+    validationSchema: strategyWithdrawSchema('withdraw', {
       maxAmount,
       minAmount
     }),
@@ -70,12 +76,12 @@ const StrategyWithdrawalForm = ({ strategy }: StrategyWithdrawalFormProps): JSX.
     WRAPPED_TOKEN,
     true
   );
-  const inputUSDValue = convertMonetaryAmountToValueInUSD(inputMonetaryAmount, prices?.[WRAPPED_TOKEN_SYMBOL].usd);
+  const inputUSDValue = convertMonetaryAmountToValueInUSD(inputMonetaryAmount, prices?.[WRAPPED_TOKEN_SYMBOL].usd) || 0;
   const isSubmitButtonDisabled = isFormDisabled(form);
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <Flex direction='column' justifyContent='space-between'>
+      <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
@@ -83,10 +89,10 @@ const StrategyWithdrawalForm = ({ strategy }: StrategyWithdrawalFormProps): JSX.
           balance={maxAmount.toString()}
           humanBalance={maxAmount.toString()}
           balanceLabel={t('available')}
-          valueUSD={inputUSDValue ?? undefined}
+          valueUSD={inputUSDValue}
           {...mergeProps(form.getFieldProps(STRATEGY_WITHDRAW_AMOUNT_FIELD))}
         />
-        <Flex direction='column'>
+        <Flex direction='column' gap='spacing4'>
           <TransactionFeeDetails
             fee={transaction.fee}
             selectProps={{ ...form.getSelectFieldProps(STRATEGY_WITHDRAW_FEE_TOKEN_FIELD) }}

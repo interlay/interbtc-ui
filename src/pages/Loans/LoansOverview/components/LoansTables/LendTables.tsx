@@ -1,5 +1,6 @@
-import { CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
+
+import { CollateralPosition, LoanAsset, TickerToData } from '@/types/loans';
 
 import { getPosition } from '../../utils/get-position';
 import { CollateralModal } from '../CollateralModal';

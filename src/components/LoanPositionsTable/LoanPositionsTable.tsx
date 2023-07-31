@@ -1,4 +1,3 @@
-import { BorrowPosition, CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { useId } from '@react-aria/utils';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { Switch } from '@/component-library';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
-import { LoanType } from '@/types/loans';
+import { BorrowPosition, CollateralPosition, LoanAsset, LoanType, TickerToData } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import { AssetCell, BalanceCell, Table, TableProps } from '../DataGrid';

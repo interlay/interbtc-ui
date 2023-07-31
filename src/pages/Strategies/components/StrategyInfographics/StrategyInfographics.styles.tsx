@@ -55,7 +55,7 @@ const StyledRightArrow = styled.div<StyledRightArrowProps>`
 
   position: relative;
   height: 1px;
-  border-bottom: 1px dashed black;
+  border-bottom: 1px dashed ${theme.colors.textPrimary};
   margin-top: auto;
   margin-bottom: auto;
 
@@ -64,7 +64,7 @@ const StyledRightArrow = styled.div<StyledRightArrowProps>`
     position: absolute;
     border-top: 4px solid transparent;
     border-bottom: 4px solid transparent;
-    border-left: 6px solid black;
+    border-left: 6px solid ${theme.colors.textPrimary};
     right: 0;
     top: calc(50% + 0.5px);
     transform: translate(25%, -50%);
@@ -76,9 +76,9 @@ const StyledEndArrow = styled.div`
 
   position: relative;
   height: 20px;
-  border-left: 1px dashed black;
-  border-bottom: 1px dashed black;
-  border-right: 1px dashed black;
+  border-left: 1px dashed ${theme.colors.textPrimary};
+  border-bottom: 1px dashed ${theme.colors.textPrimary};
+  border-right: 1px dashed ${theme.colors.textPrimary};
   margin-left: calc(${theme.icon.sizes.xl2} / 2);
   margin-right: calc((${theme.icon.sizes.xl2} + (${theme.icon.sizes.xl2} / 2)) / 2);
 
@@ -87,7 +87,7 @@ const StyledEndArrow = styled.div`
     position: absolute;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-bottom: 6px solid black;
+    border-bottom: 6px solid ${theme.colors.textPrimary};
     top: 2px;
     left: -0.5px;
     transform: translate(-50%, -50%);
@@ -107,9 +107,9 @@ const StyledIcon = styled.span<StyledIconProps>`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
+  background-color: ${theme.colors.bgPrimary};
   border-radius: ${theme.rounded.full};
-  border: 1px solid black;
+  border: 1px solid ${theme.colors.textPrimary};
   padding: ${({ $size }) => {
     switch ($size) {
       case 's':

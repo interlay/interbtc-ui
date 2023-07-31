@@ -1,4 +1,4 @@
-import { BorrowPosition, CollateralPosition, CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { RefObject, useCallback } from 'react';
@@ -20,7 +20,7 @@ import {
   LoanValidationParams,
   useForm
 } from '@/lib/form';
-import { LoanAction } from '@/types/loans';
+import { BorrowPosition, CollateralPosition, LoanAction, LoanAsset } from '@/types/loans';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 

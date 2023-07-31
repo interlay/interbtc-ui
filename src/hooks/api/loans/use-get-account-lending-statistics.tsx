@@ -1,9 +1,9 @@
-import { BorrowPosition, CollateralPosition, LendingStats, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useMemo } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, convertMonetaryBtcToUSD } from '@/common/utils/utils';
 import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
+import { BorrowPosition, CollateralPosition, LendingStats, LoanAsset, TickerToData } from '@/types/loans';
 import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 

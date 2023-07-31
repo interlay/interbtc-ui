@@ -1,10 +1,12 @@
 import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { Card, P, TextLink } from '@/component-library';
 import { MainContainer } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
+import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 
 import { StrategyCard } from './components';
 import { getContent } from './helpers/content';
@@ -30,18 +32,20 @@ const Strategies = (): JSX.Element => {
       </Card>
       <StyledList>
         {strategies.map((strategy) => {
-          const { title, summary } = getContent(t, strategy.type);
+          const { title, summary } = getContent(strategy, t);
+
+          const to = PAGES.STRATEGY.replace(`:${URL_PARAMETERS.STRATEGY.TYPE}`, strategy.type);
 
           return (
-            <StrategyCard
-              key={strategy.type}
-              risk={strategy.risk}
-              ticker={strategy.currency.ticker}
-              interestRate={strategy.interest}
-              type={strategy.type}
-              title={title}
-              description={summary}
-            />
+            <Link key={strategy.type} to={to}>
+              <StrategyCard
+                risk={strategy.risk}
+                ticker={strategy.currency.ticker}
+                interestRate={strategy.interestRate}
+                title={title}
+                description={summary}
+              />
+            </Link>
           );
         })}
         <Card alignItems='center' justifyContent='center'>

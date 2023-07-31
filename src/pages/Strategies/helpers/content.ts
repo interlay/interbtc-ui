@@ -1,8 +1,7 @@
 import { TFunction } from 'react-i18next';
 
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
-
 import { StrategyInfographicsProps } from '../components/StrategyInfographics';
+import { StrategyData } from '../hooks/use-get-strategies';
 import { StrategyType } from '../types';
 
 type ContentData = {
@@ -12,21 +11,21 @@ type ContentData = {
   infographics: StrategyInfographicsProps['items'];
 };
 
-const getContent = (t: TFunction, type: StrategyType): ContentData => {
+const getContent = (strategy: StrategyData, t: TFunction): ContentData => {
   const content: Record<StrategyType, ContentData> = {
     [StrategyType.BTC_LOW_RISK]: {
       title: t('strategies.btc_passive_income'),
-      summary: t('strategies.generate_passive_income_by_offering_ticker', { ticker: WRAPPED_TOKEN.ticker }),
-      description: t('strategies.low_risk_approach_generate_passive_income', { ticker: WRAPPED_TOKEN.ticker }),
+      summary: t('strategies.generate_passive_income_by_offering_ticker', { ticker: strategy.currency.ticker }),
+      description: t('strategies.low_risk_approach_generate_passive_income', { ticker: strategy.currency.ticker }),
       infographics: [
-        { label: `Deposit ${WRAPPED_TOKEN.ticker}`, ticker: WRAPPED_TOKEN.ticker },
-        { label: `Provide ${WRAPPED_TOKEN.ticker} to borrow market`, icon: 'presentation' },
-        { label: 'Earn Interest', ticker: WRAPPED_TOKEN.ticker }
+        { label: `Deposit ${strategy.currency.ticker}`, ticker: strategy.currency.ticker },
+        { label: `Provide ${strategy.currency.ticker} to borrow market`, icon: 'presentation' },
+        { label: 'Earn Interest', ticker: strategy.currency.ticker }
       ]
     }
   };
 
-  return content[type];
+  return content[strategy.type];
 };
 
 export { getContent };

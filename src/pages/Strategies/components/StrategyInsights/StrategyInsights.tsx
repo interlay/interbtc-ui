@@ -1,5 +1,6 @@
 import { convertMonetaryAmountToValueInUSD, formatPercentage } from '@/common/utils/utils';
 import { Card, Dd, Dl, DlGroup, Dt } from '@/component-library';
+import { formatUSD } from '@/component-library/utils/format';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
@@ -7,15 +8,21 @@ import { StrategyData } from '../../hooks/use-get-strategies';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 
 type Props = {
-  position: StrategyPositionData;
   stratetgy: StrategyData;
+  position?: StrategyPositionData;
 };
 
-const StrategyInsights = ({ position, stratetgy }: Props): JSX.Element => {
-  const { amount, earnedAmount } = position;
+const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
+  const { amount, earnedAmount } = position || {};
 
   const prices = useGetPrices();
-  const price = getTokenPrice(prices, amount.currency.ticker);
+  const price = getTokenPrice(prices, stratetgy.currency.ticker);
+
+  const amountUSD = (amount && convertMonetaryAmountToValueInUSD(amount, price?.usd)) || 0;
+  const amountUSDLabel = formatUSD(amountUSD, { compact: true });
+
+  const earnedUSD = (earnedAmount && convertMonetaryAmountToValueInUSD(earnedAmount, price?.usd)) || 0;
+  const earnedUSDLabel = formatUSD(earnedUSD, { compact: true });
 
   return (
     <Dl wrap direction='row'>
@@ -25,7 +32,7 @@ const StrategyInsights = ({ position, stratetgy }: Props): JSX.Element => {
             My deposit
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {amount.toHuman()} {amount.currency.ticker} ({convertMonetaryAmountToValueInUSD(amount, price?.usd)})
+            {amount?.toHuman() || 0} {stratetgy.currency.ticker} ({amountUSDLabel})
           </Dd>
         </DlGroup>
       </Card>
@@ -35,7 +42,7 @@ const StrategyInsights = ({ position, stratetgy }: Props): JSX.Element => {
             APY
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {formatPercentage(stratetgy.interest.toNumber())}
+            {formatPercentage(stratetgy.interestRate.toNumber())}
           </Dd>
         </DlGroup>
       </Card>
@@ -45,8 +52,7 @@ const StrategyInsights = ({ position, stratetgy }: Props): JSX.Element => {
             My earnings
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {earnedAmount.toHuman()} {earnedAmount.currency.ticker} (
-            {convertMonetaryAmountToValueInUSD(earnedAmount, price?.usd)})
+            {earnedAmount?.toHuman() || 0} {stratetgy.currency.ticker} ({earnedUSDLabel})
           </Dd>
         </DlGroup>
       </Card>
