@@ -35,7 +35,10 @@ const getStrategyLimitAmounts = (
   }
 };
 
-const useStrategyFormData = (strategyType: StrategyType, formType: StrategyFormType): UseSimplePassiveIncomeData => {
+const useGetStrategyLimitsAmount = (
+  strategyType: StrategyType,
+  formType: StrategyFormType
+): UseSimplePassiveIncomeData => {
   const { data } = useGetAccountPositions();
   const { data: loanAssets } = useGetLoanAssets();
 
@@ -56,4 +59,4 @@ const useStrategyFormData = (strategyType: StrategyType, formType: StrategyFormT
   };
 };
 
-export { useStrategyFormData };
+export { useGetStrategyLimitsAmount };

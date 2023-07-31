@@ -50,7 +50,7 @@ const StrategyPage = (): JSX.Element | null => {
       </Flex>
       <StrategyInsights position={position} stratetgy={strategy} />
       <Flex gap='spacing6'>
-        <StyledStrategyForm flex='1' type={strategyType} />
+        <StyledStrategyForm flex='1' strategy={strategy} position={position} />
         <StyledFlex flex='1' direction='column' gap='spacing6'>
           <Card gap='spacing4'>
             <H2 size='s' weight='bold'>

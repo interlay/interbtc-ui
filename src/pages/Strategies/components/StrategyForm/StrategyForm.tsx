@@ -1,25 +1,27 @@
 import { Card, CardProps, Tabs, TabsItem } from '@/component-library';
 
-import { StrategyType } from '../../types';
-import { StrategyDepositForm } from '../StrategyDepositForm';
-import { StrategyWithdrawalForm } from '../StrategyWithdrawalForm';
+import { StrategyData } from '../../hooks/use-get-strategies';
+import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
+import { StrategyDepositForm } from './StrategyDepositForm';
+import { StrategyWithdrawalForm } from './StrategyWithdrawalForm';
 
 type Props = {
-  type: StrategyType;
+  strategy: StrategyData;
+  position?: StrategyPositionData;
 };
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type StrategyFormProps = Props & InheritAttrs;
 
-const StrategyForm = ({ type, ...props }: StrategyFormProps): JSX.Element => (
+const StrategyForm = ({ strategy, position, ...props }: StrategyFormProps): JSX.Element => (
   <Card {...props}>
     <Tabs fullWidth size='large'>
       <TabsItem key='deposit' title='Deposit'>
-        <StrategyDepositForm type={type} />
+        <StrategyDepositForm strategy={strategy} position={position} />
       </TabsItem>
       <TabsItem key='withdraw' title='Withdraw'>
-        <StrategyWithdrawalForm type={type} />
+        <StrategyWithdrawalForm strategy={strategy} position={position} />
       </TabsItem>
     </Tabs>
   </Card>

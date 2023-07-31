@@ -10,26 +10,28 @@ import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
 import {
-  STRATEGY_WITHDRAW_AMOUNT_FIELD,
-  STRATEGY_WITHDRAW_FEE_TOKEN_FIELD,
-  StrategyWithdrawFormData
+  STRATEGY_DEPOSIT_AMOUNT_FIELD,
+  STRATEGY_DEPOSIT_FEE_TOKEN_FIELD,
+  StrategyDepositFormData
 } from '@/lib/form/schemas/strategies';
-import { useStrategyFormData } from '@/pages/Strategies/hooks/use-strategy-form-data';
 
-import { StrategyType } from '../../types';
+import { StrategyData } from '../../hooks/use-get-strategies';
+import { useGetStrategyLimitsAmount } from '../../hooks/use-get-strategy-limits-amount';
+import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 
-type StrategyWithdrawalFormProps = {
-  type: StrategyType;
+type StrategyDepositFormProps = {
+  strategy: StrategyData;
+  position?: StrategyPositionData;
 };
 
-const StrategyWithdrawalForm = ({ type }: StrategyWithdrawalFormProps): JSX.Element => {
-  const { t } = useTranslation();
+const StrategyDepositForm = ({ strategy }: StrategyDepositFormProps): JSX.Element => {
   const prices = useGetPrices();
-  const transaction = useTransaction(Transaction.LOANS_WITHDRAW);
-  const { maxAmount, minAmount } = useStrategyFormData(type, 'withdraw');
+  const { maxAmount, minAmount } = useGetStrategyLimitsAmount(strategy.type, 'deposit');
+  const { t } = useTranslation();
+  const transaction = useTransaction(Transaction.LOANS_LEND);
 
-  const handleSubmit = (values: StrategyWithdrawFormData) => {
-    const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];
+  const handleSubmit = (values: StrategyDepositFormData) => {
+    const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD];
 
     if (!amount) {
       return;
@@ -40,18 +42,15 @@ const StrategyWithdrawalForm = ({ type }: StrategyWithdrawalFormProps): JSX.Elem
     transaction.execute(WRAPPED_TOKEN, monetaryAmount);
   };
 
-  const form = useForm<StrategyWithdrawFormData>({
+  const form = useForm<StrategyDepositFormData>({
     initialValues: {
-      [STRATEGY_WITHDRAW_AMOUNT_FIELD]: '',
-      [STRATEGY_WITHDRAW_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
+      [STRATEGY_DEPOSIT_AMOUNT_FIELD]: '',
+      [STRATEGY_DEPOSIT_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     },
-    validationSchema: StrategySchema(STRATEGY_WITHDRAW_AMOUNT_FIELD, 'withdraw', {
-      maxAmount,
-      minAmount
-    }),
+    validationSchema: StrategySchema(STRATEGY_DEPOSIT_AMOUNT_FIELD, 'deposit', { maxAmount, minAmount }),
     onSubmit: handleSubmit,
-    onComplete: (values: StrategyWithdrawFormData) => {
-      const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];
+    onComplete: (values: StrategyDepositFormData) => {
+      const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD];
 
       if (!amount) {
         return;
@@ -64,7 +63,7 @@ const StrategyWithdrawalForm = ({ type }: StrategyWithdrawalFormProps): JSX.Elem
   });
 
   const inputMonetaryAmount = newSafeMonetaryAmount(
-    form.values[STRATEGY_WITHDRAW_AMOUNT_FIELD] || 0,
+    form.values[STRATEGY_DEPOSIT_AMOUNT_FIELD] || 0,
     WRAPPED_TOKEN,
     true
   );
@@ -73,24 +72,23 @@ const StrategyWithdrawalForm = ({ type }: StrategyWithdrawalFormProps): JSX.Elem
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <Flex direction='column' justifyContent='space-between'>
+      <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
-          aria-label={t('forms.field_amount', { field: t('withdraw') })}
+          aria-label={t('forms.field_amount', { field: t('deposit') })}
           balance={maxAmount.toString()}
           humanBalance={maxAmount.toString()}
-          balanceLabel={t('available')}
           valueUSD={inputUSDValue ?? undefined}
-          {...mergeProps(form.getFieldProps(STRATEGY_WITHDRAW_AMOUNT_FIELD))}
+          {...mergeProps(form.getFieldProps(STRATEGY_DEPOSIT_AMOUNT_FIELD))}
         />
-        <Flex direction='column'>
+        <Flex direction='column' gap='spacing4'>
           <TransactionFeeDetails
             fee={transaction.fee}
-            selectProps={{ ...form.getSelectFieldProps(STRATEGY_WITHDRAW_FEE_TOKEN_FIELD) }}
+            selectProps={{ ...form.getSelectFieldProps(STRATEGY_DEPOSIT_FEE_TOKEN_FIELD) }}
           />
           <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-            {t('withdraw')}
+            {t('deposit')}
           </AuthCTA>
         </Flex>
       </Flex>
@@ -98,4 +96,4 @@ const StrategyWithdrawalForm = ({ type }: StrategyWithdrawalFormProps): JSX.Elem
   );
 };
 
-export { StrategyWithdrawalForm };
+export { StrategyDepositForm };
