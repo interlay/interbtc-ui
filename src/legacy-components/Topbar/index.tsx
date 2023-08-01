@@ -2,7 +2,6 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { Keyring } from '@polkadot/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,10 +9,7 @@ import { showAccountModalAction, showSignTermsModalAction } from '@/common/actio
 import { StoreType } from '@/common/types/util.types';
 import { FundWallet, NotificationsPopover } from '@/components';
 import { AuthModal, SignTermsModal } from '@/components/AuthModal';
-import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { SS58_FORMAT } from '@/constants';
-import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useSignMessage } from '@/hooks/use-sign-message';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
@@ -23,56 +19,24 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { POLKADOT } from '@/utils/constants/relay-chain-names';
-import { NotificationToastType, useNotifications } from '@/utils/context/Notifications';
+import { useNotifications } from '@/utils/context/Notifications';
+import { useFaucet } from '@/utils/hooks/use-faucet';
 
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
 const Topbar = (): JSX.Element => {
-  const { bridgeLoaded, showAccountModal, isSignTermsModalOpen } = useSelector((state: StoreType) => state.general);
+  const { showAccountModal, isSignTermsModalOpen } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { getAvailableBalance } = useGetBalances();
   const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const { selectProps } = useSignMessage();
   const notifications = useNotifications();
 
-  const governanceTokenBalanceIsZero = getAvailableBalance(GOVERNANCE_TOKEN.ticker)?.isZero();
-
-  const handleRequestFromFaucet = async (): Promise<void> => {
-    if (!selectedAccount) return;
-
-    try {
-      const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedAccount.address);
-      await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
-
-      notifications.show('faucet', {
-        type: NotificationToastType.STANDARD,
-        props: { variant: 'success', title: t('notifications.funding_account_successful') }
-      });
-    } catch (error) {
-      notifications.show('faucet', {
-        type: NotificationToastType.STANDARD,
-        props: { variant: 'error', title: t('notifications.funding_account_failed') }
-      });
-    }
-  };
-
-  const [isRequestPending, setIsRequestPending] = React.useState(false);
+  const { buttonProps, isAvailable } = useFaucet();
 
   const { extensions, selectedAccount } = useSubstrateSecureState();
-
-  const handleFundsRequest = async () => {
-    if (!bridgeLoaded) return;
-    setIsRequestPending(true);
-    try {
-      await handleRequestFromFaucet();
-    } catch (error) {
-      console.log('[requestFunds] error.message => ', error.message);
-    }
-    setIsRequestPending(false);
-  };
 
   const handleAccountModalOpen = () => dispatch(showAccountModalAction(true));
 
@@ -107,19 +71,13 @@ const Topbar = (): JSX.Element => {
       <header className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
         <FundWallet />
+        {isAvailable && (
+          <InterlayDenimOrKintsugiMidnightOutlinedButton className={SMALL_SIZE_BUTTON_CLASSES} {...buttonProps}>
+            {t('request_funds')}
+          </InterlayDenimOrKintsugiMidnightOutlinedButton>
+        )}
         {selectedAccount !== undefined && (
           <>
-            {process.env.REACT_APP_FAUCET_URL && governanceTokenBalanceIsZero && (
-              <>
-                <InterlayDenimOrKintsugiMidnightOutlinedButton
-                  className={SMALL_SIZE_BUTTON_CLASSES}
-                  pending={isRequestPending}
-                  onClick={handleFundsRequest}
-                >
-                  {t('request_funds')}
-                </InterlayDenimOrKintsugiMidnightOutlinedButton>
-              </>
-            )}
             {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
               <>
                 <InterlayLink

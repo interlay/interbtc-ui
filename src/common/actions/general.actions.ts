@@ -2,10 +2,8 @@ import {
   ADD_NOTIFICATION,
   AddNotification,
   IS_BRIDGE_LOADED,
-  IS_FAUCET_LOADED,
   IS_VAULT_CLIENT_LOADED,
   IsBridgeLoaded,
-  IsFaucetLoaded,
   IsVaultClientLoaded,
   SHOW_ACCOUNT_MODAL,
   SHOW_BUY_MODAL,
@@ -20,11 +18,6 @@ import { Notification, TransactionModalData } from '../types/util.types';
 
 export const isBridgeLoaded = (isLoaded = false): IsBridgeLoaded => ({
   type: IS_BRIDGE_LOADED,
-  isLoaded
-});
-
-export const isFaucetLoaded = (isLoaded = false): IsFaucetLoaded => ({
-  type: IS_FAUCET_LOADED,
   isLoaded
 });
 
