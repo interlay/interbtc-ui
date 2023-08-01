@@ -18,7 +18,7 @@ import {
 } from '@/lib/form';
 
 import { StrategyData } from '../../hooks/use-get-strategies';
-import { useGetStrategyLimitsAmount } from '../../hooks/use-get-strategy-limits-amount';
+import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-available-amounts';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 import { StrategyFormType } from '../../types';
 
@@ -35,7 +35,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
       form.resetForm();
     }
   });
-  const { maxAmount, minAmount } = useGetStrategyLimitsAmount(StrategyFormType.DEPOSIT, strategy, position);
+  const { maxAmount, minAmount } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, position);
 
   const handleSubmit = (values: StrategyDepositFormData) => {
     const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD];

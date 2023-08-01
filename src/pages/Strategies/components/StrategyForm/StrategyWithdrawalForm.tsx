@@ -17,7 +17,7 @@ import {
 } from '@/lib/form/schemas/strategies';
 
 import { StrategyData } from '../../hooks/use-get-strategies';
-import { useGetStrategyLimitsAmount } from '../../hooks/use-get-strategy-limits-amount';
+import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-available-amounts';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 import { StrategyFormType } from '../../types';
 
@@ -34,7 +34,7 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
       form.resetForm();
     }
   });
-  const { maxAmount, minAmount } = useGetStrategyLimitsAmount(StrategyFormType.DEPOSIT, strategy, position);
+  const { maxAmount, minAmount } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, position);
 
   const handleSubmit = (values: StrategyWithdrawFormData) => {
     const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];

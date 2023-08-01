@@ -1,7 +1,7 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { useGetLoanLimitsAmount } from '@/hooks/api/loans/use-get-loan-limits-amount';
+import { useGetLoanAvailableAmounts } from '@/hooks/api/loans/use-get-loan-available-amounts';
 
 import { StrategyFormType, StrategyType } from '../types';
 import { StrategyData } from './use-get-strategies';
@@ -12,12 +12,12 @@ interface UseSimplePassiveIncomeData {
   maxAmount: MonetaryAmount<CurrencyExt>;
 }
 
-const useGetStrategyLimitsAmount = (
+const useGetStrategyAvailableAmounts = (
   type: StrategyFormType,
   strategy: StrategyData,
   position?: StrategyPositionData
 ): UseSimplePassiveIncomeData => {
-  const loanFormData = useGetLoanLimitsAmount(
+  const loanFormData = useGetLoanAvailableAmounts(
     type === StrategyFormType.DEPOSIT ? 'lend' : 'withdraw',
     strategy.loanAsset,
     position?.loanPosition
@@ -30,4 +30,4 @@ const useGetStrategyLimitsAmount = (
   }
 };
 
-export { useGetStrategyLimitsAmount };
+export { useGetStrategyAvailableAmounts };

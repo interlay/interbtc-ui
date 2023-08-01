@@ -24,7 +24,7 @@ type UseGetStrategiesResult = {
 
 const useGetStrategies = (): UseGetStrategiesResult => {
   const { data: loanAssets } = useGetLoanAssets();
-  const { data: loanPositions } = useGetAccountPositions();
+  const { data: loanPositions, isLoading: isPositionsLoading } = useGetAccountPositions();
 
   const data: StrategyData[] | undefined = useMemo(
     () =>
@@ -53,7 +53,7 @@ const useGetStrategies = (): UseGetStrategiesResult => {
   const getStrategy = useCallback((type: StrategyType) => data?.find((item) => item.type === type), [data]);
 
   return {
-    isLoading: !loanAssets || !loanPositions,
+    isLoading: !loanAssets || isPositionsLoading,
     data,
     getStrategy
   };

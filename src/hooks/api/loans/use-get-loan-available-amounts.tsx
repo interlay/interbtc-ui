@@ -129,7 +129,7 @@ type UseGetLoanLimitsAmountData = {
   maxAmount: MonetaryAmount<CurrencyExt>;
 };
 
-const useGetLoanLimitsAmount = (
+const useGetLoanAvailableAmounts = (
   action: BorrowAction | LendAction,
   asset: LoanAsset,
   position?: CollateralPosition | BorrowPosition
@@ -139,12 +139,12 @@ const useGetLoanLimitsAmount = (
 
   const maxCalculatedAmount = getMaxCalculatedAmount(action, asset, position, statistics);
 
-  const assetBalance = getAvailableBalance(asset.currency.ticker) || newMonetaryAmount(0, asset.currency);
+  const availableBalance = getAvailableBalance(asset.currency.ticker) || newMonetaryAmount(0, asset.currency);
 
   const maxAmount =
     action === 'lend' || action === 'repay'
-      ? maxCalculatedAmount.gt(assetBalance)
-        ? assetBalance
+      ? maxCalculatedAmount.gt(availableBalance)
+        ? availableBalance
         : maxCalculatedAmount
       : maxCalculatedAmount;
 
@@ -154,5 +154,5 @@ const useGetLoanLimitsAmount = (
   };
 };
 
-export { useGetLoanLimitsAmount };
+export { useGetLoanAvailableAmounts };
 export type { UseGetLoanLimitsAmountData };

@@ -17,10 +17,6 @@ const Strategies = (): JSX.Element => {
   const { t } = useTranslation();
   const { data: strategies } = useGetStrategies();
 
-  if (!strategies) {
-    return <FullLoadingSpinner />;
-  }
-
   return (
     <MainContainer>
       <Card>
@@ -30,31 +26,35 @@ const Strategies = (): JSX.Element => {
           transaction fees!
         </P>
       </Card>
-      <StyledList>
-        {strategies.map((strategy) => {
-          const { title, summary } = getContent(strategy, t);
+      {strategies ? (
+        <StyledList>
+          {strategies.map((strategy) => {
+            const { title, summary } = getContent(strategy, t);
 
-          const to = PAGES.STRATEGY.replace(`:${URL_PARAMETERS.STRATEGY.TYPE}`, strategy.type);
+            const to = PAGES.STRATEGY.replace(`:${URL_PARAMETERS.STRATEGY.TYPE}`, strategy.type);
 
-          return (
-            <Link key={strategy.type} to={to}>
-              <StrategyCard
-                risk={strategy.risk}
-                ticker={strategy.currency.ticker}
-                interestRate={strategy.interestRate}
-                title={title}
-                description={summary}
-              />
-            </Link>
-          );
-        })}
-        <Card alignItems='center' justifyContent='center'>
-          <P size='xs'>More Strategies coming soon</P>
-          <TextLink size='xs' underlined to={'#'}>
-            Request strategies
-          </TextLink>
-        </Card>
-      </StyledList>
+            return (
+              <Link key={strategy.type} to={to}>
+                <StrategyCard
+                  risk={strategy.risk}
+                  ticker={strategy.currency.ticker}
+                  interestRate={strategy.interestRate}
+                  title={title}
+                  description={summary}
+                />
+              </Link>
+            );
+          })}
+          <Card alignItems='center' justifyContent='center'>
+            <P size='xs'>More Strategies coming soon</P>
+            <TextLink size='xs' underlined to={'#'}>
+              Request strategies
+            </TextLink>
+          </Card>
+        </StyledList>
+      ) : (
+        <FullLoadingSpinner />
+      )}
     </MainContainer>
   );
 };

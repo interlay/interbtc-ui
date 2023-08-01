@@ -8,7 +8,7 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
-import { useGetLoanLimitsAmount } from '@/hooks/api/loans/use-get-loan-limits-amount';
+import { useGetLoanAvailableAmounts } from '@/hooks/api/loans/use-get-loan-available-amounts';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
@@ -98,7 +98,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { minAmount, maxAmount } = useGetLoanLimitsAmount(variant, asset, position);
+  const { minAmount, maxAmount } = useGetLoanAvailableAmounts(variant, asset, position);
 
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
