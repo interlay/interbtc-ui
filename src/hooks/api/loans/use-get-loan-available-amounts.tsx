@@ -1,5 +1,6 @@
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { useCallback } from 'react';
 
 import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
@@ -124,16 +125,21 @@ const getMaxCalculatedAmount = (
   }
 };
 
-type UseGetLoanLimitsAmountData = {
+type UseGetLoanAvailableAmountsData = {
   minAmount: MonetaryAmount<CurrencyExt>;
   maxAmount: MonetaryAmount<CurrencyExt>;
+};
+
+type UseGetLoanAvailableAmountsResult = {
+  isMaxAmount: (amount: MonetaryAmount<CurrencyExt>) => boolean;
+  data: UseGetLoanAvailableAmountsData;
 };
 
 const useGetLoanAvailableAmounts = (
   action: BorrowAction | LendAction,
   asset: LoanAsset,
   position?: CollateralPosition | BorrowPosition
-): UseGetLoanLimitsAmountData => {
+): UseGetLoanAvailableAmountsResult => {
   const { getAvailableBalance } = useGetBalances();
   const { data: statistics } = useGetAccountLendingStatistics();
 
@@ -141,18 +147,39 @@ const useGetLoanAvailableAmounts = (
 
   const availableBalance = getAvailableBalance(asset.currency.ticker) || newMonetaryAmount(0, asset.currency);
 
-  const maxAmount =
-    action === 'lend' || action === 'repay'
-      ? maxCalculatedAmount.gt(availableBalance)
-        ? availableBalance
-        : maxCalculatedAmount
-      : maxCalculatedAmount;
+  const minAmount = newMonetaryAmount(1, asset.currency);
+
+  const isMaxAmount = useCallback(
+    (amount: MonetaryAmount<CurrencyExt>) => {
+      if (action === 'withdraw') {
+        return !!position?.amount.eq(amount);
+      }
+
+      return amount.eq(maxCalculatedAmount);
+    },
+    [action, maxCalculatedAmount, position?.amount]
+  );
+
+  if (action === 'borrow' || action === 'withdraw') {
+    return {
+      isMaxAmount,
+      data: {
+        minAmount,
+        maxAmount: maxCalculatedAmount
+      }
+    };
+  }
+
+  const availableMaxAmount = maxCalculatedAmount.gt(availableBalance) ? availableBalance : maxCalculatedAmount;
 
   return {
-    minAmount: newMonetaryAmount(1, asset.currency),
-    maxAmount
+    isMaxAmount,
+    data: {
+      minAmount,
+      maxAmount: availableMaxAmount
+    }
   };
 };
 
 export { useGetLoanAvailableAmounts };
-export type { UseGetLoanLimitsAmountData };
+export type { UseGetLoanAvailableAmountsData, UseGetLoanAvailableAmountsResult };

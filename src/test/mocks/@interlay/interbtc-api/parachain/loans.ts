@@ -1,16 +1,9 @@
-import { LoansAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { LoansAPI, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
 import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
-import {
-  AccruedRewards,
-  BorrowPosition,
-  CollateralPosition,
-  LendingStats,
-  LoanAsset,
-  TickerToData
-} from '@/types/loans';
+import { AccruedRewards, BorrowPosition, CollateralPosition, LendingStats, LoanAsset } from '@/types/loans';
 
 import { EXTRINSIC_DATA } from '../extrinsic';
 

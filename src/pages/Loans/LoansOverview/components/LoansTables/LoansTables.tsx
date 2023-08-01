@@ -1,6 +1,7 @@
+import { TickerToData } from '@interlay/interbtc-api';
 import { useMemo } from 'react';
 
-import { BorrowPosition, CollateralPosition, LoanAsset, TickerToData } from '@/types/loans';
+import { BorrowPosition, CollateralPosition, LoanAsset } from '@/types/loans';
 
 import { BorrowTables } from './BorrowTables';
 import { LendTables } from './LendTables';

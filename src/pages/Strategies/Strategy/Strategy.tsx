@@ -13,7 +13,7 @@ import { useGetStrategyPosition } from '../hooks/use-get-strategy-position';
 import { StrategyRisk, StrategyType } from '../types';
 import { StyledFlex, StyledStrategyForm } from './Strategy.styles';
 
-const StrategyPage = (): JSX.Element | null => {
+const Strategy = (): JSX.Element | null => {
   const { t } = useTranslation();
   const { [URL_PARAMETERS.STRATEGY.TYPE]: strategyType } = useParams<Record<string, StrategyType>>();
   const { replace } = useHistory();
@@ -83,4 +83,4 @@ const StrategyPage = (): JSX.Element | null => {
   );
 };
 
-export { StrategyPage };
+export { Strategy };

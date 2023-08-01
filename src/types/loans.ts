@@ -4,8 +4,7 @@ import {
   CollateralPosition as LibCollateralPosition,
   CurrencyExt,
   LendingStats,
-  LoanAsset,
-  TickerToData
+  LoanAsset
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
@@ -34,6 +33,5 @@ export type {
   LendingStats,
   LoanAction,
   LoanAsset,
-  LoanType,
-  TickerToData
+  LoanType
 };

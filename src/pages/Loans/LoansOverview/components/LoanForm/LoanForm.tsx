@@ -1,5 +1,4 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import { RefObject, useCallback } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -28,12 +27,6 @@ import { isLendAsset } from '../../utils/is-loan-asset';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanDetails } from '../LoanDetails';
 import { StyledFormWrapper } from './LoanForm.style';
-
-const isMaxWithdrawAmount = (amount: MonetaryAmount<CurrencyExt>, position?: BorrowPosition | CollateralPosition) =>
-  !!position?.amount.eq(amount);
-
-const isMaxRepayAmount = (amount: MonetaryAmount<CurrencyExt>, maxAmount: MonetaryAmount<CurrencyExt>) =>
-  maxAmount.eq(amount);
 
 // The borrow limit component is only displayed when
 // loan form is openned while lending an asset that is
@@ -98,7 +91,10 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { minAmount, maxAmount } = useGetLoanAvailableAmounts(variant, asset, position);
+  const {
+    data: { minAmount, maxAmount },
+    isMaxAmount
+  } = useGetLoanAvailableAmounts(variant, asset, position);
 
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
@@ -131,7 +127,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
       case 'lend':
         return transaction.execute(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
       case 'withdraw': {
-        const isWithdrawAll = isMaxWithdrawAmount(monetaryAmount, position);
+        const isWithdrawAll = isMaxAmount(monetaryAmount);
 
         if (isWithdrawAll) {
           return transaction.execute(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
@@ -142,7 +138,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
       case 'borrow':
         return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
       case 'repay': {
-        const isRepayAll = isMaxRepayAmount(monetaryAmount, maxAmount);
+        const isRepayAll = isMaxAmount(monetaryAmount);
 
         if (isRepayAll) {
           return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, maxAmount);
@@ -173,7 +169,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
         case 'lend':
           return transaction.fee.estimate(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
         case 'withdraw': {
-          const isWithdrawAll = isMaxWithdrawAmount(monetaryAmount, position);
+          const isWithdrawAll = isMaxAmount(monetaryAmount);
 
           if (isWithdrawAll) {
             return transaction.fee.estimate(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
@@ -185,7 +181,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
           return transaction.fee.estimate(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
 
         case 'repay': {
-          const isRepayAll = isMaxRepayAmount(monetaryAmount, maxAmount);
+          const isRepayAll = isMaxAmount(monetaryAmount);
 
           if (isRepayAll) {
             return (
