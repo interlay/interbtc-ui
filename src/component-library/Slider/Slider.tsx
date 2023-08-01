@@ -1,53 +1,56 @@
-import { useFocusRing } from '@react-aria/focus';
-import { usePress } from '@react-aria/interactions';
-import { AriaSwitchProps, useSwitch } from '@react-aria/switch';
-import { mergeProps } from '@react-aria/utils';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { useToggleState } from '@react-stately/';
-import { ChangeEvent, forwardRef, HTMLAttributes, useRef } from 'react';
+import { useNumberFormatter } from '@react-aria/i18n';
+import { AriaSliderProps, useSlider } from '@react-aria/slider';
+import { useSliderState } from '@react-stately/slider';
+import { forwardRef, HTMLAttributes, useRef } from 'react';
 
+import { Label } from '../Label';
 import { useDOMRef } from '../utils/dom';
-import { StyledInput, StyledLabel, StyledSwitch, StyledWrapper } from './Slider.style';
+import { StyledSliderWrapper, StyledTrack } from './Slider.style';
+import { SliderThumb } from './SliderThumb';
 
-type Props = {
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = {};
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type InheritAttrs = Omit<AriaSwitchProps, keyof Props>;
+type InheritAttrs = Omit<AriaSliderProps, keyof Props>;
 
-type SwitchProps = Props & NativeAttrs & InheritAttrs;
+type SliderProps = Props & NativeAttrs & InheritAttrs;
 
-const Switch = forwardRef<HTMLLabelElement, SwitchProps>(
-  ({ children, onChange, className, style, hidden, ...props }, ref): JSX.Element => {
-    const labelRef = useDOMRef(ref);
-    const inputRef = useRef<HTMLInputElement>(null);
+const Slider = forwardRef<HTMLDivElement, SliderProps>(
+  ({ className, style, hidden, minValue = 0, maxValue = 100, label, ...props }, ref): JSX.Element => {
+    const domRef = useDOMRef(ref);
+    const trackRef = useRef<HTMLInputElement>(null);
+    const numberFormatter = useNumberFormatter({});
 
-    const ariaProps: AriaSwitchProps = { children, ...props };
-
-    const state = useToggleState(ariaProps);
-    const { inputProps } = useSwitch(ariaProps, state, inputRef);
-
-    const { focusProps, isFocusVisible } = useFocusRing({
-      autoFocus: inputProps.autoFocus
+    const state = useSliderState({
+      ...props,
+      numberFormatter,
+      minValue,
+      maxValue
     });
 
-    const { pressProps } = usePress(props);
+    const { groupProps, trackProps, labelProps } = useSlider(props, state, trackRef);
 
     return (
-      <StyledWrapper ref={labelRef} className={className} style={style} hidden={hidden}>
-        <VisuallyHidden>
-          <StyledInput {...mergeProps(inputProps, focusProps, pressProps, { onChange })} ref={inputRef} />
-        </VisuallyHidden>
-        <StyledSwitch $isChecked={inputProps.checked} $isFocusVisible={isFocusVisible} />
-        {children && <StyledLabel {...labelProps}>{children}</StyledLabel>}
-      </StyledWrapper>
+      <StyledSliderWrapper
+        {...groupProps}
+        direction='column'
+        ref={domRef}
+        className={className}
+        style={style}
+        hidden={hidden}
+      >
+        <Label {...labelProps}>{label}</Label>
+        <StyledTrack ref={trackRef} {...trackProps}>
+          <SliderThumb index={0} trackRef={trackRef} state={state} />
+        </StyledTrack>
+      </StyledSliderWrapper>
     );
   }
 );
 
-Switch.displayName = 'Switch';
+Slider.displayName = 'Slider';
 
-export { Switch };
-export type { SwitchProps };
+export { Slider };
+export type { SliderProps };

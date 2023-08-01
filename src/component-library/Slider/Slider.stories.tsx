@@ -1,17 +1,15 @@
 import { Meta, Story } from '@storybook/react';
 
-import { Switch, SwitchProps } from '.';
+import { Slider, SliderProps } from '.';
 
-const Template: Story<SwitchProps> = (args) => <Switch {...args} aria-label='hide all balances' />;
+const Template: Story<SliderProps> = (args) => <Slider {...args} />;
 
 const Default = Template.bind({});
-Default.args = {
-  children: 'Hide all balances'
-};
+Default.args = { label: 'Leverage', minValue: 1, maxValue: 5 };
 
 export { Default };
 
 export default {
-  title: 'Forms/Switch',
-  component: Switch
+  title: 'Forms/Slider',
+  component: Slider
 } as Meta;
