@@ -1,5 +1,6 @@
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -30,21 +31,31 @@ type StrategyDepositFormProps = {
 const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const transaction = useTransaction(Transaction.LOANS_LEND, {
+  const transaction = useTransaction(Transaction.STRATEGIES_DEPOSIT, {
     onSuccess: () => {
       form.resetForm();
     }
   });
-  const { maxAmount, minAmount } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, position);
+  const {
+    data: { maxAmount, minAmount }
+  } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, position);
+
+  const getTransactionArgs = useCallback(
+    (values: StrategyDepositFormData) => {
+      const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD] || 0;
+      const monetaryAmount = newMonetaryAmount(amount, strategy.currency, true);
+
+      return { monetaryAmount };
+    },
+    [strategy.currency]
+  );
 
   const handleSubmit = (values: StrategyDepositFormData) => {
-    const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD];
+    const transactionData = getTransactionArgs(values);
 
-    if (!amount) {
-      return;
-    }
+    if (!transactionData) return;
 
-    const monetaryAmount = new MonetaryAmount(WRAPPED_TOKEN, amount);
+    const { monetaryAmount } = transactionData;
 
     transaction.execute(WRAPPED_TOKEN, monetaryAmount);
   };
@@ -57,13 +68,11 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
     validationSchema: strategyDepositSchema('deposit', { maxAmount, minAmount }),
     onSubmit: handleSubmit,
     onComplete: (values: StrategyDepositFormData) => {
-      const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD];
+      const transactionData = getTransactionArgs(values);
 
-      if (!amount) {
-        return;
-      }
+      if (!transactionData) return;
 
-      const monetaryAmount = new MonetaryAmount(WRAPPED_TOKEN, amount);
+      const { monetaryAmount } = transactionData;
 
       transaction.fee.estimate(WRAPPED_TOKEN, monetaryAmount);
     }

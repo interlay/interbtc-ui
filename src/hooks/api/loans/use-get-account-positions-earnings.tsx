@@ -3,6 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { gql, GraphQLClient } from 'graphql-request';
 import { useCallback } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { SQUID_URL } from '@/constants';
@@ -36,7 +37,11 @@ query loanDeposits {
 const getEarnedAmountByTicker = async (
   account: string,
   lendPositions: Array<CollateralPosition>
-): Promise<GetAccountPositionsEarningsData> => {
+): Promise<GetAccountPositionsEarningsData | undefined> => {
+  if (!lendPositions.length) {
+    return undefined;
+  }
+
   const query = getEarnedAmountQuery(
     account,
     lendPositions.map(({ amount }) => amount.currency.ticker)
@@ -67,12 +72,15 @@ const useGetAccountPositionsEarnings = (
 ): UseGetAccountPositionsEarningsResult => {
   const { account } = useWallet();
 
-  const { refetch, isLoading, data } = useQuery({
+  const { refetch, isLoading, data, error } = useQuery({
     queryKey: ['loan-earnings', account],
     queryFn: () => lendPositions && account && getEarnedAmountByTicker(account.toString(), lendPositions),
     enabled: !!lendPositions && !!account,
+    refetchOnWindowFocus: false,
     refetchInterval: REFETCH_INTERVAL.MINUTE
   });
+
+  useErrorHandler(error);
 
   const getPositionEarnings = useCallback((ticker: string) => data?.[ticker], [data]);
 

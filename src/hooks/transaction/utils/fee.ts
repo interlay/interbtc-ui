@@ -157,6 +157,10 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
       return [calculatedLimit];
     }
     /* END - LOANS */
+    case Transaction.STRATEGIES_DEPOSIT: {
+      const [, amount] = params.args;
+      return [amount];
+    }
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
       const [amount] = params.args;
       return [amount];
@@ -171,6 +175,8 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     case Transaction.LOANS_WITHDRAW_ALL:
     case Transaction.LOANS_ENABLE_COLLATERAL:
     case Transaction.LOANS_DISABLE_COLLATERAL:
+    case Transaction.STRATEGIES_ALL_WITHDRAW:
+    case Transaction.STRATEGIES_WITHDRAW:
     case Transaction.AMM_CLAIM_REWARDS:
       return undefined;
   }

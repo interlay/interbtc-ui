@@ -1,5 +1,6 @@
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -29,23 +30,40 @@ type StrategyWithdrawalFormProps = {
 const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const transaction = useTransaction(Transaction.LOANS_WITHDRAW, {
+  const transaction = useTransaction({
     onSuccess: () => {
       form.resetForm();
     }
   });
-  const { maxAmount, minAmount } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, position);
+  const {
+    data: { maxAmount, minAmount },
+    isMaxAmount
+  } = useGetStrategyAvailableAmounts(StrategyFormType.WITHDRAW, strategy, position);
+
+  const getTransactionArgs = useCallback(
+    (values: StrategyWithdrawFormData) => {
+      const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD] || 0;
+      const monetaryAmount = newMonetaryAmount(amount, strategy.currency, true);
+
+      return { monetaryAmount };
+    },
+    [strategy.currency]
+  );
 
   const handleSubmit = (values: StrategyWithdrawFormData) => {
-    const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];
+    const transactionData = getTransactionArgs(values);
 
-    if (!amount) {
-      return;
+    if (!transactionData) return;
+
+    const { monetaryAmount } = transactionData;
+
+    const isWithdrawAll = isMaxAmount(monetaryAmount);
+
+    if (isWithdrawAll) {
+      return transaction.execute(Transaction.STRATEGIES_ALL_WITHDRAW, monetaryAmount.currency);
+    } else {
+      return transaction.execute(Transaction.STRATEGIES_WITHDRAW, monetaryAmount.currency, monetaryAmount);
     }
-
-    const monetaryAmount = new MonetaryAmount(WRAPPED_TOKEN, amount);
-
-    transaction.execute(WRAPPED_TOKEN, monetaryAmount);
   };
 
   const form = useForm<StrategyWithdrawFormData>({
@@ -59,15 +77,19 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
     }),
     onSubmit: handleSubmit,
     onComplete: (values: StrategyWithdrawFormData) => {
-      const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD];
+      const transactionData = getTransactionArgs(values);
 
-      if (!amount) {
-        return;
+      if (!transactionData) return;
+
+      const { monetaryAmount } = transactionData;
+
+      const isWithdrawAll = isMaxAmount(monetaryAmount);
+
+      if (isWithdrawAll) {
+        return transaction.fee.estimate(Transaction.STRATEGIES_ALL_WITHDRAW, monetaryAmount.currency);
+      } else {
+        return transaction.fee.estimate(Transaction.STRATEGIES_WITHDRAW, monetaryAmount.currency, monetaryAmount);
       }
-
-      const monetaryAmount = new MonetaryAmount(WRAPPED_TOKEN, amount);
-
-      transaction.fee.estimate(WRAPPED_TOKEN, monetaryAmount);
     }
   });
 

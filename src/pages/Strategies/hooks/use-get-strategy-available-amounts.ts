@@ -1,20 +1,20 @@
 import {
   useGetLoanAvailableAmounts,
-  UseGetLoanAvailableAmountsData
+  UseGetLoanAvailableAmountsResult
 } from '@/hooks/api/loans/use-get-loan-available-amounts';
 
 import { StrategyFormType, StrategyType } from '../types';
 import { StrategyData } from './use-get-strategies';
 import { StrategyPositionData } from './use-get-strategy-position';
 
-type useGetStrategyAvailableAmountsResult = UseGetLoanAvailableAmountsData;
+type useGetStrategyAvailableAmountsResult = UseGetLoanAvailableAmountsResult;
 
 const useGetStrategyAvailableAmounts = (
   type: StrategyFormType,
   strategy: StrategyData,
   position?: StrategyPositionData
 ): useGetStrategyAvailableAmountsResult => {
-  const { data: loanFormData } = useGetLoanAvailableAmounts(
+  const result = useGetLoanAvailableAmounts(
     type === StrategyFormType.DEPOSIT ? 'lend' : 'withdraw',
     strategy.loanAsset,
     position?.loanPosition
@@ -22,7 +22,7 @@ const useGetStrategyAvailableAmounts = (
 
   switch (strategy.type) {
     case StrategyType.BTC_LOW_RISK: {
-      return loanFormData;
+      return result;
     }
   }
 };
