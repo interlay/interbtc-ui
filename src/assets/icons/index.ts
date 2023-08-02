@@ -1,3 +1,4 @@
+export { ArrowPathRoundedSquare } from './ArrowPathRoundedSquare';
 export { ArrowRight } from './ArrowRight';
 export { ArrowRightCircle } from './ArrowRightCircle';
 export { ArrowsUpDown } from './ArrowsUpDown';
@@ -10,6 +11,7 @@ export { InformationCircle } from './InformationCircle';
 export { ListBullet } from './ListBullet';
 export { PencilSquare } from './PencilSquare';
 export { PlusCircle } from './PlusCircle';
+export { PresentationChartBar } from './PresentationChartBar';
 export { Warning } from './Warning';
 export { XCircle } from './XCircle';
 export { XMark } from './XMark';

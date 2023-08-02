@@ -249,6 +249,41 @@ const getTranslationArgs = (
     }
     /* END - LOANS */
 
+    /* START - STRATEGIES */
+    case Transaction.STRATEGIES_DEPOSIT: {
+      const [currency, amount] = params.args;
+
+      return {
+        key: isPast ? 'transaction.deposited_amount' : 'transaction.depositing_amount',
+        args: {
+          amount: amount.toHuman(),
+          currency: currency.ticker
+        }
+      };
+    }
+    case Transaction.STRATEGIES_WITHDRAW: {
+      const [currency, amount] = params.args;
+
+      return {
+        key: isPast ? 'transaction.withdrew_amount' : 'transaction.withdrawing_amount',
+        args: {
+          amount: amount.toHuman(),
+          currency: currency.ticker
+        }
+      };
+    }
+    case Transaction.STRATEGIES_ALL_WITHDRAW: {
+      const [currency] = params.args;
+
+      return {
+        key: isPast ? 'transaction.withdrew' : 'transaction.withdrawing',
+        args: {
+          currency: currency.ticker
+        }
+      };
+    }
+    /* END - STRATEGIES */
+
     /* START - VAULTS */
     case Transaction.VAULTS_DEPOSIT_COLLATERAL: {
       const [amount] = params.args;

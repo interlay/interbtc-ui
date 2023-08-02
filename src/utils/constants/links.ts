@@ -7,15 +7,19 @@ const URL_PARAMETERS = Object.freeze({
     COLLATERAL: 'vaultCollateral',
     WRAPPED: 'vaultWrapped'
   },
-  TRANSACTION_HASH: 'transactionHash',
-  STRATEGY_TYPE: 'strategyType'
+  TRANSACTION: {
+    HASH: 'transactionHash'
+  },
+  STRATEGY: {
+    TYPE: 'strategyType'
+  }
 });
 
 const PAGES = Object.freeze({
   HOME: '/',
   BTC: '/btc',
   STRATEGIES: '/strategies',
-  STRATEGY_PAGE: `/strategies/:${URL_PARAMETERS.STRATEGY_TYPE}`,
+  STRATEGY: `/strategies/:${URL_PARAMETERS.STRATEGY.TYPE}`,
   SEND_AND_RECEIVE: '/send-and-receive',
   TX: '/tx',
   STAKING: '/staking',

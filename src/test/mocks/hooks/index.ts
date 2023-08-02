@@ -1,6 +1,7 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
 const mockGetDexVolumeByTicker = jest.fn().mockReturnValue({ amount: newMonetaryAmount(0, WRAPPED_TOKEN), usd: 0 });
 
@@ -32,6 +33,25 @@ const mockPrices = {
 jest.mock('@/hooks/api/use-get-prices', () => ({
   ...jest.requireActual('@/hooks/api/use-get-pools-trading-apr'),
   useGetPrices: jest.fn().mockReturnValue(mockPrices)
+}));
+
+const mockGetPositionEarnings = jest
+  .fn()
+  .mockImplementation((ticker: string) =>
+    newMonetaryAmount(0, NATIVE_CURRENCIES.find((t) => t.ticker === ticker) as CurrencyExt)
+  );
+const mockPositionsEarnings = {
+  [RELAY_CHAIN_NATIVE_TOKEN.ticker]: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
+  [WRAPPED_TOKEN.ticker]: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
+  [GOVERNANCE_TOKEN.ticker]: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+};
+jest.mock('@/hooks/api/loans/use-get-account-positions-earnings', () => ({
+  ...jest.requireActual('@/hooks/api/loans/use-get-account-positions-earnings'),
+  useGetAccountPositionsEarnings: jest.fn().mockReturnValue({
+    isLoading: false,
+    data: mockPositionsEarnings,
+    getPositionEarnings: mockGetPositionEarnings
+  })
 }));
 
 export { mockgetDexTotalVolumeUSD, mockGetDexVolumeByTicker };

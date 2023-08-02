@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
 import { SpanProps, TextProps } from '@/component-library/Text';
-import { StrategyRisk } from '@/types/strategies';
 
+import { StrategyRisk } from '../../types';
 import { StyledTag } from './StrategyTag.style';
 
 const content: Record<StrategyRisk, { color: string; label: string }> = {

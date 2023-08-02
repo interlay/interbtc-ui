@@ -1,1 +1,0 @@
-export { StrategyPageInsights } from './StrategyPageInsights';
