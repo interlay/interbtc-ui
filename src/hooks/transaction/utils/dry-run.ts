@@ -2,13 +2,15 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { getErrorMessage } from './error';
 
-const dryRunAndPossiblyThrow = async (
-  signedExtrinsic: SubmittableExtrinsic<'promise'>
-): Promise<SubmittableExtrinsic<'promise'>> => {
-  if (window.bridge === undefined) {
-    throw new Error('Lib has not been initialized yet.');
-  }
+/**
+ * Dry-run signed submittable extrinsic if dry-running is enabled on RPC node.
+ *
+ * @throws If extrinsic execution failed during dry running.
+ * @param signedExtrinsic Extrinsic to be dry run.
+ * @returns {SubmittableExtrinsic} Dry-ran extrinsic.
+ */
 
+const dryRun = async (signedExtrinsic: SubmittableExtrinsic<'promise'>): Promise<SubmittableExtrinsic<'promise'>> => {
   // Dry-run if enabled on RPC node.
   // Source: Polkadot.js, https://github.com/polkadot-js/api/blob/319535a1e938e89522ff18ef2d1cef66a5af597c/packages/api/src/submittable/createClass.ts#L110
   if (signedExtrinsic.hasDryRun) {
@@ -31,4 +33,4 @@ const dryRunAndPossiblyThrow = async (
   return signedExtrinsic;
 };
 
-export { dryRunAndPossiblyThrow };
+export { dryRun };

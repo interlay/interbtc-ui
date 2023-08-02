@@ -6,7 +6,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 
 import { TransactionResult } from '../hooks/use-transaction';
 import { TransactionEvents } from '../types';
-import { dryRunAndPossiblyThrow } from './dry-run';
+import { dryRun } from './dry-run';
 import { getErrorMessage } from './error';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
@@ -28,7 +28,7 @@ const handleTransaction = async (
       // Extrinsic is signed at first and then we use the same signed extrinsic
       // for dry-running and submission.
       .signAsync(account, { nonce: -1 })
-      .then(dryRunAndPossiblyThrow)
+      .then(dryRun)
       .then((signedExtrinsic) => signedExtrinsic.send(callback))
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
