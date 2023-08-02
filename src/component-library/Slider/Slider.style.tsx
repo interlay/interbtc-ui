@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { Flex } from '../Flex';
+import { Span } from '../Text';
 import { theme } from '../theme';
 
 type StyledSliderThumbProps = {
@@ -8,6 +9,20 @@ type StyledSliderThumbProps = {
   $isDragged: boolean;
   $isFocused: boolean;
   $isFocusVisible: boolean;
+};
+
+type StyledFilledTrackProps = {
+  $percentage: number;
+};
+
+type StyledMarkProps = {
+  // $isFilled: number;
+  $position: number;
+};
+
+type StyledMarkTextProps = {
+  // $isFilled: number;
+  $position: number;
 };
 
 const StyledSliderWrapper = styled(Flex)`
@@ -27,7 +42,7 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledBaseTrack = styled.div`
+const StyledControls = styled.div`
   position: relative;
   display: inline-block;
   vertical-align: top;
@@ -35,27 +50,58 @@ const StyledBaseTrack = styled.div`
   min-height: 32px;
   margin-left: calc(25px / 2);
 
-  &::before,
+  &::before {
+    content: '';
+    position: absolute;
+    left: -12.5px;
+    width: 12.5px;
+    height: 100%;
+  }
+
   &::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: -12.5px;
-    transform: translateY(-50%);
-    width: calc(100% + 25px);
-    height: 3px;
-    display: block;
+    right: -12.5px;
+    width: 12.5px;
+    height: 100%;
   }
+`;
 
-  &::before {
-    background-color: ${theme.slider.track.bg};
-    z-index: 1;
-  }
+const StyledBaseTrack = styled.div`
+  position: absolute;
+  top: 50%;
+  left: -12.5px;
+  transform: translateY(-50%);
+  height: 3px;
+  display: block;
+  border-radius: ${theme.rounded.full};
+`;
 
-  &::after {
-    background-color: ${theme.slider.track.fillBg};
-    z-index: 2;
-  }
+const StyledTrack = styled(StyledBaseTrack)`
+  background-color: ${theme.slider.track.bg};
+  width: calc(100% + 25px);
+  z-index: 1;
+`;
+
+const StyledFilledTrack = styled(StyledBaseTrack)<StyledFilledTrackProps>`
+  width: ${({ $percentage }) => `calc((100% * ${$percentage}) + 12.5px)`};
+  background-color: ${theme.slider.track.fillBg};
+  z-index: 2;
+`;
+
+const StyledMark = styled.span<StyledMarkProps>`
+  left: ${({ $position }) => $position};
+  position: absolute;
+  width: 2px;
+  height: 6px;
+  background-color: ${theme.slider.track.fillBg};
+  z-index: 2;
+  top: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const StyledMarkText = styled(Span)<StyledMarkTextProps>`
+  left: ${({ $position }) => $position};
 `;
 
 const StyledSliderThumb = styled.div<StyledSliderThumbProps>`
@@ -94,5 +140,13 @@ const StyledSliderThumb = styled.div<StyledSliderThumbProps>`
   }
 `;
 
-// is-hovered is-dragged is-tophandle
-export { StyledBaseTrack, StyledInput, StyledSliderThumb, StyledSliderWrapper };
+export {
+  StyledControls,
+  StyledFilledTrack,
+  StyledInput,
+  StyledMark,
+  StyledMarkText,
+  StyledSliderThumb,
+  StyledSliderWrapper,
+  StyledTrack
+};

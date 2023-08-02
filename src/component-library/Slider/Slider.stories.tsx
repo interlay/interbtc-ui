@@ -5,7 +5,7 @@ import { Slider, SliderProps } from '.';
 const Template: Story<SliderProps> = (args) => <Slider {...args} />;
 
 const Default = Template.bind({});
-Default.args = { label: 'Leverage', minValue: 1, maxValue: 5 };
+Default.args = { label: 'Leverage', minValue: 1, maxValue: 5, marks: true };
 
 export { Default };
 

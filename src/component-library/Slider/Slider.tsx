@@ -1,15 +1,24 @@
 import { useNumberFormatter } from '@react-aria/i18n';
 import { AriaSliderProps, useSlider } from '@react-aria/slider';
 import { useSliderState } from '@react-stately/slider';
-import { forwardRef, HTMLAttributes, useRef } from 'react';
+import { forwardRef, Fragment, HTMLAttributes, ReactNode, useMemo, useRef } from 'react';
 
 import { Label } from '../Label';
+import { Span } from '../Text';
 import { useDOMRef } from '../utils/dom';
-import { StyledBaseTrack, StyledSliderWrapper } from './Slider.style';
+import {
+  StyledControls,
+  StyledFilledTrack,
+  StyledMark,
+  StyledMarkText,
+  StyledSliderWrapper,
+  StyledTrack
+} from './Slider.style';
 import { SliderThumb } from './SliderThumb';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type MarkItem = { label?: ReactNode; value: number };
+
+type Props = { marks?: boolean | MarkItem[] };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
@@ -18,7 +27,7 @@ type InheritAttrs = Omit<AriaSliderProps, keyof Props>;
 type SliderProps = Props & NativeAttrs & InheritAttrs;
 
 const Slider = forwardRef<HTMLDivElement, SliderProps>(
-  ({ className, style, hidden, minValue = 0, maxValue = 100, label, ...props }, ref): JSX.Element => {
+  ({ className, style, hidden, minValue = 0, maxValue = 100, label, marks: marksProp, ...props }, ref): JSX.Element => {
     const domRef = useDOMRef(ref);
     const trackRef = useRef<HTMLInputElement>(null);
 
@@ -32,6 +41,10 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
 
     const { groupProps, trackProps, labelProps } = useSlider(ariaProps, state, trackRef);
 
+    const marks = useMemo(() => (marksProp ? Array(maxValue).fill(undefined) : []), [marksProp, maxValue]);
+
+    const spacing = 100 / (maxValue - minValue);
+
     return (
       <StyledSliderWrapper
         {...groupProps}
@@ -42,9 +55,21 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
         hidden={hidden}
       >
         <Label {...labelProps}>{label}</Label>
-        <StyledBaseTrack ref={trackRef} {...trackProps}>
+        <StyledControls ref={trackRef} {...trackProps}>
+          <StyledTrack />
           <SliderThumb index={0} trackRef={trackRef} state={state} />
-        </StyledBaseTrack>
+          <StyledFilledTrack $percentage={state.getThumbPercent(0)} />
+          {marks.map((_, idx) => {
+            const position = 0;
+
+            return (
+              <Fragment key={idx}>
+                <StyledMark $number={idx} $spacing={spacing} />
+                <StyledMarkText size='xs'>{idx}</StyledMarkText>
+              </Fragment>
+            );
+          })}
+        </StyledControls>
       </StyledSliderWrapper>
     );
   }
