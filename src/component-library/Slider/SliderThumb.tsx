@@ -2,12 +2,11 @@ import { useFocusRing } from '@react-aria/focus';
 import { useHover } from '@react-aria/interactions';
 import { AriaSliderThumbProps, useSliderThumb } from '@react-aria/slider';
 import { mergeProps } from '@react-aria/utils';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { SliderState } from '@react-stately/slider';
 import { HTMLAttributes, RefObject } from 'react';
 
 import { useDOMRef } from '../utils/dom';
-import { StyledInput, StyledSliderThumbWrapper } from './Slider.style';
+import { StyledInput, StyledSliderThumb } from './Slider.style';
 
 type Props = {
   trackRef: RefObject<HTMLElement>;
@@ -34,21 +33,21 @@ const SliderThumb = ({ state, trackRef, ...props }: SliderThumbProps): JSX.Eleme
 
   const { hoverProps, isHovered } = useHover({});
 
-  const { isFocusVisible, focusProps } = useFocusRing();
+  const { isFocusVisible, focusProps } = useFocusRing({ within: true });
 
   return (
-    <StyledSliderThumbWrapper
-      {...mergeProps(thumbProps, hoverProps)}
+    <StyledSliderThumb
+      {...mergeProps(thumbProps, hoverProps, focusProps)}
       $isDragged={isDragging}
       $isFocused={isFocused}
       $isHovered={isHovered}
       $isFocusVisible={isFocusVisible}
       role='presentation'
     >
-      <VisuallyHidden>
-        <StyledInput ref={inputRef} {...mergeProps(inputProps, focusProps)} />
-      </VisuallyHidden>
-    </StyledSliderThumbWrapper>
+      {/* <VisuallyHidden> */}
+      <StyledInput style={thumbProps.style} ref={inputRef} {...inputProps} />
+      {/* </VisuallyHidden> */}
+    </StyledSliderThumb>
   );
 };
 

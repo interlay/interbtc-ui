@@ -593,6 +593,18 @@ const theme = {
         maxHeight: 'calc(var(--spacing-16) - 1px)'
       }
     }
+  },
+  slider: {
+    thumb: {
+      bg: 'var(--colors-slider-thumb-bg)',
+      hover: {
+        bg: 'var(--colors-slider-thumb-hover-bg)'
+      }
+    },
+    track: {
+      bg: 'var(--colors-slider-track-bg)',
+      fillBg: 'var(--colors-slider-track-fill-bg)'
+    }
   }
 };
 

@@ -5,7 +5,7 @@ import { forwardRef, HTMLAttributes, useRef } from 'react';
 
 import { Label } from '../Label';
 import { useDOMRef } from '../utils/dom';
-import { StyledSliderWrapper, StyledTrack } from './Slider.style';
+import { StyledBaseTrack, StyledSliderWrapper } from './Slider.style';
 import { SliderThumb } from './SliderThumb';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -21,16 +21,16 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
   ({ className, style, hidden, minValue = 0, maxValue = 100, label, ...props }, ref): JSX.Element => {
     const domRef = useDOMRef(ref);
     const trackRef = useRef<HTMLInputElement>(null);
-    const numberFormatter = useNumberFormatter({});
 
+    const ariaProps = { ...props, minValue, maxValue, label };
+
+    const numberFormatter = useNumberFormatter({});
     const state = useSliderState({
-      ...props,
-      numberFormatter,
-      minValue,
-      maxValue
+      ...ariaProps,
+      numberFormatter
     });
 
-    const { groupProps, trackProps, labelProps } = useSlider(props, state, trackRef);
+    const { groupProps, trackProps, labelProps } = useSlider(ariaProps, state, trackRef);
 
     return (
       <StyledSliderWrapper
@@ -42,9 +42,9 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
         hidden={hidden}
       >
         <Label {...labelProps}>{label}</Label>
-        <StyledTrack ref={trackRef} {...trackProps}>
+        <StyledBaseTrack ref={trackRef} {...trackProps}>
           <SliderThumb index={0} trackRef={trackRef} state={state} />
-        </StyledTrack>
+        </StyledBaseTrack>
       </StyledSliderWrapper>
     );
   }
