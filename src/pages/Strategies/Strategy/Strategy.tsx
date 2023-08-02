@@ -46,7 +46,7 @@ const Strategy = (): JSX.Element | null => {
         </H1>
         <Flex gap='spacing2'>
           <StrategyTag risk={strategy.risk} />
-          {strategy.risk === StrategyRisk.LOW && <StrategyTag>Passive Income</StrategyTag>}
+          {strategy.risk === StrategyRisk.LOW && <StrategyTag>{t('strategies.passive_income')}</StrategyTag>}
         </Flex>
       </Flex>
       <StrategyInsights stratetgy={strategy} position={position} />
@@ -56,7 +56,7 @@ const Strategy = (): JSX.Element | null => {
         <StyledFlex flex='1' direction='column' gap='spacing6'>
           <Card role='article' gap='spacing4'>
             <H2 size='s' weight='bold'>
-              How does it work?
+              {t('strategies.how_does_it_work')}
             </H2>
             <P color='tertiary' size='s'>
               {description}
@@ -67,14 +67,13 @@ const Strategy = (): JSX.Element | null => {
           </Card>
           <Card gap='spacing4'>
             <H2 size='s' weight='bold'>
-              What are the risks?
+              {t('strategies.what_are_the_risk')}
             </H2>
             <P color='tertiary' size='s'>
-              Discover the fundamental origins of the position, potential risks involved, the allocation of your
-              capital, and other pertinent details in the docs section.
+              {t('strategies.discover_fundamental_origins')}
             </P>
             <TextLink size='s' weight='bold' external to='https://docs.interlay.io'>
-              Learn more &gt;
+              {t('learn_more')} &gt;
             </TextLink>
           </Card>
         </StyledFlex>

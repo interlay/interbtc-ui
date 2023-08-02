@@ -1,8 +1,8 @@
 import { FlexProps, theme, useMediaQuery } from '@/component-library';
 
-import { StrategyInfographicsToken } from './StrategtInfographicToken';
 import { StyledItemContainer, StyledSubIcon } from './StrategyInfographics.styles';
 import { StrategyInfographicsIcon, VariantIcons } from './StrategyInfographicsIcon';
+import { StrategyInfographicsToken } from './StrategyInfographicToken';
 
 type Props = {
   icon?: VariantIcons;

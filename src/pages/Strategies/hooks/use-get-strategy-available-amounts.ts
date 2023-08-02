@@ -14,7 +14,7 @@ const useGetStrategyAvailableAmounts = (
   strategy: StrategyData,
   position?: StrategyPositionData
 ): useGetStrategyAvailableAmountsResult => {
-  const result = useGetLoanAvailableAmounts(
+  const loanAvailableAmounts = useGetLoanAvailableAmounts(
     type === StrategyFormType.DEPOSIT ? 'lend' : 'withdraw',
     strategy.loanAsset,
     position?.loanPosition
@@ -22,7 +22,7 @@ const useGetStrategyAvailableAmounts = (
 
   switch (strategy.type) {
     case StrategyType.BTC_LOW_RISK: {
-      return result;
+      return loanAvailableAmounts;
     }
   }
 };

@@ -2,7 +2,7 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { Card, P, TextLink } from '@/component-library';
+import { Card, P } from '@/component-library';
 import { MainContainer } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
@@ -47,9 +47,9 @@ const Strategies = (): JSX.Element => {
           })}
           <Card alignItems='center' justifyContent='center'>
             <P size='xs'>More Strategies coming soon</P>
-            <TextLink size='xs' underlined to={'#'}>
+            {/* <TextLink size='xs' underlined to={'#'}>
               Request strategies
-            </TextLink>
+            </TextLink> */}
           </Card>
         </StyledList>
       ) : (

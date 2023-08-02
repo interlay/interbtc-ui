@@ -3,7 +3,6 @@ import Big from 'big.js';
 import { useCallback, useMemo } from 'react';
 
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
 
 import { StrategyRisk, StrategyType } from '../types';
@@ -23,13 +22,11 @@ type UseGetStrategiesResult = {
 };
 
 const useGetStrategies = (): UseGetStrategiesResult => {
-  const { data: loanAssets } = useGetLoanAssets();
-  const { data: loanPositions, isLoading: isPositionsLoading } = useGetAccountPositions();
+  const { data: loanAssets, isLoading } = useGetLoanAssets();
 
   const data: StrategyData[] | undefined = useMemo(
     () =>
       loanAssets &&
-      loanPositions &&
       // eslint-disable-next-line array-callback-return
       Object.values(StrategyType).map((type) => {
         switch (type) {
@@ -47,13 +44,13 @@ const useGetStrategies = (): UseGetStrategiesResult => {
           }
         }
       }),
-    [loanAssets, loanPositions]
+    [loanAssets]
   );
 
   const getStrategy = useCallback((type: StrategyType) => data?.find((item) => item.type === type), [data]);
 
   return {
-    isLoading: !loanAssets || isPositionsLoading,
+    isLoading,
     data,
     getStrategy
   };

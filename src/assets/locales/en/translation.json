@@ -153,6 +153,7 @@
   "rewards_apr": "Rewards APR",
   "rewards_apr_ticker": "Rewards APR {{ticker}}",
   "wallet": "Wallet",
+  "learn_more": "Learn more",
   "navigation": {
     "btc": "BTC",
     "strategies": "Strategies",
@@ -775,6 +776,9 @@
     "btc_passive_income": "BTC Passive Income",
     "passive_income": "Passive Income",
     "generate_passive_income_by_offering_ticker": "Generate passive income by offering your {{ticker}} to lending markets and benefit from automatic compounding rewards.",
-    "low_risk_approach_generate_passive_income": "Discover a straightforward and low-risk approach to generate passive income. This strategy lends out deposited {{ticker}} to borrowers, allowing you to earn interest effortlessly"
+    "low_risk_approach_generate_passive_income": "Discover a straightforward and low-risk approach to generate passive income. This strategy lends out deposited {{ticker}} to borrowers, allowing you to earn interest effortlessly",
+    "how_does_it_work": "How does it work?",
+    "what_are_the_risk": "What are the risks?",
+    "discover_fundamental_origins": "Discover the fundamental origins of the position, potential risks involved, the allocation of your capital, and other pertinent details in the docs section."
   }
 }

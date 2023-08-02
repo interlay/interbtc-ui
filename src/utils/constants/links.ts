@@ -7,7 +7,9 @@ const URL_PARAMETERS = Object.freeze({
     COLLATERAL: 'vaultCollateral',
     WRAPPED: 'vaultWrapped'
   },
-  TRANSACTION_HASH: 'transactionHash',
+  TRANSACTION: {
+    HASH: 'transactionHash'
+  },
   STRATEGY: {
     TYPE: 'strategyType'
   }
