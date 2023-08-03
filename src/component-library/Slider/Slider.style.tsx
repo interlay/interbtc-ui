@@ -16,12 +16,11 @@ type StyledFilledTrackProps = {
 };
 
 type StyledMarkProps = {
-  // $isFilled: number;
+  $isFilled: boolean;
   $position: number;
 };
 
 type StyledMarkTextProps = {
-  // $isFilled: number;
   $position: number;
 };
 
@@ -46,31 +45,13 @@ const StyledControls = styled.div`
   position: relative;
   display: inline-block;
   vertical-align: top;
-  width: calc(300px - 25px);
+  width: 300px;
   min-height: 32px;
-  margin-left: calc(25px / 2);
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: -12.5px;
-    width: 12.5px;
-    height: 100%;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: -12.5px;
-    width: 12.5px;
-    height: 100%;
-  }
 `;
 
 const StyledBaseTrack = styled.div`
   position: absolute;
   top: 50%;
-  left: -12.5px;
   transform: translateY(-50%);
   height: 3px;
   display: block;
@@ -79,29 +60,33 @@ const StyledBaseTrack = styled.div`
 
 const StyledTrack = styled(StyledBaseTrack)`
   background-color: ${theme.slider.track.bg};
-  width: calc(100% + 25px);
+  width: 100%;
   z-index: 1;
 `;
 
 const StyledFilledTrack = styled(StyledBaseTrack)<StyledFilledTrackProps>`
-  width: ${({ $percentage }) => `calc((100% * ${$percentage}) + 12.5px)`};
+  width: ${({ $percentage }) => `calc((100% * ${$percentage}))`};
   background-color: ${theme.slider.track.fillBg};
   z-index: 2;
 `;
 
 const StyledMark = styled.span<StyledMarkProps>`
-  left: ${({ $position }) => $position};
+  left: ${({ $position }) => `${$position}%`};
   position: absolute;
   width: 2px;
-  height: 6px;
-  background-color: ${theme.slider.track.fillBg};
+  height: 8px;
+  background-color: ${({ $isFilled }) => ($isFilled ? theme.slider.track.fillBg : theme.slider.track.bg)};
+  border-radius: ${theme.rounded.full};
   z-index: 2;
   top: 50%;
   transform: translate(-50%, -50%);
 `;
 
 const StyledMarkText = styled(Span)<StyledMarkTextProps>`
-  left: ${({ $position }) => $position};
+  position: absolute;
+  left: ${({ $position }) => `${$position}%`};
+  transform: translateX(-50%);
+  top: 30px;
 `;
 
 const StyledSliderThumb = styled.div<StyledSliderThumbProps>`
