@@ -13,7 +13,7 @@ import { URL_PARAMETERS } from '@/utils/constants/links';
 
 // MEMO: /tx/redeem/0xb1887a4e14567610aa9ca880e29c14a00a0def0f89843bf2fe9feb3b0690635f
 const RedeemTX = (): JSX.Element => {
-  const { [URL_PARAMETERS.TRANSACTION_HASH]: txHash } = useParams<Record<string, string>>();
+  const { [URL_PARAMETERS.TRANSACTION.HASH]: txHash } = useParams<Record<string, string>>();
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,

@@ -1,23 +1,21 @@
-import Big from 'big.js';
 import { withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { Card, P } from '@/component-library';
 import { MainContainer } from '@/components';
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import { StrategyData, StrategyRisk } from '@/types/strategies';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
+import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 
 import { StrategyCard } from './components';
+import { getContent } from './helpers/content';
+import { useGetStrategies } from './hooks/use-get-strategies';
 import { StyledList } from './Strategies.style';
 
-const STRATEGIES: StrategyData[] = [
-  { currency: WRAPPED_TOKEN, interestPercentage: new Big(3.22), interestType: 'apy', risk: StrategyRisk.LOW }
-];
-
 const Strategies = (): JSX.Element => {
-  const handlePress = () => {
-    // window.open(`${PAGES.STRATEGIES}/...`)
-  };
+  const { t } = useTranslation();
+  const { data: strategies } = useGetStrategies();
 
   return (
     <MainContainer>
@@ -28,24 +26,35 @@ const Strategies = (): JSX.Element => {
           transaction fees!
         </P>
       </Card>
-      <StyledList>
-        {STRATEGIES.map((startegy, key) => (
-          <StrategyCard
-            key={key}
-            risk={startegy.risk}
-            isPressable
-            onPress={handlePress}
-            currency={startegy.currency}
-            interestType={startegy.interestType}
-            interestPercentage={startegy.interestPercentage}
-            title='BTC Passive Income'
-            description='Generate passive income by offering your IBTC to lending markets and benefit from automatic compounding rewards.'
-          />
-        ))}
-        <Card alignItems='center' justifyContent='center'>
-          <P size='xs'>More Strategies coming soon</P>
-        </Card>
-      </StyledList>
+      {strategies ? (
+        <StyledList>
+          {strategies.map((strategy) => {
+            const { title, summary } = getContent(strategy, t);
+
+            const to = PAGES.STRATEGY.replace(`:${URL_PARAMETERS.STRATEGY.TYPE}`, strategy.type);
+
+            return (
+              <Link key={strategy.type} to={to}>
+                <StrategyCard
+                  risk={strategy.risk}
+                  ticker={strategy.currency.ticker}
+                  interestRate={strategy.interestRate}
+                  title={title}
+                  description={summary}
+                />
+              </Link>
+            );
+          })}
+          <Card alignItems='center' justifyContent='center'>
+            <P size='xs'>More Strategies coming soon</P>
+            {/* <TextLink size='xs' underlined to={'#'}>
+              Request strategies
+            </TextLink> */}
+          </Card>
+        </StyledList>
+      ) : (
+        <FullLoadingSpinner />
+      )}
     </MainContainer>
   );
 };

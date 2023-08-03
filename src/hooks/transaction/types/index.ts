@@ -7,6 +7,7 @@ import { LoansActions } from './loans';
 import { RedeemActions } from './redeem';
 import { ReplaceActions } from './replace';
 import { RewardsActions } from './rewards';
+import { StrategiesActions } from './strategies';
 import { TokensActions } from './tokens';
 import { VaultsActions } from './vaults';
 import { VestingActions } from './vesting';
@@ -49,6 +50,10 @@ enum Transaction {
   LOANS_BORROW = 'LOANS_BORROW',
   LOANS_REPAY = 'LOANS_REPAY',
   LOANS_REPAY_ALL = 'LOANS_REPAY_ALL',
+  // Stategies
+  STRATEGIES_DEPOSIT = 'STRATEGIES_DEPOSIT',
+  STRATEGIES_WITHDRAW = 'STRATEGIES_WITHDRAW',
+  STRATEGIES_ALL_WITHDRAW = 'STRATEGIES_ALL_WITHDRAW',
   // AMM
   AMM_SWAP = 'AMM_SWAP',
   AMM_ADD_LIQUIDITY = 'AMM_ADD_LIQUIDITY',
@@ -77,6 +82,7 @@ type LibActions =
   | ReplaceActions
   | TokensActions
   | LoansActions
+  | StrategiesActions
   | AMMActions
   | VaultsActions
   | RewardsActions

@@ -66,6 +66,17 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
       return window.bridge.loans.enableAsCollateral(...params.args);
     /* END - LOANS */
 
+    /* START - STRATEGIES */
+    case Transaction.STRATEGIES_DEPOSIT:
+      return window.bridge.loans.lend(...params.args);
+    case Transaction.STRATEGIES_WITHDRAW:
+      return window.bridge.loans.withdraw(...params.args);
+    case Transaction.STRATEGIES_ALL_WITHDRAW: {
+      const [underlyingCurrency] = params.args;
+      return window.bridge.loans.withdrawAll(underlyingCurrency);
+    }
+    /* END - STRATEGIES */
+
     /* START - VAULTS */
     case Transaction.VAULTS_DEPOSIT_COLLATERAL:
       return window.bridge.vaults.depositCollateral(...params.args);

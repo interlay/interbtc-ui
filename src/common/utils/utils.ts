@@ -85,11 +85,11 @@ const formatUSD = (amount: number, options?: { compact?: boolean }): string => {
 };
 
 function displayMonetaryAmountInUSDFormat<T extends CurrencyExt>(
-  amount: MonetaryAmount<T>,
+  amount: MonetaryAmount<T> | undefined,
   rate: number | undefined
 ): string {
   // If the rate is not available
-  if (rate === undefined) {
+  if (rate === undefined || amount === undefined) {
     return '—';
   }
 

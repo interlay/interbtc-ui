@@ -24,6 +24,7 @@ import TestnetBanner from './legacy-components/TestnetBanner';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
+const Strategy = React.lazy(() => import(/* webpackChunkName: 'strategy' */ '@/pages/Strategies/Strategy'));
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
@@ -94,6 +95,7 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.VAULT}>
                   <Vaults />
                 </Route>
+
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>
@@ -122,9 +124,14 @@ const App = (): JSX.Element => {
                   <Wallet />
                 </Route>
                 {isStrategiesEnabled && (
-                  <Route path={PAGES.STRATEGIES}>
-                    <Strategies />
-                  </Route>
+                  <>
+                    <Route exact path={PAGES.STRATEGIES}>
+                      <Strategies />
+                    </Route>
+                    <Route path={PAGES.STRATEGY}>
+                      <Strategy />
+                    </Route>
+                  </>
                 )}
                 {isOnboardingEnabled && (
                   <Route path={PAGES.ONBOARDING}>
