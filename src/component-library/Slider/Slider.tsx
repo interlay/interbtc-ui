@@ -1,7 +1,7 @@
 import { useNumberFormatter } from '@react-aria/i18n';
 import { AriaSliderProps, useSlider } from '@react-aria/slider';
 import { useSliderState } from '@react-stately/slider';
-import { forwardRef, HTMLAttributes, ReactNode, useRef } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useRef } from 'react';
 
 import { Label } from '../Label';
 import { useDOMRef } from '../utils/dom';
@@ -9,24 +9,53 @@ import { StyledControls, StyledFilledTrack, StyledSliderWrapper, StyledTrack } f
 import { SliderMarks } from './SliderMarks';
 import { SliderThumb } from './SliderThumb';
 
-type MarkItem = { label?: ReactNode; value: number };
+type Props = {
+  marks?: boolean;
+  formatOptions?: Intl.NumberFormatOptions;
+  onChange?: (value: number) => void;
+  renderMarkText: (text: ReactNode) => ReactNode;
+};
 
-type Props = { marks?: boolean | MarkItem[] };
-
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type NativeAttrs = Omit<InputHTMLAttributes<unknown>, keyof Props>;
 
 type InheritAttrs = Omit<AriaSliderProps, keyof Props>;
 
 type SliderProps = Props & NativeAttrs & InheritAttrs;
 
 const Slider = forwardRef<HTMLDivElement, SliderProps>(
-  ({ className, style, hidden, minValue = 0, maxValue = 100, label, marks, step = 1, ...props }, ref): JSX.Element => {
+  (
+    {
+      className,
+      style,
+      hidden,
+      step = 1,
+      minValue = 0,
+      maxValue = 100,
+      label,
+      marks,
+      onChange,
+      renderMarkText,
+      name,
+      formatOptions,
+      isDisabled,
+      ...props
+    },
+    ref
+  ): JSX.Element => {
     const domRef = useDOMRef(ref);
     const trackRef = useRef<HTMLInputElement>(null);
 
-    const ariaProps = { ...props, step, minValue, maxValue, label };
+    const ariaProps: AriaSliderProps = {
+      ...props,
+      step,
+      minValue,
+      maxValue,
+      label,
+      isDisabled,
+      onChange: ((value: number[]) => onChange?.(value[0])) as any
+    };
 
-    const numberFormatter = useNumberFormatter({});
+    const numberFormatter = useNumberFormatter(formatOptions);
     const state = useSliderState({
       ...ariaProps,
       numberFormatter
@@ -37,6 +66,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
     return (
       <StyledSliderWrapper
         {...groupProps}
+        $isDisabled={isDisabled}
         direction='column'
         ref={domRef}
         className={className}
@@ -44,11 +74,20 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
         hidden={hidden}
       >
         <Label {...labelProps}>{label}</Label>
-        <StyledControls ref={trackRef} {...trackProps}>
+        <StyledControls ref={trackRef} $hasMarks={!!marks} {...trackProps}>
           <StyledTrack />
-          <SliderThumb index={0} trackRef={trackRef} state={state} />
+          <SliderThumb index={0} trackRef={trackRef} state={state} name={name} />
           <StyledFilledTrack $percentage={state.getThumbPercent(0)} />
-          {marks && <SliderMarks state={state} marks={marks} step={step} minValue={minValue} maxValue={maxValue} />}
+          {marks && (
+            <SliderMarks
+              state={state}
+              step={step}
+              minValue={minValue}
+              maxValue={maxValue}
+              numberFormatter={numberFormatter}
+              renderMarkText={renderMarkText}
+            />
+          )}
         </StyledControls>
       </StyledSliderWrapper>
     );

@@ -596,14 +596,20 @@ const theme = {
   },
   slider: {
     thumb: {
+      size: '25px',
       bg: 'var(--colors-slider-thumb-bg)',
       hover: {
         bg: 'var(--colors-slider-thumb-hover-bg)'
       }
     },
     track: {
+      size: '4px',
       bg: 'var(--colors-slider-track-bg)',
       fillBg: 'var(--colors-slider-track-fill-bg)'
+    },
+    mark: {
+      width: '2px',
+      height: '8px'
     }
   }
 };
