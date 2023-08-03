@@ -5,7 +5,7 @@ enum FeatureFlags {
 }
 
 const featureFlags: Record<FeatureFlags, string | undefined> = {
-  [FeatureFlags.STRATEGIES]: process.env.REACT_APP_FEATURE_FLAG_EARN_STRATEGIES,
+  [FeatureFlags.STRATEGIES]: process.env.REACT_APP_FEATURE_FLAG_STRATEGIES,
   [FeatureFlags.GEOBLOCK]: process.env.REACT_APP_FEATURE_FLAG_GEOBLOCK,
   [FeatureFlags.ONBOARDING]: process.env.REACT_APP_FEATURE_FLAG_ONBOARDING
 };
