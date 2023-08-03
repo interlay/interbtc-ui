@@ -11,7 +11,7 @@ import { getContent } from '../helpers/content';
 import { useGetStrategies } from '../hooks/use-get-strategies';
 import { useGetStrategyPosition } from '../hooks/use-get-strategy-position';
 import { StrategyRisk, StrategyType } from '../types';
-import { StyledFlex, StyledStrategyForm } from './Strategy.styles';
+import { StyledFlex, StyledInfoCards, StyledStrategyForm } from './Strategy.styles';
 
 const Strategy = (): JSX.Element | null => {
   const { t } = useTranslation();
@@ -50,10 +50,9 @@ const Strategy = (): JSX.Element | null => {
         </Flex>
       </Flex>
       <StrategyInsights stratetgy={strategy} position={position} />
-      {/* TODO: layout will change when adding leverage strat */}
-      <Flex gap='spacing6'>
+      <StyledFlex gap='spacing6'>
         <StyledStrategyForm flex='1' strategy={strategy} position={position} />
-        <StyledFlex flex='1' direction='column' gap='spacing6'>
+        <StyledInfoCards flex='1' direction='column' gap='spacing6'>
           <Card role='article' gap='spacing4'>
             <H2 size='s' weight='bold'>
               {t('strategies.how_does_it_work')}
@@ -76,8 +75,8 @@ const Strategy = (): JSX.Element | null => {
               {t('learn_more')} &gt;
             </TextLink>
           </Card>
-        </StyledFlex>
-      </Flex>
+        </StyledInfoCards>
+      </StyledFlex>
     </MainContainer>
   );
 };

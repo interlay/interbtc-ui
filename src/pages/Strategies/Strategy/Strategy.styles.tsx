@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Flex } from '@/component-library';
+import { Flex, theme } from '@/component-library';
 
 import { StrategyForm } from '../components/StrategyForm';
 
@@ -9,7 +9,15 @@ const StyledStrategyForm = styled(StrategyForm)`
 `;
 
 const StyledFlex = styled(Flex)`
+  flex-direction: column;
+
+  @media ${theme.breakpoints.up('md')} {
+    flex-direction: row;
+  }
+`;
+
+const StyledInfoCards = styled(Flex)`
   height: min-content;
 `;
 
-export { StyledFlex, StyledStrategyForm };
+export { StyledFlex, StyledInfoCards, StyledStrategyForm };
