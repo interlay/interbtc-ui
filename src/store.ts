@@ -1,4 +1,4 @@
-import { FaucetClient, InterBtcApi } from '@interlay/interbtc-api';
+import { InterBtcApi } from '@interlay/interbtc-api';
 import { createStore } from 'redux';
 
 import { rootReducer } from './common/reducers/index';
@@ -6,7 +6,6 @@ import { rootReducer } from './common/reducers/index';
 declare global {
   interface Window {
     bridge: InterBtcApi;
-    faucet: FaucetClient;
     isFetchingActive: boolean;
   }
 }

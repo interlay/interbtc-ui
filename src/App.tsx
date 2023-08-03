@@ -1,6 +1,5 @@
 import './i18n';
 
-import { FaucetClient } from '@interlay/interbtc-api';
 import { Keyring } from '@polkadot/keyring';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -8,7 +7,7 @@ import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
-import { isFaucetLoaded, isVaultClientLoaded } from '@/common/actions/general.actions';
+import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
@@ -49,30 +48,6 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
-
-  // Loads the connection to the faucet - only for testnet purposes
-  const loadFaucet = React.useCallback(async (): Promise<void> => {
-    try {
-      window.faucet = new FaucetClient(window.bridge.api, constants.FAUCET_URL);
-      dispatch(isFaucetLoaded(true));
-    } catch (error) {
-      console.log('[loadFaucet] error.message => ', error.message);
-    }
-  }, [dispatch]);
-
-  // Loads the faucet
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    // if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
-
-    (async () => {
-      try {
-        await loadFaucet();
-      } catch (error) {
-        console.log('[App React.useEffect 8] error.message => ', error.message);
-      }
-    })();
-  }, [bridgeLoaded, loadFaucet]);
 
   // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
