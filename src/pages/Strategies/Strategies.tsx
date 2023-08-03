@@ -2,8 +2,9 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { Card, P } from '@/component-library';
+import { Card, P, TextLink } from '@/component-library';
 import { MainContainer } from '@/components';
+import { FORMS_STRATEGIES_LINK } from '@/config/links';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
@@ -47,9 +48,9 @@ const Strategies = (): JSX.Element => {
           })}
           <Card alignItems='center' justifyContent='center'>
             <P size='xs'>More Strategies coming soon</P>
-            {/* <TextLink size='xs' underlined to={'#'}>
+            <TextLink external size='xs' underlined to={FORMS_STRATEGIES_LINK}>
               Request strategies
-            </TextLink> */}
+            </TextLink>
           </Card>
         </StyledList>
       ) : (

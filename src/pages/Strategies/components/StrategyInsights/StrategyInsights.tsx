@@ -1,11 +1,12 @@
 import { convertMonetaryAmountToValueInUSD, formatPercentage } from '@/common/utils/utils';
-import { Card, Dd, Dl, DlGroup, Dt } from '@/component-library';
+import { Card, Dd, DlGroup, Dt } from '@/component-library';
 import { formatUSD } from '@/component-library/utils/format';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import { StrategyData } from '../../hooks/use-get-strategies';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
+import { StyledDl } from './StrategyInsights.styles';
 
 type Props = {
   stratetgy: StrategyData;
@@ -25,7 +26,7 @@ const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
   const earnedUSDLabel = formatUSD(earnedUSD, { compact: true });
 
   return (
-    <Dl wrap direction='row'>
+    <StyledDl wrap direction='row'>
       <Card flex='1'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing2'>
           <Dt weight='bold' color='primary'>
@@ -56,7 +57,7 @@ const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
           </Dd>
         </DlGroup>
       </Card>
-    </Dl>
+    </StyledDl>
   );
 };
 
