@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Span } from '../Text';
+import { TextLink } from '../TextLink';
 import { theme } from '../theme';
 
 type StyledBreadcrumbProps = {
@@ -26,8 +27,14 @@ const StyledListItem = styled.li`
   position: relative;
 `;
 
-const StyledBreadcrumb = styled(Span)<StyledBreadcrumbProps>`
+const StyledSpanBreadcrumb = styled(Span)<StyledBreadcrumbProps>`
   padding: 0 ${theme.spacing.spacing2};
+  cursor: default;
 `;
 
-export { StyledBreadcrumb, StyledList, StyledListItem, StyledNav };
+const StyledLinkBreadcrumb = styled(TextLink)<StyledBreadcrumbProps>`
+  padding: 0 ${theme.spacing.spacing2};
+  text-decoration: none;
+`;
+
+export { StyledLinkBreadcrumb, StyledList, StyledListItem, StyledNav, StyledSpanBreadcrumb };

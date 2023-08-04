@@ -4,8 +4,8 @@ import { BreadcrumbItem, Breadcrumbs, BreadcrumbsProps } from '.';
 
 const Template: Story<BreadcrumbsProps> = (args) => (
   <Breadcrumbs {...args}>
-    <BreadcrumbItem>Strategies</BreadcrumbItem>
-    <BreadcrumbItem>BTC Passive Income</BreadcrumbItem>
+    <BreadcrumbItem to='#'>Strategies</BreadcrumbItem>
+    <BreadcrumbItem to='#'>BTC Passive Income</BreadcrumbItem>
   </Breadcrumbs>
 );
 

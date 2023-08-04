@@ -1,45 +1,52 @@
-import { AriaBreadcrumbItemProps, useBreadcrumbItem } from '@react-aria/breadcrumbs';
-import { cloneElement, Fragment, HTMLAttributes, useRef } from 'react';
+import { AriaBreadcrumbsProps, useBreadcrumbItem } from '@react-aria/breadcrumbs';
+import { mergeProps } from '@react-aria/utils';
+import { AnchorHTMLAttributes, Fragment, useRef } from 'react';
 
 import { ChevronRight } from '@/assets/icons';
 
-import { getWrappedElement } from '../utils/getWrappedElement';
-import { StyledBreadcrumb } from './Breadcrumbs.style';
+import { TextLinkProps } from '../TextLink';
+import { StyledLinkBreadcrumb, StyledSpanBreadcrumb } from './Breadcrumbs.style';
 
 type Props = {
-  onAction?: (key: React.Key) => void;
   isDisabled?: boolean;
-  autoFocusCurrent?: boolean;
   isCurrent: boolean;
+  to: TextLinkProps['to'];
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type InheritAttrs = Omit<AriaBreadcrumbsProps, keyof Props>;
 
-type InheritAttrs = Omit<AriaBreadcrumbItemProps, keyof Props>;
+type NativeAttrs = Omit<AnchorHTMLAttributes<unknown>, keyof (Props & InheritAttrs)>;
 
 type BreadcrumbItemProps = Props & NativeAttrs & InheritAttrs;
 
-const BreadcrumbItem = ({ children, isDisabled, isCurrent, ...props }: BreadcrumbItemProps): JSX.Element => {
+const BreadcrumbItem = ({ children, isDisabled, isCurrent, to, ...props }: BreadcrumbItemProps): JSX.Element => {
   const ref = useRef(null);
   const { itemProps } = useBreadcrumbItem(
     {
       ...props,
       children,
-      elementType: typeof children === 'string' ? 'span' : 'a'
+      isDisabled: isCurrent,
+      elementType: isCurrent ? 'span' : 'a'
     },
     ref
   );
 
-  const element = cloneElement(getWrappedElement(children), {
-    ...itemProps,
-    ref
-  });
+  const commonProps: Pick<TextLinkProps, 'size' | 'color'> = {
+    size: 's',
+    color: isCurrent ? 'secondary' : 'tertiary'
+  };
 
   return (
     <Fragment>
-      <StyledBreadcrumb size='s' color={isCurrent ? 'secondary' : 'tertiary'} $isDisabled={isDisabled}>
-        {element}
-      </StyledBreadcrumb>
+      {isCurrent ? (
+        <StyledSpanBreadcrumb ref={ref} {...mergeProps(commonProps, itemProps)}>
+          {children}
+        </StyledSpanBreadcrumb>
+      ) : (
+        <StyledLinkBreadcrumb ref={ref} to={to} $isDisabled={isDisabled} {...mergeProps(commonProps, itemProps)}>
+          {children}
+        </StyledLinkBreadcrumb>
+      )}
       {isCurrent === false && <ChevronRight size='xs' color='tertiary' />}
     </Fragment>
   );
