@@ -28,7 +28,7 @@ const withinCollateralModal = (asset: string, modalTitle?: RegExp) => {
   return within(screen.getByRole('dialog', { name: modalTitle }));
 };
 
-describe.skip('Collateral Flow', () => {
+describe('Collateral Flow', () => {
   beforeEach(() => {
     getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.EMPTY);
     getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE);

@@ -20,7 +20,7 @@ const { LOAN_POSITIONS, ASSETS, LENDING_STATS, ACCOUNT_REWARDS } = MOCK_LOANS.DA
 
 const path = '/lending';
 
-describe.skip('Loans page', () => {
+describe('Loans page', () => {
   beforeEach(() => {
     getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.EMPTY);
     getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.EMPTY);
