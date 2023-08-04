@@ -5,6 +5,7 @@ export { ArrowsUpDown } from './ArrowsUpDown';
 export { ArrowTopRightOnSquare } from './ArrowTopRightOnSquare';
 export { CheckCircle } from './CheckCircle';
 export { ChevronDown } from './ChevronDown';
+export { ChevronRight } from './ChevronRight';
 export { Cog } from './Cog';
 export { DocumentDuplicate } from './DocumentDuplicate';
 export { InformationCircle } from './InformationCircle';

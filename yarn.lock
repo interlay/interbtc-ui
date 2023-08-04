@@ -3474,6 +3474,19 @@
     "@react-types/shared" "^3.16.0"
     "@swc/helpers" "^0.4.14"
 
+"@react-aria/breadcrumbs@^3.5.3":
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@react-aria/breadcrumbs/-/breadcrumbs-3.5.3.tgz#05d4d811d7a665ccf6b0b411a2c0ab0f4fb4638e"
+  integrity sha512-rmkApAflZm7Finn3vxLGv7MbsMaPo5Bn7/lf8GBztNfzmLWP/dAA5bgvi1sj1T6sWJOuFJT8u04ImUwBCLh8cQ==
+  dependencies:
+    "@react-aria/i18n" "^3.8.0"
+    "@react-aria/interactions" "^3.16.0"
+    "@react-aria/link" "^3.5.2"
+    "@react-aria/utils" "^3.18.0"
+    "@react-types/breadcrumbs" "^3.6.0"
+    "@react-types/shared" "^3.18.1"
+    "@swc/helpers" "^0.5.0"
+
 "@react-aria/button@^3.6.4":
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/@react-aria/button/-/button-3.6.4.tgz#51927c9d968d0c1f741ee2081ca7f2e244abbc12"
@@ -3904,6 +3917,18 @@
     "@react-types/link" "^3.4.0"
     "@react-types/shared" "^3.17.0"
     "@swc/helpers" "^0.4.14"
+
+"@react-aria/link@^3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@react-aria/link/-/link-3.5.2.tgz#68b99721eeddffb87c42541419f08333eada37d9"
+  integrity sha512-CCFP11Uietro6TUZpWBoq3Ql/6qss/ODC5XM6oNxckj72IHruFIj8V7Y0tL5x0aE6h38hlKcDf8NCxkQqz2edg==
+  dependencies:
+    "@react-aria/focus" "^3.13.0"
+    "@react-aria/interactions" "^3.16.0"
+    "@react-aria/utils" "^3.18.0"
+    "@react-types/link" "^3.4.3"
+    "@react-types/shared" "^3.18.1"
+    "@swc/helpers" "^0.5.0"
 
 "@react-aria/listbox@^3.8.0":
   version "3.9.0"
@@ -4680,6 +4705,14 @@
   dependencies:
     "@react-types/shared" "^3.16.0"
 
+"@react-types/breadcrumbs@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@react-types/breadcrumbs/-/breadcrumbs-3.6.0.tgz#6a5b5e459597172d7f23f2ecbc9e11c94d2a3f2a"
+  integrity sha512-EnZk/f59yMQUmH2DW21uo3ajQ7nLEZ/sIMSfEZYP69CFe1by0RKi9aFRjJSrYjxRC0PSHTVPTjIG72KeBSsUGA==
+  dependencies:
+    "@react-types/link" "^3.4.3"
+    "@react-types/shared" "^3.18.1"
+
 "@react-types/button@^3.7.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.7.0.tgz#774c043d8090a505e60fdf26f026d5f0cc968f0f"
@@ -4765,6 +4798,14 @@
   dependencies:
     "@react-aria/interactions" "^3.14.0"
     "@react-types/shared" "^3.17.0"
+
+"@react-types/link@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@react-types/link/-/link-3.4.3.tgz#51534673ea35cf6583b950319bafd16ff76296dc"
+  integrity sha512-opKfkcaeV0cir64jPcy7DS0BrmdfuWMjua+MSeNv7FfT/b65rFgPfAOKZcvLWDsaxT5HYb7pivYPBfjKqHsQKw==
+  dependencies:
+    "@react-aria/interactions" "^3.16.0"
+    "@react-types/shared" "^3.18.1"
 
 "@react-types/listbox@^3.4.0", "@react-types/listbox@^3.4.1":
   version "3.4.1"
