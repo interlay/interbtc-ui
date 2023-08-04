@@ -4,7 +4,7 @@ import Big from 'big.js';
 
 import { formatPercentage } from '@/common/utils/utils';
 
-import { Prices } from '../hooks/api/use-get-prices';
+import { Prices } from '../../hooks/api/use-get-prices';
 import { getTokenPrice } from './prices';
 
 const MIN_DECIMAL_NUMBER = 0.01;

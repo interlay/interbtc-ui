@@ -7,14 +7,16 @@ const mapTextProps = <T extends TextProps = TextProps>({
   align,
   weight,
   rows,
+  noWrap,
   ...props
-}: T): Omit<T, 'color' | 'size' | 'align' | 'weight' | 'rows'> & StyledTextProps => ({
+}: T): Omit<T, 'color' | 'size' | 'align' | 'weight' | 'rows' | 'noWrap'> & StyledTextProps => ({
   ...props,
   $color: color,
   $size: size,
   $weight: weight,
   $align: align,
-  $rows: rows
+  $rows: rows,
+  $noWrap: noWrap
 });
 
 export { mapTextProps };

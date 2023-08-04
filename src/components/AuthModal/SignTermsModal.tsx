@@ -1,5 +1,5 @@
 import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps } from '@/component-library';
-import { useSignMessage } from '@/utils/hooks/use-sign-message';
+import { useSignMessage } from '@/hooks/use-sign-message';
 
 import { Disclaimer } from './Disclaimer';
 

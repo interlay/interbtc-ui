@@ -15,14 +15,14 @@ import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import TokenField from '@/legacy-components/TokenField';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 enum CollateralUpdateStatus {
   Close,

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { updateTransactionModal } from '@/common/actions/general.actions';
 import { CTA, CTALink } from '@/component-library';
-import { TransactionStatus } from '@/utils/hooks/transaction/types';
+import { TransactionStatus } from '@/hooks/transaction/types';
 
 import { NotificationToast, NotificationToastProps, NotificationToastVariant } from './NotificationToast';
 

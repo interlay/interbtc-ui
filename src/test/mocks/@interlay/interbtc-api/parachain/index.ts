@@ -4,6 +4,7 @@ export * from './btcRelay';
 export * from './electrsAPI';
 export * from './fee';
 export * from './issue';
+export * from './loans';
 export * from './oracle';
 export * from './redeem';
 export * from './system';

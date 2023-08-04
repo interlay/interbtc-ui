@@ -8,6 +8,12 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { Flex, Input, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
+import { useSelectCurrency } from '@/hooks/use-select-currency';
 import { useForm } from '@/lib/form';
 import {
   TRANSFER_AMOUNT_FIELD,
@@ -20,12 +26,6 @@ import {
 } from '@/lib/form/schemas';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
-import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 type TransferFormProps = {
   ticker?: string;

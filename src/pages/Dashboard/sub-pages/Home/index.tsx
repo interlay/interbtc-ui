@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import PageTitle from '@/parts/PageTitle';
-import TimerIncrement from '@/parts/TimerIncrement';
+import PageTitle from '@/legacy-components/PageTitle';
+import TimerIncrement from '@/legacy-components/TimerIncrement';
 
 import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
 import BTCRelayCard from '../../cards/BTCRelayCard';

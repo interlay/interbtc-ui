@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import MainContainer from '@/parts/MainContainer';
+import { MainContainer } from '@/components';
 import { TXType } from '@/types/general.d';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 
@@ -15,13 +15,13 @@ const TX = (): JSX.Element => {
   return (
     <MainContainer>
       <Switch>
-        <Route path={`${path}/${TXType.Issue}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
+        <Route path={`${path}/${TXType.Issue}/:${URL_PARAMETERS.TRANSACTION.HASH}`}>
           <IssueTX />
         </Route>
-        <Route path={`${path}/${TXType.Redeem}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
+        <Route path={`${path}/${TXType.Redeem}/:${URL_PARAMETERS.TRANSACTION.HASH}`}>
           <RedeemTX />
         </Route>
-        <Route path={`${path}/${TXType.Replace}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
+        <Route path={`${path}/${TXType.Replace}/:${URL_PARAMETERS.TRANSACTION.HASH}`}>
           <ReplaceTX />
         </Route>
       </Switch>

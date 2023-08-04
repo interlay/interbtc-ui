@@ -1,12 +1,11 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import { PAGES } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
+import { useGetParachainStatus } from '@/utils/hooks/api/system/use-get-parachain-status';
 
 import Stats, { StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
@@ -17,20 +16,23 @@ interface Props {
 
 const ParachainSecurityCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { parachainStatus } = useSelector((state: StoreType) => state.general);
+
+  const { data: parachainStatus, isLoading } = useGetParachainStatus();
 
   const getParachainStatusText = () => {
-    switch (parachainStatus) {
-      case ParachainStatus.Running:
-        return t('dashboard.parachain.secure');
-      case ParachainStatus.Loading:
-        return t('loading');
-      case ParachainStatus.Error:
-      case ParachainStatus.Shutdown:
-        return t('dashboard.parachain.halted');
-      default:
-        return t('no_data');
+    if (!parachainStatus && !isLoading) {
+      return t('no_data');
     }
+
+    if (!parachainStatus || isLoading) {
+      return t('loading');
+    }
+
+    if (parachainStatus.isError || parachainStatus.isShutdown) {
+      return t('dashboard.parachain.halted');
+    }
+
+    return t('dashboard.parachain.secure');
   };
 
   return (
@@ -41,21 +43,19 @@ const ParachainSecurityCard = ({ hasLinks }: Props): JSX.Element => {
       <Ring64
         className={clsx(
           'mx-auto',
-          { 'ring-interlayPaleSky': parachainStatus === ParachainStatus.Loading },
-          { [getColorShade('green', 'ring')]: parachainStatus === ParachainStatus.Running },
+          { 'ring-interlayPaleSky': isLoading },
+          { [getColorShade('green', 'ring')]: parachainStatus?.isRunning },
           {
-            [getColorShade('yellow', 'ring')]:
-              parachainStatus === ParachainStatus.Error || parachainStatus === ParachainStatus.Shutdown
+            [getColorShade('yellow', 'ring')]: parachainStatus?.isError || parachainStatus?.isShutdown
           }
         )}
       >
         <Ring64Title
           className={clsx(
-            { 'text-interlayPaleSky': parachainStatus === ParachainStatus.Loading },
-            { [getColorShade('green')]: parachainStatus === ParachainStatus.Running },
+            { 'text-interlayPaleSky': isLoading },
+            { [getColorShade('green')]: parachainStatus?.isRunning },
             {
-              [getColorShade('yellow')]:
-                parachainStatus === ParachainStatus.Error || parachainStatus === ParachainStatus.Shutdown
+              [getColorShade('yellow')]: parachainStatus?.isError || parachainStatus?.isShutdown
             }
           )}
         >

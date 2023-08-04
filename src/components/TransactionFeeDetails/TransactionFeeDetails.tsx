@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
 import { Alert, Flex } from '@/component-library';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { UseFeeEstimateResult } from '@/hooks/transaction/types/hook';
+import { SelectCurrencyFilter, useSelectCurrency } from '@/hooks/use-select-currency';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { UseFeeEstimateResult } from '@/utils/hooks/transaction/types/hook';
-import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import {
   TransactionDetails,

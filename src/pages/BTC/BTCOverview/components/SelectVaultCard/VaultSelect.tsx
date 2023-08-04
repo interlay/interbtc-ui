@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { Item, Select, SelectProps } from '@/component-library';
-import { BridgeVaultData } from '@/utils/hooks/api/bridge/use-get-vaults';
+import { BridgeVaultData } from '@/hooks/api/bridge/use-get-vaults';
 
 import { VaultListItem } from './VaultListItem';
 

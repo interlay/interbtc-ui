@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { Card, Dd, Dl, DlGroup, Dt, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
+import { useGetAccountPools } from '@/hooks/api/amm/use-get-account-pools';
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { BalanceData } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { WalletMeta } from './WalletMeta';
 

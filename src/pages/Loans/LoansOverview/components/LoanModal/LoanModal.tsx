@@ -1,9 +1,8 @@
-import { BorrowPosition, CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
 import { useRef } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
-import { LoanAction, LoanType } from '@/types/loans';
+import { BorrowPosition, CollateralPosition, LoanAction, LoanAsset, LoanType } from '@/types/loans';
 
 import { LoanForm } from '../LoanForm';
 import { StyledTabs, StyledWrapper } from './LoanModal.style';

@@ -11,16 +11,16 @@ import {
   TransactionDetailsGroup,
   TransactionFeeDetails
 } from '@/components';
+import { AccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { useGetAccountSubsidyRewards } from '@/hooks/api/loans/use-get-account-subsidy-rewards';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   claimRewardsLoanSchema,
   ClaimRewardsLoansFormData,
   LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD,
   useForm
 } from '@/lib/form';
-import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 

@@ -14,9 +14,9 @@ import {
   TransactionSelectToken,
   TransactionSelectTokenProps
 } from '@/components';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { SelectCurrencyFilter, useSelectCurrency } from '@/hooks/use-select-currency';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import { StyledPlusDivider } from './TransactionDetails.style';
 

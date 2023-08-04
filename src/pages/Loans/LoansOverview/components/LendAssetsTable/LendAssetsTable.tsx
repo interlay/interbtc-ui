@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '@/components';
-import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
-import { LoanTablePlaceholder } from '@/components/LoanPositionsTable/LoanTablePlaceholder';
+import { LoanApyCell, LoanTablePlaceholder } from '@/components/LoanPositionsTable';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum LendAssetsColumns {
   ASSET = 'asset',
@@ -26,14 +25,6 @@ type LendAssetsTableRow = {
   [LendAssetsColumns.TOTAL_SUPPLY]: ReactNode;
 };
 
-// TODO: translations
-const lendAssetsColumns = [
-  { name: 'Asset', uid: LendAssetsColumns.ASSET },
-  { name: 'APY', uid: LendAssetsColumns.APY },
-  { name: 'Wallet', uid: LendAssetsColumns.WALLET },
-  { name: 'Total Supplied', uid: LendAssetsColumns.TOTAL_SUPPLY }
-];
-
 type Props = {
   assets: TickerToData<LoanAsset>;
 };
@@ -48,13 +39,23 @@ const LendAssetsTable = ({ assets, onRowAction, ...props }: LendAssetsTableProps
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
 
+  const lendAssetsColumns = useMemo(
+    () => [
+      { name: t('asset'), uid: LendAssetsColumns.ASSET },
+      { name: t('apy'), uid: LendAssetsColumns.APY },
+      { name: t('wallet'), uid: LendAssetsColumns.WALLET },
+      { name: t('loans.total_supplied'), uid: LendAssetsColumns.TOTAL_SUPPLY }
+    ],
+    [t]
+  );
+
   const rows: LendAssetsTableRow[] = useMemo(
     () =>
       Object.values(assets).map(({ lendApy, currency, totalLiquidity, lendReward }) => {
         const asset = <AssetCell ticker={currency.ticker} />;
 
         const apy = (
-          <ApyCell
+          <LoanApyCell
             apy={lendApy}
             currency={currency}
             rewardsPerYear={lendReward}

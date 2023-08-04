@@ -5,6 +5,8 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { OracleStatus, useGetOracleStatus } from '@/hooks/api/oracle/use-get-oracle-status';
+import { useGetExchangeRate } from '@/hooks/api/use-get-exchange-rate';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import { PAGES } from '@/utils/constants/links';
