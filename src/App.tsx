@@ -1,33 +1,30 @@
 import './i18n';
 
-import { FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
 import { Keyring } from '@polkadot/keyring';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import { initGeneralDataAction, isFaucetLoaded, isVaultClientLoaded } from '@/common/actions/general.actions';
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { isVaultClientLoaded } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
-import Layout from '@/parts/Layout';
-import Wrapper from '@/parts/Wrapper';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
-import { TransactionModal } from './components/TransactionModal';
+import { Layout, TransactionModal } from './components';
 import * as constants from './constants';
+import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
 import TestnetBanner from './legacy-components/TestnetBanner';
-import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
+const Strategy = React.lazy(() => import(/* webpackChunkName: 'strategy' */ '@/pages/Strategies/Strategy'));
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
@@ -52,30 +49,6 @@ const App = (): JSX.Element => {
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
 
-  // Loads the connection to the faucet - only for testnet purposes
-  const loadFaucet = React.useCallback(async (): Promise<void> => {
-    try {
-      window.faucet = new FaucetClient(window.bridge.api, constants.FAUCET_URL);
-      dispatch(isFaucetLoaded(true));
-    } catch (error) {
-      console.log('[loadFaucet] error.message => ', error.message);
-    }
-  }, [dispatch]);
-
-  // Loads the faucet
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    // if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
-
-    (async () => {
-      try {
-        await loadFaucet();
-      } catch (error) {
-        console.log('[App React.useEffect 8] error.message => ', error.message);
-      }
-    })();
-  }, [bridgeLoaded, loadFaucet]);
-
   // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
@@ -93,58 +66,6 @@ const App = (): JSX.Element => {
   );
   useErrorHandler(vaultsError);
 
-  // Initializes data on app bootstrap
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!bridgeLoaded) return;
-
-    (async () => {
-      try {
-        const [
-          totalWrappedTokenAmount,
-          totalLockedCollateralTokenAmount,
-          totalGovernanceTokenAmount,
-          btcRelayHeight,
-          bitcoinHeight,
-          state
-        ] = await Promise.all([
-          window.bridge.tokens.total(WRAPPED_TOKEN),
-          window.bridge.tokens.total(RELAY_CHAIN_NATIVE_TOKEN),
-          window.bridge.tokens.total(GOVERNANCE_TOKEN),
-          window.bridge.btcRelay.getLatestBlockHeight(),
-          window.bridge.electrsAPI.getLatestBlockHeight(),
-          window.bridge.system.getStatusCode()
-        ]);
-
-        const parachainStatus = (state: SecurityStatusCode) => {
-          if (state.isError) {
-            return ParachainStatus.Error;
-          } else if (state.isRunning) {
-            return ParachainStatus.Running;
-          } else if (state.isShutdown) {
-            return ParachainStatus.Shutdown;
-          } else {
-            return ParachainStatus.Loading;
-          }
-        };
-
-        dispatch(
-          initGeneralDataAction(
-            totalWrappedTokenAmount,
-            totalLockedCollateralTokenAmount,
-            totalGovernanceTokenAmount,
-            btcRelayHeight,
-            bitcoinHeight,
-            parachainStatus(state)
-          )
-        );
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('[App React.useEffect 2] error.message => ', error.message);
-      }
-    })();
-  }, [dispatch, bridgeLoaded]);
-
   React.useEffect(() => {
     if (!setSelectedAccount) return;
 
@@ -158,77 +79,79 @@ const App = (): JSX.Element => {
   }, [setSelectedAccount, extensions.length]);
 
   return (
-    <Wrapper>
-      <Layout>
-        {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
-        <Route
-          render={({ location }) => (
-            <React.Suspense fallback={<FullLoadingSpinner />}>
-              {bridgeLoaded ? (
-                <Switch location={location}>
-                  <Route exact path={PAGES.VAULTS}>
-                    <Vaults />
-                  </Route>
-                  <Route exact path={PAGES.VAULT}>
-                    <Vault />
-                  </Route>
-                  <Route path={PAGES.VAULT}>
-                    <Vaults />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD}>
-                    <Dashboard />
-                  </Route>
-                  <Route path={PAGES.STAKING}>
-                    <Staking />
-                  </Route>
-                  <Route path={PAGES.TX}>
-                    <TX />
-                  </Route>
-                  <Route path={PAGES.BTC}>
-                    <BTC />
-                  </Route>
-                  <Route path={PAGES.SEND_AND_RECEIVE}>
-                    <SendAndReceive />
-                  </Route>
-                  <Route path={PAGES.LOANS}>
-                    <Loans />
-                  </Route>
-                  <Route path={PAGES.SWAP}>
-                    <Swap />
-                  </Route>
-                  <Route path={PAGES.POOLS}>
-                    <Pools />
-                  </Route>
-                  <Route path={PAGES.WALLET}>
-                    <Wallet />
-                  </Route>
-                  {isStrategiesEnabled && (
-                    <Route path={PAGES.STRATEGIES}>
+    <Layout>
+      {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
+      <Route
+        render={({ location }) => (
+          <React.Suspense fallback={<FullLoadingSpinner />}>
+            {bridgeLoaded ? (
+              <Switch location={location}>
+                <Route exact path={PAGES.VAULTS}>
+                  <Vaults />
+                </Route>
+                <Route exact path={PAGES.VAULT}>
+                  <Vault />
+                </Route>
+                <Route path={PAGES.VAULT}>
+                  <Vaults />
+                </Route>
+                <Route path={PAGES.DASHBOARD}>
+                  <Dashboard />
+                </Route>
+                <Route path={PAGES.STAKING}>
+                  <Staking />
+                </Route>
+                <Route path={PAGES.TX}>
+                  <TX />
+                </Route>
+                <Route path={PAGES.BTC}>
+                  <BTC />
+                </Route>
+                <Route path={PAGES.SEND_AND_RECEIVE}>
+                  <SendAndReceive />
+                </Route>
+                <Route path={PAGES.LOANS}>
+                  <Loans />
+                </Route>
+                <Route path={PAGES.SWAP}>
+                  <Swap />
+                </Route>
+                <Route path={PAGES.POOLS}>
+                  <Pools />
+                </Route>
+                <Route path={[PAGES.HOME, PAGES.WALLET]}>
+                  <Wallet />
+                </Route>
+                {isStrategiesEnabled && (
+                  <>
+                    <Route exact path={PAGES.STRATEGIES}>
                       <Strategies />
                     </Route>
-                  )}
-                  {isOnboardingEnabled && (
-                    <Route path={PAGES.ONBOARDING}>
-                      <Onboarding />
+                    <Route path={PAGES.STRATEGY}>
+                      <Strategy />
                     </Route>
-                  )}
-                  <Route path={PAGES.ACTIONS}>
-                    <Actions />
+                  </>
+                )}
+                {isOnboardingEnabled && (
+                  <Route path={PAGES.ONBOARDING}>
+                    <Onboarding />
                   </Route>
-                  <Redirect exact from={PAGES.HOME} to={PAGES.WALLET} />
-                  <Route path='*'>
-                    <NoMatch />
-                  </Route>
-                </Switch>
-              ) : (
-                <FullLoadingSpinner />
-              )}
-            </React.Suspense>
-          )}
-        />
-      </Layout>
+                )}
+                <Route path={PAGES.ACTIONS}>
+                  <Actions />
+                </Route>
+                <Route path='*'>
+                  <NoMatch />
+                </Route>
+              </Switch>
+            ) : (
+              <FullLoadingSpinner />
+            )}
+          </React.Suspense>
+        )}
+      />
       <TransactionModal />
-    </Wrapper>
+    </Layout>
   );
 };
 

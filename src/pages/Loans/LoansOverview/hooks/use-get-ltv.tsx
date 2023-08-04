@@ -4,9 +4,13 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { MeterRanges, Status } from '@/component-library';
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { PositionsThresholdsData } from '@/utils/hooks/api/loans/use-get-account-positions';
+
+interface PositionsThresholds {
+  collateral: Big;
+  liquidation: Big;
+}
 
 type LTVData = {
   value: number;
@@ -14,14 +18,14 @@ type LTVData = {
   status: Status;
 };
 
-const getRanges = (thresholds: PositionsThresholdsData): MeterRanges => {
+const getRanges = (thresholds: PositionsThresholds): MeterRanges => {
   const collateral = thresholds.collateral.round(2).toNumber();
   const liquidation = thresholds.liquidation.round(2).toNumber();
 
   return [0, collateral, liquidation, 100];
 };
 
-const getStatus = (value: Big, thresholds: PositionsThresholdsData): Status => {
+const getStatus = (value: Big, thresholds: PositionsThresholds): Status => {
   if (value.gte(thresholds.liquidation)) {
     return 'error';
   }

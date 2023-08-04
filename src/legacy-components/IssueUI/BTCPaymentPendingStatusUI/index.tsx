@@ -8,13 +8,13 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { BLOCK_TIME } from '@/config/parachain';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import Timer from '@/legacy-components/Timer';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 interface Props {
   // TODO: should type properly (`Relay`)

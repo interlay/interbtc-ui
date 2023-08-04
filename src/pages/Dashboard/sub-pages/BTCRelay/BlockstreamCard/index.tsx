@@ -12,13 +12,15 @@ import ExternalLink from '@/legacy-components/ExternalLink';
 import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { useGetBtcBlockHeight } from '@/utils/hooks/api/use-get-btc-block-height';
 
 import DashboardCard from '../../../cards/DashboardCard';
 import Stats from '../../../Stats';
 
 const BlockstreamCard = (): JSX.Element => {
   const { t } = useTranslation();
-  const { bridgeLoaded, bitcoinHeight } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { data: blockHeight } = useGetBtcBlockHeight();
 
   const {
     isIdle: blockstreamTipIdle,
@@ -65,7 +67,9 @@ const BlockstreamCard = (): JSX.Element => {
           >
             {t('blockstream')}
           </Ring64Title>
-          <Ring64Value>{t('dashboard.relay.block_number', { number: formatNumber(bitcoinHeight) })}</Ring64Value>
+          <Ring64Value>
+            {t('dashboard.relay.block_number', { number: formatNumber(blockHeight?.bitcoin || 0) })}
+          </Ring64Value>
         </Ring64>
       </>
     );

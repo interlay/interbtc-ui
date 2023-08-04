@@ -8,6 +8,7 @@ type Props = {
   align?: NormalAlignments;
   weight?: FontWeight;
   rows?: number;
+  noWrap?: boolean;
 };
 
 type NativeAttrs<T = unknown> = Omit<HTMLAttributes<T>, keyof Props>;

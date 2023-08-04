@@ -4,9 +4,9 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { convertMonetaryBtcToUSD } from '@/common/utils/utils';
+import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt>; asset: LoanAsset };
 

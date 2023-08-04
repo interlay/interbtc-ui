@@ -16,6 +16,14 @@ import { convertMonetaryAmountToValueInUSD, getRandomArrayElement, safeBitcoinAm
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { IssueData, useGetIssueData } from '@/hooks/api/bridge/use-get-issue-data';
+import { BridgeVaultData, GetVaultType, useGetVaults } from '@/hooks/api/bridge/use-get-vaults';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { TransactionArgs } from '@/hooks/transaction/types';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   BTC_ISSUE_AMOUNT_FIELD,
   BTC_ISSUE_CUSTOM_VAULT_FIELD,
@@ -27,14 +35,6 @@ import {
   useForm
 } from '@/lib/form';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { IssueData, useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
-import { BridgeVaultData, GetVaultType, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { TransactionArgs } from '@/utils/hooks/transaction/types';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { RequestLimitsCard } from '../RequestLimitsCard';

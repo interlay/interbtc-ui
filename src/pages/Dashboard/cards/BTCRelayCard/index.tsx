@@ -1,12 +1,11 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import { formatNumber } from '@/common/utils/utils';
 import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import { PAGES } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
+import { useGetBtcBlockHeight } from '@/utils/hooks/api/use-get-btc-block-height';
 
 import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
@@ -24,15 +23,10 @@ interface Props {
 const BTCRelayCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
   // TODO: compute status using blockstream data
-  const { btcRelayHeight, bitcoinHeight } = useSelector((state: StoreType) => state.general);
+  const { data: blockHeight } = useGetBtcBlockHeight();
 
-  const outdatedRelayThreshold = 12;
-  const state =
-    bitcoinHeight === 0
-      ? Status.Loading
-      : bitcoinHeight - btcRelayHeight >= outdatedRelayThreshold
-      ? Status.Failure
-      : Status.Ok;
+  const state = blockHeight ? (blockHeight.isOutdated ? Status.Failure : Status.Ok) : Status.Loading;
+
   const statusText =
     state === Status.Loading
       ? t('loading')
@@ -81,7 +75,9 @@ const BTCRelayCard = ({ hasLinks }: Props): JSX.Element => {
         >
           {graphText}
         </Ring64Title>
-        <Ring64Value>{t('dashboard.relay.block_number', { number: formatNumber(btcRelayHeight) })}</Ring64Value>
+        <Ring64Value>
+          {t('dashboard.relay.block_number', { number: formatNumber(blockHeight?.relay || 0) })}
+        </Ring64Value>
       </Ring64>
     </DashboardCard>
   );
