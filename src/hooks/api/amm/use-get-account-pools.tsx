@@ -6,10 +6,10 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { Prices, useGetPrices } from '@/hooks/api/use-get-prices';
+import { useWallet } from '@/lib/wallet';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
 
-import useAccountId from '../../use-account-id';
 import { useGetLiquidityPools } from './use-get-liquidity-pools';
 
 type AccountLiquidityPool = { data: LiquidityPool; amount: MonetaryAmount<LpCurrency> };
@@ -60,15 +60,16 @@ interface UseGetAccountProvidedLiquidity {
 
 // Mixes current pools with liquidity provided by the account
 const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
-  const accountId = useAccountId();
+  const { account } = useWallet();
   const prices = useGetPrices();
-
   const { data: liquidityPools, refetch: refetchLiquidityPools } = useGetLiquidityPools();
-  const queryKey = ['account-pools', accountId];
+
+  const queryKey = ['account-pools', account?.address];
+
   const { data, error, refetch: refetchQuery } = useQuery({
-    queryKey: ['account-pools', accountId],
-    queryFn: () => accountId && liquidityPools && prices && getAccountLiquidityPools(accountId, liquidityPools, prices),
-    enabled: !!accountId && !!liquidityPools && !!prices,
+    queryKey,
+    queryFn: () => account && liquidityPools && prices && getAccountLiquidityPools(account.id, liquidityPools, prices),
+    enabled: !!account && !!liquidityPools && !!prices,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 

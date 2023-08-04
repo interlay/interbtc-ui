@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { ArrowRight } from '@/assets/icons';
-import { Flex, P, theme } from '@/component-library';
+import { CTA, Flex, P, theme } from '@/component-library';
 
 import { AuthListItem } from './AuthListItem';
 
@@ -47,4 +47,9 @@ const StyledP = styled(P)<StyledArrowRightProps>`
   color: ${({ $isSelected }) => $isSelected && theme.list.text};
 `;
 
-export { StyledAccountItem, StyledArrowRight, StyledCopyItem, StyledItem, StyledP, StyledWalletItem };
+const StyledCTA = styled(CTA)`
+  padding: ${theme.spacing.spacing3};
+  border: ${theme.border.default};
+`;
+
+export { StyledAccountItem, StyledArrowRight, StyledCopyItem, StyledCTA, StyledItem, StyledP, StyledWalletItem };

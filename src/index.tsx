@@ -19,6 +19,7 @@ import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/li
 
 import App from './App';
 import { GeoblockingWrapper } from './components/Geoblock/Geoblock';
+import { WalletProvider } from './lib/wallet/WalletProvider';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 import { NotificationsProvider } from './utils/context/Notifications';
@@ -39,15 +40,17 @@ ReactDOM.render(
           <Provider store={store}>
             <SubstrateProvider>
               <ThemeWrapper>
-                <SubstrateLoadingAndErrorHandlingWrapper>
-                  <Subscriptions>
-                    <NotificationsProvider>
-                      <OverlayProvider>
-                        <App />
-                      </OverlayProvider>
-                    </NotificationsProvider>
-                  </Subscriptions>
-                </SubstrateLoadingAndErrorHandlingWrapper>
+                <WalletProvider>
+                  <SubstrateLoadingAndErrorHandlingWrapper>
+                    <Subscriptions>
+                      <NotificationsProvider>
+                        <OverlayProvider>
+                          <App />
+                        </OverlayProvider>
+                      </NotificationsProvider>
+                    </Subscriptions>
+                  </SubstrateLoadingAndErrorHandlingWrapper>
+                </WalletProvider>
               </ThemeWrapper>
             </SubstrateProvider>
           </Provider>

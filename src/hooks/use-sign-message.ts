@@ -8,6 +8,7 @@ import { showSignTermsModalAction } from '@/common/actions/general.actions';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL, TC_VERSION } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
+import { WalletAccountData } from '@/lib/wallet/types';
 
 import { NotificationToastType, useNotifications } from '../utils/context/Notifications';
 import { signMessage } from '../utils/helpers/wallet';
@@ -41,7 +42,7 @@ type UseSignMessageResult = {
     onPress: (e: PressEvent) => void;
     loading: boolean;
   };
-  selectProps: { onSelectionChange: (account: KeyringPair) => void };
+  selectProps: { onSelectionChange: (account: WalletAccountData) => void };
   modal: {
     buttonProps: {
       onPress: (e: PressEvent) => void;
@@ -142,7 +143,7 @@ const useSignMessage = (): UseSignMessageResult => {
     signMessageMutation.mutate(account);
   };
 
-  const handleOpenSignTermModal = async (account: KeyringPair) => {
+  const handleOpenSignTermModal = async (account: WalletAccountData) => {
     if (!SIGNER_API_URL || !shouldCheckSignature) return;
 
     // Cancel possible ongoing unwanted account

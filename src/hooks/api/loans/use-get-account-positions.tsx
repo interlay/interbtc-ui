@@ -4,10 +4,10 @@ import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import { useWallet } from '@/lib/wallet';
 import { BorrowPosition, CollateralPosition } from '@/types/loans';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
-import useAccountId from '../../use-account-id';
 import { useGetAccountPositionsEarnings } from './use-get-account-positions-earnings';
 
 const getLendPositionsOfAccount = async (accountId: AccountId): Promise<Array<CollateralPosition>> =>
@@ -20,12 +20,12 @@ interface UseGetLendPositionsOfAccountResult {
 }
 
 const useGetLendPositionsOfAccount = (): UseGetLendPositionsOfAccountResult => {
-  const accountId = useAccountId();
+  const { account } = useWallet();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['getLendPositionsOfAccount', accountId],
-    queryFn: () => accountId && getLendPositionsOfAccount(accountId),
-    enabled: !!accountId,
+    queryKey: ['getLendPositionsOfAccount', account?.address],
+    queryFn: () => account && getLendPositionsOfAccount(account.id),
+    enabled: !!account,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
@@ -41,18 +41,12 @@ interface UseGetBorrowPositionsOfAccountResult {
 }
 
 const useGetBorrowPositionsOfAccount = (): UseGetBorrowPositionsOfAccountResult => {
-  const accountId = useAccountId();
+  const { account } = useWallet();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['getBorrowPositionsOfAccount', accountId],
-    queryFn: async () => {
-      if (!accountId) {
-        throw new Error('Something went wrong!');
-      }
-
-      return await window.bridge.loans.getBorrowPositionsOfAccount(accountId);
-    },
-    enabled: !!accountId,
+    queryKey: ['getBorrowPositionsOfAccount', account?.address],
+    queryFn: () => account && window.bridge.loans.getBorrowPositionsOfAccount(account?.id),
+    enabled: !!account,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 

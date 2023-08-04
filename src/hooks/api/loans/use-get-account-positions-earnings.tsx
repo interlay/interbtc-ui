@@ -7,7 +7,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { SQUID_URL } from '@/constants';
-import { useWallet } from '@/hooks/use-wallet';
+import { useWallet } from '@/lib/wallet';
 import { CollateralPosition } from '@/types/loans';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 
@@ -73,8 +73,8 @@ const useGetAccountPositionsEarnings = (
   const { account } = useWallet();
 
   const { refetch, isLoading, data, error } = useQuery({
-    queryKey: ['loan-earnings', account],
-    queryFn: () => lendPositions && account && getEarnedAmountByTicker(account.toString(), lendPositions),
+    queryKey: ['loan-earnings', account?.address],
+    queryFn: () => lendPositions && account && getEarnedAmountByTicker(account.address, lendPositions),
     enabled: !!lendPositions && !!account,
     refetchOnWindowFocus: false,
     refetchInterval: REFETCH_INTERVAL.MINUTE

@@ -1,4 +1,3 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { mergeProps } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from 'react-use';
@@ -7,14 +6,13 @@ import { DocumentDuplicate } from '@/assets/icons';
 import { shortAddress } from '@/common/utils/utils';
 import { CTA, Divider, Flex, P, Span, Tooltip, WalletIcon } from '@/component-library';
 import { useCopyTooltip } from '@/hooks/use-copy-tooltip';
-import { KeyringPair } from '@/lib/substrate';
-import { WalletData } from '@/utils/constants/wallets';
+import { WalletAccountData, WalletData } from '@/lib/wallet/types';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
 
 import { StyledAccountItem, StyledCopyItem, StyledP } from './AuthModal.style';
 import { AuthModalSteps } from './types';
 
-type CopyAddressProps = { account: InjectedAccountWithMeta };
+type CopyAddressProps = { account: WalletAccountData };
 
 const CopyAddress = ({ account }: CopyAddressProps) => {
   const [, copy] = useCopyToClipboard();
@@ -26,7 +24,7 @@ const CopyAddress = ({ account }: CopyAddressProps) => {
     <Tooltip {...tooltipProps}>
       <StyledCopyItem
         {...mergeProps(buttonProps, { onPress: handleCopy })}
-        aria-label={`copy ${`${account.meta.name} address` || shortAddress(account.address)} to clipboard`}
+        aria-label={`copy ${`${account.name} address` || shortAddress(account.address)} to clipboard`}
         elementType='div'
       >
         <DocumentDuplicate />
@@ -36,23 +34,21 @@ const CopyAddress = ({ account }: CopyAddressProps) => {
 };
 
 type AccountStepProps = {
-  accounts: InjectedAccountWithMeta[];
+  value?: WalletAccountData;
+  accounts: WalletAccountData[];
   wallet: WalletData;
-  selectedAccount?: KeyringPair;
   onChangeWallet?: () => void;
-  onSelectionChange: (account: InjectedAccountWithMeta) => void;
+  onSelectionChange: (account: WalletAccountData) => void;
 } & StepComponentProps;
 
 const AccountComponent = ({
+  value,
   accounts,
   wallet,
-  selectedAccount,
   onChangeWallet,
   onSelectionChange
 }: AccountStepProps): JSX.Element | null => {
   const { t } = useTranslation();
-
-  const walletAccounts = accounts.filter(({ meta: { source } }) => source === wallet.extensionName);
 
   return (
     <Flex direction='column' marginTop='spacing6'>
@@ -70,8 +66,8 @@ const AccountComponent = ({
       </Flex>
       <Divider color='default' />
       <Flex elementType='ul' direction='column' gap='spacing4' marginTop='spacing6'>
-        {walletAccounts.map((account) => {
-          const isSelected = selectedAccount?.address === account.address;
+        {accounts.map((account) => {
+          const isSelected = value?.address === account.address;
 
           return (
             <Flex key={account.address} elementType='li' gap='spacing4'>
@@ -84,7 +80,7 @@ const AccountComponent = ({
                 isSelected={isSelected}
               >
                 <StyledP weight='bold' $isSelected={isSelected}>
-                  {account.meta.name}
+                  {account.name}
                 </StyledP>
                 <StyledP $isSelected={isSelected}>({shortAddress(account.address)})</StyledP>
               </StyledAccountItem>

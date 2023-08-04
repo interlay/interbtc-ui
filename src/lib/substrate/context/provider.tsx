@@ -1,6 +1,6 @@
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { keyring } from '@polkadot/ui-keyring';
@@ -187,22 +187,22 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   const keyringStatus = state.keyringStatus;
   const accounts = state.accounts;
 
-  React.useEffect(() => {
-    if (keyringStatus !== KeyringStatus.Ready) return;
+  // React.useEffect(() => {
+  //   if (keyringStatus !== KeyringStatus.Ready) return;
 
-    if (selectedAccountAddress) {
-      (async () => {
-        try {
-          const { signer } = await web3FromAddress(selectedAccountAddress);
-          window.bridge.setAccount(selectedAccountAddress, signer);
-        } catch (error) {
-          console.error('[SubstrateProvider] error => ', error);
-        }
-      })();
-    } else {
-      window.bridge.removeAccount();
-    }
-  }, [selectedAccountAddress, keyringStatus]);
+  //   if (selectedAccountAddress) {
+  //     (async () => {
+  //       try {
+  //         const { signer } = await web3FromAddress(selectedAccountAddress);
+  //         window.bridge.setAccount(selectedAccountAddress, signer);
+  //       } catch (error) {
+  //         console.error('[SubstrateProvider] error => ', error);
+  //       }
+  //     })();
+  //   } else {
+  //     window.bridge.removeAccount();
+  //   }
+  // }, [selectedAccountAddress, keyringStatus]);
 
   const removeSelectedAccount = React.useCallback(() => {
     if (!removeLS) return;

@@ -1,7 +1,6 @@
 import './i18n';
 
 import { Keyring } from '@polkadot/keyring';
-import { getWallets } from '@talismn/connect-wallets';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -20,6 +19,7 @@ import { PAGES } from '@/utils/constants/links';
 
 import { Layout, TransactionModal } from './components';
 import * as constants from './constants';
+import { useApi } from './hooks/api/use-api';
 import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
 import TestnetBanner from './legacy-components/TestnetBanner';
 
@@ -42,6 +42,8 @@ const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pag
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 const App = (): JSX.Element => {
+  useApi();
+
   const { selectedAccount, extensions } = useSubstrateSecureState();
   const { setSelectedAccount } = useSubstrate();
 
@@ -78,19 +80,6 @@ const App = (): JSX.Element => {
       }
     }
   }, [setSelectedAccount, extensions.length]);
-
-  // get an array of wallets which are installed
-  const installedWallets = getWallets().filter((wallet) => wallet.installed);
-
-  console.log(getWallets());
-
-  // get talisman from the array of installed wallets
-  const talismanWallet = installedWallets.find((wallet) => wallet.extensionName === 'subwallet');
-
-  // enable the wallet
-  if (talismanWallet) {
-    console.log(talismanWallet.enable('myCoolDapp'));
-  }
 
   return (
     <Layout>

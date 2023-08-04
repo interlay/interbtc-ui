@@ -4,8 +4,6 @@ export type { ApyDetailsGroupItemProps, ApyDetailsGroupProps, ApyDetailsProps } 
 export { ApyDetails, ApyDetailsGroup, ApyDetailsGroupItem } from './ApyDetails';
 export type { AuthCTAProps } from './AuthCTA';
 export { AuthCTA } from './AuthCTA';
-export type { AuthModalProps, SignTermsModalProps } from './AuthModal';
-export { AuthModal, SignTermsModal } from './AuthModal';
 export type { AssetCellProps, BalanceCellProps, CellProps, TableProps } from './DataGrid';
 export { AssetCell, BalanceCell, Cell, Table } from './DataGrid';
 export type { FundWalletProps } from './FundWallet';
@@ -35,3 +33,5 @@ export * from './TransactionDetails';
 export type { TransactionFeeDetailsProps } from './TransactionFeeDetails';
 export { TransactionFeeDetails } from './TransactionFeeDetails';
 export { TransactionModal } from './TransactionModal';
+export type { AuthModalProps, SignTermsModalProps } from './WalletModalTrigger';
+export { AuthModal, SignTermsModal } from './WalletModalTrigger';

@@ -1,5 +1,3 @@
-import { Keyring } from '@polkadot/api';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,10 +8,9 @@ import { Card, CTA, CTALink, Flex, H1, H2, P, Strong } from '@/component-library
 import { AuthModal, MainContainer, SignTermsModal } from '@/components';
 import { INTERLAY_DISCORD_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { SS58_FORMAT } from '@/constants';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useSignMessage } from '@/hooks/use-sign-message';
-import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
+import { useSubstrateSecureState } from '@/lib/substrate';
 
 import { Tutorial } from './components';
 import { StyledWrapper } from './Onboarding.style';
@@ -34,8 +31,8 @@ const Onboarding = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
-  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
-  const { selectProps } = useSignMessage();
+  // const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
+  // const { selectProps } = useSignMessage();
   const { extensions, selectedAccount } = useSubstrateSecureState();
   const { hasSignature } = useSignMessage();
 
@@ -45,18 +42,18 @@ const Onboarding = (): JSX.Element => {
 
   const handleAccountModalClose = () => dispatch(showAccountModalAction(false));
 
-  const handleAccountSelect = (account: InjectedAccountWithMeta) => {
-    const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
-    const keyringAccount = keyring.addFromAddress(account.address, account.meta);
-    setSelectedAccount(keyringAccount);
-    selectProps.onSelectionChange(keyringAccount as KeyringPair);
-    handleAccountModalClose();
-  };
+  // const handleAccountSelect = (account: InjectedAccountWithMeta) => {
+  //   const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
+  //   const keyringAccount = keyring.addFromAddress(account.address, account.meta);
+  //   setSelectedAccount(keyringAccount);
+  //   // selectProps.onSelectionChange(keyringAccount as KeyringPair);
+  //   handleAccountModalClose();
+  // };
 
-  const handleDisconnect = () => {
-    removeSelectedAccount();
-    handleAccountModalClose();
-  };
+  // const handleDisconnect = () => {
+  //   removeSelectedAccount();
+  //   handleAccountModalClose();
+  // };
 
   const handleCloseSignTermsModal = () => dispatch(showSignTermsModalAction(false));
 
@@ -174,12 +171,7 @@ const Onboarding = (): JSX.Element => {
             {getCta(step)}
           </Card>
         ))}
-        <AuthModal
-          isOpen={showAccountModal}
-          onClose={handleAccountModalClose}
-          onDisconnect={handleDisconnect}
-          onAccountSelect={handleAccountSelect}
-        />
+        <AuthModal isOpen={showAccountModal} onClose={handleAccountModalClose} />
         <SignTermsModal isOpen={isSignTermsModalOpen} onClose={handleCloseSignTermsModal} />
       </StyledWrapper>
     </MainContainer>

@@ -1,13 +1,17 @@
 import { useLocalStorage as useLibLocalStorage } from 'react-use';
 
+import { WalletAccountData } from '@/lib/wallet/types';
+
 enum LocalStorageKey {
   TC_SIGNATURES = 'TC_SIGNATURES',
-  WALLET_WELCOME_BANNER = 'WALLET_WELCOME_BANNER'
+  WALLET_WELCOME_BANNER = 'WALLET_WELCOME_BANNER',
+  WALLET_ACCOUNT = 'WALLET_ACCOUNT'
 }
 
 type LocalStorageValueTypes = {
   [LocalStorageKey.TC_SIGNATURES]: { [account: string]: { version: string; isSigned: boolean } | boolean };
   [LocalStorageKey.WALLET_WELCOME_BANNER]: boolean;
+  [LocalStorageKey.WALLET_ACCOUNT]: WalletAccountData;
 };
 
 type Options<T = unknown> =

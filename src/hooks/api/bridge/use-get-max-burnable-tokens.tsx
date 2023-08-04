@@ -4,9 +4,9 @@ import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import { useWallet } from '@/lib/wallet';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
-import useAccountId from '../../use-account-id';
 import { useGetCollateralCurrencies } from '../use-get-collateral-currencies';
 
 type MaxBurnableTokensData = {
@@ -31,14 +31,13 @@ type UseGetMaxBurnableTokensResult = {
 
 const useGetMaxBurnableTokens = (): UseGetMaxBurnableTokensResult => {
   const { data: collateralCurrencies } = useGetCollateralCurrencies(true);
-
-  const accountId = useAccountId();
+  const { account } = useWallet();
 
   const { data, error, refetch } = useQuery({
-    queryKey: ['max-burnable-tokens', accountId?.toString()],
+    queryKey: ['max-burnable-tokens', account?.address],
     queryFn: () => collateralCurrencies && getMaxBurnableTokensData(collateralCurrencies),
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL,
-    enabled: !!accountId && !!collateralCurrencies
+    enabled: !!account && !!collateralCurrencies
   });
 
   useErrorHandler(error);
