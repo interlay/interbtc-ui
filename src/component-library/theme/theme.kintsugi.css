@@ -86,7 +86,7 @@
   --colors-table-row-hover-bg: #1c2c46;
   --color-table-header-row-bg: #080e28;
   --colors-table-border: #080e28;
-  /* Table */
+  /* Tooltip */
   --colors-tooltip-bg: var(--colors-blue);
   --colors-tooltip-tip-bg: var(--colors-blue);
   /* List */
@@ -100,4 +100,9 @@
   --color-icon-fallback-color: #040816;
   /* Select */
   --color-select-text: var(--colors-neutral-white);
+  /* Slider */
+  --colors-slider-thumb-bg: var(--colors-blue);
+  --colors-slider-thumb-hover-bg: var(--colors-dark-blue);
+  --colors-slider-track-bg: var(--colors-mid-blue);
+  --colors-slider-track-fill-bg: var(--colors-yellow);
 }
