@@ -10,6 +10,7 @@ type StyledTextProps = {
   $align?: NormalAlignments;
   $weight?: FontWeight;
   $rows?: number;
+  $noWrap?: boolean;
 };
 
 const Text = styled.p<StyledTextProps>`
@@ -18,6 +19,7 @@ const Text = styled.p<StyledTextProps>`
   line-height: ${({ $size }) => resolveHeight($size)};
   font-weight: ${({ $weight }) => $weight && theme.fontWeight[$weight]};
   text-align: ${({ $align }) => $align};
+  white-space: ${({ $noWrap }) => $noWrap && 'nowrap'};
 
   ${({ $rows }) => {
     return (

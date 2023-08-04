@@ -9,10 +9,16 @@ import { useTable } from 'react-table';
 import { formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+import useCurrentActiveBlockNumber from '@/hooks/use-current-active-block-number';
+import useQueryParams from '@/hooks/use-query-params';
+import useStableBitcoinConfirmations from '@/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/hooks/use-stable-parachain-confirmations';
+import useUpdateQueryParameters from '@/hooks/use-update-query-parameters';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SectionTitle from '@/legacy-components/SectionTitle';
 import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -24,19 +30,13 @@ import InterlayTable, {
 } from '@/legacy-components/UI/InterlayTable';
 import StatusCell from '@/legacy-components/UI/InterlayTable/StatusCell';
 import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
-import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
-import useQueryParams from '@/utils/hooks/use-query-params';
-import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
 interface Props {
   vaultAddress: string;

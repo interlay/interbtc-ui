@@ -3,8 +3,8 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { TransactionDetailsDd, TransactionDetailsDt, TransactionDetailsGroup } from '@/components';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 type RewardsDetailsProps = {
   apy: Big;

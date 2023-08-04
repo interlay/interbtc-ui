@@ -9,11 +9,11 @@ import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/uti
 import { CoinIcon, Flex } from '@/component-library';
 import { Cell, Table } from '@/components';
 import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { GetAccountStakingData } from '@/utils/hooks/api/escrow/use-get-account-staking-data';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum StakingTableColumns {
   ASSET = 'asset',
@@ -42,11 +42,14 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
   const { getAvailableBalance } = useGetBalances();
 
   const columns = [
-    { name: t('wallet.total_governance_locked', { token: GOVERNANCE_TOKEN.ticker }), uid: StakingTableColumns.ASSET },
-    { name: t('unlocks'), uid: StakingTableColumns.UNLOCKS },
-    { name: t('wallet.available_to_stake'), uid: StakingTableColumns.AVAILABLE },
     {
-      name: t('wallet.voting_power_governance', { token: VOTE_GOVERNANCE_TOKEN.ticker }),
+      name: t('wallet_page.total_governance_locked', { token: GOVERNANCE_TOKEN.ticker }),
+      uid: StakingTableColumns.ASSET
+    },
+    { name: t('unlocks'), uid: StakingTableColumns.UNLOCKS },
+    { name: t('wallet_page.available_to_stake'), uid: StakingTableColumns.AVAILABLE },
+    {
+      name: t('wallet_page.voting_power_governance', { token: VOTE_GOVERNANCE_TOKEN.ticker }),
       uid: StakingTableColumns.VOTING_POWER
     }
   ];

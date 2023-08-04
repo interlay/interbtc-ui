@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { useGeoblocking } from '@/utils/hooks/use-geoblocking';
+import { useGeoblocking } from '@/hooks/use-geoblocking';
 
 type Props = {
   children: ReactNode;

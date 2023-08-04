@@ -1,61 +1,63 @@
 import '@testing-library/jest-dom';
 
-import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { AccountId } from '@polkadot/types/interfaces';
-
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import {
-  DEFAULT_TOKENS_BALANCE_FN,
-  EMPTY_TOKENS_BALANCE_FN,
-  MOCK_TOKEN_BALANCE,
-  mockTokensBalance
-} from '@/test/mocks/@interlay/interbtc-api';
-import {
-  DEFAULT_BORROW_POSITIONS,
-  DEFAULT_IBTC,
-  DEFAULT_LEND_POSITIONS,
-  DEFAULT_POSITIONS,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendPositionsOfAccount,
-  mockRepay,
-  mockRepayAll
-} from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
+import { MOCK_TOKENS } from '@/test/mocks/@interlay/interbtc-api';
+import { MOCK_LOANS } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
-import { act, render, screen, userEvent, waitFor } from '../../test-utils';
+import { render, screen, userEvent, waitFor } from '../../test-utils';
 import { submitForm, withinModalTabPanel } from '../utils/table';
+import { waitForFeeEstimate, waitForTransactionExecute } from '../utils/transaction';
 import { TABLES } from './constants';
+
+const {
+  getBorrowPositionsOfAccount,
+  getLendPositionsOfAccount,
+  getLoanAssets,
+  getLendingStats,
+  repay,
+  repayAll
+} = MOCK_LOANS.MODULE;
+const { balance } = MOCK_TOKENS.MODULE;
+
+const { LOAN_POSITIONS, ASSETS, LENDING_STATS, WRAPPED_LOAN } = MOCK_LOANS.DATA;
+const { BALANCE_FN } = MOCK_TOKENS.DATA;
 
 const path = '/lending';
 const tab = 'repay';
 
-describe.skip('Repay Flow', () => {
+describe('Repay Flow', () => {
   beforeEach(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
+    getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
+    getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE_COLLATERAL);
+    getLoanAssets.mockReturnValue(ASSETS.NORMAL);
+    getLendingStats.mockReturnValue(LENDING_STATS.LOW_LTV);
+    balance.mockImplementation(BALANCE_FN.FULL);
   });
 
-  it('should be able to repay', async () => {
-    // SCENARIO: user is partially repaying loan
+  it('should be able to partial repay', async () => {
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
     // should render modal with ltv meter
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
 
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'repay amount' }), DEFAULT_IBTC.AMOUNT.SMALL);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'repay amount' }), WRAPPED_LOAN.AMOUNT.VERY_SMALL.VALUE);
+
+    await waitForFeeEstimate(repay);
 
     await submitForm(tabPanel, 'repay');
 
-    expect(mockRepay).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
+    await waitForTransactionExecute(repay);
+
+    expect(repay).toHaveBeenCalledWith(WRAPPED_TOKEN, WRAPPED_LOAN.AMOUNT.VERY_SMALL.MONETARY);
   });
 
   it('should be able repay all by using max button', async () => {
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
     userEvent.click(
       tabPanel.getByRole('button', {
@@ -63,38 +65,43 @@ describe.skip('Repay Flow', () => {
       })
     );
 
+    await waitForFeeEstimate(repayAll);
+
     await submitForm(tabPanel, 'repay');
 
-    expect(mockRepayAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
+    await waitForTransactionExecute(repayAll);
+
+    expect(repayAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
   });
 
   it('should be able repay all by typing max amount', async () => {
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
-    const replayAllAmount = DEFAULT_POSITIONS.BORROW.IBTC.amount.add(DEFAULT_POSITIONS.BORROW.IBTC.accumulatedDebt);
+    const replayAllAmount = WRAPPED_LOAN.POSITIONS.BORROW.amount.add(WRAPPED_LOAN.POSITIONS.BORROW.accumulatedDebt);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'repay amount' }), replayAllAmount.toString());
 
-    // Wait for debounce
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    });
+    await waitForFeeEstimate(repayAll);
 
     await submitForm(tabPanel, 'repay');
 
-    expect(mockRepayAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
+    await waitForTransactionExecute(repayAll);
+
+    expect(repayAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
   });
 
   it('should not be able to repay over available balance', async () => {
-    mockTokensBalance.mockImplementation(EMPTY_TOKENS_BALANCE_FN);
+    balance.mockImplementation(BALANCE_FN.EMPTY);
 
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'repay amount' }), DEFAULT_IBTC.AMOUNT.VERY_LARGE);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'repay amount' }), WRAPPED_LOAN.AMOUNT.VERY_SMALL.VALUE);
+
+    userEvent.tab();
 
     await waitFor(() => {
       expect(tabPanel.getByRole('textbox', { name: 'repay amount' })).toHaveErrorMessage('');
@@ -104,25 +111,17 @@ describe.skip('Repay Flow', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(mockRepay).not.toHaveBeenCalled();
-      expect(mockRepayAll).not.toHaveBeenCalled();
+      expect(repay).not.toHaveBeenCalled();
+      expect(repayAll).not.toHaveBeenCalled();
     });
   });
 
   it('should partially repay loan while applying max balance when there are not enough funds to pay the entire loan', async () => {
-    const mockWrappedTokenBalance = 10000000;
-
-    mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
-      if (currency.ticker === WRAPPED_TOKEN.ticker) {
-        return new ChainBalance(currency, mockWrappedTokenBalance, mockWrappedTokenBalance, mockWrappedTokenBalance);
-      }
-
-      return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
-    });
+    balance.mockImplementation(BALANCE_FN.CUSTOM(WRAPPED_LOAN.POSITIONS.BORROW.amount));
 
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+    const tabPanel = await withinModalTabPanel(TABLES.BORROW.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab, true);
 
     userEvent.click(
       tabPanel.getByRole('button', {
@@ -130,9 +129,12 @@ describe.skip('Repay Flow', () => {
       })
     );
 
+    await waitForFeeEstimate(repay);
+
     await submitForm(tabPanel, 'repay');
 
-    expect(mockRepay).toHaveBeenCalledWith(WRAPPED_TOKEN, newMonetaryAmount(mockWrappedTokenBalance, WRAPPED_TOKEN));
-    expect(mockRepayAll).not.toHaveBeenCalled();
+    await waitForTransactionExecute(repay);
+
+    expect(repay).toHaveBeenCalledWith(WRAPPED_TOKEN, WRAPPED_LOAN.POSITIONS.BORROW.amount);
   });
 });

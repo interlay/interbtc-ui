@@ -11,6 +11,8 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import InterlayConiferOutlinedButton from '@/legacy-components/buttons/InterlayConiferOutlinedButton';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
@@ -22,8 +24,6 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)

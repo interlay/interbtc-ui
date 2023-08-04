@@ -1,8 +1,8 @@
+import { MainContainer } from '@/components';
+import { useGetAccountPools } from '@/hooks/api/amm/use-get-account-pools';
+import { useGetLiquidityPools } from '@/hooks/api/amm/use-get-liquidity-pools';
+import useAccountId from '@/hooks/use-account-id';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import MainContainer from '@/parts/MainContainer';
-import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
-import { useGetLiquidityPools } from '@/utils/hooks/api/amm/use-get-liquidity-pools';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolsInsights, PoolsTables } from './components';
 

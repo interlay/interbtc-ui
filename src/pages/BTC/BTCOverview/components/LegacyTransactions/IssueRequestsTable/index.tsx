@@ -11,9 +11,13 @@ import { formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/u
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useIssueRequests } from '@/hooks/issue-requests';
+import useQueryParams from '@/hooks/use-query-params';
+import useUpdateQueryParameters from '@/hooks/use-update-query-parameters';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SectionTitle from '@/legacy-components/SectionTitle';
 import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -24,15 +28,11 @@ import InterlayTable, {
   InterlayTr
 } from '@/legacy-components/UI/InterlayTable';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import { useIssueRequests } from '@/services/hooks/issue-requests';
 import { issuesCountQuery } from '@/services/queries/issues';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
-import useQueryParams from '@/utils/hooks/use-query-params';
-import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
 import IssueRequestModal from './IssueRequestModal';
 

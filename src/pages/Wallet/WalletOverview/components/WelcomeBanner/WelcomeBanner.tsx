@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Flex } from '@/component-library';
 import { INTERLAY_GET_ASSETS_LINK, INTERLAY_WHITEPAPPER } from '@/config/links';
 import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { FeatureFlags, useFeatureFlag } from '@/hooks/use-feature-flag';
 import { PAGES } from '@/utils/constants/links';
-import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 
 import {
   StyledCard,
@@ -32,10 +32,10 @@ const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
       <StyledTextWrapper direction='column' gap='spacing6'>
         <Flex direction='column' gap='spacing4'>
           <StyledTitle weight='bold' size='xl2'>
-            {t('wallet.welcome_to_dapp', { name: APP_NAME })}
+            {t('wallet_page.welcome_to_dapp', { name: APP_NAME })}
           </StyledTitle>
           <StyledP size='s' color='tertiary'>
-            {t('wallet.dapp_is_a_one_stop_shop_for_bitcoin_defi', {
+            {t('wallet_page.dapp_is_a_one_stop_shop_for_bitcoin_defi', {
               name: APP_NAME,
               wrappedToken: WRAPPED_TOKEN.ticker
             })}

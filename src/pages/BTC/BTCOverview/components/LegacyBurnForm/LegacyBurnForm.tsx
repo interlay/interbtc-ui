@@ -7,12 +7,16 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { CoinIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetCollateralCurrencies } from '@/hooks/api/use-get-collateral-currencies';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -23,10 +27,6 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -47,7 +47,7 @@ const LegacyBurnForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, parachainStatus } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
   const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
 
@@ -278,13 +278,7 @@ const LegacyBurnForm = (): JSX.Element | null => {
             )}
           />
 
-          <AuthCTA
-            fullWidth
-            size='large'
-            type='submit'
-            loading={transaction.isLoading}
-            disabled={parachainStatus === ParachainStatus.Loading || parachainStatus === ParachainStatus.Shutdown}
-          >
+          <AuthCTA fullWidth size='large' type='submit' loading={transaction.isLoading}>
             {t('burn')}
           </AuthCTA>
         </form>

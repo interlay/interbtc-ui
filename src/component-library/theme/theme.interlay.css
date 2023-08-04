@@ -82,7 +82,7 @@
   --colors-table-row-hover-bg: #f0f1f2;
   --color-table-header-row-bg: #f4f3f5;
   --colors-table-border: #f4f3f5;
-  /* Table */
+  /* Tooltip */
   --colors-tooltip-bg: var(--colors-neutral-white);
   --colors-tooltip-tip-bg: var(--colors-neutral-white);
   /* List */
@@ -96,4 +96,9 @@
   --color-icon-fallback-color: #f4f3f5;
   /* Select */
   --color-select-text: var(--colors-neutral-black);
+  /* Slider */
+  --colors-slider-thumb-bg: var(--colors-neutral-white);
+  --colors-slider-thumb-hover-bg: var(--color-light-grey);
+  --colors-slider-track-bg: #dee3f5;
+  --colors-slider-track-fill-bg: var(--colors-light-blue);
 }
