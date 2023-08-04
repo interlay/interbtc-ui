@@ -11,8 +11,6 @@ import ErrorFallback from '@/legacy-components/ErrorFallback';
 import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import { PAGES } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
-import { OracleStatus, useGetOracleStatus } from '@/utils/hooks/api/oracle/use-get-oracle-status';
-import { useGetExchangeRate } from '@/utils/hooks/api/use-get-exchange-rate';
 
 import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
