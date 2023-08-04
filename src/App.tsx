@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
@@ -24,6 +24,7 @@ import TestnetBanner from './legacy-components/TestnetBanner';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
+const Strategy = React.lazy(() => import(/* webpackChunkName: 'strategy' */ '@/pages/Strategies/Strategy'));
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
@@ -118,13 +119,18 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.POOLS}>
                   <Pools />
                 </Route>
-                <Route path={PAGES.WALLET}>
+                <Route path={[PAGES.HOME, PAGES.WALLET]}>
                   <Wallet />
                 </Route>
                 {isStrategiesEnabled && (
-                  <Route path={PAGES.STRATEGIES}>
-                    <Strategies />
-                  </Route>
+                  <>
+                    <Route exact path={PAGES.STRATEGIES}>
+                      <Strategies />
+                    </Route>
+                    <Route path={PAGES.STRATEGY}>
+                      <Strategy />
+                    </Route>
+                  </>
                 )}
                 {isOnboardingEnabled && (
                   <Route path={PAGES.ONBOARDING}>
@@ -134,7 +140,6 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.ACTIONS}>
                   <Actions />
                 </Route>
-                <Redirect exact from={PAGES.HOME} to={PAGES.WALLET} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>

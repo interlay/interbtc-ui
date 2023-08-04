@@ -1,12 +1,13 @@
 import { ExtrinsicData } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
-import { DispatchError } from '@polkadot/types/interfaces';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 import { TransactionResult } from '../hooks/use-transaction';
 import { TransactionEvents } from '../types';
+import { dryRun } from './dry-run';
+import { getErrorMessage } from './error';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
 
@@ -23,9 +24,12 @@ const handleTransaction = async (
 
   return new Promise<HandleTransactionResult>((resolve, reject) => {
     let unsubscribe: () => void;
-
     (extrinsicData.extrinsic as SubmittableExtrinsic<'promise'>)
-      .signAndSend(account, { nonce: -1 }, callback)
+      // Extrinsic is signed at first and then we use the same signed extrinsic
+      // for dry-running and submission.
+      .signAsync(account, { nonce: -1 })
+      .then(dryRun)
+      .then((signedExtrinsic) => signedExtrinsic.send(callback))
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
 
@@ -46,25 +50,6 @@ const handleTransaction = async (
       }
     }
   });
-};
-
-const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
-  const { isModule, asModule, isBadOrigin } = dispatchError;
-
-  // Runtime error in one of the parachain modules
-  if (isModule) {
-    // for module errors, we have the section indexed, lookup
-    const decoded = api.registry.findMetaError(asModule);
-    const { docs, name, section } = decoded;
-    return `The error code is ${section}.${name}. ${docs.join(' ')}.`;
-  }
-
-  // Bad origin
-  if (isBadOrigin) {
-    return `The error is caused by using an incorrect account. The error code is BadOrigin ${dispatchError}.`;
-  }
-
-  return `The error is ${dispatchError}.`;
 };
 
 /**

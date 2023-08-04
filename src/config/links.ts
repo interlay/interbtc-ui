@@ -26,8 +26,11 @@ const BANXA_LINK = 'http://checkout.banxa.com/';
 const GEOBLOCK_API_ENDPOINT = '/check_access';
 const GEOBLOCK_REDIRECTION_LINK = 'https://www.interlay.io/geoblock';
 
+const FORMS_STRATEGIES_LINK = 'https://forms.gle/Ue7NQ81j2u5oNDey6';
+
 export {
   BANXA_LINK,
+  FORMS_STRATEGIES_LINK,
   GEOBLOCK_API_ENDPOINT,
   GEOBLOCK_REDIRECTION_LINK,
   INTERLAY_COMPANY_LINK,

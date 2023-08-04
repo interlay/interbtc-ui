@@ -1,61 +1,30 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { Card, CardProps, Tabs, TabsItem } from '@/component-library';
 
-import { Tabs, TabsItem } from '@/component-library';
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
-
-import { StrategyFormType, StrategyRiskVariant } from '../../types/form';
+import { StrategyData } from '../../hooks/use-get-strategies';
+import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 import { StrategyDepositForm } from './StrategyDepositForm';
-import { StyledStrategyForm } from './StrategyForm.style';
 import { StrategyWithdrawalForm } from './StrategyWithdrawalForm';
 
-interface StrategyFormProps {
-  riskVariant: StrategyRiskVariant;
-}
-
-interface StrategyFormBaseProps extends StrategyFormProps {
-  hasActiveStrategy: boolean | undefined;
-}
-
-type TabData = { type: StrategyFormType; title: string };
-
-const tabs: Array<TabData> = [
-  {
-    type: 'deposit',
-    title: 'Deposit'
-  },
-  {
-    type: 'withdraw',
-    title: 'Withdraw'
-  }
-];
-
-const StrategyForm = ({ riskVariant }: StrategyFormProps): JSX.Element => {
-  // TODO: replace with actually withdrawable amount once we know how to get that information,
-  // for now it's statically set for display purposes
-  const maxWithdrawableAmount = newMonetaryAmount(1.337, WRAPPED_TOKEN, true);
-  const hasActiveStrategy = maxWithdrawableAmount && !maxWithdrawableAmount.isZero();
-
-  return (
-    <StyledStrategyForm>
-      <Tabs fullWidth size='large'>
-        {tabs.map(({ type, title }) => (
-          <TabsItem key={type} title={title}>
-            {type === 'deposit' ? (
-              <StrategyDepositForm key={type} riskVariant={riskVariant} hasActiveStrategy={hasActiveStrategy} />
-            ) : (
-              <StrategyWithdrawalForm
-                key={type}
-                riskVariant={riskVariant}
-                hasActiveStrategy={hasActiveStrategy}
-                maxWithdrawableAmount={maxWithdrawableAmount}
-              />
-            )}
-          </TabsItem>
-        ))}
-      </Tabs>
-    </StyledStrategyForm>
-  );
+type Props = {
+  strategy: StrategyData;
+  position?: StrategyPositionData;
 };
 
+type InheritAttrs = Omit<CardProps, keyof Props>;
+
+type StrategyFormProps = Props & InheritAttrs;
+
+const StrategyForm = ({ strategy, position, ...props }: StrategyFormProps): JSX.Element => (
+  <Card {...props}>
+    <Tabs fullWidth size='large'>
+      <TabsItem key='deposit' title='Deposit'>
+        <StrategyDepositForm strategy={strategy} position={position} />
+      </TabsItem>
+      <TabsItem key='withdraw' title='Withdraw'>
+        <StrategyWithdrawalForm strategy={strategy} position={position} />
+      </TabsItem>
+    </Tabs>
+  </Card>
+);
+
 export { StrategyForm };
-export type { StrategyFormBaseProps, StrategyFormProps };

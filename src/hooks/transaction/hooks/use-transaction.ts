@@ -9,6 +9,7 @@ import { useSubstrate } from '@/lib/substrate';
 import { useGetLiquidityPools } from '../../api/amm/use-get-liquidity-pools';
 import { useGetBalances } from '../../api/tokens/use-get-balances';
 import { getExtrinsic, getStatus } from '../extrinsics';
+import { submitTransaction } from '../submission/submit';
 import { Transaction, TransactionActions } from '../types';
 import {
   TransactionResult,
@@ -21,7 +22,6 @@ import {
 } from '../types/hook';
 import { wrapWithTxFeeSwap } from '../utils/fee';
 import { getActionData, getAmountWithFeeDeducted } from '../utils/params';
-import { submitTransaction } from '../utils/submit';
 import { FeeEstimateResult, useFeeEstimate } from './use-fee-estimate';
 import { useTransactionNotifications } from './use-transaction-notifications';
 

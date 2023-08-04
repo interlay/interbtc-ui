@@ -15,13 +15,13 @@ const TX = (): JSX.Element => {
   return (
     <MainContainer>
       <Switch>
-        <Route path={`${path}/${TXType.Issue}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
+        <Route path={`${path}/${TXType.Issue}/:${URL_PARAMETERS.TRANSACTION.HASH}`}>
           <IssueTX />
         </Route>
-        <Route path={`${path}/${TXType.Redeem}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
+        <Route path={`${path}/${TXType.Redeem}/:${URL_PARAMETERS.TRANSACTION.HASH}`}>
           <RedeemTX />
         </Route>
-        <Route path={`${path}/${TXType.Replace}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
+        <Route path={`${path}/${TXType.Replace}/:${URL_PARAMETERS.TRANSACTION.HASH}`}>
           <ReplaceTX />
         </Route>
       </Switch>

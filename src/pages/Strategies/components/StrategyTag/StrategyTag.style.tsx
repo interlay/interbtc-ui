@@ -6,6 +6,7 @@ const StyledTag = styled(Span)`
   border: ${theme.border.default};
   border-radius: ${theme.rounded.full};
   padding: ${theme.spacing.spacing2};
+  background-color: ${theme.colors.bgPrimary};
 `;
 
 export { StyledTag };

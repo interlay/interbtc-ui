@@ -1,6 +1,8 @@
-import { SpanProps, TextProps } from '@/component-library/Text';
-import { StrategyRisk } from '@/types/strategies';
+import { ReactNode } from 'react';
 
+import { SpanProps, TextProps } from '@/component-library/Text';
+
+import { StrategyRisk } from '../../types';
 import { StyledTag } from './StrategyTag.style';
 
 const content: Record<StrategyRisk, { color: string; label: string }> = {
@@ -21,17 +23,16 @@ const content: Record<StrategyRisk, { color: string; label: string }> = {
 const getContent = (risk: StrategyRisk) => content[risk];
 
 type Props = {
-  variant: 'risk' | 'passive-income';
   risk?: StrategyRisk;
+  children?: ReactNode;
 };
 
 type InheritAttrs = Omit<SpanProps, keyof Props>;
 
 type StrategyTagProps = Props & InheritAttrs;
 
-const StrategyTag = ({ variant, risk, ...props }: StrategyTagProps): JSX.Element => {
-  const { color, label } =
-    variant === 'risk' && risk ? getContent(risk) : { label: 'Passive Income', color: undefined };
+const StrategyTag = ({ risk, children, ...props }: StrategyTagProps): JSX.Element => {
+  const { color, label } = risk ? getContent(risk) : { label: children, color: undefined };
 
   return (
     <StyledTag color={color as TextProps['color']} size='xs' {...props}>
