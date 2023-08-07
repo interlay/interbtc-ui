@@ -8,8 +8,8 @@ import { shortAddress } from '@/common/utils/utils';
 import { CTA, CTALink, Dd, DlGroup, Dt, Flex, FlexProps, P, Tooltip, WalletIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { SUBSCAN_LINK } from '@/config/relay-chains';
+import { useCopyTooltip } from '@/hooks/use-copy-tooltip';
 import { useSubstrateState } from '@/lib/substrate';
-import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 
 type WalletMetaProps = FlexProps;
 

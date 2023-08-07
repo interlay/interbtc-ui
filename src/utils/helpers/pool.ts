@@ -2,8 +2,8 @@ import { CurrencyExt, PooledCurrencies } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 const calculateTotalLiquidityUSD = (pooledCurrencies: PooledCurrencies, prices?: Prices): number =>
   pooledCurrencies.reduce((total, currentAmount) => {

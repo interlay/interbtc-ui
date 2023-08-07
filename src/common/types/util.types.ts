@@ -1,9 +1,7 @@
-import { CollateralCurrencyExt } from '@interlay/interbtc-api';
-import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { u256 } from '@polkadot/types/primitive';
 import { CombinedState, Store } from 'redux';
 
-import { TransactionStatus } from '@/utils/hooks/transaction/types';
+import { TransactionStatus } from '@/hooks/transaction/types';
 
 import { rootReducer } from '../reducers/index';
 import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
@@ -40,13 +38,6 @@ export interface DashboardStatusUpdateInfo {
   forced: boolean;
 }
 
-export enum ParachainStatus {
-  Loading,
-  Error,
-  Running,
-  Shutdown
-}
-
 export type Notification = {
   status: TransactionStatus;
   description: string;
@@ -68,11 +59,6 @@ export type GeneralState = {
   showAccountModal: boolean;
   isSignTermsModalOpen: boolean;
   isBuyModalOpen: boolean;
-  totalWrappedTokenAmount: BitcoinAmount;
-  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
-  btcRelayHeight: number;
-  bitcoinHeight: number;
-  parachainStatus: ParachainStatus;
   notifications: Record<string, Notification[]>;
   transactionModal: {
     isOpen: boolean;

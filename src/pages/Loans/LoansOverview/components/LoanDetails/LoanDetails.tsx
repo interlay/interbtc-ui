@@ -1,8 +1,8 @@
 import { LoanAsset } from '@interlay/interbtc-api';
 
 import { TransactionDetails, TransactionDetailsDd, TransactionDetailsDt, TransactionDetailsGroup } from '@/components';
+import { Prices } from '@/hooks/api/use-get-prices';
 import { LoanAction } from '@/types/loans';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { getApyLabel } from '../../utils/apy';
 import { RewardsDetails } from './RewardsDetails';

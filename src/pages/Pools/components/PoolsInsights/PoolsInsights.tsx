@@ -13,6 +13,10 @@ import {
   TransactionDetailsGroup,
   TransactionFeeDetails
 } from '@/components';
+import { AccountPoolsData } from '@/hooks/api/amm/use-get-account-pools';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   ClaimRewardsPoolFormData,
   claimRewardsPoolSchema,
@@ -20,10 +24,6 @@ import {
   useForm
 } from '@/lib/form';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
-import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { StyledDd, StyledDt } from './PoolsInsights.style';
 import { calculateClaimableFarmingRewardUSD } from './utils';

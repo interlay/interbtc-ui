@@ -10,10 +10,13 @@ import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, formatNumber, shortAddress } from '@/common/utils/utils';
 import { BTC_EXPLORER_BLOCK_API } from '@/config/blockstream-explorer-links';
+import useQueryParams from '@/hooks/use-query-params';
+import useUpdateQueryParameters from '@/hooks/use-update-query-parameters';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SectionTitle from '@/legacy-components/SectionTitle';
 import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
@@ -23,14 +26,11 @@ import InterlayTable, {
   InterlayThead,
   InterlayTr
 } from '@/legacy-components/UI/InterlayTable';
-import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import btcBlocksCountQuery from '@/services/queries/btc-blocks-count-query';
 import btcBlocksQuery from '@/services/queries/btc-blocks-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import useQueryParams from '@/utils/hooks/use-query-params';
-import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
 const BlocksTable = (): JSX.Element => {
   const { t } = useTranslation();

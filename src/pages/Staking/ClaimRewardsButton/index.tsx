@@ -2,12 +2,12 @@ import clsx from 'clsx';
 import { useQueryClient } from 'react-query';
 
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
 } from '@/legacy-components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 interface CustomProps {
   claimableRewardAmount: string;

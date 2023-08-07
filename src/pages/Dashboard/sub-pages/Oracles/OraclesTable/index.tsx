@@ -14,6 +14,7 @@ import { formatDateTime, formatNumber } from '@/common/utils/utils';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SectionTitle from '@/legacy-components/SectionTitle';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -22,7 +23,6 @@ import InterlayTable, {
   InterlayThead,
   InterlayTr
 } from '@/legacy-components/UI/InterlayTable';
-import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
   allLatestSubmissionsFetcher,

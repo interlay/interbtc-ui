@@ -13,9 +13,9 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { Subscriptions } from '@/hooks/api/tokens/use-balances-subscription';
+import ThemeWrapper from '@/legacy-components/ThemeWrapper';
 import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/lib/substrate';
-import ThemeWrapper from '@/parts/ThemeWrapper';
-import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscription';
 
 import App from './App';
 import { GeoblockingWrapper } from './components/Geoblock/Geoblock';

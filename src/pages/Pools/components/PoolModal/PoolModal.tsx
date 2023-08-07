@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
-import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { useGetAccountPools } from '@/hooks/api/amm/use-get-account-pools';
 
 import { DepositForm } from '../DepositForm';
 import { WithdrawForm } from '../WithdrawForm';

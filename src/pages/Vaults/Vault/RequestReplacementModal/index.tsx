@@ -16,6 +16,8 @@ import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { Transaction, useTransaction } from '@/hooks/transaction';
 import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
 import ErrorMessage from '@/legacy-components/ErrorMessage';
@@ -24,8 +26,6 @@ import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsis
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
 import { getExchangeRate } from '@/utils/helpers/oracle';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const AMOUNT = 'amount';
 
