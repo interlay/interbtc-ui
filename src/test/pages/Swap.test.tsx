@@ -12,12 +12,16 @@ const { getLiquidityProvidedByAccount, swap } = MOCK_AMM.MODULE;
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
 const { getFutureBlockNumber } = MOCK_SYSTEM.MODULE;
 
+jest.useFakeTimers();
+
 const path = '/swap';
 
-jest.mock('../../parts/Layout', () => {
+jest.mock('@/components/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
   MockedLayout.displayName = 'MockedLayout';
-  return MockedLayout;
+  return {
+    Layout: MockedLayout
+  };
 });
 
 describe('Swap Page', () => {
@@ -101,6 +105,8 @@ describe('Swap Page', () => {
 
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
+    await waitForFeeEstimate(swap);
+
     await waitFor(() => {
       expect(
         screen.getByRole('textbox', {
@@ -108,8 +114,6 @@ describe('Swap Page', () => {
         })
       ).toHaveValue(TRADE.outputAmount.toString());
     });
-
-    await waitForFeeEstimate(swap);
 
     expect(getFutureBlockNumber).toHaveBeenCalledTimes(1);
 
@@ -199,6 +203,8 @@ describe('Swap Page', () => {
 
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
+    await waitForFeeEstimate(swap);
+
     await waitFor(() => {
       expect(
         screen.getByRole('textbox', {
@@ -206,8 +212,6 @@ describe('Swap Page', () => {
         })
       ).toHaveValue(TRADE.outputAmount.toString());
     });
-
-    await waitForFeeEstimate(swap);
 
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 

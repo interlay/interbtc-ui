@@ -2,61 +2,67 @@ import '@testing-library/jest-dom';
 
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import {
-  DEFAULT_TOKENS_BALANCE_FN,
-  EMPTY_TOKENS_BALANCE_FN,
-  mockTokensBalance
-} from '@/test/mocks/@interlay/interbtc-api';
-import {
-  DEFAULT_ASSETS,
-  DEFAULT_BORROW_POSITIONS,
-  DEFAULT_IBTC,
-  DEFAULT_IBTC_LOAN_ASSET,
-  DEFAULT_LEND_POSITIONS,
-  mockGetBorrowPositionsOfAccount,
-  mockGetLendPositionsOfAccount,
-  mockGetLoanAssets,
-  mockLend
-} from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
+import { MOCK_LOANS, MOCK_TOKENS } from '@/test/mocks/@interlay/interbtc-api';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
 import { submitForm, withinModalTabPanel } from '../utils/table';
+import { getFeeTokenSelect, waitForFeeEstimate, waitForTransactionExecute } from '../utils/transaction';
 import { TABLES } from './constants';
+
+const {
+  getBorrowPositionsOfAccount,
+  getLendPositionsOfAccount,
+  getLoanAssets,
+  getLendingStats,
+  lend
+} = MOCK_LOANS.MODULE;
+const { balance } = MOCK_TOKENS.MODULE;
+
+const { LOAN_POSITIONS, ASSETS, LENDING_STATS, WRAPPED_LOAN } = MOCK_LOANS.DATA;
+const { BALANCE_FN } = MOCK_TOKENS.DATA;
 
 const path = '/lending';
 const tab = 'lend';
 
-describe.skip('Lending Flow', () => {
+describe('Lending Flow', () => {
   beforeEach(() => {
-    mockGetLoanAssets.mockReturnValue(DEFAULT_ASSETS);
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockLend.mockRestore();
-    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
+    getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.EMPTY);
+    getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE_COLLATERAL);
+    getLoanAssets.mockReturnValue(ASSETS.NORMAL);
+    getLendingStats.mockReturnValue(LENDING_STATS.LOW_LTV);
+    balance.mockImplementation(BALANCE_FN.FULL);
   });
 
   it('should be able to lend', async () => {
     await render(<App />, { path });
 
-    const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
+    const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, WRAPPED_LOAN.ASSET.currency.ticker, tab);
 
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
+    expect(getFeeTokenSelect(tabPanel)).toBeInTheDocument();
 
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), WRAPPED_LOAN.AMOUNT.MEDIUM.VALUE);
+
+    await waitForFeeEstimate(lend);
 
     await submitForm(tabPanel, 'lend');
 
-    expect(mockLend).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM);
+    await waitForTransactionExecute(lend);
+
+    expect(lend).toHaveBeenCalledWith(WRAPPED_TOKEN, WRAPPED_LOAN.AMOUNT.MEDIUM.MONETARY);
   });
 
   it('should not be able to lend over available balance', async () => {
-    mockTokensBalance.mockImplementation(EMPTY_TOKENS_BALANCE_FN);
+    balance.mockImplementation(BALANCE_FN.EMPTY);
 
     await render(<App />, { path });
 
     const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), WRAPPED_LOAN.AMOUNT.MEDIUM.VALUE);
+
+    // TODO: should remove this when form ticker is revised
+    userEvent.tab();
 
     await waitFor(() => {
       expect(tabPanel.getByRole('textbox', { name: 'lend amount' })).toHaveErrorMessage('');
@@ -66,24 +72,21 @@ describe.skip('Lending Flow', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(mockLend).not.toHaveBeenCalled();
+      expect(lend).not.toHaveBeenCalled();
     });
   });
 
-  it('should not be able to lend due to lack of borrows and supply cap', async () => {
-    mockGetLoanAssets.mockReturnValue({
-      IBTC: {
-        ...DEFAULT_IBTC_LOAN_ASSET,
-        totalBorrows: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-        supplyCap: DEFAULT_IBTC.MONETARY.EMPTY
-      }
-    });
+  it('should not be able to lend due to lack of supply cap', async () => {
+    getLoanAssets.mockReturnValue(ASSETS.EMPTY_CAPACITY);
 
     await render(<App />, { path });
 
     const tabPanel = await withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), WRAPPED_LOAN.AMOUNT.MEDIUM.VALUE);
+
+    // TODO: should remove this when form ticker is revised
+    userEvent.tab();
 
     await waitFor(() => {
       expect(tabPanel.getByRole('textbox', { name: 'lend amount' })).toHaveErrorMessage('');
@@ -93,7 +96,7 @@ describe.skip('Lending Flow', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(mockLend).not.toHaveBeenCalled();
+      expect(lend).not.toHaveBeenCalled();
     });
   });
 });

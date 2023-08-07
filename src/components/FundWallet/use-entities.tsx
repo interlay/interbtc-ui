@@ -10,9 +10,9 @@ import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchange
 import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { useWallet } from '@/hooks/use-wallet';
 import { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { useWallet } from '@/utils/hooks/use-wallet';
 
 const queryString = require('query-string');
 

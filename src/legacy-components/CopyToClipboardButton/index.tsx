@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
+import useCopyToClipboard from '@/hooks/use-copy-to-clipboard';
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/legacy-components/UI/InterlayButtonBase';
-import useCopyToClipboard from '@/utils/hooks/use-copy-to-clipboard';
 
 interface Props extends InterlayButtonBaseProps {
   text: string;

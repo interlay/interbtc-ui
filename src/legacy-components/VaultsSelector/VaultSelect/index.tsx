@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import { VaultApiType } from '@/common/types/vault.types';
 import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/hooks/api/use-get-identities';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 
 import Select, {
   SELECT_VARIANTS,

@@ -23,13 +23,13 @@ import {
   TRANSACTION_FEE_AMOUNT,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import useAccountId from '@/hooks/use-account-id';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { TreasuryAction } from '@/types/general.d';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { HighlightDescriptionItem } from './HighlightDescriptionItem';
 import { IssueDescriptionItem } from './IssueDescriptionItem';

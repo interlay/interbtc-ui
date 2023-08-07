@@ -1,3 +1,13 @@
+import {
+  AccruedRewards,
+  BorrowPosition,
+  CollateralPosition as LibCollateralPosition,
+  CurrencyExt,
+  LendingStats,
+  LoanAsset
+} from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
+
 type Lend = 'lend';
 
 type Borrow = 'borrow';
@@ -10,4 +20,18 @@ type BorrowAction = Borrow | 'repay';
 
 type LoanAction = LendAction | BorrowAction;
 
-export type { BorrowAction, LendAction, LoanAction, LoanType };
+interface CollateralPosition extends LibCollateralPosition {
+  earnedAmount?: MonetaryAmount<CurrencyExt>;
+}
+
+export type {
+  AccruedRewards,
+  BorrowAction,
+  BorrowPosition,
+  CollateralPosition,
+  LendAction,
+  LendingStats,
+  LoanAction,
+  LoanAsset,
+  LoanType
+};

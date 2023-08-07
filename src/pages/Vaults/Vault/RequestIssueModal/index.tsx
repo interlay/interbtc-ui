@@ -14,11 +14,11 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Modal, ModalBody, ModalHeader } from '@/component-library';
+import { AuthCTA } from '@/components';
 import {
-  BLOCKS_BEHIND_LIMIT,
   DEFAULT_ISSUE_BRIDGE_FEE_RATE,
   DEFAULT_ISSUE_DUST_AMOUNT,
   DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE
@@ -31,22 +31,21 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/hooks/transaction';
+import useAccountId from '@/hooks/use-account-id';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
-import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import useAccountId from '@/utils/hooks/use-account-id';
+import { useGetBtcBlockHeight } from '@/utils/hooks/api/use-get-btc-block-height';
 
 import SubmittedIssueRequestModal from '../SubmittedIssueRequestModal';
 
@@ -94,12 +93,11 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   const { t } = useTranslation();
   const prices = useGetPrices();
 
+  const { data: blockHeight } = useGetBtcBlockHeight();
+
   const handleError = useErrorHandler();
 
-  const { selectedAccount } = useSubstrateSecureState();
-  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
-    (state: StoreType) => state.general
-  );
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
 
@@ -179,21 +177,25 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
     const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
 
-    const result = await transaction.executeAsync(
-      wrappedTokenAmount,
-      vaultAccountId,
-      collateralToken,
-      false, // default
-      vaults
-    );
+    try {
+      const result = await transaction.executeAsync(
+        wrappedTokenAmount,
+        vaultAccountId,
+        collateralToken,
+        false, // default
+        vaults
+      );
 
-    const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
+      const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
 
-    // TODO: handle issue aggregation
-    const issueRequest = issueRequests[0];
-    handleSubmittedRequestModalOpen(issueRequest);
-    setSubmitStatus(STATUSES.RESOLVED);
-    onClose();
+      // TODO: handle issue aggregation
+      const issueRequest = issueRequests[0];
+      handleSubmittedRequestModalOpen(issueRequest);
+      setSubmitStatus(STATUSES.RESOLVED);
+      onClose();
+    } catch (e) {
+      setSubmitStatus(STATUSES.IDLE);
+    }
   };
 
   const validateForm = (value: string): string | undefined => {
@@ -219,7 +221,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
       });
     }
 
-    if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
+    if (blockHeight?.isOutdated) {
       return t('issue_page.error_more_than_6_blocks_behind', {
         wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
       });
@@ -398,15 +400,9 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}
             />
-            <SubmitButton
-              disabled={
-                // TODO: `parachainStatus` and `address` should be checked at upper levels
-                parachainStatus !== ParachainStatus.Running || !selectedAccount
-              }
-              pending={submitStatus === STATUSES.PENDING}
-            >
+            <AuthCTA fullWidth type='submit' loading={submitStatus === STATUSES.PENDING}>
               {t('confirm')}
-            </SubmitButton>
+            </AuthCTA>
           </form>
         </ModalBody>
       </Modal>
