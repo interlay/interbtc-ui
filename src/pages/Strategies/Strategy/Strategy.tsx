@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 
-import { Card, CoinIcon, Flex, H1, H2, P, TextLink } from '@/component-library';
+import { BreadcrumbItem, Breadcrumbs, Card, CoinIcon, Flex, H1, H2, P, TextLink } from '@/component-library';
 import { MainContainer } from '@/components';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
@@ -39,6 +39,10 @@ const Strategy = (): JSX.Element | null => {
   return (
     <MainContainer>
       <Flex direction='column' gap='spacing6'>
+        <Breadcrumbs>
+          <BreadcrumbItem to={PAGES.STRATEGIES}>{t('navigation.strategies')}</BreadcrumbItem>
+          <BreadcrumbItem to='#'>{title}</BreadcrumbItem>
+        </Breadcrumbs>
         <H1 size='lg' weight='bold'>
           <Flex elementType='span' alignItems='center' gap='spacing2'>
             <CoinIcon ticker={strategy.currency.ticker} /> {title}
