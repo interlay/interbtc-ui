@@ -1,5 +1,6 @@
 import { useQuery } from 'react-query';
 
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 
 interface UseGetOracleStatusResult {
@@ -13,7 +14,7 @@ enum OracleStatus {
 }
 
 const getOracleStatus = async (): Promise<OracleStatus> => {
-  const isOracleOnline = await window.bridge.oracle.isOnline();
+  const isOracleOnline = await window.bridge.oracle.isOnline(RELAY_CHAIN_NATIVE_TOKEN);
   return isOracleOnline ? OracleStatus.ONLINE : OracleStatus.OFFLINE;
 };
 

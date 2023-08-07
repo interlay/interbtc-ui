@@ -7,19 +7,16 @@ import { CTA, CTAProps } from '@/component-library';
 import { SIGNER_API_URL } from '@/constants';
 import { useSignMessage } from '@/hooks/use-sign-message';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import { useGetParachainStatus } from '@/utils/hooks/api/system/use-get-parachain-status';
 
 enum AuthStatus {
   UNAUTH,
   AUTH,
-  UNSIGNED,
-  BLOCKED
+  UNSIGNED
 }
 
 const useAuthCTAProps = (props: AuthCTAProps): AuthCTAProps => {
   const { t } = useTranslation();
   const { hasSignature, buttonProps } = useSignMessage();
-  const { data: parachainStatus } = useGetParachainStatus();
 
   const { selectedAccount } = useSubstrateSecureState();
 
@@ -28,12 +25,8 @@ const useAuthCTAProps = (props: AuthCTAProps): AuthCTAProps => {
       return AuthStatus.UNAUTH;
     }
 
-    if (!parachainStatus?.isRunning) {
-      return AuthStatus.BLOCKED;
-    }
-
     return !SIGNER_API_URL || hasSignature ? AuthStatus.AUTH : AuthStatus.UNSIGNED;
-  }, [hasSignature, parachainStatus, selectedAccount]);
+  }, [hasSignature, selectedAccount]);
 
   const dispatch = useDispatch();
 
@@ -53,13 +46,6 @@ const useAuthCTAProps = (props: AuthCTAProps): AuthCTAProps => {
         type: 'button',
         disabled: false,
         children: t('sign_t&cs')
-      };
-    case AuthStatus.BLOCKED:
-      return {
-        ...buttonProps,
-        type: 'button',
-        disabled: true,
-        children
       };
     case AuthStatus.UNAUTH:
     default:

@@ -6,7 +6,6 @@ import { PAGES } from '@/utils/constants/links';
 
 const Home = React.lazy(() => import(/* webpackChunkName: 'home' */ './sub-pages/Home'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ './sub-pages/Vaults'));
-const Parachain = React.lazy(() => import(/* webpackChunkName: 'parachain' */ './sub-pages/Parachain'));
 const Oracles = React.lazy(() => import(/* webpackChunkName: 'oracles' */ './sub-pages/Oracles'));
 const IssueRequests = React.lazy(() => import(/* webpackChunkName: 'issue-requests' */ './sub-pages/IssueRequests'));
 const RedeemRequests = React.lazy(() => import(/* webpackChunkName: 'redeem-requests' */ './sub-pages/RedeemRequests'));
@@ -20,9 +19,6 @@ const Dashboard = (): JSX.Element => {
       <Switch>
         <Route path={PAGES.DASHBOARD_VAULTS}>
           <Vaults />
-        </Route>
-        <Route path={PAGES.DASHBOARD_PARACHAIN}>
-          <Parachain />
         </Route>
         <Route path={PAGES.DASHBOARD_ORACLES}>
           <Oracles />
