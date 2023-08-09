@@ -14,7 +14,7 @@ interface GetAccountStakableLimitResult {
 }
 
 const getAccountStakableLimit = async (account: AccountId) => {
-  const { amount } = await window.bridge.api.rpc.escrow.totalSupply(account);
+  const { amount } = await window.bridge.api.rpc.escrow.freeStakable(account);
   return newMonetaryAmount(amount, GOVERNANCE_TOKEN);
 };
 
