@@ -19,6 +19,7 @@ import { PAGES } from '@/utils/constants/links';
 
 import { Layout, TransactionModal } from './components';
 import * as constants from './constants';
+import { EVM } from './EVM';
 import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
 import TestnetBanner from './legacy-components/TestnetBanner';
 
@@ -77,6 +78,8 @@ const App = (): JSX.Element => {
       }
     }
   }, [setSelectedAccount, extensions.length]);
+
+  return <EVM />;
 
   return (
     <Layout>
