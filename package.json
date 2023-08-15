@@ -7,7 +7,7 @@
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.18",
     "@interlay/bridge": "^0.3.13",
-    "@interlay/interbtc-api": "2.4.0",
+    "@interlay/interbtc-api": "2.4.2",
     "@interlay/monetary-js": "0.7.3",
     "@polkadot/api": "9.14.2",
     "@polkadot/extension-dapp": "0.44.1",

@@ -2125,13 +2125,13 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.4.0.tgz#097a5bc16364e9f5aaf18d2921f9bc6b98fef326"
-  integrity sha512-SJG2FBF9410YG3L6n6lluDmu0zUR5JyvE7HGDFD3osrXdckKGC47gEY4Xar7Qbf/Z+gI4KNwNbdUUfhtstjx+Q==
+"@interlay/interbtc-api@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.4.2.tgz#e9e4a3a0aefcf2fde1a4f1cb1e569f0f24811b2c"
+  integrity sha512-caNEaRLcASwqfBsvveYJ8bZLv3xgS1QwfYe+lDiqeNQo/LYj+hjmjEa50MwSA4gZ2kw41wOaJoQlQhO+AJdI7Q==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-types" "1.12.0"
+    "@interlay/interbtc-types" "1.13.0"
     "@interlay/monetary-js" "0.7.3"
     "@polkadot/api" "9.14.2"
     big.js "6.1.1"
@@ -2147,10 +2147,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.11.0.tgz#5b94066ddee1fd677de928531db36e6ae439e08f"
   integrity sha512-bn3XjyRlXyhe1QKUHx5IEQJDNC6LoSCJJIkTnSp5xm52GRBEWgHOvLAnfJi3gyj7A3lV/yA2Xjqf294bZgMmfw==
 
-"@interlay/interbtc-types@1.12.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.12.0.tgz#07dc8e15690292387124dbc2bbb7bf5bc8b68001"
-  integrity sha512-ELJa2ftIbe8Ds2ejS7kO5HumN9EB5l2OBi3Qsy5iHJsHKq2HtXfFoKnW38HarM6hADrWG+e/yNGHSKJIJzEZuA==
+"@interlay/interbtc-types@1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.13.0.tgz#0e09badf10861b4c8a5087b4358da317e464a14a"
+  integrity sha512-oUjavcfnX7lxlMd10qGc48/MoATX37TQcuSAZBIUmpCRiJ15hZbQoTAKGgWMPsla3+3YqUAzkWUEVMwUvM1U+w==
 
 "@interlay/monetary-js@0.7.3":
   version "0.7.3"
