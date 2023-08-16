@@ -4,11 +4,10 @@ import { Keyring } from '@polkadot/keyring';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
-import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
@@ -44,7 +43,6 @@ const App = (): JSX.Element => {
   const { selectedAccount, extensions } = useSubstrateSecureState();
   const { setSelectedAccount } = useSubstrate();
 
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
@@ -54,7 +52,7 @@ const App = (): JSX.Element => {
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
-      enabled: process.env.NODE_ENV !== 'test' && bridgeLoaded && !!selectedAccount,
+      enabled: process.env.NODE_ENV !== 'test' && !!selectedAccount,
       onSuccess: ({ data }) => {
         const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
@@ -81,75 +79,70 @@ const App = (): JSX.Element => {
   return (
     <Layout>
       {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
-      <Route
-        render={({ location }) => (
-          <React.Suspense fallback={<FullLoadingSpinner />}>
-            {bridgeLoaded ? (
-              <Switch location={location}>
-                <Route exact path={PAGES.VAULTS}>
-                  <Vaults />
+      <Route>
+        <React.Suspense fallback={<FullLoadingSpinner />}>
+          <Switch>
+            <Route exact path={PAGES.VAULTS}>
+              <Vaults />
+            </Route>
+            <Route exact path={PAGES.VAULT}>
+              <Vault />
+            </Route>
+            <Route path={PAGES.VAULT}>
+              <Vaults />
+            </Route>
+            <Route path={PAGES.DASHBOARD}>
+              <Dashboard />
+            </Route>
+            <Route path={PAGES.STAKING}>
+              <Staking />
+            </Route>
+            <Route path={PAGES.TX}>
+              <TX />
+            </Route>
+            <Route path={PAGES.BTC}>
+              <BTC />
+            </Route>
+            <Route path={PAGES.SEND_AND_RECEIVE}>
+              <SendAndReceive />
+            </Route>
+            <Route path={PAGES.LOANS}>
+              <Loans />
+            </Route>
+            <Route path={PAGES.SWAP}>
+              <Swap />
+            </Route>
+            <Route path={PAGES.POOLS}>
+              <Pools />
+            </Route>
+            <Route path={[PAGES.HOME, PAGES.WALLET]}>
+              <Wallet />
+            </Route>
+            {isStrategiesEnabled && (
+              <>
+                <Route exact path={PAGES.STRATEGIES}>
+                  <Strategies />
                 </Route>
-                <Route exact path={PAGES.VAULT}>
-                  <Vault />
+                <Route path={PAGES.STRATEGY}>
+                  <Strategy />
                 </Route>
-                <Route path={PAGES.VAULT}>
-                  <Vaults />
-                </Route>
-                <Route path={PAGES.DASHBOARD}>
-                  <Dashboard />
-                </Route>
-                <Route path={PAGES.STAKING}>
-                  <Staking />
-                </Route>
-                <Route path={PAGES.TX}>
-                  <TX />
-                </Route>
-                <Route path={PAGES.BTC}>
-                  <BTC />
-                </Route>
-                <Route path={PAGES.SEND_AND_RECEIVE}>
-                  <SendAndReceive />
-                </Route>
-                <Route path={PAGES.LOANS}>
-                  <Loans />
-                </Route>
-                <Route path={PAGES.SWAP}>
-                  <Swap />
-                </Route>
-                <Route path={PAGES.POOLS}>
-                  <Pools />
-                </Route>
-                <Route path={[PAGES.HOME, PAGES.WALLET]}>
-                  <Wallet />
-                </Route>
-                {isStrategiesEnabled && (
-                  <>
-                    <Route exact path={PAGES.STRATEGIES}>
-                      <Strategies />
-                    </Route>
-                    <Route path={PAGES.STRATEGY}>
-                      <Strategy />
-                    </Route>
-                  </>
-                )}
-                {isOnboardingEnabled && (
-                  <Route path={PAGES.ONBOARDING}>
-                    <Onboarding />
-                  </Route>
-                )}
-                <Route path={PAGES.ACTIONS}>
-                  <Actions />
-                </Route>
-                <Route path='*'>
-                  <NoMatch />
-                </Route>
-              </Switch>
-            ) : (
-              <FullLoadingSpinner />
+              </>
             )}
-          </React.Suspense>
-        )}
-      />
+            {isOnboardingEnabled && (
+              <Route path={PAGES.ONBOARDING}>
+                <Onboarding />
+              </Route>
+            )}
+            <Route path={PAGES.ACTIONS}>
+              <Actions />
+            </Route>
+            <Route path='*'>
+              <NoMatch />
+            </Route>
+          </Switch>
+          )
+        </React.Suspense>
+      </Route>
       <TransactionModal />
     </Layout>
   );
