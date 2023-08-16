@@ -35,7 +35,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     [
       GRAPHQL_FETCHER,
       `query {
-        vaults(orderBy: registrationTimestamp_ASC) {
+        vaults(orderBy: registrationTimestamp_ASC, limit: 100) {
           id
           registrationTimestamp
         }
