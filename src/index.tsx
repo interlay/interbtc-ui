@@ -5,13 +5,13 @@ import '@/component-library/theme/theme.kintsugi.css';
 
 import { configGlobalBig } from '@interlay/monetary-js';
 import { OverlayProvider } from '@react-aria/overlays';
-import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { CompatRouter } from 'react-router-dom-v5-compat';
 
 import { Subscriptions } from '@/hooks/api/tokens/use-balances-subscription';
 import ThemeWrapper from '@/legacy-components/ThemeWrapper';
@@ -34,26 +34,28 @@ const queryClient = new QueryClient();
 ReactDOM.render(
   <GeoblockingWrapper>
     <Router>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <Provider store={store}>
-            <SubstrateProvider>
-              <ThemeWrapper>
-                <SubstrateLoadingAndErrorHandlingWrapper>
-                  <Subscriptions>
-                    <NotificationsProvider>
-                      <OverlayProvider>
-                        <App />
-                      </OverlayProvider>
-                    </NotificationsProvider>
-                  </Subscriptions>
-                </SubstrateLoadingAndErrorHandlingWrapper>
-              </ThemeWrapper>
-            </SubstrateProvider>
-          </Provider>
-        </HelmetProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <CompatRouter>
+        <QueryClientProvider client={queryClient}>
+          <HelmetProvider>
+            <Provider store={store}>
+              <SubstrateProvider>
+                <ThemeWrapper>
+                  <SubstrateLoadingAndErrorHandlingWrapper>
+                    <Subscriptions>
+                      <NotificationsProvider>
+                        <OverlayProvider>
+                          <App />
+                        </OverlayProvider>
+                      </NotificationsProvider>
+                    </Subscriptions>
+                  </SubstrateLoadingAndErrorHandlingWrapper>
+                </ThemeWrapper>
+              </SubstrateProvider>
+            </Provider>
+          </HelmetProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </CompatRouter>
     </Router>
   </GeoblockingWrapper>,
   document.getElementById('root')
