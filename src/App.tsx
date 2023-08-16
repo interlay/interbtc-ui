@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom-v5-compat';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
@@ -79,70 +79,31 @@ const App = (): JSX.Element => {
   return (
     <Layout>
       {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
-      <Route>
-        <React.Suspense fallback={<FullLoadingSpinner />}>
-          <Switch>
-            <Route exact path={PAGES.VAULTS}>
-              <Vaults />
+      <React.Suspense fallback={<FullLoadingSpinner />}>
+        <Routes>
+          <Route path={PAGES.HOME} element={<Navigate to={PAGES.WALLET} />} />
+          <Route path={PAGES.VAULTS} element={<Vaults />} />
+          <Route path={PAGES.VAULT} element={<Vault />} />
+          <Route path={PAGES.VAULT} element={<Vaults />} />
+          <Route path={PAGES.DASHBOARD} element={<Dashboard />} />
+          <Route path={PAGES.STAKING} element={<Staking />} />
+          <Route path={PAGES.TX} element={<TX />} />
+          <Route path={PAGES.BTC} element={<BTC />} />
+          <Route path={PAGES.SEND_AND_RECEIVE} element={<SendAndReceive />} />
+          <Route path={PAGES.LOANS} element={<Loans />} />
+          <Route path={PAGES.SWAP} element={<Swap />} />
+          <Route path={PAGES.POOLS} element={<Pools />} />
+          <Route path={PAGES.WALLET} element={<Wallet />} />
+          {isStrategiesEnabled && (
+            <Route path={PAGES.STRATEGIES} element={<Strategies />}>
+              <Route path={PAGES.STRATEGY} element={<Strategy />} />
             </Route>
-            <Route exact path={PAGES.VAULT}>
-              <Vault />
-            </Route>
-            <Route path={PAGES.VAULT}>
-              <Vaults />
-            </Route>
-            <Route path={PAGES.DASHBOARD}>
-              <Dashboard />
-            </Route>
-            <Route path={PAGES.STAKING}>
-              <Staking />
-            </Route>
-            <Route path={PAGES.TX}>
-              <TX />
-            </Route>
-            <Route path={PAGES.BTC}>
-              <BTC />
-            </Route>
-            <Route path={PAGES.SEND_AND_RECEIVE}>
-              <SendAndReceive />
-            </Route>
-            <Route path={PAGES.LOANS}>
-              <Loans />
-            </Route>
-            <Route path={PAGES.SWAP}>
-              <Swap />
-            </Route>
-            <Route path={PAGES.POOLS}>
-              <Pools />
-            </Route>
-            <Route path={[PAGES.HOME, PAGES.WALLET]}>
-              <Wallet />
-            </Route>
-            {isStrategiesEnabled && (
-              <>
-                <Route exact path={PAGES.STRATEGIES}>
-                  <Strategies />
-                </Route>
-                <Route path={PAGES.STRATEGY}>
-                  <Strategy />
-                </Route>
-              </>
-            )}
-            {isOnboardingEnabled && (
-              <Route path={PAGES.ONBOARDING}>
-                <Onboarding />
-              </Route>
-            )}
-            <Route path={PAGES.ACTIONS}>
-              <Actions />
-            </Route>
-            <Route path='*'>
-              <NoMatch />
-            </Route>
-          </Switch>
-          )
-        </React.Suspense>
-      </Route>
+          )}
+          {isOnboardingEnabled && <Route path={PAGES.ONBOARDING} element={<Onboarding />} />}
+          <Route path={PAGES.ACTIONS} element={<Actions />} />
+          <Route path='*' element={<NoMatch />} />
+        </Routes>
+      </React.Suspense>
       <TransactionModal />
     </Layout>
   );
