@@ -1,6 +1,6 @@
 const vaultsByAccountIdQuery = (accountId: string): string => `
 {
-    vaults(where: {accountId_eq: "${accountId}"}, limit: 100) {
+    vaults(where: {accountId_eq: "${accountId}"}) {
       id
     }
   }
