@@ -27,7 +27,7 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   VoteGovernanceTokenMonetaryAmount
 } from '@/config/relay-chains';
-import { useGetAccountStakableLimit } from '@/hooks/api/escrow/use-get-account-stakable-limit';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import { useSignMessage } from '@/hooks/use-sign-message';
@@ -109,7 +109,8 @@ const Staking = (): JSX.Element => {
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const { data: maxStakableAmount } = useGetAccountStakableLimit();
+  const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
+  const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
   const queryClient = useQueryClient();
 
@@ -318,7 +319,7 @@ const Staking = (): JSX.Element => {
 
   const availableBalance = React.useMemo(() => {
     if (
-      maxStakableAmount === undefined ||
+      isBalancesLoading ||
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
       transactionFeeReserveIdle ||
@@ -331,17 +332,21 @@ const Staking = (): JSX.Element => {
     if (transactionFeeReserve === undefined) {
       throw new Error('Transaction fee reserve value returned undefined!');
     }
+    if (governanceTokenBalance === undefined) {
+      throw new Error('Governance token balance value returned undefined!');
+    }
 
-    const calculatedBalance = maxStakableAmount.sub(transactionFeeReserve);
+    const calculatedBalance = governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
 
     return calculatedBalance.toBig().gte(0) ? calculatedBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
   }, [
-    maxStakableAmount,
+    isBalancesLoading,
+    governanceTokenBalance,
     stakedAmountAndEndBlockIdle,
     stakedAmountAndEndBlockLoading,
+    stakedAmount,
     transactionFeeReserveIdle,
     transactionFeeReserveLoading,
-    stakedAmount,
     transactionFeeReserve
   ]);
 
