@@ -2125,13 +2125,13 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@2.3.7":
-  version "2.3.7"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.3.7.tgz#26d4fa574531fe9eea3f0d49364f7476da9713cf"
-  integrity sha512-w9xPaUa3wTTXOb83pHbSqlE3E8V2iA4WE4IlOu23Zqth4hnG0h819WynlfzUsAPGug6RkZkHWIKnu+85V95g5A==
+"@interlay/interbtc-api@2.4.3":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.4.3.tgz#1b1b953d792a168f7a3d20014c8255b78cf08119"
+  integrity sha512-0j8sPekmyhf6m8Qa4gnYndUx5Uu8XB+4E0nxhrUsVN62zSNrxSu8Ubn6sjlwOXUmgqB1BJRZe/PV3hj2OiWgUw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-types" "1.12.0"
+    "@interlay/interbtc-types" "1.13.0"
     "@interlay/monetary-js" "0.7.3"
     "@polkadot/api" "9.14.2"
     big.js "6.1.1"
@@ -2147,10 +2147,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.11.0.tgz#5b94066ddee1fd677de928531db36e6ae439e08f"
   integrity sha512-bn3XjyRlXyhe1QKUHx5IEQJDNC6LoSCJJIkTnSp5xm52GRBEWgHOvLAnfJi3gyj7A3lV/yA2Xjqf294bZgMmfw==
 
-"@interlay/interbtc-types@1.12.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.12.0.tgz#07dc8e15690292387124dbc2bbb7bf5bc8b68001"
-  integrity sha512-ELJa2ftIbe8Ds2ejS7kO5HumN9EB5l2OBi3Qsy5iHJsHKq2HtXfFoKnW38HarM6hADrWG+e/yNGHSKJIJzEZuA==
+"@interlay/interbtc-types@1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.13.0.tgz#0e09badf10861b4c8a5087b4358da317e464a14a"
+  integrity sha512-oUjavcfnX7lxlMd10qGc48/MoATX37TQcuSAZBIUmpCRiJ15hZbQoTAKGgWMPsla3+3YqUAzkWUEVMwUvM1U+w==
 
 "@interlay/monetary-js@0.7.3":
   version "0.7.3"
@@ -3474,6 +3474,19 @@
     "@react-types/shared" "^3.16.0"
     "@swc/helpers" "^0.4.14"
 
+"@react-aria/breadcrumbs@^3.5.3":
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/@react-aria/breadcrumbs/-/breadcrumbs-3.5.3.tgz#05d4d811d7a665ccf6b0b411a2c0ab0f4fb4638e"
+  integrity sha512-rmkApAflZm7Finn3vxLGv7MbsMaPo5Bn7/lf8GBztNfzmLWP/dAA5bgvi1sj1T6sWJOuFJT8u04ImUwBCLh8cQ==
+  dependencies:
+    "@react-aria/i18n" "^3.8.0"
+    "@react-aria/interactions" "^3.16.0"
+    "@react-aria/link" "^3.5.2"
+    "@react-aria/utils" "^3.18.0"
+    "@react-types/breadcrumbs" "^3.6.0"
+    "@react-types/shared" "^3.18.1"
+    "@swc/helpers" "^0.5.0"
+
 "@react-aria/button@^3.6.4":
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/@react-aria/button/-/button-3.6.4.tgz#51927c9d968d0c1f741ee2081ca7f2e244abbc12"
@@ -3904,6 +3917,18 @@
     "@react-types/link" "^3.4.0"
     "@react-types/shared" "^3.17.0"
     "@swc/helpers" "^0.4.14"
+
+"@react-aria/link@^3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@react-aria/link/-/link-3.5.2.tgz#68b99721eeddffb87c42541419f08333eada37d9"
+  integrity sha512-CCFP11Uietro6TUZpWBoq3Ql/6qss/ODC5XM6oNxckj72IHruFIj8V7Y0tL5x0aE6h38hlKcDf8NCxkQqz2edg==
+  dependencies:
+    "@react-aria/focus" "^3.13.0"
+    "@react-aria/interactions" "^3.16.0"
+    "@react-aria/utils" "^3.18.0"
+    "@react-types/link" "^3.4.3"
+    "@react-types/shared" "^3.18.1"
+    "@swc/helpers" "^0.5.0"
 
 "@react-aria/listbox@^3.8.0":
   version "3.9.0"
@@ -4680,6 +4705,14 @@
   dependencies:
     "@react-types/shared" "^3.16.0"
 
+"@react-types/breadcrumbs@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@react-types/breadcrumbs/-/breadcrumbs-3.6.0.tgz#6a5b5e459597172d7f23f2ecbc9e11c94d2a3f2a"
+  integrity sha512-EnZk/f59yMQUmH2DW21uo3ajQ7nLEZ/sIMSfEZYP69CFe1by0RKi9aFRjJSrYjxRC0PSHTVPTjIG72KeBSsUGA==
+  dependencies:
+    "@react-types/link" "^3.4.3"
+    "@react-types/shared" "^3.18.1"
+
 "@react-types/button@^3.7.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.7.0.tgz#774c043d8090a505e60fdf26f026d5f0cc968f0f"
@@ -4765,6 +4798,14 @@
   dependencies:
     "@react-aria/interactions" "^3.14.0"
     "@react-types/shared" "^3.17.0"
+
+"@react-types/link@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@react-types/link/-/link-3.4.3.tgz#51534673ea35cf6583b950319bafd16ff76296dc"
+  integrity sha512-opKfkcaeV0cir64jPcy7DS0BrmdfuWMjua+MSeNv7FfT/b65rFgPfAOKZcvLWDsaxT5HYb7pivYPBfjKqHsQKw==
+  dependencies:
+    "@react-aria/interactions" "^3.16.0"
+    "@react-types/shared" "^3.18.1"
 
 "@react-types/listbox@^3.4.0", "@react-types/listbox@^3.4.1":
   version "3.4.1"

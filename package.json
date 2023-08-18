@@ -1,13 +1,13 @@
 {
   "name": "interbtc-ui",
-  "version": "2.37.0",
+  "version": "2.38.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.18",
     "@interlay/bridge": "^0.3.13",
-    "@interlay/interbtc-api": "2.3.7",
+    "@interlay/interbtc-api": "2.4.3",
     "@interlay/monetary-js": "0.7.3",
     "@polkadot/api": "9.14.2",
     "@polkadot/extension-dapp": "0.44.1",
@@ -15,6 +15,7 @@
     "@polkadot/ui-keyring": "^2.9.7",
     "@reach/tooltip": "^0.16.0",
     "@react-aria/accordion": "^3.0.0-alpha.14",
+    "@react-aria/breadcrumbs": "^3.5.3",
     "@react-aria/button": "^3.6.4",
     "@react-aria/dialog": "^3.3.1",
     "@react-aria/focus": "^3.6.1",
