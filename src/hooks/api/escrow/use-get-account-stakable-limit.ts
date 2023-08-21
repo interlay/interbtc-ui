@@ -21,7 +21,7 @@ const getAccountStakableLimit = async (account: AccountId) => {
 const useGetAccountStakableLimit = (): GetAccountStakableLimitResult => {
   const account = useAccountId();
 
-  const queryKey = ['staking', account];
+  const queryKey = ['stakable-limit', account];
 
   const { data, error, refetch } = useQuery({
     queryKey,

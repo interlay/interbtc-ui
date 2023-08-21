@@ -333,7 +333,7 @@ const Staking = (): JSX.Element => {
     }
 
     const calculatedBalance = maxStakableAmount.sub(transactionFeeReserve);
-    console.log('calculated balance', calculatedBalance.toString());
+
     return calculatedBalance.toBig().gte(0) ? calculatedBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
   }, [
     maxStakableAmount,
