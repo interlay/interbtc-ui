@@ -95,12 +95,12 @@ const useGetDexVolumes = (range: DateRangeVolume): UseGetCurrenciesResult => {
 
       const data = await graphQLClient.request(GET_DEX_VOLUMES, { start, end });
 
-      const [startVolumes] = data.startVolumes;
-      const [endVolumes] = data.endVolumes;
-
-      if (!startVolumes || !endVolumes) {
+      if (!data.startVolumes.length || !data.endVolumes.length) {
         return {};
       }
+
+      const [startVolumes] = data.startVolumes;
+      const [endVolumes] = data.endVolumes;
 
       return startVolumes.amounts.reduce((acc: DexVolumesData, item: any) => {
         let currency: CurrencyExt;
