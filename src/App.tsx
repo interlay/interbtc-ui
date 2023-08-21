@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
@@ -119,7 +119,7 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.POOLS}>
                   <Pools />
                 </Route>
-                <Route path={[PAGES.HOME, PAGES.WALLET]}>
+                <Route path={PAGES.WALLET}>
                   <Wallet />
                 </Route>
                 {isStrategiesEnabled && (
@@ -139,6 +139,9 @@ const App = (): JSX.Element => {
                 )}
                 <Route path={PAGES.ACTIONS}>
                   <Actions />
+                </Route>
+                <Route exact path={PAGES.HOME}>
+                  <Redirect to={PAGES.WALLET} />
                 </Route>
                 <Route path='*'>
                   <NoMatch />
