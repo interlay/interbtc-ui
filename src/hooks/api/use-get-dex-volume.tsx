@@ -98,6 +98,10 @@ const useGetDexVolumes = (range: DateRangeVolume): UseGetCurrenciesResult => {
       const [startVolumes] = data.startVolumes;
       const [endVolumes] = data.endVolumes;
 
+      if (!startVolumes || !endVolumes) {
+        return {};
+      }
+
       return startVolumes.amounts.reduce((acc: DexVolumesData, item: any) => {
         let currency: CurrencyExt;
         let endVolume;
