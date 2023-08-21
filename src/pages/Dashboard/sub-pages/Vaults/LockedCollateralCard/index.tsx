@@ -47,7 +47,7 @@ const LockedCollateralCard = ({
     if (cumulativeVolumes === undefined) {
       throw new Error('Something went wrong!');
     }
-    const totalLockedCollateralTokenAmount = cumulativeVolumes.slice(-1)[0].amount;
+    const totalLockedCollateralTokenAmount = cumulativeVolumes.slice(-1)[0]?.amount;
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {

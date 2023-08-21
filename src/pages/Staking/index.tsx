@@ -731,7 +731,7 @@ const Staking = (): JSX.Element => {
               <AvailableBalanceUI
                 label='Available balance'
                 balance={
-                  availableMonetaryBalance === undefined // /
+                  availableMonetaryBalance === undefined
                     ? '-'
                     : formatNumber(Number(availableMonetaryBalance), {
                         minimumFractionDigits: 0,
