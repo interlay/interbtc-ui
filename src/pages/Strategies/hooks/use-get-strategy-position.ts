@@ -29,6 +29,7 @@ const useGetStrategyPosition = (strategy: StrategyData | undefined): UseGetStrat
   }
 
   switch (strategy.type) {
+    case StrategyType.BTC_LEVERAGE_LONG:
     case StrategyType.BTC_LOW_RISK: {
       if (isAccountPositionsLoading) {
         return {

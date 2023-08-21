@@ -32,13 +32,13 @@ const Strategies = (): JSX.Element => {
           {strategies.map((strategy) => {
             const { title, summary } = getContent(strategy, t);
 
-            const to = PAGES.STRATEGY.replace(`:${URL_PARAMETERS.STRATEGY.TYPE}`, strategy.type);
+            const to = PAGES.STRATEGY.replace(`:${URL_PARAMETERS.STRATEGY.SLUG}`, strategy.slug);
 
             return (
               <Link key={strategy.type} to={to}>
                 <StrategyCard
                   risk={strategy.risk}
-                  ticker={strategy.currency.ticker}
+                  ticker={strategy.currencies.primary.ticker}
                   interestRate={strategy.interestRate}
                   title={title}
                   description={summary}

@@ -11,7 +11,7 @@ const URL_PARAMETERS = Object.freeze({
     HASH: 'transactionHash'
   },
   STRATEGY: {
-    TYPE: 'strategyType'
+    SLUG: 'strategySlug'
   }
 });
 
@@ -19,7 +19,7 @@ const PAGES = Object.freeze({
   HOME: '/',
   BTC: '/btc',
   STRATEGIES: '/strategies',
-  STRATEGY: `/strategies/:${URL_PARAMETERS.STRATEGY.TYPE}`,
+  STRATEGY: `/strategies/:${URL_PARAMETERS.STRATEGY.SLUG}`,
   SEND_AND_RECEIVE: '/send-and-receive',
   TX: '/tx',
   STAKING: '/staking',
@@ -86,8 +86,8 @@ const QUERY_PARAMETERS = Object.freeze({
 const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
   BANXA: {
     WALLET_ADDRESS: 'walletAddress',
-    FIAT_TYPE: 'fiatType',
-    COIN_TYPE: 'coinType'
+    FIAT_SLUG: 'fiatType',
+    COIN_SLUG: 'coinType'
   },
   DOCS: {
     ASSET: {

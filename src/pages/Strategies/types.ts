@@ -1,11 +1,18 @@
 enum StrategyRisk {
   LOW = 'low',
   MEDIUM = 'medium',
+  MEDIUM_HIGH = 'medium-high',
   HIGH = 'high'
 }
 
+enum StrategySlug {
+  BTC_LOW_RISK = 'btc-low-risk',
+  BTC_LEVERAGE_LONG = 'btc-leverage-long'
+}
+
 enum StrategyType {
-  BTC_LOW_RISK = 'btc-low-risk'
+  PASSIVE_INCOME,
+  LEVERAGE_LONG
 }
 
 enum StrategyFormType {
@@ -13,4 +20,4 @@ enum StrategyFormType {
   WITHDRAW
 }
 
-export { StrategyFormType, StrategyRisk, StrategyType };
+export { StrategyFormType, StrategyRisk, StrategySlug, StrategyType };

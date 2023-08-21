@@ -779,6 +779,14 @@
     "low_risk_approach_generate_passive_income": "Discover a straightforward and low-risk approach to generate passive income. This strategy lends out deposited {{ticker}} to borrowers, allowing you to earn interest effortlessly",
     "how_does_it_work": "How does it work?",
     "what_are_the_risk": "What are the risks?",
-    "discover_fundamental_origins": "Discover the fundamental origins of the position, potential risks involved, the allocation of your capital, and other pertinent details in the docs section."
+    "discover_fundamental_origins": "Discover the fundamental origins of the position, potential risks involved, the allocation of your capital, and other pertinent details in the docs section.",
+    "deposit_ticker": "Deposit {{ticker}}",
+    "borrow_ticker": "Borrow {{ticker}}",
+    "provider_ticker_to_borrow_market": "Deposit {{ticker}} to borrow market",
+    "earn_interest": "Earn Interest",
+    "deposit_ticker_as_collateral": "Deposit {{ticker}} as collateral",
+    "swap_input_for_output": "Swap {{input}} for {{output}}",
+    "repeat_until_desired_leverage": "Repeat {{start}}-{{end}} until desired leverage is achieved",
+    "leveraged_ticker_long": "Leverage {{ticker}} Long"
   }
 }

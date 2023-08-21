@@ -4,7 +4,11 @@ import { Fragment, ReactNode, useMemo } from 'react';
 
 import { StyledMark, StyledMarkText } from './Slider.style';
 
-type Props = { renderMarkText: (text: ReactNode) => ReactNode; state: SliderState; numberFormatter: Intl.NumberFormat };
+type Props = {
+  renderMarkText?: (text: ReactNode) => ReactNode;
+  state: SliderState;
+  numberFormatter: Intl.NumberFormat;
+};
 
 type InheritAttrs = Omit<Pick<AriaSliderProps, 'minValue' | 'maxValue' | 'step'>, keyof Props>;
 

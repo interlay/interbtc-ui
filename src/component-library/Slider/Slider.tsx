@@ -13,7 +13,7 @@ type Props = {
   marks?: boolean;
   formatOptions?: Intl.NumberFormatOptions;
   onChange?: (value: number) => void;
-  renderMarkText: (text: ReactNode) => ReactNode;
+  renderMarkText?: (text: ReactNode) => ReactNode;
 };
 
 type NativeAttrs = Omit<InputHTMLAttributes<unknown>, keyof Props>;

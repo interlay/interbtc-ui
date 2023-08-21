@@ -1,5 +1,5 @@
 import { convertMonetaryAmountToValueInUSD, formatPercentage } from '@/common/utils/utils';
-import { Card, Dd, DlGroup, Dt } from '@/component-library';
+import { Card, CoinIcon, Dd, DlGroup, Dt } from '@/component-library';
 import { formatUSD } from '@/component-library/utils/format';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -17,7 +17,7 @@ const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
   const { amount, earnedAmount } = position || {};
 
   const prices = useGetPrices();
-  const price = getTokenPrice(prices, stratetgy.currency.ticker);
+  const price = getTokenPrice(prices, stratetgy.currencies.primary.ticker);
 
   const amountUSD = (amount && convertMonetaryAmountToValueInUSD(amount, price?.usd)) || 0;
   const amountUSDLabel = formatUSD(amountUSD, { compact: true });
@@ -33,7 +33,8 @@ const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
             My deposit
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {amount?.toHuman() || 0} {stratetgy.currency.ticker} ({amountUSDLabel})
+            <CoinIcon ticker={stratetgy.currencies.primary.ticker} />
+            {amount?.toHuman() || 0} {stratetgy.currencies.primary.ticker} ({amountUSDLabel})
           </Dd>
         </DlGroup>
       </Card>
@@ -53,7 +54,7 @@ const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
             My earnings
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {earnedAmount?.toHuman() || 0} {stratetgy.currency.ticker} ({earnedUSDLabel})
+            {earnedAmount?.toHuman() || 0} {stratetgy.currencies.primary.ticker} ({earnedUSDLabel})
           </Dd>
         </DlGroup>
       </Card>

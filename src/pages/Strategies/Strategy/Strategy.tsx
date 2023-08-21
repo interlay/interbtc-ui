@@ -10,16 +10,16 @@ import { StrategyInfographics, StrategyInsights, StrategyTag } from '../componen
 import { getContent } from '../helpers/content';
 import { useGetStrategies } from '../hooks/use-get-strategies';
 import { useGetStrategyPosition } from '../hooks/use-get-strategy-position';
-import { StrategyRisk, StrategyType } from '../types';
+import { StrategyRisk, StrategySlug } from '../types';
 import { StyledFlex, StyledInfoCards, StyledStrategyForm } from './Strategy.styles';
 
 const Strategy = (): JSX.Element | null => {
   const { t } = useTranslation();
-  const { [URL_PARAMETERS.STRATEGY.TYPE]: strategyType } = useParams<Record<string, StrategyType>>();
+  const { [URL_PARAMETERS.STRATEGY.SLUG]: strategySlug } = useParams<Record<string, StrategySlug>>();
   const { replace } = useHistory();
   const { data: strategies, getStrategy } = useGetStrategies();
 
-  const strategy = getStrategy(strategyType);
+  const strategy = getStrategy(strategySlug);
 
   const { data: position, isLoading: isPositionLoading } = useGetStrategyPosition(strategy);
 
@@ -45,7 +45,7 @@ const Strategy = (): JSX.Element | null => {
         </Breadcrumbs>
         <H1 size='lg' weight='bold'>
           <Flex elementType='span' alignItems='center' gap='spacing2'>
-            <CoinIcon ticker={strategy.currency.ticker} /> {title}
+            <CoinIcon ticker={strategy.currencies.primary.ticker} /> {title}
           </Flex>
         </H1>
         <Flex gap='spacing2'>
@@ -65,7 +65,7 @@ const Strategy = (): JSX.Element | null => {
               {description}
             </P>
             <Card shadowed={false} variant='bordered' background='tertiary'>
-              <StrategyInfographics items={infographics} />
+              <StrategyInfographics {...infographics} />
             </Card>
           </Card>
           <Card gap='spacing4'>
