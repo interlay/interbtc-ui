@@ -2,6 +2,7 @@ import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount, WrappedCurrency 
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 
 const CUMULATIVE_VOLUMES_FETCHER = 'cumulative-volumes-fetcher';
 
@@ -35,41 +36,26 @@ const cumulativeVolumesFetcher = async (
   const queryFragment = (
     type: VolumeType,
     date: Date,
-    collateralCurrencyIdLiteral?: string | number,
-    wrappedCurrencyIdLiteral?: string | number
+    collateralCurrency?: CurrencyExt,
+    wrappedCurrency?: CurrencyExt
   ) => {
-    let colCurrCond = '';
-    if (collateralCurrencyIdLiteral !== undefined) {
-      colCurrCond =
-        (typeof collateralCurrencyIdLiteral === 'number' ? 'asset_eq: ' : 'token_eq: ') +
-        collateralCurrencyIdLiteral.toString();
-    }
-    let wrapCurrCond = '';
-    if (wrappedCurrencyIdLiteral !== undefined) {
-      wrapCurrCond =
-        (typeof wrappedCurrencyIdLiteral === 'number' ? 'asset_eq: ' : 'token_eq: ') +
-        wrappedCurrencyIdLiteral.toString();
-    }
     const where = `{
       tillTimestamp_lte: "${date.toISOString()}",
       type_eq: ${type},
       ${
-        collateralCurrencyIdLiteral
+        collateralCurrency
           ? `collateralCurrency: {
-        ${colCurrCond}}`
+        ${getCurrencyEqualityCondition(collateralCurrency)}}`
           : ``
       },
       ${
-        wrappedCurrencyIdLiteral
+        wrappedCurrency
           ? `wrappedCurrency: {
-        ${wrapCurrCond}}`
+        ${getCurrencyEqualityCondition(wrappedCurrency)}}`
           : ``
       },
     }`;
-    const entityName =
-      collateralCurrencyIdLiteral || wrappedCurrencyIdLiteral
-        ? `cumulativeVolumePerCurrencyPairs`
-        : `cumulativeVolumes`;
+    const entityName = collateralCurrency || wrappedCurrency ? `cumulativeVolumePerCurrencyPairs` : `cumulativeVolumes`;
     return `
       ts${date.getTime()}: ${entityName} (where: ${where}, orderBy: tillTimestamp_DESC, limit: 1) {
         amount
@@ -80,14 +66,7 @@ const cumulativeVolumesFetcher = async (
 
   const query = `
   {
-    ${cutoffTimestamps.map((date) => {
-      let col;
-      // TODO: Need to refactor when we want to support lend tokens as collateral for vaults.
-      if (collateralCurrency) {
-        col = 'foreignAsset' in collateralCurrency ? collateralCurrency.foreignAsset.id : collateralCurrency.ticker;
-      }
-      return queryFragment(type, date, col, wrappedCurrency?.ticker);
-    })}
+    ${cutoffTimestamps.map((date) => queryFragment(type, date, collateralCurrency, wrappedCurrency))}
   }
   `;
 
