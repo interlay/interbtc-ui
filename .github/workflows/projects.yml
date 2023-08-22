@@ -21,4 +21,4 @@ jobs:
           project-url: https://github.com/orgs/interlay/projects/4
           github-token: ${{ secrets.PROJECTS }}
           label: roadmap
-          label-operator: OR
+          label-operator: AND
