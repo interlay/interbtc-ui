@@ -57,7 +57,11 @@ const GET_DEX_VOLUMES = gql`
         ...AmountFields
       }
     }
-    endVolumes: cumulativeDexTradingVolumes(limit: 1, orderBy: tillTimestamp_DESC, where: { tillTimestamp_lte: $end }) {
+    endVolumes: cumulativeDexTradingVolumes(
+      limit: 1
+      orderBy: tillTimestamp_DESC
+      where: { tillTimestamp_lte: $end, tillTimestamp_gte: $start }
+    ) {
       tillTimestamp
       amounts {
         ...AmountFields
