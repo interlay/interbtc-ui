@@ -1,5 +1,5 @@
 import { convertMonetaryAmountToValueInUSD, formatPercentage } from '@/common/utils/utils';
-import { Card, CoinIcon, Dd, DlGroup, Dt } from '@/component-library';
+import { Card, CoinIcon, Dd, DlGroup, Dt, Flex } from '@/component-library';
 import { formatUSD } from '@/component-library/utils/format';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -26,34 +26,36 @@ const StrategyInsights = ({ stratetgy, position }: Props): JSX.Element => {
   const earnedUSDLabel = formatUSD(earnedUSD, { compact: true });
 
   return (
-    <StyledDl wrap direction='row'>
+    <StyledDl wrap direction='row' gap='spacing4'>
       <Card flex='1'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing2'>
-          <Dt weight='bold' color='primary'>
-            My deposit
+          <Dt size='s' weight='bold' color='primary'>
+            My Deposit
           </Dt>
-          <Dd weight='bold' color='secondary'>
-            <CoinIcon ticker={stratetgy.currencies.primary.ticker} />
-            {amount?.toHuman() || 0} {stratetgy.currencies.primary.ticker} ({amountUSDLabel})
+          <Dd size='xs' weight='bold' color='secondary'>
+            <Flex gap='spacing2' alignItems='center'>
+              <CoinIcon ticker={stratetgy.currencies.primary.ticker} />
+              {amount?.toHuman() || 0} {stratetgy.currencies.primary.ticker} ({amountUSDLabel})
+            </Flex>
           </Dd>
         </DlGroup>
       </Card>
       <Card flex='1'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing2'>
-          <Dt weight='bold' color='primary'>
+          <Dt size='s' weight='bold' color='primary'>
             APY
           </Dt>
-          <Dd weight='bold' color='secondary'>
+          <Dd size='xs' weight='bold' color='secondary'>
             {formatPercentage(stratetgy.interestRate.toNumber())}
           </Dd>
         </DlGroup>
       </Card>
-      <Card direction='row' flex={'1'} gap='spacing2' alignItems='center' justifyContent='space-between'>
+      <Card flex='1'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing2'>
-          <Dt weight='bold' color='primary'>
+          <Dt size='s' weight='bold' color='primary'>
             My earnings
           </Dt>
-          <Dd weight='bold' color='secondary'>
+          <Dd size='xs' weight='bold' color='secondary'>
             {earnedAmount?.toHuman() || 0} {stratetgy.currencies.primary.ticker} ({earnedUSDLabel})
           </Dd>
         </DlGroup>

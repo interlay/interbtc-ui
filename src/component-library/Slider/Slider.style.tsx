@@ -33,7 +33,7 @@ type StyledSliderWrapperProps = {
 };
 
 const StyledSliderWrapper = styled(Flex)<StyledSliderWrapperProps>`
-  width: 300px;
+  width: 100%;
   cursor: ${({ $isDisabled }) => $isDisabled && 'default'};
   opacity: ${({ $isDisabled }) => $isDisabled && 0.5};
 `;
@@ -121,8 +121,8 @@ const StyledSliderThumb = styled.div<StyledSliderThumbProps>`
       $isFocusVisible &&
       css`
         box-shadow: 0 0 0 2px var(--colors-input-focus-border);
-        height: 28px;
-        width: 28px;
+        height: 28.5px;
+        width: 28.5px;
       `}
   }
 `;

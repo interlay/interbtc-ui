@@ -609,8 +609,8 @@ const theme = {
       fillBg: 'var(--colors-slider-track-fill-bg)'
     },
     mark: {
-      width: '2px',
-      height: '8px'
+      width: '4px',
+      height: '10px'
     }
   }
 };

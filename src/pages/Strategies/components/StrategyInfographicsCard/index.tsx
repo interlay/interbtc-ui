@@ -1,0 +1,1 @@
+export { StrategyInfographicsCard } from './StrategyInfographicsCard';

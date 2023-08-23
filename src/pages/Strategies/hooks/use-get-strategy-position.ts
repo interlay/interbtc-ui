@@ -29,8 +29,8 @@ const useGetStrategyPosition = (strategy: StrategyData | undefined): UseGetStrat
   }
 
   switch (strategy.type) {
-    case StrategyType.BTC_LEVERAGE_LONG:
-    case StrategyType.BTC_LOW_RISK: {
+    case StrategyType.LEVERAGE_LONG:
+    case StrategyType.PASSIVE_INCOME: {
       if (isAccountPositionsLoading) {
         return {
           data: undefined,
@@ -38,7 +38,7 @@ const useGetStrategyPosition = (strategy: StrategyData | undefined): UseGetStrat
         };
       }
 
-      const position = getLendPosition(strategy.currency);
+      const position = getLendPosition(strategy.currencies.primary);
 
       if (!position) {
         return {

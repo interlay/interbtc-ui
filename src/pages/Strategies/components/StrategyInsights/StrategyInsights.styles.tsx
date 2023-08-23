@@ -5,7 +5,7 @@ import { Dl, theme } from '@/component-library';
 const StyledDl = styled(Dl)`
   flex-direction: column;
 
-  @media ${theme.breakpoints.up('sm')} {
+  @media ${theme.breakpoints.up('md')} {
     flex-direction: row;
   }
 `;

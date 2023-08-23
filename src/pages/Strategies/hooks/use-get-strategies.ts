@@ -8,7 +8,7 @@ import { useGetCurrencies } from '@/hooks/api/use-get-currencies';
 
 import { StrategyRisk, StrategySlug, StrategyType } from '../types';
 
-type AAA =
+type StrategySpecificData =
   | {
       type: StrategyType.PASSIVE_INCOME;
       currencies: {
@@ -28,7 +28,7 @@ type StrategyData = {
   slug: StrategySlug;
   interestRate: Big;
   loanAsset: LoanAsset;
-} & AAA;
+} & StrategySpecificData;
 
 type UseGetStrategiesResult = {
   isLoading: boolean;
@@ -43,8 +43,8 @@ const useGetStrategies = (): UseGetStrategiesResult => {
   const data: StrategyData[] | undefined = useMemo(
     () =>
       loanAssets &&
-      // eslint-disable-next-line array-callback-return
       Object.values(StrategySlug).map(
+        // eslint-disable-next-line array-callback-return
         (slug): StrategyData => {
           switch (slug) {
             case StrategySlug.BTC_LOW_RISK: {

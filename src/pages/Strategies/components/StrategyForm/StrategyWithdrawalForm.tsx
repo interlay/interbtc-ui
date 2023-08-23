@@ -19,8 +19,10 @@ import {
 
 import { StrategyData } from '../../hooks/use-get-strategies';
 import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-available-amounts';
+import { useGetStrategyLeverageData } from '../../hooks/use-get-strategy-leverage-data';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
-import { StrategyFormType } from '../../types';
+import { StrategyFormType, StrategyType } from '../../types';
+import { StrategyLeverageDetails } from './StrategyLeverageDetails';
 
 type StrategyWithdrawalFormProps = {
   strategy: StrategyData;
@@ -43,11 +45,11 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
   const getTransactionArgs = useCallback(
     (values: StrategyWithdrawFormData) => {
       const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD] || 0;
-      const monetaryAmount = newMonetaryAmount(amount, strategy.currency, true);
+      const monetaryAmount = newMonetaryAmount(amount, strategy.currencies.primary, true);
 
       return { monetaryAmount };
     },
-    [strategy.currency]
+    [strategy.currencies]
   );
 
   const handleSubmit = (values: StrategyWithdrawFormData) => {
@@ -93,6 +95,8 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
     }
   });
 
+  const leverageData = useGetStrategyLeverageData(StrategyFormType.WITHDRAW, strategy, form.values, position);
+
   const inputMonetaryAmount = newSafeMonetaryAmount(
     form.values[STRATEGY_WITHDRAW_AMOUNT_FIELD] || 0,
     WRAPPED_TOKEN,
@@ -103,7 +107,7 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>
+      <Flex marginTop='spacing4' direction='column' gap='spacing4' justifyContent='space-between'>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
@@ -112,9 +116,13 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
           humanBalance={maxAmount.toString()}
           balanceLabel={t('available')}
           valueUSD={inputUSDValue}
+          label={t('withdraw')}
           {...mergeProps(form.getFieldProps(STRATEGY_WITHDRAW_AMOUNT_FIELD))}
         />
         <Flex direction='column' gap='spacing4'>
+          {strategy.type === StrategyType.LEVERAGE_LONG && (
+            <StrategyLeverageDetails strategy={strategy} leverageData={leverageData} />
+          )}
           <TransactionFeeDetails
             fee={transaction.fee}
             selectProps={{ ...form.getSelectFieldProps(STRATEGY_WITHDRAW_FEE_TOKEN_FIELD) }}

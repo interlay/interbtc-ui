@@ -33,6 +33,7 @@ const StyledMeter = styled.div<StyledMeterProps>`
   height: ${theme.meter.bar.height};
   background: ${({ $variant }) => theme.meter.bar[$variant].bg};
   border-radius: ${theme.meter.bar.radius};
+  overflow: hidden;
 
   // Progress bar for secondary Meter
   ${({ $variant, $position }) =>
@@ -47,7 +48,6 @@ const StyledMeter = styled.div<StyledMeterProps>`
         height: 100%;
         right: calc(100% - ${$position}%);
         background-color: ${theme.meter.bar.indicator.color};
-        border-radius: inherit;
         transition: right ${theme.transition.duration.duration100}ms;
         will-change: right;
       }

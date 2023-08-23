@@ -17,6 +17,8 @@ export type { LoanPositionsTableProps } from './LoanPositionsTable';
 export type { LoanApyCellProps } from './LoanPositionsTable';
 export { LoanPositionsTable } from './LoanPositionsTable';
 export { LoanApyCell } from './LoanPositionsTable';
+export type { LTVMeterProps } from './LTVMeter';
+export { LTVMeter } from './LTVMeter';
 export { MainContainer } from './MainContainer';
 export type { NotificationsPopoverProps } from './NotificationsPopover';
 export { NotificationsPopover } from './NotificationsPopover';

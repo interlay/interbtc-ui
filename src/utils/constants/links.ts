@@ -86,8 +86,8 @@ const QUERY_PARAMETERS = Object.freeze({
 const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
   BANXA: {
     WALLET_ADDRESS: 'walletAddress',
-    FIAT_SLUG: 'fiatType',
-    COIN_SLUG: 'coinType'
+    FIAT_TYPE: 'fiatType',
+    COIN_TYPE: 'coinType'
   },
   DOCS: {
     ASSET: {

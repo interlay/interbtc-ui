@@ -6,15 +6,19 @@ import { StrategyRisk } from '../../types';
 import { StyledTag } from './StrategyTag.style';
 
 const content: Record<StrategyRisk, { color: string; label: string }> = {
-  low: {
+  [StrategyRisk.LOW]: {
     color: 'success',
     label: 'Low Risk'
   },
-  medium: {
+  [StrategyRisk.MEDIUM]: {
     color: 'warning',
     label: 'Medium Risk'
   },
-  high: {
+  [StrategyRisk.MEDIUM_HIGH]: {
+    color: 'warning',
+    label: 'Medium to High Risk'
+  },
+  [StrategyRisk.HIGH]: {
     color: 'error',
     label: 'High Risk'
   }

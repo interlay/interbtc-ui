@@ -1,10 +1,19 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
-import { StrategyData } from './use-get-strategies';
+import {
+  STRATEGY_DEPOSIT_AMOUNT_FIELD,
+  STRATEGY_WITHDRAW_AMOUNT_FIELD,
+  StrategyDepositFormData,
+  StrategyWithdrawFormData
+} from '@/lib/form';
 
-type UseGetStrategyLeverageData = {
+import { StrategyFormType } from '../types';
+import { StrategyData } from './use-get-strategies';
+import { StrategyPositionData } from './use-get-strategy-position';
+
+type UseGetStrategyLeverageDataResult = {
   leverage: Big;
   liquidity: MonetaryAmount<CurrencyExt>;
   collateralInput: MonetaryAmount<CurrencyExt>;
@@ -16,15 +25,15 @@ type UseGetStrategyLeverageData = {
   apy: Big;
 };
 
-const useGetStrategyLeverageData = (
+const useGetStrategyLeverageData = <T extends StrategyFormType>(
+  type: T,
   strategy: StrategyData,
-  depositAmount: MonetaryAmount<CurrencyExt>,
-  leverage: number
-): UseGetStrategyLeverageData => {
-  return {
+  form: T extends StrategyFormType.DEPOSIT ? StrategyDepositFormData : StrategyWithdrawFormData,
+  position?: StrategyPositionData
+): UseGetStrategyLeverageDataResult => {
+  const data = {
     apy: Big(10),
-    collateralInput: depositAmount,
-    leverage: new Big(leverage),
+    leverage: new Big(3),
     ltv: new Big(0),
     liquidity: strategy.loanAsset.availableCapacity,
     price: {
@@ -32,7 +41,29 @@ const useGetStrategyLeverageData = (
       liquidation: new Big(0)
     }
   };
+
+  if (type === StrategyFormType.DEPOSIT) {
+    const { [STRATEGY_DEPOSIT_AMOUNT_FIELD]: inputAmount } = form as StrategyDepositFormData;
+    const inputMonetaryAmount = newMonetaryAmount(inputAmount || 0, strategy.currencies.primary, true);
+
+    const collateralInput = position?.amount ? inputMonetaryAmount.add(position.amount) : inputMonetaryAmount;
+
+    return {
+      ...data,
+      collateralInput
+    };
+  }
+
+  const { [STRATEGY_WITHDRAW_AMOUNT_FIELD]: inputAmount } = form as StrategyWithdrawFormData;
+  const inputMonetaryAmount = newMonetaryAmount(inputAmount || 0, strategy.currencies.primary, true);
+
+  const collateralInput = position?.amount ? inputMonetaryAmount.sub(inputMonetaryAmount) : inputMonetaryAmount;
+
+  return {
+    ...data,
+    collateralInput
+  };
 };
 
 export { useGetStrategyLeverageData };
-export type { UseGetStrategyLeverageData };
+export type { UseGetStrategyLeverageDataResult };

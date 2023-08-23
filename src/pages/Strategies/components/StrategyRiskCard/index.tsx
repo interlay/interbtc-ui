@@ -1,0 +1,1 @@
+export { StrategyRiskCard } from './StrategyRiskCard';

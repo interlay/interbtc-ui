@@ -14,11 +14,14 @@ type Props = {
   formatOptions?: Intl.NumberFormatOptions;
   onChange?: (value: number) => void;
   renderMarkText?: (text: ReactNode) => ReactNode;
+  value?: number;
+  defaultValue?: number;
+  step?: number;
 };
 
-type NativeAttrs = Omit<InputHTMLAttributes<unknown>, keyof Props>;
-
 type InheritAttrs = Omit<AriaSliderProps, keyof Props>;
+
+type NativeAttrs = Omit<InputHTMLAttributes<unknown>, keyof (Props & InheritAttrs)>;
 
 type SliderProps = Props & NativeAttrs & InheritAttrs;
 
@@ -38,6 +41,8 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
       name,
       formatOptions,
       isDisabled,
+      value,
+      defaultValue,
       ...props
     },
     ref
@@ -52,12 +57,15 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(
       maxValue,
       label,
       isDisabled,
+      value: value ? [value] : undefined,
+      defaultValue: defaultValue ? [defaultValue] : undefined,
       onChange: ((value: number[]) => onChange?.(value[0])) as any
     };
 
     const numberFormatter = useNumberFormatter(formatOptions);
     const state = useSliderState({
       ...ariaProps,
+
       numberFormatter
     });
 

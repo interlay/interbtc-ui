@@ -5,14 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, Slider, TokenInput } from '@/component-library';
-import {
-  AuthCTA,
-  TransactionDetails,
-  TransactionDetailsDd,
-  TransactionDetailsDt,
-  TransactionDetailsGroup,
-  TransactionFeeDetails
-} from '@/components';
+import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
@@ -20,6 +13,7 @@ import {
   isFormDisabled,
   STRATEGY_DEPOSIT_AMOUNT_FIELD,
   STRATEGY_DEPOSIT_FEE_TOKEN_FIELD,
+  STRATEGY_DEPOSIT_LEVERAGE_FIELD,
   StrategyDepositFormData,
   strategyDepositSchema,
   useForm
@@ -27,8 +21,10 @@ import {
 
 import { StrategyData } from '../../hooks/use-get-strategies';
 import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-available-amounts';
+import { useGetStrategyLeverageData } from '../../hooks/use-get-strategy-leverage-data';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 import { StrategyFormType, StrategyType } from '../../types';
+import { StrategyLeverageDetails } from './StrategyLeverageDetails';
 
 type StrategyDepositFormProps = {
   strategy: StrategyData;
@@ -72,6 +68,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
   const form = useForm<StrategyDepositFormData>({
     initialValues: {
       [STRATEGY_DEPOSIT_AMOUNT_FIELD]: '',
+      [STRATEGY_DEPOSIT_LEVERAGE_FIELD]: 1,
       [STRATEGY_DEPOSIT_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     },
     validationSchema: strategyDepositSchema('deposit', { maxAmount, minAmount }),
@@ -87,6 +84,8 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
     }
   });
 
+  const leverageData = useGetStrategyLeverageData(StrategyFormType.DEPOSIT, strategy, form.values, position);
+
   const depositMonetaryAmount = newSafeMonetaryAmount(
     form.values[STRATEGY_DEPOSIT_AMOUNT_FIELD] || 0,
     currencies.primary,
@@ -98,7 +97,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>
+      <Flex marginTop='spacing4' direction='column' gap='spacing4' justifyContent='space-between'>
         <TokenInput
           placeholder='0.00'
           ticker={currencies.primary.ticker}
@@ -106,7 +105,8 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
           balance={maxAmount.toString()}
           humanBalance={maxAmount.toString()}
           valueUSD={depositUSDValue}
-          {...mergeProps(form.getFieldProps(STRATEGY_DEPOSIT_AMOUNT_FIELD))}
+          label='Deposit'
+          {...mergeProps(form.getFieldProps(STRATEGY_DEPOSIT_AMOUNT_FIELD, false, true))}
         />
         {strategy.type === StrategyType.LEVERAGE_LONG && (
           <>
@@ -116,18 +116,22 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
               ticker={strategy.currencies.secondary.ticker}
               aria-label={t('forms.field_amount', { field: t('borrow') })}
               valueUSD={depositUSDValue}
-              // {...mergeProps(form.getFieldProps(STRATEGY_DEPOSIT_AMOUNT_FIELD))}
+              label='Borrow'
             />
-            <Slider label='Leverage' step={1} minValue={1} maxValue={5} marks renderMarkText={(text) => `${text}x`} />
+            <Slider
+              label='Leverage'
+              minValue={1}
+              maxValue={5}
+              marks
+              renderMarkText={(text) => `${text}x`}
+              {...mergeProps(form.getSliderFieldProps(STRATEGY_DEPOSIT_LEVERAGE_FIELD, false, true))}
+            />
           </>
         )}
         <Flex direction='column' gap='spacing4'>
-          <TransactionDetails>
-            <TransactionDetailsGroup>
-              <TransactionDetailsDt>Available liquidity</TransactionDetailsDt>
-              <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
-            </TransactionDetailsGroup>
-          </TransactionDetails>
+          {strategy.type === StrategyType.LEVERAGE_LONG && (
+            <StrategyLeverageDetails strategy={strategy} leverageData={leverageData} />
+          )}
           <TransactionFeeDetails
             fee={transaction.fee}
             selectProps={{ ...form.getSelectFieldProps(STRATEGY_DEPOSIT_FEE_TOKEN_FIELD) }}

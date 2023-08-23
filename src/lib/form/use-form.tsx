@@ -22,6 +22,12 @@ type GetSelectFieldProps = (
   hideUntouchedError?: boolean
 ) => Omit<ReturnType<GetFieldProps>, 'onChange'> & { onSelectionChange?: (key: Key) => void };
 
+type GetSliderFieldProps = (
+  nameOrOptions: any,
+  hideErrorMessage?: boolean,
+  hideUntouchedError?: boolean
+) => Omit<ReturnType<GetFieldProps>, 'onChange'> & { onChange: (value: number) => void };
+
 type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
   hideErrorMessages?: boolean;
   onComplete?: (form: Values) => void;
@@ -131,11 +137,28 @@ const useForm = <Values extends FormikValues = FormikValues>({
     [getFieldProps, setFieldValue]
   );
 
+  const getSliderFieldProps: GetSliderFieldProps = useCallback(
+    (nameOrOptions: any, hideErrorMessage?: boolean, hideUntouchedError?: boolean) => {
+      const props = getFieldProps(nameOrOptions, hideErrorMessage, hideUntouchedError);
+      const fieldName = getFieldName(nameOrOptions);
+
+      return {
+        ...props,
+        onChange: (number: number) => {
+          console.log(number);
+          setFieldValue(fieldName, number, true);
+        }
+      };
+    },
+    [getFieldProps, setFieldValue]
+  );
+
   return {
     values,
     validateForm,
     getFieldProps,
     getSelectFieldProps,
+    getSliderFieldProps,
     setFieldTouched,
     setFieldValue,
     ...formik

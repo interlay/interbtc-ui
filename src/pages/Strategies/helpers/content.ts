@@ -14,51 +14,55 @@ type ContentData = {
 const getContent = (strategy: StrategyData, t: TFunction): ContentData => {
   switch (strategy.type) {
     case StrategyType.PASSIVE_INCOME: {
+      const { primary } = strategy.currencies;
+
       return {
         title: t('strategies.btc_passive_income'),
         summary: t('strategies.generate_passive_income_by_offering_ticker', {
-          ticker: strategy.currencies.primary.ticker
+          ticker: primary.ticker
         }),
         description: t('strategies.low_risk_approach_generate_passive_income', {
-          ticker: strategy.currencies.primary.ticker
+          ticker: primary.ticker
         }),
         infographics: {
           items: [
-            { label: t('strategies.deposit_ticker', { ticker: strategy.currencies.primary.ticker }) },
+            { label: t('strategies.deposit_ticker', { ticker: primary.ticker }), ticker: primary.ticker },
             {
-              label: t('strategies.provider_ticker_to_borrow_market', { ticker: strategy.currencies.primary.ticker }),
+              label: t('strategies.provider_ticker_to_borrow_market', { ticker: primary.ticker }),
               icon: 'presentation'
             },
-            { label: t('strategies.earn_interest') }
+            { label: t('strategies.earn_interest'), ticker: primary.ticker }
           ]
         }
       };
     }
     case StrategyType.LEVERAGE_LONG: {
+      const { primary, secondary } = strategy.currencies;
+
       return {
-        title: t('strategies.deposit_ticker_as_collateral', { ticker: strategy.currencies.primary.ticker }),
+        title: t('strategies.deposit_ticker_as_collateral', { ticker: primary.ticker }),
         summary: t('strategies.generate_passive_income_by_offering_ticker', {
-          ticker: strategy.currencies.primary.ticker
+          ticker: primary.ticker
         }),
         description: t('strategies.low_risk_approach_generate_passive_income', {
-          ticker: strategy.currencies.primary.ticker
+          ticker: primary.ticker
         }),
         infographics: {
           items: [
             {
-              label: t('strategies.deposit_ticker_as_collateral', { ticker: strategy.currencies.primary.ticker }),
-              ticker: strategy.currencies.primary.ticker
+              label: t('strategies.deposit_ticker_as_collateral', { ticker: primary.ticker }),
+              ticker: primary.ticker
             },
             {
-              label: t('strategies.borrow_ticker', { ticker: strategy.currencies.secondary }),
-              ticker: strategy.currencies.secondary.ticker
+              label: t('strategies.borrow_ticker', { ticker: secondary.ticker }),
+              ticker: secondary.ticker
             },
             {
               label: t('strategies.swap_input_for_output', {
-                input: strategy.currencies.secondary.ticker,
-                output: strategy.currencies.primary.ticker
+                input: secondary.ticker,
+                output: primary.ticker
               }),
-              ticker: [strategy.currencies.secondary.ticker, strategy.currencies.primary.ticker]
+              ticker: [secondary.ticker, primary.ticker]
             }
           ],
           isCyclic: true,
