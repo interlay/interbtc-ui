@@ -8,7 +8,10 @@ const Default = Template.bind({});
 Default.args = {
   placeholder: 'placeholder',
   label: 'Coin',
-  description: "What's your favorite coin?"
+  labelPosition: 'side',
+  errorMessage: "What's your favorite coin?",
+  maxWidth: 'spacing12',
+  justifyContent: 'space-between'
 };
 
 const Label = Template.bind({});
