@@ -1,2 +1,2 @@
-export type { SwapFormProps } from './StakingForm';
-export { SwapForm } from './StakingForm';
+export type { StakingFormProps } from './StakingForm';
+export { StakingForm } from './StakingForm';

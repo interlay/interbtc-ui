@@ -4,7 +4,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
+import { REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import useAccountId from '../../use-account-id';
 
@@ -24,7 +24,7 @@ const useGetAccountVotingBalance = (): GetAccountVotingBalanceResult => {
   const { data, error, refetch } = useQuery({
     queryKey,
     queryFn: () => accountId && getAccountVotingBalance(accountId),
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL.BLOCK,
     enabled: !!accountId
   });
 

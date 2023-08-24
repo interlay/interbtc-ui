@@ -1,12 +1,13 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
 import { add } from 'date-fns';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { BLOCK_TIME } from '@/config/parachain';
-import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
+import { REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import useAccountId from '../../use-account-id';
 
@@ -15,9 +16,16 @@ type AccountUnlockStakingData = {
   block: number;
 };
 
-type GetAccountStakingData = {
+type AccountStakingData = {
+  isStaking: boolean;
   unlock: AccountUnlockStakingData;
+
   balance: MonetaryAmount<CurrencyExt>;
+  claimableRewards: MonetaryAmount<CurrencyExt>;
+  projected: {
+    amount: MonetaryAmount<CurrencyExt>;
+    apy: Big;
+  };
 };
 
 const getUnlockData = (stakeEndBlock: number, currentBlockNumber: number): AccountUnlockStakingData => {
@@ -31,26 +39,36 @@ const getUnlockData = (stakeEndBlock: number, currentBlockNumber: number): Accou
   };
 };
 
-const getAccountStakingData = async (accountId: AccountId): Promise<GetAccountStakingData> => {
+const getAccountStakingData = async (accountId: AccountId): Promise<AccountStakingData> => {
   const stakedBalancePromise = window.bridge.escrow.getStakedBalance(accountId);
   const currentBlockNumberPromise = window.bridge.system.getCurrentBlockNumber();
+  const claimableRewardsPromise = window.bridge.escrow.getRewards(accountId);
+  const projectedPromise = window.bridge.escrow.getRewardEstimate(accountId);
 
-  const [stakedBalance, currentBlockNumber] = await Promise.all([stakedBalancePromise, currentBlockNumberPromise]);
+  const [stakedBalance, currentBlockNumber, claimableRewards, projected] = await Promise.all([
+    stakedBalancePromise,
+    currentBlockNumberPromise,
+    claimableRewardsPromise,
+    projectedPromise
+  ]);
 
   const unlock = getUnlockData(stakedBalance.endBlock, currentBlockNumber);
 
   return {
+    isStaking: !stakedBalance.amount.isZero(),
     unlock,
-    balance: stakedBalance.amount
+    balance: stakedBalance.amount,
+    claimableRewards,
+    projected
   };
 };
 
-interface GetAccountStakingDataResult {
-  data: GetAccountStakingData | undefined;
+interface UseGetAccountStakingDataResult {
+  data: AccountStakingData | undefined;
   refetch: () => void;
 }
 
-const useGetAccountStakingData = (): GetAccountStakingDataResult => {
+const useGetAccountStakingData = (): UseGetAccountStakingDataResult => {
   const accountId = useAccountId();
 
   const queryKey = ['staking', accountId];
@@ -58,7 +76,7 @@ const useGetAccountStakingData = (): GetAccountStakingDataResult => {
   const { data, error, refetch } = useQuery({
     queryKey,
     queryFn: () => accountId && getAccountStakingData(accountId),
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL.BLOCK,
     enabled: !!accountId
   });
 
@@ -68,4 +86,4 @@ const useGetAccountStakingData = (): GetAccountStakingDataResult => {
 };
 
 export { useGetAccountStakingData };
-export type { AccountUnlockStakingData, GetAccountStakingData, GetAccountStakingDataResult };
+export type { AccountStakingData, AccountUnlockStakingData, UseGetAccountStakingDataResult };

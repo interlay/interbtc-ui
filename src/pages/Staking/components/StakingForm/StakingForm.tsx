@@ -1,8 +1,10 @@
-import { newMonetaryAmount, Trade } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import {
   AuthCTA,
@@ -12,35 +14,48 @@ import {
   TransactionDetailsGroup,
   TransactionFeeDetails
 } from '@/components';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
+import { NetworkStakingData } from '@/hooks/api/escrow/uset-get-network-staking-data';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
-import { Transaction, useTransaction } from '@/hooks/transaction';
+import { useTransaction } from '@/hooks/transaction';
 import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
-import useAccountId from '@/hooks/use-account-id';
-import { SWAP_FEE_TOKEN_FIELD, SWAP_INPUT_AMOUNT_FIELD, SwapFormData, swapSchema, useForm } from '@/lib/form';
-import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
+import {
+  STAKING_AMOUNT_FIELD,
+  STAKING_FEE_TOKEN_FIELD,
+  STAKING_LOCK_TIME_AMOUNT_FIELD,
+  StakingFormData,
+  stakingSchema,
+  useForm
+} from '@/lib/form';
 import { getTokenInputProps } from '@/utils/helpers/input';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { convertBlockNumbersToWeeks } from '@/utils/helpers/staking';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+import { StakingLockTimeInput } from './StakingLockTimeInput';
+import { StakingTransactionDetails } from './StakingTransactionDetails';
 
-type InheritAttrs = CardProps & Props;
+type Props = {
+  accountData: AccountStakingData;
+  votingBalance: MonetaryAmount<CurrencyExt>;
+  networkData: NetworkStakingData;
+};
 
-type SwapFormProps = Props & InheritAttrs;
+type InheritAttrs = Omit<CardProps, keyof Props>;
 
-const SwapForm = (props: SwapFormProps): JSX.Element | null => {
+type StakingFormProps = Props & InheritAttrs;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StakingForm = ({ accountData, votingBalance, networkData, ...props }: StakingFormProps): JSX.Element | null => {
   const prices = useGetPrices();
-  const accountId = useAccountId();
   const { t } = useTranslation();
   const { data: balances, getAvailableBalance } = useGetBalances();
 
-  const transaction = useTransaction(Transaction.AMM_SWAP, {
-    // onSigning: () => {
-    //   setInputAmount(undefined);
-    //   form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);
-    //   setTrade(undefined);
-    // },
+  const transaction = useTransaction({
+    onSuccess: () => {
+      form.resetForm();
+    }
   });
 
   const inputBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker);
@@ -52,40 +67,49 @@ const SwapForm = (props: SwapFormProps): JSX.Element | null => {
     minAmount
   };
 
-  const getTransactionArgs = useCallback(
-    async (trade: Trade | null | undefined) => {
-      if (!trade || !accountId) return;
+  const getTransactionArgs = useCallback(async (values: StakingFormData) => {
+    const amount = newMonetaryAmount(values[STAKING_AMOUNT_FIELD] || 0, GOVERNANCE_TOKEN, true);
 
-      try {
-        const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
-        const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+    return { amount, lockTime: values[STAKING_LOCK_TIME_AMOUNT_FIELD] };
+  }, []);
 
-        return {
-          trade,
-          minimumAmountOut,
-          accountId,
-          deadline
-        };
-      } catch (error: any) {
-        transaction.reject(error);
-      }
-    },
-    [accountId, transaction]
-  );
-
-  const handleSubmit = async (values: SwapFormData) => {
-    const transactionData = await getTransactionArgs(trade);
+  const handleSubmit = async (values: StakingFormData) => {
+    const transactionData = await getTransactionArgs(values);
 
     if (!transactionData || !transaction.fee.data || !inputBalance) return;
 
-    const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
+    // const {amount,lockTime} = transactionData
 
-    transaction.execute(tradeData, minimumAmountOut, accountId, deadline);
+    // const isStaking = !votingBalance.isZero()
+
+    // if(!isStaking) {
+    //   const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(numberTime);
+
+    //  return transaction.execute(monetaryAmount, unlockHeight);
+
+    // }
+
+    // const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
+
+    // transaction.execute(tradeData, minimumAmountOut, accountId, deadline);
   };
 
-  const form = useForm<SwapFormData>({
-    initialValues: {},
-    validationSchema: swapSchema({ [SWAP_INPUT_AMOUNT_FIELD]: inputSchemaParams }),
+  const maxLockTime = useMemo(() => {
+    const remainingWeeks = convertBlockNumbersToWeeks(accountData.unlock.block);
+
+    return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeks);
+  }, [accountData.unlock.block]);
+
+  const form = useForm<StakingFormData>({
+    initialValues: {
+      [STAKING_AMOUNT_FIELD]: '',
+      [STAKING_LOCK_TIME_AMOUNT_FIELD]: STAKE_LOCK_TIME.MIN,
+      [STAKING_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
+    },
+    validationSchema: stakingSchema({
+      [STAKING_AMOUNT_FIELD]: inputSchemaParams,
+      [STAKING_LOCK_TIME_AMOUNT_FIELD]: { min: STAKE_LOCK_TIME.MIN, max: maxLockTime }
+    }),
     onSubmit: handleSubmit,
     validateOnMount: true
   });
@@ -96,7 +120,14 @@ const SwapForm = (props: SwapFormProps): JSX.Element | null => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [balances]);
 
-  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => setInputAmount(e.target.value);
+  const handleListSelectionChange = (value: number) => {
+    form.setFieldValue(STAKING_LOCK_TIME_AMOUNT_FIELD, value, true);
+  };
+
+  const monetaryAmount = newSafeMonetaryAmount(form.values[STAKING_AMOUNT_FIELD] || 0, GOVERNANCE_TOKEN, true);
+  const amountUSD = monetaryAmount
+    ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
+    : 0;
 
   const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
@@ -109,67 +140,41 @@ const SwapForm = (props: SwapFormProps): JSX.Element | null => {
       <Flex direction='column'>
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
+            <TransactionDetails>
+              <TransactionDetailsGroup>
+                <TransactionDetailsDt>Total Staked {GOVERNANCE_TOKEN.ticker} in the network</TransactionDetailsDt>
+                <TransactionDetailsDd>
+                  {networkData.totalStakedBalance.toHuman()} {GOVERNANCE_TOKEN.ticker}
+                </TransactionDetailsDd>
+              </TransactionDetailsGroup>
+              <TransactionDetailsGroup>
+                <TransactionDetailsDt>Total {VOTE_GOVERNANCE_TOKEN.ticker} in the network</TransactionDetailsDt>
+                <TransactionDetailsDd>
+                  {networkData.totalVotingSupply.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
+                </TransactionDetailsDd>
+              </TransactionDetailsGroup>
+            </TransactionDetails>
             <TokenInput
               placeholder='0.00'
-              valueUSD={inputAmountUSD}
-              {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, true), getTokenInputProps(inputBalance), {
-                onChange: handleChangeInput
-              })}
+              valueUSD={amountUSD}
+              ticker={GOVERNANCE_TOKEN.ticker}
+              {...mergeProps(form.getFieldProps(STAKING_AMOUNT_FIELD, false, true), getTokenInputProps(inputBalance))}
             />
-            <List
-              aria-label='slippage tolerance'
-              direction='row'
-              selectionMode='single'
-              onSelectionChange={handleSelectionChange}
-              defaultSelectedKeys={[value.toString()]}
-            >
-              <ListItem textValue='0' key='0'>
-                0%
-              </ListItem>
-              <ListItem textValue='0.1' key='0.1'>
-                0.1%
-              </ListItem>
-              <ListItem textValue='0.5' key='0.5'>
-                0.5%
-              </ListItem>
-              <ListItem textValue='1' key='1'>
-                1%
-              </ListItem>
-              <ListItem textValue='3' key='3'>
-                3%
-              </ListItem>
-            </List>
+            <StakingLockTimeInput
+              maxLockTime={maxLockTime}
+              inputProps={form.getFieldProps(STAKING_LOCK_TIME_AMOUNT_FIELD, false, true)}
+              onListSelectionChange={handleListSelectionChange}
+            />
             <Flex direction='column' gap='spacing2'>
-              <TransactionDetails>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt>New unlock date</TransactionDetailsDt>
-                  <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
-                </TransactionDetailsGroup>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt>New {VOTE_GOVERNANCE_TOKEN.ticker} Gained</TransactionDetailsDt>
-                  <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
-                </TransactionDetailsGroup>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt>New Total Stake</TransactionDetailsDt>
-                  <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
-                </TransactionDetailsGroup>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt>Estimated APR</TransactionDetailsDt>
-                  <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
-                </TransactionDetailsGroup>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt>Projected {GOVERNANCE_TOKEN.ticker} Rewards</TransactionDetailsDt>
-                  <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
-                </TransactionDetailsGroup>
-              </TransactionDetails>
+              <StakingTransactionDetails />
               <TransactionFeeDetails
                 fee={transaction.fee}
-                selectProps={form.getSelectFieldProps(SWAP_FEE_TOKEN_FIELD)}
+                selectProps={form.getSelectFieldProps(STAKING_FEE_TOKEN_FIELD)}
               />
             </Flex>
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
-              {t('issue')}
-            </AuthCTA>{' '}
+              {t('stake')}
+            </AuthCTA>
           </Flex>
         </form>
       </Flex>
@@ -177,5 +182,5 @@ const SwapForm = (props: SwapFormProps): JSX.Element | null => {
   );
 };
 
-export { SwapForm };
-export type { SwapFormProps };
+export { StakingForm };
+export type { StakingFormProps };

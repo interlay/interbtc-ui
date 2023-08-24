@@ -9,7 +9,7 @@ import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/uti
 import { CoinIcon, Flex } from '@/component-library';
 import { Cell, Table } from '@/components';
 import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { GetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
+import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
@@ -31,7 +31,7 @@ type StakingTableRows = {
 };
 
 type StakingTableProps = {
-  data: GetAccountStakingData;
+  data: AccountStakingData;
   votingBalance: MonetaryAmount<CurrencyExt>;
 };
 

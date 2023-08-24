@@ -144,6 +144,7 @@
   "amount": "Amount",
   "select_token": "Select Token",
   "fee_token": "Fee token",
+  "claim": "Claim",
   "claim_rewards": "Claim Rewards",
   "tx_fees": "Tx fees",
   "view_subscan": "View Subscan",

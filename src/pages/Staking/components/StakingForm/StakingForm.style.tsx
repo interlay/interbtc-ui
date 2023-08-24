@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '@/component-library';
+import { List, theme } from '@/component-library';
 
 type StyledCircleProps = {
   $isFocusVisible: boolean;
@@ -37,4 +37,8 @@ const StyledBackground = styled.div`
   background-color: ${theme.colors.bgPrimary};
 `;
 
-export { StyledBackground, StyledCircle, StyledWrapper };
+const StyledList = styled(List)`
+  font-size: ${theme.text.xs};
+`;
+
+export { StyledBackground, StyledCircle, StyledList, StyledWrapper };
