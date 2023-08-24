@@ -42,6 +42,9 @@ const SlippageManager = forwardRef<HTMLDivElement, SlippageManagerProps>(
               onSelectionChange={handleSelectionChange}
               defaultSelectedKeys={[value.toString()]}
             >
+              <ListItem textValue='0' key='0'>
+                0%
+              </ListItem>
               <ListItem textValue='0.1' key='0.1'>
                 0.1%
               </ListItem>
