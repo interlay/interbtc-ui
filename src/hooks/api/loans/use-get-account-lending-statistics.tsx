@@ -1,4 +1,5 @@
 import { TickerToData } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { useMemo } from 'react';
 
@@ -92,11 +93,11 @@ const getAccountPositionsStats = (
   };
 };
 
-const useGetAccountLendingStatistics = (): UseGetAccountLendingStatistics => {
+const useGetAccountLendingStatistics = (proxyAccount?: AccountId): UseGetAccountLendingStatistics => {
   const {
     data: { lendPositions, borrowPositions },
     refetch: positionsRefetch
-  } = useGetAccountPositions();
+  } = useGetAccountPositions(proxyAccount);
   const { data: loanAssets, refetch: loanAssetsRefetch } = useGetLoanAssets();
 
   const prices = useGetPrices();

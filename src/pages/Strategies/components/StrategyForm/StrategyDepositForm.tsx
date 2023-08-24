@@ -21,6 +21,7 @@ import {
 import { StrategyData } from '../../hooks/use-get-strategies';
 import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-available-amounts';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
+import { useGetStrategyProxyAccount } from '../../hooks/use-get-strategy-proxy-account';
 import { StrategyFormType } from '../../types';
 
 type StrategyDepositFormProps = {
@@ -31,16 +32,27 @@ type StrategyDepositFormProps = {
 const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const transaction = useTransaction(Transaction.STRATEGIES_DEPOSIT, {
+  const transaction = useTransaction({
     onSuccess: () => {
-      form.resetForm();
+      if (proxyAccount) {
+        form.resetForm();
+      } else {
+        refetchProxyAccount();
+      }
     }
   });
+
+  const {
+    isLoading: isLoadingProxyAccount,
+    account: proxyAccount,
+    refetch: refetchProxyAccount
+  } = useGetStrategyProxyAccount(strategy.type);
+
   const {
     data: { maxAmount, minAmount }
-  } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, position);
+  } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, proxyAccount, position);
 
-  const getTransactionArgs = useCallback(
+  const getDepositTransactionArgs = useCallback(
     (values: StrategyDepositFormData) => {
       const amount = values[STRATEGY_DEPOSIT_AMOUNT_FIELD] || 0;
       const monetaryAmount = newMonetaryAmount(amount, strategy.currency, true);
@@ -51,13 +63,17 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
   );
 
   const handleSubmit = (values: StrategyDepositFormData) => {
-    const transactionData = getTransactionArgs(values);
+    if (proxyAccount) {
+      const depositTransactionData = getDepositTransactionArgs(values);
 
-    if (!transactionData) return;
+      if (!depositTransactionData) return;
 
-    const { monetaryAmount } = transactionData;
+      const { monetaryAmount } = depositTransactionData;
 
-    transaction.execute(WRAPPED_TOKEN, monetaryAmount);
+      transaction.execute(Transaction.STRATEGIES_DEPOSIT, proxyAccount, [WRAPPED_TOKEN, monetaryAmount]);
+    } else {
+      transaction.execute(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
+    }
   };
 
   const form = useForm<StrategyDepositFormData>({
@@ -68,13 +84,17 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
     validationSchema: strategyDepositSchema('deposit', { maxAmount, minAmount }),
     onSubmit: handleSubmit,
     onComplete: (values: StrategyDepositFormData) => {
-      const transactionData = getTransactionArgs(values);
+      if (proxyAccount) {
+        const depositTransactionData = getDepositTransactionArgs(values);
 
-      if (!transactionData) return;
+        if (!depositTransactionData) return;
 
-      const { monetaryAmount } = transactionData;
+        const { monetaryAmount } = depositTransactionData;
 
-      transaction.fee.estimate(WRAPPED_TOKEN, monetaryAmount);
+        transaction.fee.estimate(Transaction.STRATEGIES_DEPOSIT, proxyAccount, [WRAPPED_TOKEN, monetaryAmount]);
+      } else {
+        transaction.fee.estimate(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
+      }
     }
   });
 
@@ -84,7 +104,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
     true
   );
   const inputUSDValue = convertMonetaryAmountToValueInUSD(inputMonetaryAmount, prices?.[WRAPPED_TOKEN_SYMBOL].usd) || 0;
-  const isSubmitButtonDisabled = isFormDisabled(form);
+  const isSubmitButtonDisabled = isFormDisabled(form) || isLoadingProxyAccount;
 
   return (
     <form onSubmit={form.handleSubmit}>
@@ -104,7 +124,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
             selectProps={{ ...form.getSelectFieldProps(STRATEGY_DEPOSIT_FEE_TOKEN_FIELD) }}
           />
           <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-            {t('deposit')}
+            {proxyAccount ? t('deposit') : t('strategy.initialize')}
           </AuthCTA>
         </Flex>
       </Flex>

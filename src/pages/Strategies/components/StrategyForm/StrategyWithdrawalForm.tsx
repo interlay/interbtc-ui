@@ -20,6 +20,7 @@ import {
 import { StrategyData } from '../../hooks/use-get-strategies';
 import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-available-amounts';
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
+import { useGetStrategyProxyAccount } from '../../hooks/use-get-strategy-proxy-account';
 import { StrategyFormType } from '../../types';
 
 type StrategyWithdrawalFormProps = {
@@ -32,15 +33,26 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
   const prices = useGetPrices();
   const transaction = useTransaction({
     onSuccess: () => {
-      form.resetForm();
+      if (proxyAccount) {
+        form.resetForm();
+      } else {
+        refetchProxyAccount();
+      }
     }
   });
+
+  const {
+    isLoading: isLoadingProxyAccount,
+    account: proxyAccount,
+    refetch: refetchProxyAccount
+  } = useGetStrategyProxyAccount(strategy.type);
+
   const {
     data: { maxAmount, minAmount },
     isMaxAmount
-  } = useGetStrategyAvailableAmounts(StrategyFormType.WITHDRAW, strategy, position);
+  } = useGetStrategyAvailableAmounts(StrategyFormType.WITHDRAW, strategy, proxyAccount, position);
 
-  const getTransactionArgs = useCallback(
+  const getWithdrawalTransactionArgs = useCallback(
     (values: StrategyWithdrawFormData) => {
       const amount = values[STRATEGY_WITHDRAW_AMOUNT_FIELD] || 0;
       const monetaryAmount = newMonetaryAmount(amount, strategy.currency, true);
@@ -51,18 +63,28 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
   );
 
   const handleSubmit = (values: StrategyWithdrawFormData) => {
-    const transactionData = getTransactionArgs(values);
+    if (proxyAccount) {
+      const transactionData = getWithdrawalTransactionArgs(values);
 
-    if (!transactionData) return;
+      if (!transactionData) return;
 
-    const { monetaryAmount } = transactionData;
+      const { monetaryAmount } = transactionData;
 
-    const isWithdrawAll = isMaxAmount(monetaryAmount);
+      const isWithdrawAll = isMaxAmount(monetaryAmount);
 
-    if (isWithdrawAll) {
-      return transaction.execute(Transaction.STRATEGIES_ALL_WITHDRAW, monetaryAmount.currency);
+      if (isWithdrawAll) {
+        return transaction.execute(Transaction.STRATEGIES_ALL_WITHDRAW, proxyAccount, [
+          monetaryAmount.currency,
+          monetaryAmount
+        ]);
+      } else {
+        return transaction.execute(Transaction.STRATEGIES_WITHDRAW, proxyAccount, [
+          monetaryAmount.currency,
+          monetaryAmount
+        ]);
+      }
     } else {
-      return transaction.execute(Transaction.STRATEGIES_WITHDRAW, monetaryAmount.currency, monetaryAmount);
+      transaction.execute(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
     }
   };
 
@@ -77,18 +99,28 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
     }),
     onSubmit: handleSubmit,
     onComplete: (values: StrategyWithdrawFormData) => {
-      const transactionData = getTransactionArgs(values);
+      if (proxyAccount) {
+        const transactionData = getWithdrawalTransactionArgs(values);
 
-      if (!transactionData) return;
+        if (!transactionData) return;
 
-      const { monetaryAmount } = transactionData;
+        const { monetaryAmount } = transactionData;
 
-      const isWithdrawAll = isMaxAmount(monetaryAmount);
+        const isWithdrawAll = isMaxAmount(monetaryAmount);
 
-      if (isWithdrawAll) {
-        return transaction.fee.estimate(Transaction.STRATEGIES_ALL_WITHDRAW, monetaryAmount.currency);
+        if (isWithdrawAll) {
+          return transaction.fee.estimate(Transaction.STRATEGIES_ALL_WITHDRAW, proxyAccount, [
+            monetaryAmount.currency,
+            monetaryAmount
+          ]);
+        } else {
+          return transaction.fee.estimate(Transaction.STRATEGIES_WITHDRAW, proxyAccount, [
+            monetaryAmount.currency,
+            monetaryAmount
+          ]);
+        }
       } else {
-        return transaction.fee.estimate(Transaction.STRATEGIES_WITHDRAW, monetaryAmount.currency, monetaryAmount);
+        transaction.fee.estimate(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
       }
     }
   });
@@ -99,7 +131,7 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
     true
   );
   const inputUSDValue = convertMonetaryAmountToValueInUSD(inputMonetaryAmount, prices?.[WRAPPED_TOKEN_SYMBOL].usd) || 0;
-  const isSubmitButtonDisabled = isFormDisabled(form);
+  const isSubmitButtonDisabled = isFormDisabled(form) || isLoadingProxyAccount;
 
   return (
     <form onSubmit={form.handleSubmit}>
@@ -120,7 +152,7 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
             selectProps={{ ...form.getSelectFieldProps(STRATEGY_WITHDRAW_FEE_TOKEN_FIELD) }}
           />
           <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-            {t('withdraw')}
+            {proxyAccount ? t('withdraw') : t('strategy.initialize')}
           </AuthCTA>
         </Flex>
       </Flex>

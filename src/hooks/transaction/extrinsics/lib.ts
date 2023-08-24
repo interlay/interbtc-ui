@@ -1,5 +1,8 @@
 import { ExtrinsicData } from '@interlay/interbtc-api';
 
+import { StrategyType } from '@/pages/Strategies/types';
+import { proxyExtrinsic } from '@/utils/helpers/extrinsic';
+
 import { LibActions, Transaction } from '../types';
 
 const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
@@ -67,13 +70,85 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
     /* END - LOANS */
 
     /* START - STRATEGIES */
-    case Transaction.STRATEGIES_DEPOSIT:
-      return window.bridge.loans.lend(...params.args);
-    case Transaction.STRATEGIES_WITHDRAW:
-      return window.bridge.loans.withdraw(...params.args);
+    case Transaction.STRATEGIES_INITIALIZE_PROXY: {
+      // TODO: How to initialize only 1 unique address per strategy per account?
+      const [strategyType] = params.args;
+      switch (strategyType) {
+        case StrategyType.BTC_LOW_RISK:
+          return { extrinsic: window.bridge.api.tx.proxy.createPure('Any', 0, 0) };
+        default:
+          throw new Error(`No proxy account initalization defined for strategy type ${strategyType}`);
+      }
+    }
+    // Since we use proxy accounts for strategies, first argument is always proxy account for which
+    // the action should be performed - this account must be passed.
+    case Transaction.STRATEGIES_DEPOSIT: {
+      return (async () => {
+        const [proxyAccount, args] = params.args;
+        const depositAmount = args[1];
+
+        const transferExtrinsic = window.bridge.tokens.transfer(proxyAccount.toString(), depositAmount);
+
+        const strategyDepositExtrinsic = (await window.bridge.loans.lend(...args)).extrinsic;
+        const proxiedStrategyDepositExtrinsic = proxyExtrinsic(proxyAccount, strategyDepositExtrinsic);
+
+        const batchedExtrinsics = window.bridge.transaction.buildBatchExtrinsic([
+          transferExtrinsic.extrinsic,
+          proxiedStrategyDepositExtrinsic
+        ]);
+
+        return { extrinsic: batchedExtrinsics };
+      })();
+    }
+
+    case Transaction.STRATEGIES_WITHDRAW: {
+      return (async () => {
+        const primaryAccount = window.bridge.account;
+        if (!primaryAccount) {
+          throw new Error('Strategy primary account not found.');
+        }
+
+        const [proxyAccount, args] = params.args;
+        const withdrawalAmount = args[1];
+
+        const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdraw(...args)).extrinsic;
+        const proxiedStrategyWithdrawExtrinsic = proxyExtrinsic(proxyAccount, strategyWithdrawalExtrinsic);
+
+        const transferExtrinsic = window.bridge.tokens.transfer(primaryAccount.toString(), withdrawalAmount).extrinsic;
+        const proxiedTransferExtrinsic = proxyExtrinsic(proxyAccount, transferExtrinsic);
+
+        const batchExtrinsic = window.bridge.transaction.buildBatchExtrinsic([
+          proxiedStrategyWithdrawExtrinsic,
+          proxiedTransferExtrinsic
+        ]);
+
+        return { extrinsic: batchExtrinsic };
+      })();
+    }
+
     case Transaction.STRATEGIES_ALL_WITHDRAW: {
-      const [underlyingCurrency] = params.args;
-      return window.bridge.loans.withdrawAll(underlyingCurrency);
+      return (async () => {
+        const primaryAccount = window.bridge.account;
+        if (!primaryAccount) {
+          throw new Error('Primary account not found.');
+        }
+
+        const [proxyAccount, args] = params.args;
+        const withdrawalAmount = args[1];
+
+        const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdrawAll(args[0])).extrinsic;
+        const proxiedStrategyWithdrawExtrinsic = proxyExtrinsic(proxyAccount, strategyWithdrawalExtrinsic);
+
+        const transferExtrinsic = window.bridge.tokens.transfer(primaryAccount.toString(), withdrawalAmount).extrinsic;
+        const proxiedTransferExtrinsic = proxyExtrinsic(proxyAccount, transferExtrinsic);
+
+        const batchExtrinsic = window.bridge.transaction.buildBatchExtrinsic([
+          proxiedStrategyWithdrawExtrinsic,
+          proxiedTransferExtrinsic
+        ]);
+
+        return { extrinsic: batchExtrinsic };
+      })();
     }
     /* END - STRATEGIES */
 

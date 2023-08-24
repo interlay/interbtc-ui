@@ -6,6 +6,7 @@ import {
   LiquidityPool,
   MultiPath,
   newCurrencyId,
+  newMonetaryAmount,
   Trade
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
@@ -62,7 +63,8 @@ const getTxFeeSwapData = async (
     reverseDirectionTrade.outputAmount.toString(true),
     baseExtrinsic
   );
-  const withSwapTxFee = await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
+  console.log(reverseDirectionExtrinsic.toString());
+  const withSwapTxFee = newMonetaryAmount(0, GOVERNANCE_TOKEN); // await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
   const { inputAmount, path } = getOptimalTradeForTxFeeSwap(
     withSwapTxFee.mul(OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER),
     reverseDirectionTrade.outputAmount,
@@ -79,7 +81,7 @@ const estimateTransactionFee: (
   params: Actions
 ) => Promise<MonetaryAmount<CurrencyExt>> = async (feeCurrency, pools, params) => {
   const baseExtrinsicData = await getExtrinsic(params);
-  const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
+  const baseTxFee = newMonetaryAmount(0, feeCurrency); // await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
 
   if (isCurrencyEqual(feeCurrency, GOVERNANCE_TOKEN)) {
     return baseTxFee;
@@ -158,7 +160,7 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     }
     /* END - LOANS */
     case Transaction.STRATEGIES_DEPOSIT: {
-      const [, amount] = params.args;
+      const [, amount] = params.args[1];
       return [amount];
     }
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
@@ -177,6 +179,7 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     case Transaction.LOANS_DISABLE_COLLATERAL:
     case Transaction.STRATEGIES_ALL_WITHDRAW:
     case Transaction.STRATEGIES_WITHDRAW:
+    case Transaction.STRATEGIES_INITIALIZE_PROXY:
     case Transaction.AMM_CLAIM_REWARDS:
       return undefined;
   }

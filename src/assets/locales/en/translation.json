@@ -667,7 +667,8 @@
   },
   "strategy": {
     "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",
-    "update_position": "Update position"
+    "update_position": "Update position",
+    "initialize": "Initialize strategy"
   },
   "transaction": {
     "recent_transactions": "Recent transactions",

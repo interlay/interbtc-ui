@@ -251,7 +251,7 @@ const getTranslationArgs = (
 
     /* START - STRATEGIES */
     case Transaction.STRATEGIES_DEPOSIT: {
-      const [currency, amount] = params.args;
+      const [currency, amount] = params.args[1];
 
       return {
         key: isPast ? 'transaction.deposited_amount' : 'transaction.depositing_amount',
@@ -262,7 +262,7 @@ const getTranslationArgs = (
       };
     }
     case Transaction.STRATEGIES_WITHDRAW: {
-      const [currency, amount] = params.args;
+      const [currency, amount] = params.args[1];
 
       return {
         key: isPast ? 'transaction.withdrew_amount' : 'transaction.withdrawing_amount',
@@ -273,7 +273,7 @@ const getTranslationArgs = (
       };
     }
     case Transaction.STRATEGIES_ALL_WITHDRAW: {
-      const [currency] = params.args;
+      const [currency] = params.args[1];
 
       return {
         key: isPast ? 'transaction.withdrew' : 'transaction.withdrawing',
