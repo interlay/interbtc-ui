@@ -70,7 +70,16 @@ function useTransaction<T extends Transaction>(
         onReady: () => onSigning(params)
       };
 
-      return submitTransaction(window.bridge.api, params.accountAddress, feeWrappedExtrinsic, expectedStatus, events);
+      const shouldDryRun = params.type !== Transaction.XCM_TRANSFER;
+
+      return submitTransaction(
+        window.bridge.api,
+        params.accountAddress,
+        feeWrappedExtrinsic,
+        expectedStatus,
+        events,
+        shouldDryRun
+      );
     },
     [feeData?.amount, onSigning, pools]
   );
