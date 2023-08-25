@@ -26,6 +26,7 @@ const Strategy = React.lazy(() => import(/* webpackChunkName: 'strategy' */ '@/p
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
+const Staking1 = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking copy'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
@@ -97,6 +98,9 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.STAKING}>
                   <Staking />
+                </Route>
+                <Route path={'/staking-old'}>
+                  <Staking1 />
                 </Route>
                 <Route path={PAGES.TX}>
                   <TX />

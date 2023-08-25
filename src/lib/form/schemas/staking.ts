@@ -18,6 +18,7 @@ type StakingValidationParams = {
   };
 };
 
+// TODO: lock time could be 0 if only adding into staking amount
 const stakingSchema = (params: StakingValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
     [STAKING_AMOUNT_FIELD]: yup
@@ -34,7 +35,7 @@ const stakingSchema = (params: StakingValidationParams): yup.ObjectSchema<any> =
       )
       .max(
         params[STAKING_LOCK_TIME_AMOUNT_FIELD].max,
-        `Lock time must be less than or equal to ${params[STAKING_LOCK_TIME_AMOUNT_FIELD].min}`
+        `Lock time must be less than or equal to ${params[STAKING_LOCK_TIME_AMOUNT_FIELD].max}`
       )
   });
 

@@ -11,8 +11,10 @@ const escapeRegExp = (string: string): string => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
+const numericRegex = /^[0-9\b]+$/;
+
 // match escaped "." characters via in a non-capturing group
-const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`);
+const decimalRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`);
 
 type Props = {
   value?: string | number;
@@ -29,14 +31,31 @@ type AriaAttrs = Omit<AriaTextFieldOptions<'input'>, (keyof Props & InheritAttrs
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ onChange, validationState, value: valueProp, defaultValue = '', ...props }, ref): JSX.Element => {
+  (
+    { onChange, validationState, value: valueProp, defaultValue = '', inputMode = 'numeric', ...props },
+    ref
+  ): JSX.Element => {
     const [value, setValue] = useState<string | undefined>(defaultValue?.toString());
     const inputRef = useDOMRef(ref);
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
       const value = e.target.value;
 
-      if (inputRegex.test(escapeRegExp(value))) {
+      let isValid = true;
+
+      switch (inputMode) {
+        case 'decimal': {
+          isValid = decimalRegex.test(escapeRegExp(value));
+
+          break;
+        }
+        case 'numeric': {
+          isValid = e.target.value === '' || numericRegex.test(e.target.value);
+          break;
+        }
+      }
+
+      if (isValid) {
         onChange?.(e);
         setValue(value);
       }
@@ -45,13 +64,10 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useTextField(
       {
         ...props,
+        inputMode,
         validationState: props.errorMessage ? 'invalid' : validationState,
         value: value,
-        pattern: '^[0-9]*[.,]?[0-9]*$',
-        inputMode: 'decimal',
-        autoComplete: 'off',
-        minLength: 1,
-        maxLength: 79
+        autoComplete: 'off'
       },
       inputRef
     );

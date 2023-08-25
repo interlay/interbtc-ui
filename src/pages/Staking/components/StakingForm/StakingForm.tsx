@@ -1,5 +1,4 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,8 +36,7 @@ import { StakingLockTimeInput } from './StakingLockTimeInput';
 import { StakingTransactionDetails } from './StakingTransactionDetails';
 
 type Props = {
-  accountData: AccountStakingData;
-  votingBalance: MonetaryAmount<CurrencyExt>;
+  accountData: AccountStakingData | null;
   networkData: NetworkStakingData;
 };
 
@@ -46,8 +44,7 @@ type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type StakingFormProps = Props & InheritAttrs;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StakingForm = ({ accountData, votingBalance, networkData, ...props }: StakingFormProps): JSX.Element | null => {
+const StakingForm = ({ accountData, networkData, ...props }: StakingFormProps): JSX.Element | null => {
   const prices = useGetPrices();
   const { t } = useTranslation();
   const { data: balances, getAvailableBalance } = useGetBalances();
@@ -95,15 +92,19 @@ const StakingForm = ({ accountData, votingBalance, networkData, ...props }: Stak
   };
 
   const maxLockTime = useMemo(() => {
+    if (!accountData) {
+      return STAKE_LOCK_TIME.MAX;
+    }
+
     const remainingWeeks = convertBlockNumbersToWeeks(accountData.unlock.block);
 
     return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeks);
-  }, [accountData.unlock.block]);
+  }, [accountData]);
 
   const form = useForm<StakingFormData>({
     initialValues: {
       [STAKING_AMOUNT_FIELD]: '',
-      [STAKING_LOCK_TIME_AMOUNT_FIELD]: STAKE_LOCK_TIME.MIN,
+      // [STAKING_LOCK_TIME_AMOUNT_FIELD]: STAKE_LOCK_TIME.MIN,
       [STAKING_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     },
     validationSchema: stakingSchema({
@@ -166,7 +167,7 @@ const StakingForm = ({ accountData, votingBalance, networkData, ...props }: Stak
               onListSelectionChange={handleListSelectionChange}
             />
             <Flex direction='column' gap='spacing2'>
-              <StakingTransactionDetails />
+              <StakingTransactionDetails accountData={accountData} amount={monetaryAmount} form={form.values} />
               <TransactionFeeDetails
                 fee={transaction.fee}
                 selectProps={form.getSelectFieldProps(STAKING_FEE_TOKEN_FIELD)}

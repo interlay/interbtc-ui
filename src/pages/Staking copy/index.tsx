@@ -583,6 +583,8 @@ const Staking = (): JSX.Element => {
       newLockingAmount = monetaryLockingAmount.add(stakedAmount);
     }
 
+    console.log(newLockTime);
+
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
     return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
   };

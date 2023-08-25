@@ -17,10 +17,9 @@ type AccountUnlockStakingData = {
 };
 
 type AccountStakingData = {
-  isStaking: boolean;
   unlock: AccountUnlockStakingData;
-
   balance: MonetaryAmount<CurrencyExt>;
+  votingBalance: MonetaryAmount<CurrencyExt>;
   claimableRewards: MonetaryAmount<CurrencyExt>;
   projected: {
     amount: MonetaryAmount<CurrencyExt>;
@@ -39,32 +38,38 @@ const getUnlockData = (stakeEndBlock: number, currentBlockNumber: number): Accou
   };
 };
 
-const getAccountStakingData = async (accountId: AccountId): Promise<AccountStakingData> => {
-  const stakedBalancePromise = window.bridge.escrow.getStakedBalance(accountId);
+const getAccountStakingData = async (accountId: AccountId): Promise<AccountStakingData | null> => {
+  const stakedBalance = await window.bridge.escrow.getStakedBalance(accountId);
+
+  if (stakedBalance.amount.isZero()) {
+    return null;
+  }
+
   const currentBlockNumberPromise = window.bridge.system.getCurrentBlockNumber();
   const claimableRewardsPromise = window.bridge.escrow.getRewards(accountId);
   const projectedPromise = window.bridge.escrow.getRewardEstimate(accountId);
+  const votingBalancePromise = window.bridge.escrow.votingBalance(accountId);
 
-  const [stakedBalance, currentBlockNumber, claimableRewards, projected] = await Promise.all([
-    stakedBalancePromise,
+  const [currentBlockNumber, claimableRewards, projected, votingBalance] = await Promise.all([
     currentBlockNumberPromise,
     claimableRewardsPromise,
-    projectedPromise
+    projectedPromise,
+    votingBalancePromise
   ]);
 
   const unlock = getUnlockData(stakedBalance.endBlock, currentBlockNumber);
 
   return {
-    isStaking: !stakedBalance.amount.isZero(),
     unlock,
     balance: stakedBalance.amount,
+    votingBalance,
     claimableRewards,
     projected
   };
 };
 
 interface UseGetAccountStakingDataResult {
-  data: AccountStakingData | undefined;
+  data: AccountStakingData | null | undefined;
   refetch: () => void;
 }
 

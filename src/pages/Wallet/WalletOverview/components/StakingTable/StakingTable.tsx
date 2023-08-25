@@ -1,5 +1,3 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import { differenceInDays, format, formatDistanceToNowStrict } from 'date-fns';
 import { ReactNode, useMemo } from 'react';
@@ -32,10 +30,9 @@ type StakingTableRows = {
 
 type StakingTableProps = {
   data: AccountStakingData;
-  votingBalance: MonetaryAmount<CurrencyExt>;
 };
 
-const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element => {
+const StakingTable = ({ data }: StakingTableProps): JSX.Element => {
   const { t } = useTranslation();
   const titleId = useId();
   const prices = useGetPrices();
@@ -55,7 +52,7 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
   ];
 
   const rows = useMemo((): StakingTableRows[] => {
-    const { balance, unlock } = data;
+    const { balance, unlock, votingBalance } = data;
     const stakingBalancePrice =
       convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, balance.currency.ticker)?.usd) || 0;
 
@@ -88,7 +85,7 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prices, data, votingBalance]);
+  }, [prices, data]);
 
   return <Table title={t('staked')} titleId={titleId} columns={columns} rows={rows} />;
 };
