@@ -8,17 +8,22 @@ import { Transaction, useTransaction } from '@/hooks/transaction';
 
 type Props = {
   data: AccountStakingData | null;
-  onClaimRewards: () => void;
+  onVotingClaimRewards: () => void;
 };
 
 type InheritAttrs = CardProps & Props;
 
 type StakingAccountDetailsProps = Props & InheritAttrs;
 
-const StakingAccountDetails = ({ data, onClaimRewards, ...props }: StakingAccountDetailsProps): JSX.Element | null => {
+const StakingAccountDetails = ({
+  data,
+  onVotingClaimRewards,
+  ...props
+}: StakingAccountDetailsProps): JSX.Element | null => {
   const { t } = useTranslation();
+
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW_REWARDS, {
-    onSuccess: onClaimRewards
+    onSuccess: onVotingClaimRewards
   });
 
   const handlePress = () => transaction.execute();

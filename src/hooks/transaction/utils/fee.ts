@@ -159,6 +159,20 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
       return [calculatedLimit];
     }
     /* END - LOANS */
+    /* START - ESCROW */
+    case Transaction.ESCROW_CREATE_LOCK: {
+      const [amount] = params.args;
+      return [amount];
+    }
+    case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT: {
+      const [amount] = params.args;
+      return [amount];
+    }
+    case Transaction.ESCROW_INCREASE_LOCKED_AMOUNT: {
+      const [amount] = params.args;
+      return [amount];
+    }
+    /* END - ESCROW */
     case Transaction.STRATEGIES_DEPOSIT: {
       const [, , isIdentitySet, , amount] = params.args;
       if (isIdentitySet) {
@@ -184,6 +198,9 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     case Transaction.STRATEGIES_WITHDRAW:
     case Transaction.STRATEGIES_INITIALIZE_PROXY:
     case Transaction.AMM_CLAIM_REWARDS:
+    case Transaction.ESCROW_INCREASE_LOCKED_TIME:
+    case Transaction.ESCROW_WITHDRAW:
+    case Transaction.ESCROW_WITHDRAW_REWARDS:
       return undefined;
   }
 

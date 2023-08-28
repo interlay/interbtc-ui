@@ -275,6 +275,8 @@ const Staking = (): JSX.Element => {
     const extensionTime =
       (stakedAmountAndEndBlock?.endBlock || currentBlockNumber) + convertWeeksToBlockNumbers(lockTimeValue);
 
+    console.log(stakedAmountAndEndBlock?.endBlock, currentBlockNumber, convertWeeksToBlockNumbers(lockTimeValue));
+
     setBlockLockTimeExtension(extensionTime);
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
@@ -372,7 +374,7 @@ const Staking = (): JSX.Element => {
 
         existingStakeTransaction.execute(
           Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT,
-          monetaryAmount.toString(true),
+          monetaryAmount,
           unlockHeight
         );
       } else if (checkOnlyIncreaseLockAmount(numberTime, monetaryAmount)) {
@@ -582,8 +584,6 @@ const Staking = (): JSX.Element => {
       // New total staked governance token
       newLockingAmount = monetaryLockingAmount.add(stakedAmount);
     }
-
-    console.log(newLockTime);
 
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
     return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);

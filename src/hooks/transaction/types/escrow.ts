@@ -1,4 +1,5 @@
-import { InterBtcApi } from '@interlay/interbtc-api';
+import { CurrencyExt, InterBtcApi } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { Transaction } from '.';
 
@@ -7,10 +8,12 @@ interface EscrowCreateLockAction {
   args: Parameters<InterBtcApi['escrow']['createLock']>;
 }
 
+type CustomEscrowInscreaseLookedTimeAndAmountArgs = [amount: MonetaryAmount<CurrencyExt>];
+
 interface EscrowInscreaseLookedTimeAndAmountAction {
   type: Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT;
   args: [
-    ...Parameters<InterBtcApi['api']['tx']['escrow']['increaseAmount']>,
+    ...CustomEscrowInscreaseLookedTimeAndAmountArgs,
     ...Parameters<InterBtcApi['api']['tx']['escrow']['increaseUnlockHeight']>
   ];
 }

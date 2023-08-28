@@ -1,41 +1,28 @@
-import { format } from 'date-fns';
-import { useTranslation } from 'react-i18next';
-
-import { Card, Flex, P } from '@/component-library';
-import { AuthCTA, MainContainer } from '@/components';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { Flex } from '@/component-library';
+import { MainContainer } from '@/components';
 import { useGetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
 import { useGetNetworkStakingData } from '@/hooks/api/escrow/uset-get-network-staking-data';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 
 import { StakingAccountDetails } from './components';
+import { StakingWithdrawCard } from './components/StakingWithdrawCard';
 import { StyledStakingForm, StyledWrapper } from './Staking.style';
 
 const Staking = (): JSX.Element => {
-  const { t } = useTranslation();
-  const { data: accountStakingData, refetch: refetchAccountStakingData } = useGetAccountStakingData();
-  const { data: networkStakingData } = useGetNetworkStakingData();
+  const { data: accountData, refetch: refetchAccountData } = useGetAccountStakingData();
+  const { data: networkData } = useGetNetworkStakingData();
 
-  if (accountStakingData === undefined || networkStakingData === undefined) {
+  if (accountData === undefined || networkData === undefined) {
     return <FullLoadingSpinner />;
   }
 
   return (
     <MainContainer>
       <StyledWrapper gap='spacing8'>
-        <StyledStakingForm accountData={accountStakingData} networkData={networkStakingData} />
+        <StyledStakingForm accountData={accountData} networkData={networkData} onStaking={refetchAccountData} />
         <Flex direction='column' gap='spacing4'>
-          <StakingAccountDetails data={accountStakingData} onClaimRewards={refetchAccountStakingData} />
-          {accountStakingData && (
-            <Card direction='column' gap='spacing4'>
-              <P size='s'>
-                Withdraw Staked {GOVERNANCE_TOKEN.ticker} on{' '}
-                {format(accountStakingData.unlock.date, YEAR_MONTH_DAY_PATTERN)}
-              </P>
-              <AuthCTA>{t('withdraw')}</AuthCTA>
-            </Card>
-          )}
+          <StakingAccountDetails data={accountData} onVotingClaimRewards={refetchAccountData} />
+          {accountData && <StakingWithdrawCard data={accountData} onClaimRewards={refetchAccountData} />}
         </Flex>
       </StyledWrapper>
     </MainContainer>

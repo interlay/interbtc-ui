@@ -155,6 +155,7 @@
   "rewards_apr_ticker": "Rewards APR {{ticker}}",
   "wallet": "Wallet",
   "learn_more": "Learn more",
+  "stake": "Stake",
   "navigation": {
     "btc": "BTC",
     "strategies": "Strategies",

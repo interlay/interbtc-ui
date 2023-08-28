@@ -3,11 +3,13 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { add } from 'date-fns';
+import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { BLOCK_TIME } from '@/config/parachain';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
+import { convertWeeksToBlockNumbers } from '@/utils/helpers/staking';
 
 import useAccountId from '../../use-account-id';
 
@@ -19,6 +21,7 @@ type AccountUnlockStakingData = {
 type AccountStakingData = {
   unlock: AccountUnlockStakingData;
   balance: MonetaryAmount<CurrencyExt>;
+  endBlock: number;
   votingBalance: MonetaryAmount<CurrencyExt>;
   claimableRewards: MonetaryAmount<CurrencyExt>;
   projected: {
@@ -62,6 +65,7 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
   return {
     unlock,
     balance: stakedBalance.amount,
+    endBlock: stakedBalance.endBlock,
     votingBalance,
     claimableRewards,
     projected
@@ -70,6 +74,7 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
 
 interface UseGetAccountStakingDataResult {
   data: AccountStakingData | null | undefined;
+  getUnlockHeight: (lockTime: number) => Promise<number>;
   refetch: () => void;
 }
 
@@ -85,9 +90,24 @@ const useGetAccountStakingData = (): UseGetAccountStakingDataResult => {
     enabled: !!accountId
   });
 
+  const getUnlockHeight = useCallback(
+    async (lockTime: number) => {
+      const newLockBlockNumber = convertWeeksToBlockNumbers(lockTime);
+
+      if (data) {
+        return data.endBlock + newLockBlockNumber;
+      }
+
+      const currentBlockNumber = await window.bridge.system.getCurrentBlockNumber();
+
+      return currentBlockNumber + newLockBlockNumber;
+    },
+    [data]
+  );
+
   useErrorHandler(error);
 
-  return { data, refetch };
+  return { data, refetch, getUnlockHeight };
 };
 
 export { useGetAccountStakingData };

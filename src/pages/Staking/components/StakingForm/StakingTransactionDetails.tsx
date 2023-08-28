@@ -2,6 +2,7 @@ import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { add, differenceInWeeks, format } from 'date-fns';
 
+import { formatPercentage } from '@/common/utils/utils';
 import {
   TransactionDetails,
   TransactionDetailsDd,
@@ -11,10 +12,15 @@ import {
 } from '@/components';
 import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
-import { STAKING_LOCK_TIME_AMOUNT_FIELD, StakingFormData } from '@/lib/form';
+import { AccountStakingEstimationData } from '@/hooks/api/escrow/use-get-staking-estimation-data';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 
-type Props = { accountData: AccountStakingData | null; amount: MonetaryAmount<CurrencyExt>; form: StakingFormData };
+type Props = {
+  accountData: AccountStakingData | null;
+  estimation?: AccountStakingEstimationData;
+  amount: MonetaryAmount<CurrencyExt>;
+  lockTime?: number;
+};
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
 
@@ -23,14 +29,15 @@ type StakingTransactionDetailsProps = Props & InheritAttrs;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StakingTransactionDetails = ({
   accountData,
+  estimation,
   amount,
-  form,
+  lockTime,
   ...props
 }: StakingTransactionDetailsProps): JSX.Element | null => {
   const unlockDateTerm = accountData ? 'New unlock date' : 'Unlock date';
 
   const newDate = add(accountData?.unlock.date || new Date(), {
-    weeks: form[STAKING_LOCK_TIME_AMOUNT_FIELD]
+    weeks: lockTime
   });
 
   const unlockDateLabel = format(newDate, YEAR_MONTH_DAY_PATTERN);
@@ -40,6 +47,8 @@ const StakingTransactionDetails = ({
   const newStakedAmount = accountData ? accountData.balance.add(amount) : amount;
 
   const newTotalStaked = newStakedAmount.mul(remainingWeeks).div(STAKE_LOCK_TIME.MAX);
+
+  const votingBalanceGained = accountData ? newTotalStaked.sub(accountData?.votingBalance) : newTotalStaked;
 
   // const extendingLockTime = parseInt(lockTime); // Weeks
 
@@ -71,21 +80,27 @@ const StakingTransactionDetails = ({
       </TransactionDetailsGroup>
       <TransactionDetailsGroup>
         <TransactionDetailsDt>New {VOTE_GOVERNANCE_TOKEN.ticker} Gained</TransactionDetailsDt>
-        <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
-      </TransactionDetailsGroup>
-      <TransactionDetailsGroup>
-        <TransactionDetailsDt>New Total Stake</TransactionDetailsDt>
         <TransactionDetailsDd>
-          {newTotalStaked.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
+          {votingBalanceGained.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
         </TransactionDetailsDd>
       </TransactionDetailsGroup>
+      {accountData && (
+        <TransactionDetailsGroup>
+          <TransactionDetailsDt>New Total Stake</TransactionDetailsDt>
+          <TransactionDetailsDd>
+            {newTotalStaked.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
+          </TransactionDetailsDd>
+        </TransactionDetailsGroup>
+      )}
       <TransactionDetailsGroup>
         <TransactionDetailsDt>Estimated APR</TransactionDetailsDt>
-        <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
+        <TransactionDetailsDd>{formatPercentage(estimation?.apy.toNumber() || 0)}</TransactionDetailsDd>
       </TransactionDetailsGroup>
       <TransactionDetailsGroup>
         <TransactionDetailsDt>Projected {GOVERNANCE_TOKEN.ticker} Rewards</TransactionDetailsDt>
-        <TransactionDetailsDd>21/09/26</TransactionDetailsDd>
+        <TransactionDetailsDd>
+          {estimation?.amount.toHuman() || 0} {GOVERNANCE_TOKEN.ticker}
+        </TransactionDetailsDd>
       </TransactionDetailsGroup>
     </TransactionDetails>
   );
