@@ -3,41 +3,42 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { add } from 'date-fns';
-import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { BLOCK_TIME } from '@/config/parachain';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
-import { convertWeeksToBlockNumbers } from '@/utils/helpers/staking';
 
 import useAccountId from '../../use-account-id';
 
 type AccountUnlockStakingData = {
   date: Date;
   block: number;
+  remainingBlocks: number;
+  isAvailable: boolean;
 };
 
 type AccountStakingData = {
   unlock: AccountUnlockStakingData;
   balance: MonetaryAmount<CurrencyExt>;
-  endBlock: number;
   votingBalance: MonetaryAmount<CurrencyExt>;
-  claimableRewards: MonetaryAmount<CurrencyExt>;
   projected: {
     amount: MonetaryAmount<CurrencyExt>;
     apy: Big;
   };
+  // limit: MonetaryAmount<CurrencyExt>;
 };
 
 const getUnlockData = (stakeEndBlock: number, currentBlockNumber: number): AccountUnlockStakingData => {
-  const blocksUntilUnlockDate = stakeEndBlock - currentBlockNumber;
+  const remainingBlocks = stakeEndBlock - currentBlockNumber;
 
-  const unlockDate = add(new Date(), { seconds: blocksUntilUnlockDate * BLOCK_TIME });
+  const unlockDate = add(new Date(), { seconds: remainingBlocks * BLOCK_TIME });
 
   return {
     date: unlockDate,
-    block: stakeEndBlock
+    block: stakeEndBlock,
+    remainingBlocks,
+    isAvailable: remainingBlocks <= 0
   };
 };
 
@@ -48,14 +49,19 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
     return null;
   }
 
+  // const limitPromise = window.bridge.api.rpc.escrow.freeStakable(accountId);
   const currentBlockNumberPromise = window.bridge.system.getCurrentBlockNumber();
-  const claimableRewardsPromise = window.bridge.escrow.getRewards(accountId);
   const projectedPromise = window.bridge.escrow.getRewardEstimate(accountId);
   const votingBalancePromise = window.bridge.escrow.votingBalance(accountId);
 
-  const [currentBlockNumber, claimableRewards, projected, votingBalance] = await Promise.all([
+  const [
+    // limit,
+    currentBlockNumber,
+    projected,
+    votingBalance
+  ] = await Promise.all([
+    // limitPromise,
     currentBlockNumberPromise,
-    claimableRewardsPromise,
     projectedPromise,
     votingBalancePromise
   ]);
@@ -65,16 +71,14 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
   return {
     unlock,
     balance: stakedBalance.amount,
-    endBlock: stakedBalance.endBlock,
     votingBalance,
-    claimableRewards,
     projected
+    // limit
   };
 };
 
 interface UseGetAccountStakingDataResult {
   data: AccountStakingData | null | undefined;
-  getUnlockHeight: (lockTime: number) => Promise<number>;
   refetch: () => void;
 }
 
@@ -90,24 +94,9 @@ const useGetAccountStakingData = (): UseGetAccountStakingDataResult => {
     enabled: !!accountId
   });
 
-  const getUnlockHeight = useCallback(
-    async (lockTime: number) => {
-      const newLockBlockNumber = convertWeeksToBlockNumbers(lockTime);
-
-      if (data) {
-        return data.endBlock + newLockBlockNumber;
-      }
-
-      const currentBlockNumber = await window.bridge.system.getCurrentBlockNumber();
-
-      return currentBlockNumber + newLockBlockNumber;
-    },
-    [data]
-  );
-
   useErrorHandler(error);
 
-  return { data, refetch, getUnlockHeight };
+  return { data, refetch };
 };
 
 export { useGetAccountStakingData };

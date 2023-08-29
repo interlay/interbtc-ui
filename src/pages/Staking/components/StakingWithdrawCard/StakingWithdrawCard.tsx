@@ -10,18 +10,18 @@ import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 
 type Props = {
   data: AccountStakingData;
-  onClaimRewards: () => void;
+  onWithdraw: () => void;
 };
 
 type InheritAttrs = CardProps & Props;
 
 type StakingWithdrawCardProps = Props & InheritAttrs;
 
-const StakingWithdrawCard = ({ data, onClaimRewards, ...props }: StakingWithdrawCardProps): JSX.Element | null => {
+const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCardProps): JSX.Element | null => {
   const { t } = useTranslation();
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW, {
-    onSuccess: onClaimRewards
+    onSuccess: onWithdraw
   });
 
   const handlePress = () => transaction.execute();
@@ -31,7 +31,9 @@ const StakingWithdrawCard = ({ data, onClaimRewards, ...props }: StakingWithdraw
       <P size='s'>
         Withdraw Staked {GOVERNANCE_TOKEN.ticker} on {format(data.unlock.date, YEAR_MONTH_DAY_PATTERN)}
       </P>
-      <AuthCTA onPress={handlePress}>{t('withdraw')}</AuthCTA>
+      <AuthCTA disabled={!data.unlock.isAvailable} onPress={handlePress}>
+        {t('withdraw')}
+      </AuthCTA>
     </Card>
   );
 };

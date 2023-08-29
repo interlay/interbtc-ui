@@ -20,20 +20,20 @@ const getRewardEstimate = async (
   accountId?: AccountId,
   accountData?: AccountStakingData | null,
   amount: MonetaryAmount<CurrencyExt> = newMonetaryAmount(0, GOVERNANCE_TOKEN),
-  lockTime = 0
+  weeksLocked = 0
 ): Promise<AccountStakingEstimationData | undefined> => {
   if (!accountId) return;
 
-  const baseBlockNumber = accountData?.endBlock || (await window.bridge.system.getCurrentBlockNumber());
+  const baseBlockNumber = accountData?.unlock.block || (await window.bridge.system.getCurrentBlockNumber());
 
-  const newBlockNumber = baseBlockNumber + convertWeeksToBlockNumbers(lockTime);
+  const newBlockNumber = baseBlockNumber + convertWeeksToBlockNumbers(weeksLocked);
 
   return window.bridge.escrow.getRewardEstimate(accountId, amount, newBlockNumber);
 };
 
 type StakingEstimationVariables = {
   amount?: MonetaryAmount<CurrencyExt>;
-  lockTime?: number;
+  weeksLocked?: number;
 };
 
 type UseGetStakingEstimationOptions = UseMutationOptions<
@@ -60,8 +60,8 @@ const useGetStakingEstimationData = (
 
   const fn: MutationFunction<AccountStakingEstimationData | undefined, StakingEstimationVariables> = ({
     amount,
-    lockTime
-  }) => getRewardEstimate(accountId, accountData.data, amount, lockTime);
+    weeksLocked
+  }) => getRewardEstimate(accountId, accountData.data, amount, weeksLocked);
 
   const mutation = useMutation<AccountStakingEstimationData | undefined, Error, StakingEstimationVariables, unknown>(
     fn,

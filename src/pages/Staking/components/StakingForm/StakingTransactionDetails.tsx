@@ -1,6 +1,6 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { add, differenceInWeeks, format } from 'date-fns';
+import { add, format } from 'date-fns';
 
 import { formatPercentage } from '@/common/utils/utils';
 import {
@@ -14,12 +14,34 @@ import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME, VOTE_GOVERNANCE_TOKEN } from '@/conf
 import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
 import { AccountStakingEstimationData } from '@/hooks/api/escrow/use-get-staking-estimation-data';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
+import { convertBlockNumbersToWeeks } from '@/utils/helpers/staking';
+
+const getData = (accountData: AccountStakingData | null, amount: MonetaryAmount<CurrencyExt>, weeksLocked = 0) => {
+  if (!accountData && (amount.isZero() || !weeksLocked)) return;
+
+  if (accountData && amount.isZero() && !weeksLocked) return;
+
+  const existingWeeksLocked = accountData ? convertBlockNumbersToWeeks(accountData.unlock.remainingBlocks) : 0;
+
+  const totalWeeksLocked = existingWeeksLocked + weeksLocked;
+
+  const totalStakedAmount = accountData ? accountData.balance.add(amount) : amount;
+
+  const newTotalStaked = totalStakedAmount.mul(totalWeeksLocked).div(STAKE_LOCK_TIME.MAX);
+
+  const votingBalanceGained = accountData ? newTotalStaked.sub(accountData?.votingBalance) : newTotalStaked;
+
+  return {
+    votingBalanceGained,
+    newTotalStaked
+  };
+};
 
 type Props = {
   accountData: AccountStakingData | null;
   estimation?: AccountStakingEstimationData;
   amount: MonetaryAmount<CurrencyExt>;
-  lockTime?: number;
+  weeksLocked?: number;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
@@ -31,46 +53,18 @@ const StakingTransactionDetails = ({
   accountData,
   estimation,
   amount,
-  lockTime,
+  weeksLocked = 0,
   ...props
 }: StakingTransactionDetailsProps): JSX.Element | null => {
   const unlockDateTerm = accountData ? 'New unlock date' : 'Unlock date';
 
   const newDate = add(accountData?.unlock.date || new Date(), {
-    weeks: lockTime
+    weeks: weeksLocked
   });
 
   const unlockDateLabel = format(newDate, YEAR_MONTH_DAY_PATTERN);
 
-  const remainingWeeks = differenceInWeeks(newDate, new Date());
-
-  const newStakedAmount = accountData ? accountData.balance.add(amount) : amount;
-
-  const newTotalStaked = newStakedAmount.mul(remainingWeeks).div(STAKE_LOCK_TIME.MAX);
-
-  const votingBalanceGained = accountData ? newTotalStaked.sub(accountData?.votingBalance) : newTotalStaked;
-
-  // const extendingLockTime = parseInt(lockTime); // Weeks
-
-  // let newLockTime: number;
-  // let newLockingAmount: GovernanceTokenMonetaryAmount;
-  // if (remainingBlockNumbersToUnstake === null) {
-  //   // If the user has not staked
-  //   newLockTime = extendingLockTime;
-  //   newLockingAmount = monetaryLockingAmount;
-  // } else {
-  //   // If the user has staked
-  //   const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
-
-  //   // New lock-time that is applied to the entire staked governance token
-  //   newLockTime = currentLockTime + extendingLockTime; // Weeks
-
-  //   // New total staked governance token
-  //   newLockingAmount = monetaryLockingAmount.add(stakedAmount);
-  // }
-
-  // // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
-  // return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
+  const { newTotalStaked, votingBalanceGained } = getData(accountData, amount, weeksLocked) || {};
 
   return (
     <TransactionDetails {...props}>
@@ -81,14 +75,14 @@ const StakingTransactionDetails = ({
       <TransactionDetailsGroup>
         <TransactionDetailsDt>New {VOTE_GOVERNANCE_TOKEN.ticker} Gained</TransactionDetailsDt>
         <TransactionDetailsDd>
-          {votingBalanceGained.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
+          {votingBalanceGained?.toHuman() || 0} {VOTE_GOVERNANCE_TOKEN.ticker}
         </TransactionDetailsDd>
       </TransactionDetailsGroup>
       {accountData && (
         <TransactionDetailsGroup>
           <TransactionDetailsDt>New Total Stake</TransactionDetailsDt>
           <TransactionDetailsDd>
-            {newTotalStaked.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
+            {newTotalStaked?.toHuman() || 0} {VOTE_GOVERNANCE_TOKEN.ticker}
           </TransactionDetailsDd>
         </TransactionDetailsGroup>
       )}

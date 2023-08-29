@@ -1,17 +1,23 @@
 import { mergeProps } from '@react-aria/utils';
-import { Key, useState } from 'react';
+import { Key, useMemo, useState } from 'react';
 
 import { Flex, FlexProps, InputProps, ListItem, ListProps, NumberInput } from '@/component-library';
 
 import { StyledList } from './StakingForm.style';
 
-type Props = { maxLockTime: number; inputProps: InputProps; onListSelectionChange?: (value: number) => void };
+type Props = {
+  isExtending: boolean;
+  maxLockTime: number;
+  inputProps: InputProps;
+  onListSelectionChange?: (value: number) => void;
+};
 
 type InheritAttrs = Omit<FlexProps, keyof Props>;
 
 type StakingLockTimeInputProps = Props & InheritAttrs;
 
 const StakingLockTimeInput = ({
+  isExtending,
   maxLockTime,
   onListSelectionChange,
   inputProps,
@@ -28,19 +34,24 @@ const StakingLockTimeInput = ({
     setListLockTime(selectedKey);
   };
 
-  const items = [
-    { label: '1 Week', value: '1' },
-    { label: '1 Month', value: '4' },
-    { label: '3 Month', value: '13' },
-    { label: '6 Month', value: '26' },
-    { label: 'Max', value: maxLockTime.toString() }
-  ];
+  const items = useMemo(
+    () => [
+      { label: '1 Week', value: '1' },
+      { label: '1 Month', value: '4' },
+      { label: '3 Month', value: '13' },
+      { label: '6 Month', value: '26' },
+      { label: 'Max', value: maxLockTime.toString() }
+    ],
+    [maxLockTime]
+  );
 
   // TODO: enforce integer
   return (
     <Flex direction='column' gap='spacing4' {...props}>
       <NumberInput
-        label={`Extended lock time in weeks (Max ${maxLockTime})`}
+        label={
+          isExtending ? `Extended lock time in weeks (Max ${maxLockTime})` : `Lock time in weeks (Max ${maxLockTime})`
+        }
         labelPosition='side'
         justifyContent='space-between'
         maxWidth='spacing12'
@@ -56,6 +67,7 @@ const StakingLockTimeInput = ({
         selectionMode='single'
         onSelectionChange={handleSelectionChange}
         selectedKeys={listLockTime ? [listLockTime] : []}
+        wrap
         // disabledKeys={items
         //   .filter((item) => (item.value === 'max' ? maxLockTime : Number(item.value)) > maxLockTime)
         //   .map((item) => item.value)}

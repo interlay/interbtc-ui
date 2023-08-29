@@ -275,8 +275,6 @@ const Staking = (): JSX.Element => {
     const extensionTime =
       (stakedAmountAndEndBlock?.endBlock || currentBlockNumber) + convertWeeksToBlockNumbers(lockTimeValue);
 
-    console.log(stakedAmountAndEndBlock?.endBlock, currentBlockNumber, convertWeeksToBlockNumbers(lockTimeValue));
-
     setBlockLockTimeExtension(extensionTime);
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
@@ -580,7 +578,7 @@ const Staking = (): JSX.Element => {
 
       // New lock-time that is applied to the entire staked governance token
       newLockTime = currentLockTime + extendingLockTime; // Weeks
-
+      console.log(currentLockTime, extendingLockTime);
       // New total staked governance token
       newLockingAmount = monetaryLockingAmount.add(stakedAmount);
     }
