@@ -23,7 +23,7 @@ const StakingAccountDetails = ({
   claimableRewards,
   onClaimRewards,
   ...props
-}: StakingAccountDetailsProps): JSX.Element | null => {
+}: StakingAccountDetailsProps): JSX.Element => {
   const { t } = useTranslation();
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW_REWARDS, {

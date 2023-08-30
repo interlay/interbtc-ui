@@ -1,22 +1,15 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { isPast } from 'date-fns';
 import { ChangeEvent, useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Alert, Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
-import {
-  AuthCTA,
-  TransactionDetails,
-  TransactionDetailsDd,
-  TransactionDetailsDt,
-  TransactionDetailsGroup,
-  TransactionFeeDetails
-} from '@/components';
-import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { AuthCTA, TransactionFeeDetails } from '@/components';
+import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME } from '@/config/relay-chains';
 import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
-import { useGetStakingEstimationData } from '@/hooks/api/escrow/use-get-staking-estimation-data';
+import { useGetStakingDetailsData } from '@/hooks/api/escrow/use-get-staking-details-data';
 import { NetworkStakingData } from '@/hooks/api/escrow/uset-get-network-staking-data';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
@@ -35,7 +28,10 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { convertBlockNumbersToWeeks, convertWeeksToBlockNumbers } from '@/utils/helpers/staking';
 
 import { StakingLockTimeInput } from './StakingLockTimeInput';
+import { StakingNetworkDetails } from './StakingNetworkDetails';
 import { StakingTransactionDetails } from './StakingTransactionDetails';
+
+const MIN_AMOUNT = newMonetaryAmount(1, GOVERNANCE_TOKEN);
 
 type Props = {
   accountData: AccountStakingData | null;
@@ -47,12 +43,12 @@ type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type StakingFormProps = Props & InheritAttrs;
 
-const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingFormProps): JSX.Element | null => {
+const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingFormProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
   const { data: balances, getAvailableBalance } = useGetBalances();
 
-  const { data: estimation, mutate: mutateEstimation } = useGetStakingEstimationData();
+  const { data: detailsData, mutate: mutateDetails } = useGetStakingDetailsData();
 
   const transaction = useTransaction({
     onSuccess: () => {
@@ -61,17 +57,11 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
     }
   });
 
-  const isWithdrawReady = useMemo(() => !!accountData && isPast(accountData?.unlock.date), [accountData]);
+  const hasStake = !!accountData;
 
   const governanceBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker);
   const inputBalance = governanceBalance;
   //   accountData?.limit && governanceBalance && pickSmallerAmount(governanceBalance, accountData.limit);
-  const minAmount = newMonetaryAmount(1, GOVERNANCE_TOKEN);
-
-  const inputSchemaParams = {
-    maxAmount: inputBalance,
-    minAmount
-  };
 
   const getTransactionArgs = useCallback(
     async (values: StakingFormData) => {
@@ -107,26 +97,40 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
 
     if (!data) return;
 
+    let monetaryAmount = data.amount;
+
+    if (monetaryAmount && transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
+      monetaryAmount = transaction.calculateAmountWithFeeDeducted(monetaryAmount);
+    }
+
     switch (data.transactionType) {
       case Transaction.ESCROW_CREATE_LOCK:
-        return transaction.execute(data.transactionType, data.amount, data.unlockHeight);
+        return transaction.execute(
+          data.transactionType,
+          monetaryAmount as MonetaryAmount<CurrencyExt>,
+          data.unlockHeight
+        );
+      case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT:
+        return transaction.execute(
+          data.transactionType,
+          monetaryAmount as MonetaryAmount<CurrencyExt>,
+          data.unlockHeight
+        );
       case Transaction.ESCROW_INCREASE_LOCKED_AMOUNT:
-        return transaction.execute(data.transactionType, data.amount);
+        return transaction.execute(data.transactionType, monetaryAmount as MonetaryAmount<CurrencyExt>);
       case Transaction.ESCROW_INCREASE_LOCKED_TIME:
         return transaction.execute(data.transactionType, data.unlockHeight);
-      case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT:
-        return transaction.execute(data.transactionType, data.amount, data.unlockHeight);
     }
   };
 
-  const maxLockTime = useMemo(() => {
+  const lockedWeeksLimit = useMemo(() => {
     if (!accountData) {
-      return STAKE_LOCK_TIME.MAX;
+      return { min: STAKE_LOCK_TIME.MIN, max: STAKE_LOCK_TIME.MAX };
     }
 
-    const remainingWeeks = convertBlockNumbersToWeeks(accountData.unlock.block);
+    const remainingWeeks = convertBlockNumbersToWeeks(accountData.unlock.remainingBlocks);
 
-    return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeks);
+    return { min: 0, max: Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeks) };
   }, [accountData]);
 
   const form = useForm<StakingFormData>({
@@ -137,14 +141,17 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
     },
     validationSchema: stakingSchema(
       {
-        [STAKING_AMOUNT_FIELD]: inputSchemaParams,
-        [STAKING_LOCKED_WEEKS_AMOUNT_FIELD]: { min: accountData ? 0 : STAKE_LOCK_TIME.MIN, max: maxLockTime }
+        [STAKING_AMOUNT_FIELD]: {
+          maxAmount: inputBalance,
+          minAmount: MIN_AMOUNT
+        },
+        [STAKING_LOCKED_WEEKS_AMOUNT_FIELD]: lockedWeeksLimit
       },
-      !!accountData
+      hasStake
     ),
     onSubmit: handleSubmit,
     onComplete: async (values) => {
-      if (isWithdrawReady) return;
+      if (accountData?.unlock.isAvailable) return;
 
       const data = await getTransactionArgs(values);
 
@@ -153,52 +160,55 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
       switch (data.transactionType) {
         case Transaction.ESCROW_CREATE_LOCK:
           return transaction.fee.estimate(data.transactionType, data.amount, data.unlockHeight);
+        case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT:
+          return transaction.fee.estimate(data.transactionType, data.amount, data.unlockHeight);
         case Transaction.ESCROW_INCREASE_LOCKED_AMOUNT:
           return transaction.fee.estimate(data.transactionType, data.amount);
         case Transaction.ESCROW_INCREASE_LOCKED_TIME:
           return transaction.fee.estimate(data.transactionType, data.unlockHeight);
-        case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT:
-          return transaction.fee.estimate(data.transactionType, data.amount, data.unlockHeight);
       }
     }
   });
 
-  // MEMO: re-validate form on balances refetch
   useEffect(() => {
     form.validateForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [balances, accountData]);
 
-  const handleEstimation = (amountProp?: string, weeksLockedProp?: number) => {
-    if (isWithdrawReady) return;
+  useEffect(() => {
+    handleDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountData]);
+
+  const handleDetails = (amountProp?: string, weeksLockedProp?: number) => {
+    if (accountData?.unlock.isAvailable) return;
 
     const amount = amountProp || form.values[STAKING_AMOUNT_FIELD] || 0;
 
     const monetaryAmount = newSafeMonetaryAmount(amount, GOVERNANCE_TOKEN, true);
 
-    const weeksLocked = weeksLockedProp || Number(form.values[STAKING_LOCKED_WEEKS_AMOUNT_FIELD]);
+    const weeksLocked =
+      weeksLockedProp === undefined ? Number(form.values[STAKING_LOCKED_WEEKS_AMOUNT_FIELD]) : weeksLockedProp;
 
-    mutateEstimation({ amount: monetaryAmount, weeksLocked });
+    mutateDetails({ amount: monetaryAmount, weeksLocked });
   };
 
   const handleListSelectionChange = (value: number) => {
     form.setFieldValue(STAKING_LOCKED_WEEKS_AMOUNT_FIELD, value, true);
 
-    handleEstimation(undefined, value);
+    handleDetails(undefined, value);
   };
 
   const handleChangeAmount = (e: ChangeEvent<HTMLInputElement>) => {
     const amount = e.target.value;
 
-    if (!amount) handleEstimation(amount);
+    handleDetails(amount);
   };
 
   const handleChangeLockTime = (e: ChangeEvent<HTMLInputElement>) => {
     const weeksLocked = e.target.value;
 
-    if (!weeksLocked) return;
-
-    handleEstimation(undefined, Number(weeksLocked));
+    handleDetails(undefined, weeksLocked ? Number(weeksLocked) : 0);
   };
 
   const monetaryAmount = newSafeMonetaryAmount(form.values[STAKING_AMOUNT_FIELD] || 0, GOVERNANCE_TOKEN, true);
@@ -206,13 +216,9 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const weeksLocked = Number(form.values[STAKING_LOCKED_WEEKS_AMOUNT_FIELD]);
+  const isBtnDisabled = accountData?.unlock.isAvailable || isTransactionFormDisabled(form, transaction.fee);
 
-  const isBtnDisabled = isWithdrawReady || isTransactionFormDisabled(form, transaction.fee);
-
-  console.log(form.errors);
-
-  const shouldDisplayWithdrawAlert = isWithdrawReady && form.dirty;
+  const shouldDisplayWithdrawAlert = accountData?.unlock.isAvailable && form.dirty;
 
   return (
     <Card {...props} gap='spacing2'>
@@ -223,21 +229,9 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
       <Flex direction='column'>
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
-            <TransactionDetails>
-              <TransactionDetailsGroup>
-                <TransactionDetailsDt>Total Staked {GOVERNANCE_TOKEN.ticker} in the network</TransactionDetailsDt>
-                <TransactionDetailsDd>
-                  {networkData.totalStakedBalance.toHuman()} {GOVERNANCE_TOKEN.ticker}
-                </TransactionDetailsDd>
-              </TransactionDetailsGroup>
-              <TransactionDetailsGroup>
-                <TransactionDetailsDt>Total {VOTE_GOVERNANCE_TOKEN.ticker} in the network</TransactionDetailsDt>
-                <TransactionDetailsDd>
-                  {networkData.totalVotingSupply.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
-                </TransactionDetailsDd>
-              </TransactionDetailsGroup>
-            </TransactionDetails>
+            <StakingNetworkDetails data={networkData} />
             <TokenInput
+              label={t('amount')}
               placeholder='0.00'
               valueUSD={amountUSD}
               ticker={GOVERNANCE_TOKEN.ticker}
@@ -246,8 +240,9 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
               })}
             />
             <StakingLockTimeInput
-              isExtending={!!accountData}
-              maxLockTime={maxLockTime}
+              min={lockedWeeksLimit.min}
+              max={lockedWeeksLimit.max}
+              isExtending={hasStake}
               inputProps={mergeProps(form.getFieldProps(STAKING_LOCKED_WEEKS_AMOUNT_FIELD, false, true), {
                 onChange: handleChangeLockTime
               })}
@@ -259,12 +254,7 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
               </Alert>
             )}
             <Flex direction='column' gap='spacing2'>
-              <StakingTransactionDetails
-                accountData={accountData}
-                estimation={estimation}
-                amount={monetaryAmount}
-                weeksLocked={weeksLocked}
-              />
+              <StakingTransactionDetails hasStake={hasStake} data={detailsData} />
               <TransactionFeeDetails
                 fee={transaction.fee}
                 selectProps={form.getSelectFieldProps(STAKING_FEE_TOKEN_FIELD)}

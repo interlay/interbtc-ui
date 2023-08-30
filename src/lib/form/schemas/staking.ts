@@ -1,4 +1,4 @@
-// import i18n from 'i18next';
+import i18n from 'i18next';
 
 import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
@@ -29,17 +29,20 @@ const stakingSchema = (params: StakingValidationParams, hasStaked: boolean): yup
     .maxAmount(amountParams as MaxAmountValidationParams)
     .minAmount(amountParams as MinAmountValidationParams, 'transfer');
 
-  const baseLockTimeSchema = yup
+  let baseLockTimeSchema = yup
     .string()
-    .test('min', `Lock time must be greater than or equal to ${min}`, (value) => Number(value) >= min)
-    .test('max', `Lock time must be less than or equal to ${max}`, (value) => Number(value) <= max);
-  // .min(min, `Lock time must be greater than or equal to ${min}`)
-  // .max(max, `Lock time must be less than or equal to ${max}`);
+    .test('max', `Lock time must be less than or equal to ${max}`, (value) =>
+      value === undefined ? true : Number(value) <= max
+    );
 
   if (!hasStaked) {
     baseAmountSchema = baseAmountSchema.requiredAmount('stake');
 
-    // baseLockTimeSchema = baseLockTimeSchema.required(i18n.t('forms.please_enter_your_field', { field: 'lock time' }));
+    baseLockTimeSchema = baseLockTimeSchema
+      .required(i18n.t('forms.please_enter_your_field', { field: 'lock time' }))
+      .test('min', `Lock time must be greater than or equal to ${min}`, (value) =>
+        value === undefined ? true : Number(value) >= min
+      );
   }
 
   return yup.object().shape({

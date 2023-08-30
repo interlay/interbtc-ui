@@ -24,4 +24,8 @@ const StyledStakingForm = styled(StakingForm)`
   }
 `;
 
-export { StyledStakingForm, StyledWrapper };
+const StyledStakingDetails = styled(Flex)`
+  min-width: 290px;
+`;
+
+export { StyledStakingDetails, StyledStakingForm, StyledWrapper };

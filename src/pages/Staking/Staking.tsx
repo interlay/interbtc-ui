@@ -1,4 +1,3 @@
-import { Flex } from '@/component-library';
 import { MainContainer } from '@/components';
 import { useGetAccountStakingClaimableRewards } from '@/hooks/api/escrow/use-get-account-claimable-rewards';
 import { useGetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
@@ -7,7 +6,7 @@ import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 
 import { StakingAccountDetails } from './components';
 import { StakingWithdrawCard } from './components/StakingWithdrawCard';
-import { StyledStakingForm, StyledWrapper } from './Staking.style';
+import { StyledStakingDetails, StyledStakingForm, StyledWrapper } from './Staking.style';
 
 const Staking = (): JSX.Element => {
   const { data: accountData, refetch: refetchAccountData } = useGetAccountStakingData();
@@ -22,14 +21,14 @@ const Staking = (): JSX.Element => {
     <MainContainer>
       <StyledWrapper gap='spacing4'>
         <StyledStakingForm accountData={accountData} networkData={networkData} onStaking={refetchAccountData} />
-        <Flex direction='column' gap='spacing4'>
+        <StyledStakingDetails direction='column' gap='spacing4'>
           <StakingAccountDetails
             accountData={accountData}
             claimableRewards={claimableRewards}
             onClaimRewards={refetchClaimableRewards}
           />
           {accountData && <StakingWithdrawCard data={accountData} onWithdraw={refetchAccountData} />}
-        </Flex>
+        </StyledStakingDetails>
       </StyledWrapper>
     </MainContainer>
   );

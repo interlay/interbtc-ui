@@ -1,6 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
-import { add, format } from 'date-fns';
+import { format } from 'date-fns';
 
 import { formatPercentage } from '@/common/utils/utils';
 import {
@@ -10,61 +8,25 @@ import {
   TransactionDetailsGroup,
   TransactionDetailsProps
 } from '@/components';
-import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
-import { AccountStakingEstimationData } from '@/hooks/api/escrow/use-get-staking-estimation-data';
+import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { AccountStakingDetailsData } from '@/hooks/api/escrow/use-get-staking-details-data';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
-import { convertBlockNumbersToWeeks } from '@/utils/helpers/staking';
-
-const getData = (accountData: AccountStakingData | null, amount: MonetaryAmount<CurrencyExt>, weeksLocked = 0) => {
-  if (!accountData && (amount.isZero() || !weeksLocked)) return;
-
-  if (accountData && amount.isZero() && !weeksLocked) return;
-
-  const existingWeeksLocked = accountData ? convertBlockNumbersToWeeks(accountData.unlock.remainingBlocks) : 0;
-
-  const totalWeeksLocked = existingWeeksLocked + weeksLocked;
-
-  const totalStakedAmount = accountData ? accountData.balance.add(amount) : amount;
-
-  const newTotalStaked = totalStakedAmount.mul(totalWeeksLocked).div(STAKE_LOCK_TIME.MAX);
-
-  const votingBalanceGained = accountData ? newTotalStaked.sub(accountData?.votingBalance) : newTotalStaked;
-
-  return {
-    votingBalanceGained,
-    newTotalStaked
-  };
-};
 
 type Props = {
-  accountData: AccountStakingData | null;
-  estimation?: AccountStakingEstimationData;
-  amount: MonetaryAmount<CurrencyExt>;
-  weeksLocked?: number;
+  hasStake: boolean;
+  data?: AccountStakingDetailsData;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
 
 type StakingTransactionDetailsProps = Props & InheritAttrs;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StakingTransactionDetails = ({
-  accountData,
-  estimation,
-  amount,
-  weeksLocked = 0,
-  ...props
-}: StakingTransactionDetailsProps): JSX.Element | null => {
-  const unlockDateTerm = accountData ? 'New unlock date' : 'Unlock date';
+const StakingTransactionDetails = ({ hasStake, data, ...props }: StakingTransactionDetailsProps): JSX.Element => {
+  const { totalStaked, votingBalanceGained, apy, governanceBalanceReward, date } = data || {};
 
-  const newDate = add(accountData?.unlock.date || new Date(), {
-    weeks: weeksLocked
-  });
+  const unlockDateTerm = hasStake ? 'New unlock date' : 'Unlock date';
 
-  const unlockDateLabel = format(newDate, YEAR_MONTH_DAY_PATTERN);
-
-  const { newTotalStaked, votingBalanceGained } = getData(accountData, amount, weeksLocked) || {};
+  const unlockDateLabel = date ? format(date, YEAR_MONTH_DAY_PATTERN) : '-';
 
   return (
     <TransactionDetails {...props}>
@@ -78,22 +40,22 @@ const StakingTransactionDetails = ({
           {votingBalanceGained?.toHuman() || 0} {VOTE_GOVERNANCE_TOKEN.ticker}
         </TransactionDetailsDd>
       </TransactionDetailsGroup>
-      {accountData && (
+      {hasStake && (
         <TransactionDetailsGroup>
           <TransactionDetailsDt>New Total Stake</TransactionDetailsDt>
           <TransactionDetailsDd>
-            {newTotalStaked?.toHuman() || 0} {VOTE_GOVERNANCE_TOKEN.ticker}
+            {totalStaked?.toHuman() || 0} {VOTE_GOVERNANCE_TOKEN.ticker}
           </TransactionDetailsDd>
         </TransactionDetailsGroup>
       )}
       <TransactionDetailsGroup>
         <TransactionDetailsDt>Estimated APR</TransactionDetailsDt>
-        <TransactionDetailsDd>{formatPercentage(estimation?.apy.toNumber() || 0)}</TransactionDetailsDd>
+        <TransactionDetailsDd>{formatPercentage(apy?.toNumber() || 0)}</TransactionDetailsDd>
       </TransactionDetailsGroup>
       <TransactionDetailsGroup>
         <TransactionDetailsDt>Projected {GOVERNANCE_TOKEN.ticker} Rewards</TransactionDetailsDt>
         <TransactionDetailsDd>
-          {estimation?.amount.toHuman() || 0} {GOVERNANCE_TOKEN.ticker}
+          {governanceBalanceReward?.toHuman() || 0} {GOVERNANCE_TOKEN.ticker}
         </TransactionDetailsDd>
       </TransactionDetailsGroup>
     </TransactionDetails>

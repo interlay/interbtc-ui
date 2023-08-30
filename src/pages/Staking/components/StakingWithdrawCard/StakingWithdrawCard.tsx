@@ -17,7 +17,7 @@ type InheritAttrs = CardProps & Props;
 
 type StakingWithdrawCardProps = Props & InheritAttrs;
 
-const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCardProps): JSX.Element | null => {
+const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCardProps): JSX.Element => {
   const { t } = useTranslation();
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW, {

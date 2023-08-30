@@ -1,13 +1,23 @@
 import { mergeProps } from '@react-aria/utils';
 import { Key, useMemo, useState } from 'react';
 
-import { Flex, FlexProps, InputProps, ListItem, ListProps, NumberInput } from '@/component-library';
+import {
+  Flex,
+  FlexProps,
+  InputProps,
+  ListItem,
+  ListProps,
+  NumberInput,
+  theme,
+  useMediaQuery
+} from '@/component-library';
 
 import { StyledList } from './StakingForm.style';
 
 type Props = {
   isExtending: boolean;
-  maxLockTime: number;
+  min: number;
+  max: number;
   inputProps: InputProps;
   onListSelectionChange?: (value: number) => void;
 };
@@ -18,12 +28,15 @@ type StakingLockTimeInputProps = Props & InheritAttrs;
 
 const StakingLockTimeInput = ({
   isExtending,
-  maxLockTime,
+  min,
+  max,
   onListSelectionChange,
   inputProps,
   ...props
-}: StakingLockTimeInputProps): JSX.Element | null => {
+}: StakingLockTimeInputProps): JSX.Element => {
   const [listLockTime, setListLockTime] = useState<Key | undefined>(inputProps.value?.toString() as Key);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
     const [selectedKey] = [...key];
@@ -40,37 +53,41 @@ const StakingLockTimeInput = ({
       { label: '1 Month', value: '4' },
       { label: '3 Month', value: '13' },
       { label: '6 Month', value: '26' },
-      { label: 'Max', value: maxLockTime.toString() }
+      { label: 'Max', value: max.toString() }
     ],
-    [maxLockTime]
+    [max]
   );
 
-  // TODO: enforce integer
+  const isDisabled = max <= 0;
+
+  const listKeys = items.map((item) => item.value);
+
+  const disabledKeys = isDisabled ? listKeys : listKeys.filter((key) => (key === 'max' ? max : Number(key)) > max);
+
+  const label = isExtending ? `Extended lock time in weeks (Max ${max})` : `Lock time in weeks (Max ${max})`;
+
   return (
     <Flex direction='column' gap='spacing4' {...props}>
       <NumberInput
-        label={
-          isExtending ? `Extended lock time in weeks (Max ${maxLockTime})` : `Lock time in weeks (Max ${maxLockTime})`
-        }
-        labelPosition='side'
-        justifyContent='space-between'
-        maxWidth='spacing12'
-        placeholder='1'
-        min={1}
-        max={maxLockTime}
-        maxLength={maxLockTime.toString().length}
-        {...mergeProps(inputProps, { onChange: () => setListLockTime(undefined) })}
+        label={label}
+        min={min}
+        max={max}
+        isDisabled={max <= 0}
+        placeholder={isExtending ? '0' : '1'}
+        maxLength={max.toString().length}
+        {...mergeProps(inputProps, {
+          onChange: () => setListLockTime(undefined),
+          ...(!isMobile && { labelPosition: 'side', justifyContent: 'space-between', maxWidth: 'spacing12' })
+        })}
       />
       <StyledList
+        wrap
         aria-label='staking lock time'
         direction='row'
         selectionMode='single'
         onSelectionChange={handleSelectionChange}
         selectedKeys={listLockTime ? [listLockTime] : []}
-        wrap
-        // disabledKeys={items
-        //   .filter((item) => (item.value === 'max' ? maxLockTime : Number(item.value)) > maxLockTime)
-        //   .map((item) => item.value)}
+        disabledKeys={disabledKeys}
       >
         {items.map((item) => (
           <ListItem justifyContent='center' textValue={item.value} key={item.value}>
