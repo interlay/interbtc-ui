@@ -9,11 +9,23 @@ import { StakingWithdrawCard } from './components/StakingWithdrawCard';
 import { StyledStakingDetails, StyledStakingForm, StyledWrapper } from './Staking.style';
 
 const Staking = (): JSX.Element => {
-  const { data: accountData, refetch: refetchAccountData } = useGetAccountStakingData();
-  const { data: claimableRewards, refetch: refetchClaimableRewards } = useGetAccountStakingClaimableRewards();
+  const {
+    data: accountData,
+    refetch: refetchAccountData,
+    isLoading: isAccountStakingDataLoading
+  } = useGetAccountStakingData();
+  const {
+    data: claimableRewards,
+    refetch: refetchClaimableRewards,
+    isLoading: isClaimableRewardsLoading
+  } = useGetAccountStakingClaimableRewards();
   const { data: networkData } = useGetNetworkStakingData();
 
-  if (accountData === undefined || claimableRewards === undefined || networkData === undefined) {
+  if (
+    (isAccountStakingDataLoading && accountData === undefined) ||
+    (isClaimableRewardsLoading && claimableRewards === undefined) ||
+    networkData === undefined
+  ) {
     return <FullLoadingSpinner />;
   }
 

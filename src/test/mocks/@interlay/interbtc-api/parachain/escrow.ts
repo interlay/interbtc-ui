@@ -1,25 +1,68 @@
 import '@testing-library/jest-dom';
 
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, EscrowAPI, newMonetaryAmount, StakedBalance } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
 
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
-const DEFAULT_STAKED_AMOUNT = newMonetaryAmount(10, GOVERNANCE_TOKEN, true);
+import { EXTRINSIC_DATA } from '../extrinsic';
+import { MOCK_SYSTEM } from './system';
 
-const DEFAULT_STAKED_BALANCE = { amount: DEFAULT_STAKED_AMOUNT, endBlock: 0 };
-
-const EMPTY_STAKED_BALANCE = { amount: newMonetaryAmount(0, GOVERNANCE_TOKEN), endBlock: 0 };
-
-const mockGetStakedBalance = jest.fn().mockResolvedValue(DEFAULT_STAKED_BALANCE);
-
-const DEFAULT_VOTING_BALANCE = newMonetaryAmount(10, GOVERNANCE_TOKEN, true);
-
-const mockVotingBalance = jest.fn().mockResolvedValue(DEFAULT_VOTING_BALANCE);
-
-export {
-  DEFAULT_STAKED_BALANCE,
-  DEFAULT_VOTING_BALANCE,
-  EMPTY_STAKED_BALANCE,
-  mockGetStakedBalance,
-  mockVotingBalance
+const GOVERNANCE_AMOUNT = {
+  EMPTY: {
+    VALUE: '0',
+    MONETARY: newMonetaryAmount(0, GOVERNANCE_TOKEN, true)
+  },
+  FULL: {
+    VALUE: '100',
+    MONETARY: newMonetaryAmount(100, GOVERNANCE_TOKEN, true)
+  }
 };
+
+const VOTE_AMOUNT = {
+  EMPTY: {
+    VALUE: '0',
+    MONETARY: newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true)
+  },
+  FULL: {
+    VALUE: '100',
+    MONETARY: newMonetaryAmount(100, VOTE_GOVERNANCE_TOKEN, true)
+  }
+};
+
+const STAKED_BALANCE: Record<'EMPTY' | 'FULL', StakedBalance> = {
+  EMPTY: { amount: GOVERNANCE_AMOUNT.EMPTY.MONETARY, endBlock: MOCK_SYSTEM.DATA.BLOCK_NUMBER.CURRENT },
+  FULL: { amount: GOVERNANCE_AMOUNT.FULL.MONETARY, endBlock: MOCK_SYSTEM.DATA.BLOCK_NUMBER.CURRENT + 1 }
+};
+
+const REWARD_ESTIMATE: Record<'EMPTY' | 'FULL', { amount: MonetaryAmount<CurrencyExt>; apy: Big }> = {
+  EMPTY: { apy: new Big(0), amount: GOVERNANCE_AMOUNT.EMPTY.MONETARY },
+  FULL: { apy: new Big(10), amount: GOVERNANCE_AMOUNT.FULL.MONETARY }
+};
+
+const DATA = { GOVERNANCE_AMOUNT, STAKED_BALANCE };
+
+const MODULE: Record<keyof EscrowAPI, jest.Mock<any, any>> = {
+  getStakedBalance: jest.fn().mockResolvedValue(STAKED_BALANCE.FULL),
+  votingBalance: jest.fn().mockResolvedValue(VOTE_AMOUNT.EMPTY.MONETARY),
+  getRewardEstimate: jest.fn().mockResolvedValue(REWARD_ESTIMATE.FULL),
+  totalVotingSupply: jest.fn().mockResolvedValue(GOVERNANCE_AMOUNT.FULL.MONETARY),
+  getTotalStakedBalance: jest.fn().mockResolvedValue(GOVERNANCE_AMOUNT.FULL.MONETARY),
+  getMaxPeriod: jest.fn(),
+  getRewards: jest.fn(),
+  getSpan: jest.fn(),
+  // MUTATIONS
+  createLock: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  increaseAmount: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  increaseUnlockHeight: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  withdraw: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
+  withdrawRewards: jest.fn().mockResolvedValue(EXTRINSIC_DATA)
+};
+
+const MOCK_ESCROW = {
+  DATA,
+  MODULE
+};
+
+export { MOCK_ESCROW };

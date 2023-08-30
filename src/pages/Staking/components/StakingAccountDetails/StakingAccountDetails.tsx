@@ -7,9 +7,10 @@ import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
 import { Transaction, useTransaction } from '@/hooks/transaction';
+import { useWallet } from '@/hooks/use-wallet';
 
 type Props = {
-  accountData: AccountStakingData | null;
+  accountData?: AccountStakingData | null;
   claimableRewards?: MonetaryAmount<CurrencyExt>;
   onClaimRewards: () => void;
 };
@@ -25,6 +26,7 @@ const StakingAccountDetails = ({
   ...props
 }: StakingAccountDetailsProps): JSX.Element => {
   const { t } = useTranslation();
+  const { isAuth } = useWallet();
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW_REWARDS, {
     onSuccess: onClaimRewards
@@ -65,7 +67,7 @@ const StakingAccountDetails = ({
           </Dd>
         </DlGroup>
       </Dl>
-      {hasClaimableRewards && (
+      {isAuth && hasClaimableRewards && (
         <AuthCTA onPress={handlePress} loading={transaction.isLoading}>
           {t('claim')}
         </AuthCTA>

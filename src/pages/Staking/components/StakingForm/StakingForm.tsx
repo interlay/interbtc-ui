@@ -15,6 +15,7 @@ import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
+import { useWallet } from '@/hooks/use-wallet';
 import {
   STAKING_AMOUNT_FIELD,
   STAKING_FEE_TOKEN_FIELD,
@@ -34,7 +35,7 @@ import { StakingTransactionDetails } from './StakingTransactionDetails';
 const MIN_AMOUNT = newMonetaryAmount(1, GOVERNANCE_TOKEN);
 
 type Props = {
-  accountData: AccountStakingData | null;
+  accountData?: AccountStakingData | null;
   networkData: NetworkStakingData;
   onStaking: () => void;
 };
@@ -47,6 +48,7 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
   const prices = useGetPrices();
   const { t } = useTranslation();
   const { data: balances, getAvailableBalance } = useGetBalances();
+  const { account } = useWallet();
 
   const { data: detailsData, mutate: mutateDetails } = useGetStakingDetailsData();
 
@@ -59,7 +61,7 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
 
   const hasStake = !!accountData;
 
-  const governanceBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker);
+  const governanceBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker) || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const inputBalance = governanceBalance;
   //   accountData?.limit && governanceBalance && pickSmallerAmount(governanceBalance, accountData.limit);
 
@@ -181,7 +183,7 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
   }, [accountData]);
 
   const handleDetails = (amountProp?: string, weeksLockedProp?: number) => {
-    if (accountData?.unlock.isAvailable) return;
+    if (!account || accountData?.unlock.isAvailable) return;
 
     const amount = amountProp || form.values[STAKING_AMOUNT_FIELD] || 0;
 

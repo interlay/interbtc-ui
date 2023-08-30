@@ -79,6 +79,7 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
 
 interface UseGetAccountStakingDataResult {
   data: AccountStakingData | null | undefined;
+  isLoading: boolean;
   refetch: () => void;
 }
 
@@ -87,7 +88,7 @@ const useGetAccountStakingData = (): UseGetAccountStakingDataResult => {
 
   const queryKey = ['staking', accountId];
 
-  const { data, error, refetch } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey,
     queryFn: () => accountId && getAccountStakingData(accountId),
     refetchInterval: REFETCH_INTERVAL.BLOCK,
@@ -96,7 +97,7 @@ const useGetAccountStakingData = (): UseGetAccountStakingDataResult => {
 
   useErrorHandler(error);
 
-  return { data, refetch };
+  return { data, isLoading, refetch };
 };
 
 export { useGetAccountStakingData };

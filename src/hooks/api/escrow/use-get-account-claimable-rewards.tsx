@@ -11,6 +11,7 @@ const getAccountStakingData = async (accountId: AccountId) => window.bridge.escr
 
 interface UseGetAccountStakingClaimableRewardsResult {
   data: MonetaryAmount<CurrencyExt> | undefined;
+  isLoading: boolean;
   refetch: () => void;
 }
 
@@ -19,7 +20,7 @@ const useGetAccountStakingClaimableRewards = (): UseGetAccountStakingClaimableRe
 
   const queryKey = ['staking-claimable-rewards', account];
 
-  const { data, error, refetch } = useQuery({
+  const { data, error, isLoading, refetch } = useQuery({
     queryKey,
     queryFn: () => account && getAccountStakingData(account),
     refetchInterval: REFETCH_INTERVAL.BLOCK,
@@ -28,7 +29,7 @@ const useGetAccountStakingClaimableRewards = (): UseGetAccountStakingClaimableRe
 
   useErrorHandler(error);
 
-  return { data, refetch };
+  return { data, isLoading, refetch };
 };
 
 export { useGetAccountStakingClaimableRewards };
