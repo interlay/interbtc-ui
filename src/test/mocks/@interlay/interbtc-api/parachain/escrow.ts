@@ -53,11 +53,11 @@ const MODULE: Record<keyof EscrowAPI, jest.Mock<any, any>> = {
   getRewards: jest.fn(),
   getSpan: jest.fn(),
   // MUTATIONS
-  createLock: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
-  increaseAmount: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
-  increaseUnlockHeight: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
-  withdraw: jest.fn().mockResolvedValue(EXTRINSIC_DATA),
-  withdrawRewards: jest.fn().mockResolvedValue(EXTRINSIC_DATA)
+  createLock: jest.fn().mockReturnValue(EXTRINSIC_DATA),
+  increaseAmount: jest.fn().mockReturnValue(EXTRINSIC_DATA),
+  increaseUnlockHeight: jest.fn().mockReturnValue(EXTRINSIC_DATA),
+  withdraw: jest.fn().mockReturnValue(EXTRINSIC_DATA),
+  withdrawRewards: jest.fn().mockReturnValue(EXTRINSIC_DATA)
 };
 
 const MOCK_ESCROW = {

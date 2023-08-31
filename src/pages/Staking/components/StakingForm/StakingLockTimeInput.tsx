@@ -90,7 +90,7 @@ const StakingLockTimeInput = ({
         disabledKeys={disabledKeys}
       >
         {items.map((item) => (
-          <ListItem justifyContent='center' textValue={item.value} key={item.value}>
+          <ListItem justifyContent='center' textValue={item.label} aria-label={item.label} key={item.value}>
             {item.label}
           </ListItem>
         ))}

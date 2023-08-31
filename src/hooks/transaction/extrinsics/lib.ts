@@ -203,9 +203,10 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
       return window.bridge.escrow.withdrawRewards(...params.args);
     case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT: {
       const [amount, unlockHeight] = params.args;
+
       const txs = [
-        window.bridge.api.tx.escrow.increaseAmount(amount.toString(true)),
-        window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
+        window.bridge.escrow.increaseAmount(amount).extrinsic,
+        window.bridge.escrow.increaseUnlockHeight(unlockHeight).extrinsic
       ];
       const batch = window.bridge.api.tx.utility.batchAll(txs);
 

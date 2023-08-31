@@ -34,8 +34,7 @@ const DATA = { VESTING_SCHEDULES };
 const MODULE = {
   vestingSchedules: jest.fn().mockReturnValue(VESTING_SCHEDULES.EMPTY),
   claimVesting: jest.fn().mockReturnValue(EXTRINSIC),
-  increaseAmount: jest.fn().mockReturnValue(EXTRINSIC),
-  increaseUnlockHeight: jest.fn().mockReturnValue(EXTRINSIC)
+  batchAll: jest.fn().mockReturnValue(EXTRINSIC)
 };
 
 // maps module to ApiPromise
@@ -65,9 +64,8 @@ const PROMISE: Partial<Record<keyof ApiPromise, unknown>> = {
     multiTransactionPayment: {
       withFeeSwapPath: jest.fn().mockReturnValue(EXTRINSIC)
     },
-    escrow: {
-      increaseAmount: MODULE.increaseAmount,
-      increaseUnlockHeight: MODULE.increaseAmount
+    utility: {
+      batchAll: MODULE.batchAll
     }
   }
 };
