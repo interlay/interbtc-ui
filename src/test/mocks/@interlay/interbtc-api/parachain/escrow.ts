@@ -4,7 +4,8 @@ import { CurrencyExt, EscrowAPI, newMonetaryAmount, StakedBalance } from '@inter
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
-import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, STAKE_LOCK_TIME, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { convertWeeksToBlockNumbers } from '@/utils/helpers/staking';
 
 import { EXTRINSIC_DATA } from '../extrinsic';
 import { MOCK_SYSTEM } from './system';
@@ -31,9 +32,10 @@ const VOTE_AMOUNT = {
   }
 };
 
-const STAKED_BALANCE: Record<'EMPTY' | 'FULL', StakedBalance> = {
+const STAKED_BALANCE: Record<'EMPTY' | 'FULL' | 'FULL_LOCK_TIME', StakedBalance> = {
   EMPTY: { amount: GOVERNANCE_AMOUNT.EMPTY.MONETARY, endBlock: MOCK_SYSTEM.DATA.BLOCK_NUMBER.CURRENT },
-  FULL: { amount: GOVERNANCE_AMOUNT.FULL.MONETARY, endBlock: MOCK_SYSTEM.DATA.BLOCK_NUMBER.CURRENT + 1 }
+  FULL: { amount: GOVERNANCE_AMOUNT.FULL.MONETARY, endBlock: MOCK_SYSTEM.DATA.BLOCK_NUMBER.CURRENT + 1 },
+  FULL_LOCK_TIME: { amount: GOVERNANCE_AMOUNT.FULL.MONETARY, endBlock: convertWeeksToBlockNumbers(STAKE_LOCK_TIME.MAX) }
 };
 
 const REWARD_ESTIMATE: Record<'EMPTY' | 'FULL', { amount: MonetaryAmount<CurrencyExt>; apy: Big }> = {
@@ -50,7 +52,7 @@ const MODULE: Record<keyof EscrowAPI, jest.Mock<any, any>> = {
   totalVotingSupply: jest.fn().mockResolvedValue(GOVERNANCE_AMOUNT.FULL.MONETARY),
   getTotalStakedBalance: jest.fn().mockResolvedValue(GOVERNANCE_AMOUNT.FULL.MONETARY),
   getMaxPeriod: jest.fn(),
-  getRewards: jest.fn(),
+  getRewards: jest.fn().mockResolvedValue(GOVERNANCE_AMOUNT.FULL.MONETARY),
   getSpan: jest.fn(),
   // MUTATIONS
   createLock: jest.fn().mockReturnValue(EXTRINSIC_DATA),

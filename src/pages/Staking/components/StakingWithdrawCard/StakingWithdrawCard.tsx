@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Card, CardProps, P } from '@/component-library';
-import { AuthCTA } from '@/components';
+import { AuthCTA, ClaimModal } from '@/components';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
 import { Transaction, useTransaction } from '@/hooks/transaction';
@@ -19,22 +20,38 @@ type StakingWithdrawCardProps = Props & InheritAttrs;
 
 const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCardProps): JSX.Element => {
   const { t } = useTranslation();
+  const [isOpen, setOpen] = useState(false);
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW, {
     onSuccess: onWithdraw
   });
 
-  const handlePress = () => transaction.execute();
+  const handleSubmit = () => transaction.execute();
+
+  const handleOpen = () => transaction.fee.estimate();
+
+  const handlePress = () => setOpen(true);
 
   return (
-    <Card direction='column' gap='spacing4' {...props}>
-      <P size='s'>
-        Withdraw Staked {GOVERNANCE_TOKEN.ticker} on {format(data.unlock.date, YEAR_MONTH_DAY_PATTERN)}
-      </P>
-      <AuthCTA disabled={!data.unlock.isAvailable} onPress={handlePress}>
-        {t('withdraw')}
-      </AuthCTA>
-    </Card>
+    <>
+      <Card direction='column' gap='spacing4' {...props}>
+        <P size='s'>
+          Withdraw Staked {GOVERNANCE_TOKEN.ticker} on {format(data.unlock.date, YEAR_MONTH_DAY_PATTERN)}
+        </P>
+        <AuthCTA disabled={!data.unlock.isAvailable} onPress={handlePress}>
+          {t('withdraw')}
+        </AuthCTA>
+      </Card>
+      <ClaimModal
+        isOpen={isOpen}
+        onClose={() => setOpen(false)}
+        title={`Withdraw Staked ${GOVERNANCE_TOKEN.ticker}`}
+        submitLabel={t('withdraw')}
+        transaction={transaction}
+        onSubmit={handleSubmit}
+        onOpen={handleOpen}
+      />
+    </>
   );
 };
 

@@ -72,7 +72,7 @@ const StakingLockTimeInput = ({
         label={label}
         min={min}
         max={max}
-        isDisabled={max <= 0}
+        isDisabled={isDisabled}
         placeholder={isExtending ? '0' : '1'}
         maxLength={max.toString().length}
         {...mergeProps(inputProps, {
@@ -84,7 +84,8 @@ const StakingLockTimeInput = ({
         wrap
         aria-label='staking lock time'
         direction='row'
-        selectionMode='single'
+        selectionMode='multiple'
+        selectionBehavior='replace'
         onSelectionChange={handleSelectionChange}
         selectedKeys={listLockTime ? [listLockTime] : []}
         disabledKeys={disabledKeys}

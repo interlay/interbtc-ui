@@ -4,14 +4,24 @@ import App from '@/App';
 import { STAKE_LOCK_TIME } from '@/config/relay-chains';
 import { convertWeeksToBlockNumbers } from '@/utils/helpers/staking';
 
-import { MOCK_API, MOCK_ESCROW } from '../mocks/@interlay/interbtc-api';
+import { MOCK_API, MOCK_ESCROW, MOCK_SYSTEM } from '../mocks/@interlay/interbtc-api';
 import { EXTRINSIC_DATA } from '../mocks/@interlay/interbtc-api/extrinsic';
+import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, within } from '../test-utils';
 import { waitForFeeEstimate, waitForTransactionExecute } from './utils/transaction';
 
 const { STAKED_BALANCE, GOVERNANCE_AMOUNT } = MOCK_ESCROW.DATA;
-const { getStakedBalance, createLock, increaseAmount, increaseUnlockHeight } = MOCK_ESCROW.MODULE;
+const {
+  getStakedBalance,
+  createLock,
+  increaseAmount,
+  increaseUnlockHeight,
+  getRewardEstimate,
+  withdraw,
+  withdrawRewards
+} = MOCK_ESCROW.MODULE;
 const { batchAll } = MOCK_API.MODULE;
+const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;
 
 jest.mock('@/components/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
@@ -27,8 +37,17 @@ const ONE_WEEK = 1;
 
 const ONE_WEEK_UNLOCK_HEIGHT = convertWeeksToBlockNumbers(ONE_WEEK) + STAKED_BALANCE.FULL.endBlock;
 
-describe('Pools Page', () => {
+describe('Staking Page', () => {
   let matchMedia: MatchMediaMock;
+
+  beforeAll(() => {
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(new Date('2023-01-01T00:00:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
 
   beforeEach(() => {
     matchMedia = new MatchMediaMock();
@@ -51,11 +70,19 @@ describe('Pools Page', () => {
 
     await waitForFeeEstimate(createLock);
 
+    const unlockHeight = convertWeeksToBlockNumbers(ONE_WEEK);
+
+    expect(getRewardEstimate).toHaveBeenLastCalledWith(
+      DEFAULT_ACCOUNT_1.address,
+      GOVERNANCE_AMOUNT.FULL.MONETARY,
+      unlockHeight
+    );
+
+    expect(screen.getByText('08/01/23')).toBeInTheDocument();
+
     userEvent.click(screen.getByRole('button', { name: /stake/i }));
 
     await waitForTransactionExecute(createLock);
-
-    const unlockHeight = convertWeeksToBlockNumbers(ONE_WEEK);
 
     expect(createLock).toHaveBeenCalledWith(GOVERNANCE_AMOUNT.FULL.MONETARY, unlockHeight);
   });
@@ -143,6 +170,60 @@ describe('Pools Page', () => {
       expect(screen.getByRole('textbox', { name: /lock time/i, exact: false })).toHaveValue(
         STAKE_LOCK_TIME.MAX.toString()
       );
+    });
+  });
+
+  it('should be able to withdraw stake', async () => {
+    getCurrentBlockNumber.mockResolvedValue(STAKED_BALANCE.FULL.endBlock);
+
+    await render(<App />, { path });
+
+    userEvent.type(screen.getByRole('textbox', { name: /amount/i }), GOVERNANCE_AMOUNT.FULL.VALUE);
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('alert')).toHaveLength(2);
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /withdraw/i }));
+
+    await waitForFeeEstimate(withdraw);
+
+    const dialog = within(screen.getByRole('dialog', { name: /withdraw/i, exact: false }));
+
+    userEvent.click(dialog.getByRole('button', { name: /withdraw/i }));
+
+    await waitForTransactionExecute(withdraw);
+  });
+
+  it('should be able to claim rewards', async () => {
+    await render(<App />, { path });
+
+    userEvent.click(screen.getByRole('button', { name: /claim/i }));
+
+    await waitForFeeEstimate(withdrawRewards);
+
+    const dialog = within(screen.getByRole('dialog', { name: /claim rewards/i }));
+
+    userEvent.click(dialog.getByRole('button', { name: /claim/i }));
+
+    await waitForTransactionExecute(withdrawRewards);
+  });
+
+  it('should not be able to extend lock time', async () => {
+    getStakedBalance.mockResolvedValue(STAKED_BALANCE.FULL_LOCK_TIME);
+
+    await render(<App />, { path });
+
+    expect(screen.getByRole('textbox', { name: /extended lock time/i, exact: false })).toBeDisabled();
+
+    expect(screen.getByLabelText(/max 0/i)).toBeInTheDocument();
+
+    const grid = within(screen.getByRole('grid', { name: /staking lock time/i }));
+
+    const rows = grid.getAllByRole('row');
+
+    rows.forEach((row) => {
+      expect(row).toHaveAttribute('aria-disabled', 'true');
     });
   });
 });

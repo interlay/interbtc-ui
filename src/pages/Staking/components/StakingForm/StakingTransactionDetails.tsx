@@ -28,6 +28,8 @@ const StakingTransactionDetails = ({ hasStake, data, ...props }: StakingTransact
 
   const unlockDateLabel = date ? format(date, YEAR_MONTH_DAY_PATTERN) : '-';
 
+  console.log(unlockDateLabel);
+
   return (
     <TransactionDetails {...props}>
       <TransactionDetailsGroup>
