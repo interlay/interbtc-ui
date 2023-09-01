@@ -226,7 +226,7 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
   return (
     <Card {...props} gap='spacing2'>
       <H1 size='base' color='secondary' weight='bold' align='center'>
-        Stake {GOVERNANCE_TOKEN.ticker}
+        {t('staking_page.stake_ticker', { ticker: GOVERNANCE_TOKEN.ticker })}
       </H1>
       <Divider size='medium' orientation='horizontal' color='secondary' />
       <Flex direction='column'>
@@ -253,7 +253,9 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
             />
             {shouldDisplayWithdrawAlert && (
               <Alert status='warning'>
-                Your already staked {GOVERNANCE_TOKEN.ticker} needs to be withdrawn before adding a new stake
+                {t('staking_pages.your_already_staked_ticker_needs_to_be_withdrawn', {
+                  ticker: GOVERNANCE_TOKEN.ticker
+                })}
               </Alert>
             )}
             <Flex direction='column' gap='spacing2'>

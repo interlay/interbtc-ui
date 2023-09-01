@@ -1,5 +1,6 @@
 import { mergeProps } from '@react-aria/utils';
 import { Key, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Flex,
@@ -34,6 +35,8 @@ const StakingLockTimeInput = ({
   inputProps,
   ...props
 }: StakingLockTimeInputProps): JSX.Element => {
+  const { t } = useTranslation();
+
   const [listLockTime, setListLockTime] = useState<Key | undefined>(inputProps.value?.toString() as Key);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -49,13 +52,13 @@ const StakingLockTimeInput = ({
 
   const items = useMemo(
     () => [
-      { label: '1 Week', value: '1' },
-      { label: '1 Month', value: '4' },
-      { label: '3 Month', value: '13' },
-      { label: '6 Month', value: '26' },
-      { label: 'Max', value: max.toString() }
+      { label: t('staking_page.time.one_week'), value: '1' },
+      { label: t('staking_page.time.one_month'), value: '4' },
+      { label: t('staking_page.time.three_month'), value: '13' },
+      { label: t('staking_page.time.six_month'), value: '26' },
+      { label: t('max'), value: max.toString() }
     ],
-    [max]
+    [max, t]
   );
 
   const isDisabled = max <= 0;
@@ -64,7 +67,9 @@ const StakingLockTimeInput = ({
 
   const disabledKeys = isDisabled ? listKeys : listKeys.filter((key) => (key === 'max' ? max : Number(key)) > max);
 
-  const label = isExtending ? `Extended lock time in weeks (Max ${max})` : `Lock time in weeks (Max ${max})`;
+  const label = isExtending
+    ? t('staking_page.extended_lock_time_in_weeks', { value: max })
+    : t('staking_page.lock_time_in_weeks', { value: max });
 
   return (
     <Flex direction='column' gap='spacing4' {...props}>
@@ -82,7 +87,7 @@ const StakingLockTimeInput = ({
       />
       <StyledList
         wrap
-        aria-label='staking lock time'
+        aria-label={label.toLowerCase()}
         direction='row'
         selectionMode='multiple'
         selectionBehavior='replace'

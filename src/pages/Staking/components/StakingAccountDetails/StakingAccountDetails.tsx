@@ -47,26 +47,26 @@ const StakingAccountDetails = ({
       <Card {...props} gap='spacing3'>
         <Dl direction='column' gap='spacing2'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <Dt size='xs'>Staked {GOVERNANCE_TOKEN.ticker}</Dt>
+            <Dt size='xs'>{t('staking_page.staked_ticker', { ticker: GOVERNANCE_TOKEN.ticker })}</Dt>
             <Dd size='s' color='secondary'>
               {balance?.toHuman() || 0}
             </Dd>
           </DlGroup>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <Dt size='xs'>{VOTE_GOVERNANCE_TOKEN.ticker} Balance</Dt>
+            <Dt size='xs'>{t('ticker_balance', { ticker: VOTE_GOVERNANCE_TOKEN.ticker })}</Dt>
             <Dd size='s' color='secondary'>
               {votingBalance?.toHuman() || 0}
             </Dd>
           </DlGroup>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <Dt size='xs'>Projected {GOVERNANCE_TOKEN.ticker} Rewards</Dt>
+            <Dt size='xs'>{t('staking_page.projected_ticker_rewards', { ticker: GOVERNANCE_TOKEN.ticker })}</Dt>
             <Dd size='s' color='secondary'>
               {projected?.amount.toHuman() || 0}
             </Dd>
           </DlGroup>
           <Divider color='default' marginTop='spacing1' marginBottom='spacing1' />
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <Dt size='xs'>Claimable Rewards</Dt>
+            <Dt size='xs'>{t('claimable_rewards')}</Dt>
             <Dd size='s'>
               {claimableRewards?.toHuman() || 0} {GOVERNANCE_TOKEN.ticker}
             </Dd>
@@ -83,7 +83,7 @@ const StakingAccountDetails = ({
       <ClaimModal
         isOpen={isOpen}
         onClose={() => setOpen(false)}
-        title={`Claim Rewards`}
+        title={t('claim_rewards')}
         submitLabel={t('claim')}
         transaction={transaction}
         onSubmit={handleSubmit}

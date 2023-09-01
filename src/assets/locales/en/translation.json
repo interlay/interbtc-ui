@@ -156,6 +156,9 @@
   "wallet": "Wallet",
   "learn_more": "Learn more",
   "stake": "Stake",
+  "max": "Max",
+  "ticker_balance": "{{ticker}} Balance",
+  "claimable_rewards": "Claimable Rewards",
   "navigation": {
     "btc": "BTC",
     "strategies": "Strategies",
@@ -537,11 +540,27 @@
     }
   },
   "staking_page": {
-    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
-    "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
-    "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance",
-    "total_vote_governance_token_in_the_network": "Total {{voteGovernanceTokenSymbol}} in the network",
-    "total_staked_governance_token_in_the_network": "Total Staked {{governanceTokenSymbol}} in the network"
+    "stake_ticker": "Stake {{ticker}}",
+    "total_staked_ticker_in_the_network": "Total Staked {{ticker}} in the network",
+    "total_ticker_in_the_network": "Total {{ticker}} in the network",
+    "time": {
+      "one_week": "1 Week",
+      "one_month": "1 Month",
+      "three_month": "3 Month",
+      "six_month": "6 Month"
+    },
+    "lock_time_in_weeks": "Lock time in weeks (Max {{value}})",
+    "extended_lock_time_in_weeks": "Extended lock time in weeks (Max {{value}})",
+    "your_already_staked_ticker_needs_to_be_withdrawn": "Your already staked {GOVERNANCE_TOKEN.ticker} needs to be withdrawn before adding a new stake",
+    "unlock_date": "Unlock date",
+    "new_unlock_date": "New unlock date",
+    "new_ticker_gained": "New {{ticker}} Gained",
+    "new_total_stake": "New Total Stake",
+    "estimated_apr": "Estimated APR",
+    "projected_ticker_rewards": "Projected {{ticker}} Rewards",
+    "staked_ticker": "Staked {{ticker}}",
+    "withdraw_staked_ticker_on_date": "Withdraw Staked {{ticker}} on",
+    "withdraw_staked_ticker": "Withdraw Staked {{ticker}}"
   },
   "about": {
     "research_paper": "Research Paper",

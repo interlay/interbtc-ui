@@ -154,7 +154,7 @@ describe('Staking Page', () => {
 
     await render(<App />, { path });
 
-    const grid = within(screen.getByRole('grid', { name: /staking lock time/i }));
+    const grid = within(screen.getByRole('grid', { name: /lock time/i, exact: false }));
 
     userEvent.click(grid.getByRole('gridcell', { name: /1 week/i }));
 
@@ -232,9 +232,9 @@ describe('Staking Page', () => {
 
     expect(screen.getByRole('textbox', { name: /extended lock time/i, exact: false })).toBeDisabled();
 
-    expect(screen.getByLabelText(/max 0/i)).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/max 0/i)).toHaveLength(2);
 
-    const grid = within(screen.getByRole('grid', { name: /staking lock time/i }));
+    const grid = within(screen.getByRole('grid', { name: /lock time/i, exact: false }));
 
     const rows = grid.getAllByRole('row');
 

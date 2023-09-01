@@ -36,7 +36,10 @@ const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCard
     <>
       <Card direction='column' gap='spacing4' {...props}>
         <P size='s'>
-          Withdraw Staked {GOVERNANCE_TOKEN.ticker} on {format(data.unlock.date, YEAR_MONTH_DAY_PATTERN)}
+          {t('staking_page.withdraw_staked_ticker_on_date', {
+            ticker: GOVERNANCE_TOKEN.ticker
+          })}{' '}
+          {format(data.unlock.date, YEAR_MONTH_DAY_PATTERN)}
         </P>
         <AuthCTA disabled={!data.unlock.isAvailable} onPress={handlePress}>
           {t('withdraw')}
@@ -45,7 +48,7 @@ const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCard
       <ClaimModal
         isOpen={isOpen}
         onClose={() => setOpen(false)}
-        title={`Withdraw Staked ${GOVERNANCE_TOKEN.ticker}`}
+        title={t('staking_page.withdraw_staked_ticker', { ticker: GOVERNANCE_TOKEN.ticker })}
         submitLabel={t('withdraw')}
         transaction={transaction}
         onSubmit={handleSubmit}
