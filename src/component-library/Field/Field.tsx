@@ -39,7 +39,7 @@ const Field = forwardRef<HTMLDivElement, FieldProps>(
     const error = hasError({ errorMessage });
     const hasHelpText = !!description || error;
 
-    const field = (
+    const element = (
       <>
         <StyledField $maxWidth={maxWidth}>{children}</StyledField>
         {hasHelpText && (
@@ -61,10 +61,10 @@ const Field = forwardRef<HTMLDivElement, FieldProps>(
           </Label>
         )}
         {labelPosition === 'top' ? (
-          field
+          element
         ) : (
           <Flex direction='column' alignItems='flex-end'>
-            {field}
+            {element}
           </Flex>
         )}
       </Flex>

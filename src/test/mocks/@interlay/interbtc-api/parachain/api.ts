@@ -16,17 +16,6 @@ const VESTING_SCHEDULES = {
   FULL: [{ start: new Big(0), period: new Big(0), periodCount: new Big(1), perPeriod: new Big(1) }]
 };
 
-// case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT: {
-//   const [amount, unlockHeight] = params.args;
-//   const txs = [
-//     window.bridge.api.tx.escrow.increaseAmount(amount.toString(true)),
-//     window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
-//   ];
-//   const batch = window.bridge.api.tx.utility.batchAll(txs);
-
-//   return { extrinsic: batch };
-// }
-
 // add here data that is being used in tests
 const DATA = { VESTING_SCHEDULES };
 

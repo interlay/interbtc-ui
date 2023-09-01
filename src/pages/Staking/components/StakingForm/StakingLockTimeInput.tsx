@@ -63,7 +63,7 @@ const StakingLockTimeInput = ({
 
   const isDisabled = max <= 0;
 
-  const listKeys = items.map((item) => item.value);
+  const listKeys = useMemo(() => items.map((item) => item.value), [items]);
 
   const disabledKeys = isDisabled ? listKeys : listKeys.filter((key) => (key === 'max' ? max : Number(key)) > max);
 

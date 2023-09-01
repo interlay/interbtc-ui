@@ -11,7 +11,8 @@ const Disabled = Template.bind({});
 Disabled.args = {
   label: 'Amount',
   description: "What's your amount?",
-  defaultValue: 10
+  defaultValue: 10,
+  isDisabled: true
 };
 
 export { Default, Disabled };
