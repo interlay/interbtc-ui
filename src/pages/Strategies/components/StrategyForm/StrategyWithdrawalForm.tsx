@@ -73,15 +73,21 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
       const isWithdrawAll = isMaxAmount(monetaryAmount);
 
       if (isWithdrawAll) {
-        return transaction.execute(Transaction.STRATEGIES_ALL_WITHDRAW, proxyAccount, [
+        return transaction.execute(
+          Transaction.STRATEGIES_ALL_WITHDRAW,
+          strategy.type,
+          proxyAccount,
           monetaryAmount.currency,
           monetaryAmount
-        ]);
+        );
       } else {
-        return transaction.execute(Transaction.STRATEGIES_WITHDRAW, proxyAccount, [
+        return transaction.execute(
+          Transaction.STRATEGIES_WITHDRAW,
+          strategy.type,
+          proxyAccount,
           monetaryAmount.currency,
           monetaryAmount
-        ]);
+        );
       }
     } else {
       transaction.execute(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
@@ -109,15 +115,21 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
         const isWithdrawAll = isMaxAmount(monetaryAmount);
 
         if (isWithdrawAll) {
-          return transaction.fee.estimate(Transaction.STRATEGIES_ALL_WITHDRAW, proxyAccount, [
+          return transaction.fee.estimate(
+            Transaction.STRATEGIES_ALL_WITHDRAW,
+            strategy.type,
+            proxyAccount,
             monetaryAmount.currency,
             monetaryAmount
-          ]);
+          );
         } else {
-          return transaction.fee.estimate(Transaction.STRATEGIES_WITHDRAW, proxyAccount, [
+          return transaction.fee.estimate(
+            Transaction.STRATEGIES_WITHDRAW,
+            strategy.type,
+            proxyAccount,
             monetaryAmount.currency,
             monetaryAmount
-          ]);
+          );
         }
       } else {
         transaction.fee.estimate(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);

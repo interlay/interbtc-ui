@@ -12,17 +12,17 @@ interface StrategiesInitializeProxyAction {
 
 interface StrategiesDepositAction {
   type: Transaction.STRATEGIES_DEPOSIT;
-  args: [AccountId, Parameters<InterBtcApi['loans']['lend']>];
+  args: [StrategyType, AccountId, boolean, ...Parameters<InterBtcApi['loans']['lend']>];
 }
 
 interface StrategiesWithdrawAction {
   type: Transaction.STRATEGIES_WITHDRAW;
-  args: [AccountId, Parameters<InterBtcApi['loans']['withdraw']>];
+  args: [StrategyType, AccountId, ...Parameters<InterBtcApi['loans']['withdraw']>];
 }
 
 interface StrategiesWithdrawAllAction {
   type: Transaction.STRATEGIES_ALL_WITHDRAW;
-  args: [AccountId, Parameters<InterBtcApi['loans']['withdraw']>];
+  args: [StrategyType, AccountId, ...Parameters<InterBtcApi['loans']['withdraw']>];
 }
 
 type StrategiesActions =

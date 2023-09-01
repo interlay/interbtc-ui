@@ -9,6 +9,7 @@ import { StrategyType } from '../types';
 
 interface UseGetStrategyProxyAccountResult {
   account: AccountId | undefined;
+  isIdentitySet: boolean | undefined;
   isLoading: boolean;
   refetch: () => void;
 }
@@ -16,7 +17,7 @@ interface UseGetStrategyProxyAccountResult {
 const getStrategyProxyAccount = async (
   strategyType: StrategyType,
   primaryAccount: AccountId | undefined
-): Promise<AccountId | undefined> => {
+): Promise<{ account: AccountId; isIdentitySet: boolean } | undefined> => {
   if (!primaryAccount) {
     return undefined;
   }
@@ -24,21 +25,49 @@ const getStrategyProxyAccount = async (
   // MEMO: Not possible to query proxy accounts by delegate,
   // therefore all are fetched and then filtered.
 
-  const allProxies = await window.bridge.api.query.proxy.proxies.entries(); // will give the created proxies, unsure how to identify correctlyw hich proxy is responsible for which strategy yet
-  const selectedAccountProxies = allProxies.filter(
-    (proxy) => proxy[1][0][0].delegate.toString() === primaryAccount.toString()
+  const allProxies = await window.bridge.api.query.proxy.proxies.entries();
+  const selectedAccountProxies = allProxies
+    .filter((proxy) => proxy[1][0][0].delegate.toString() === primaryAccount.toString())
+    .map((proxy) => storageKeyToNthInner(proxy[0]));
+
+  const accountToStrategy = await new Promise<Array<[AccountId, StrategyType | undefined]>>((resolve) =>
+    window.bridge.api.query.identity.identityOf.multi(selectedAccountProxies, (identities) => {
+      const accountIdentities = identities.map((identity) => {
+        if (identity.isNone) {
+          return undefined;
+        }
+        console.log(identity.unwrap().info);
+        return identity.unwrap().info.additional[0][0].toString() as StrategyType;
+      });
+
+      const accountsWithStrategies = selectedAccountProxies.map(
+        (account, index) => [account, accountIdentities[index]] as [AccountId, StrategyType | undefined]
+      );
+
+      resolve(accountsWithStrategies);
+    })
   );
 
-  switch (strategyType) {
-    case StrategyType.BTC_LOW_RISK:
-      // TODO: determine how to distinguish which proxy belongs to which strategy
-      if (selectedAccountProxies.length === 0) {
-        return undefined;
-      }
-      return storageKeyToNthInner(selectedAccountProxies[0][0]);
-    default:
-      return undefined;
+  console.log(accountToStrategy.map(([a, b]) => [a.toString(), b]));
+
+  const getAccountOfStrategyIdentity = () =>
+    accountToStrategy.find(([, accountStrategyType]) => accountStrategyType === strategyType)?.[0];
+
+  const getFirstUnusedProxy = () =>
+    accountToStrategy.find(([, accountStrategyType]) => accountStrategyType === undefined)?.[0];
+
+  const strategyAccount = getAccountOfStrategyIdentity();
+  if (strategyAccount) {
+    return { account: strategyAccount, isIdentitySet: true };
   }
+
+  const firstUnusedProxy = getFirstUnusedProxy();
+
+  if (!firstUnusedProxy) {
+    throw new Error('Proxy account limit was exceeded.');
+  }
+
+  return { account: firstUnusedProxy, isIdentitySet: false };
 };
 
 const useGetStrategyProxyAccount = (strategyType: StrategyType): UseGetStrategyProxyAccountResult => {
@@ -52,7 +81,7 @@ const useGetStrategyProxyAccount = (strategyType: StrategyType): UseGetStrategyP
 
   useErrorHandler(error);
 
-  return { isLoading, account: data, refetch };
+  return { account: data?.account, isIdentitySet: data?.isIdentitySet, isLoading, refetch };
 };
 
 export { useGetStrategyProxyAccount };

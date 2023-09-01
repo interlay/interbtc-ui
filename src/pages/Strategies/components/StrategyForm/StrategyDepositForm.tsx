@@ -45,6 +45,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
   const {
     isLoading: isLoadingProxyAccount,
     account: proxyAccount,
+    isIdentitySet,
     refetch: refetchProxyAccount
   } = useGetStrategyProxyAccount(strategy.type);
 
@@ -70,7 +71,14 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
 
       const { monetaryAmount } = depositTransactionData;
 
-      transaction.execute(Transaction.STRATEGIES_DEPOSIT, proxyAccount, [WRAPPED_TOKEN, monetaryAmount]);
+      transaction.execute(
+        Transaction.STRATEGIES_DEPOSIT,
+        strategy.type,
+        proxyAccount,
+        !!isIdentitySet,
+        WRAPPED_TOKEN,
+        monetaryAmount
+      );
     } else {
       transaction.execute(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
     }
@@ -91,7 +99,14 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
 
         const { monetaryAmount } = depositTransactionData;
 
-        transaction.fee.estimate(Transaction.STRATEGIES_DEPOSIT, proxyAccount, [WRAPPED_TOKEN, monetaryAmount]);
+        transaction.fee.estimate(
+          Transaction.STRATEGIES_DEPOSIT,
+          strategy.type,
+          proxyAccount,
+          !!isIdentitySet,
+          WRAPPED_TOKEN,
+          monetaryAmount
+        );
       } else {
         transaction.fee.estimate(Transaction.STRATEGIES_INITIALIZE_PROXY, strategy.type);
       }

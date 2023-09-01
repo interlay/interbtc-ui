@@ -160,7 +160,7 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     }
     /* END - LOANS */
     case Transaction.STRATEGIES_DEPOSIT: {
-      const [, amount] = params.args[1];
+      const [, , , , amount] = params.args;
       return [amount];
     }
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
