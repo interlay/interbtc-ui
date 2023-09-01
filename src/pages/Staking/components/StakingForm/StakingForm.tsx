@@ -71,15 +71,16 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
       const weeksLocked = Number(values[STAKING_LOCKED_WEEKS_AMOUNT_FIELD]);
 
       const hasAmount = !amount.isZero();
+      const hasWeeksLocked = weeksLocked > 0;
 
       if (accountData) {
-        const blockNumber = weeksLocked ? convertWeeksToBlockNumbers(weeksLocked) : 0;
+        const blockNumber = hasWeeksLocked ? convertWeeksToBlockNumbers(weeksLocked) : 0;
 
         const unlockHeight = accountData.unlock.block + blockNumber;
 
-        if (hasAmount && weeksLocked) {
+        if (hasAmount && hasWeeksLocked) {
           return { transactionType: Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT as const, amount, unlockHeight };
-        } else if (hasAmount && !weeksLocked) {
+        } else if (hasAmount && !hasWeeksLocked) {
           return { transactionType: Transaction.ESCROW_INCREASE_LOCKED_AMOUNT as const, amount };
         } else {
           return { transactionType: Transaction.ESCROW_INCREASE_LOCKED_TIME as const, unlockHeight };

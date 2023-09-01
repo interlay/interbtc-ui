@@ -105,10 +105,26 @@ describe('Staking Page', () => {
     expect(batchAll).toHaveBeenCalledWith([EXTRINSIC_DATA.extrinsic, EXTRINSIC_DATA.extrinsic]);
   });
 
-  it('should be able to increase stake amount', async () => {
+  it('should be able to increase stake amount when lock time is empty', async () => {
     await render(<App />, { path });
 
     userEvent.type(screen.getByRole('textbox', { name: /amount/i }), GOVERNANCE_AMOUNT.FULL.VALUE);
+
+    await waitForFeeEstimate(increaseAmount);
+
+    userEvent.click(screen.getByRole('button', { name: /stake/i }));
+
+    await waitForTransactionExecute(increaseAmount);
+
+    expect(increaseAmount).toHaveBeenCalledWith(GOVERNANCE_AMOUNT.FULL.MONETARY);
+  });
+
+  it('should be able to increase stake amount when lock time is 0', async () => {
+    await render(<App />, { path });
+
+    userEvent.type(screen.getByRole('textbox', { name: /amount/i }), GOVERNANCE_AMOUNT.FULL.VALUE);
+
+    userEvent.type(screen.getByRole('textbox', { name: /extended lock time/i, exact: false }), '0');
 
     await waitForFeeEstimate(increaseAmount);
 
@@ -181,7 +197,7 @@ describe('Staking Page', () => {
     userEvent.type(screen.getByRole('textbox', { name: /amount/i }), GOVERNANCE_AMOUNT.FULL.VALUE);
 
     await waitFor(() => {
-      expect(screen.getAllByRole('alert')).toHaveLength(2);
+      expect(screen.getByRole('alert')).toBeInTheDocument();
     });
 
     userEvent.click(screen.getByRole('button', { name: /withdraw/i }));
@@ -209,7 +225,7 @@ describe('Staking Page', () => {
     await waitForTransactionExecute(withdrawRewards);
   });
 
-  it('should not be able to extend lock time', async () => {
+  it('should not be able to extend lock time due to input being disable (account already maxed lock time)', async () => {
     getStakedBalance.mockResolvedValue(STAKED_BALANCE.FULL_LOCK_TIME);
 
     await render(<App />, { path });
@@ -225,5 +241,26 @@ describe('Staking Page', () => {
     rows.forEach((row) => {
       expect(row).toHaveAttribute('aria-disabled', 'true');
     });
+  });
+
+  it('should not be able to extend lock time due to exceeding max', async () => {
+    getStakedBalance.mockResolvedValue(STAKED_BALANCE.EMPTY);
+
+    await render(<App />, { path });
+
+    userEvent.type(
+      screen.getByRole('textbox', { name: new RegExp(`max ${STAKE_LOCK_TIME.MAX}`, 'i'), exact: false }),
+      (STAKE_LOCK_TIME.MAX + ONE_WEEK).toString()
+    );
+
+    userEvent.type(screen.getByRole('textbox', { name: /amount/i }), GOVERNANCE_AMOUNT.FULL.VALUE);
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: new RegExp(`max ${STAKE_LOCK_TIME.MAX}`, 'i') })).toHaveErrorMessage(
+        ''
+      );
+    });
+
+    expect(createLock).not.toHaveBeenCalled();
   });
 });
