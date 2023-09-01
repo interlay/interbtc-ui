@@ -1,13 +1,15 @@
 enum FeatureFlags {
   STRATEGIES = 'strategies',
   GEOBLOCK = 'geoblock',
-  ONBOARDING = 'onboarding'
+  ONBOARDING = 'onboarding',
+  GLOBAL_WARNING = 'global_warning'
 }
 
 const featureFlags: Record<FeatureFlags, string | undefined> = {
   [FeatureFlags.STRATEGIES]: process.env.REACT_APP_FEATURE_FLAG_STRATEGIES,
   [FeatureFlags.GEOBLOCK]: process.env.REACT_APP_FEATURE_FLAG_GEOBLOCK,
-  [FeatureFlags.ONBOARDING]: process.env.REACT_APP_FEATURE_FLAG_ONBOARDING
+  [FeatureFlags.ONBOARDING]: process.env.REACT_APP_FEATURE_FLAG_ONBOARDING,
+  [FeatureFlags.GLOBAL_WARNING]: process.env.REACT_APP_FEATURE_FLAG_GLOBAL_WARNING
 };
 
 const useFeatureFlag = (feature: FeatureFlags): boolean => featureFlags[feature] === 'enabled';

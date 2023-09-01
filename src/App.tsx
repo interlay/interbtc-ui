@@ -9,6 +9,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
+import { Alert, TextLink } from '@/component-library';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
@@ -48,6 +49,7 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
+  const isGlobalWarningEnabled = useFeatureFlag(FeatureFlags.GLOBAL_WARNING);
 
   // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
@@ -80,6 +82,15 @@ const App = (): JSX.Element => {
 
   return (
     <Layout>
+      {isGlobalWarningEnabled && (
+        <Alert status='warning'>
+          Kusama parachains, including Kintsugi, have stopped producing blocks due to{' '}
+          <TextLink external icon to='https://kusama.polkassembly.io/referenda/263'>
+            an ongoing issue on Kusama
+          </TextLink>
+          . The relay chain is continuing to produce blocks as per normal.
+        </Alert>
+      )}
       {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
       <Route
         render={({ location }) => (
