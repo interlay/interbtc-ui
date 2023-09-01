@@ -49,6 +49,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
     refetch: refetchProxyAccount
   } = useGetStrategyProxyAccount(strategy.type);
 
+  console.log(proxyAccount?.toString(), isIdentitySet);
   const {
     data: { maxAmount, minAmount }
   } = useGetStrategyAvailableAmounts(StrategyFormType.DEPOSIT, strategy, proxyAccount, position);

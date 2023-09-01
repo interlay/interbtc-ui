@@ -63,8 +63,8 @@ const getTxFeeSwapData = async (
     reverseDirectionTrade.outputAmount.toString(true),
     baseExtrinsic
   );
-  console.log(reverseDirectionExtrinsic.toString());
-  const withSwapTxFee = newMonetaryAmount(0, GOVERNANCE_TOKEN); // await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
+
+  const withSwapTxFee = await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
   const { inputAmount, path } = getOptimalTradeForTxFeeSwap(
     withSwapTxFee.mul(OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER),
     reverseDirectionTrade.outputAmount,
@@ -81,7 +81,7 @@ const estimateTransactionFee: (
   params: Actions
 ) => Promise<MonetaryAmount<CurrencyExt>> = async (feeCurrency, pools, params) => {
   const baseExtrinsicData = await getExtrinsic(params);
-  const baseTxFee = newMonetaryAmount(0, feeCurrency); // await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
+  const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
 
   if (isCurrencyEqual(feeCurrency, GOVERNANCE_TOKEN)) {
     return baseTxFee;
