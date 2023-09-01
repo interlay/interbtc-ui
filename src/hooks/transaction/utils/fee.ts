@@ -6,7 +6,6 @@ import {
   LiquidityPool,
   MultiPath,
   newCurrencyId,
-  newMonetaryAmount,
   Trade
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
