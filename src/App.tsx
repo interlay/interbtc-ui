@@ -9,7 +9,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { Alert, CTALink } from '@/component-library';
+import { Alert, TextLink } from '@/component-library';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
@@ -84,10 +84,10 @@ const App = (): JSX.Element => {
     <Layout>
       {isGlobalWarningEnabled && (
         <Alert status='warning'>
-          Kusama parachains, including Kintsugi, have stopped producing blocks due to
-          <CTALink external to='https://kusama.polkassembly.io/referenda/263'>
+          Kusama parachains, including Kintsugi, have stopped producing blocks due to{' '}
+          <TextLink external icon to='https://kusama.polkassembly.io/referenda/263'>
             an ongoing issue on Kusama
-          </CTALink>
+          </TextLink>
           . The relay chain is continuing to produce blocks as per normal.
         </Alert>
       )}
