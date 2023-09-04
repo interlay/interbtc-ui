@@ -7,9 +7,12 @@ const SiteInformation = (): JSX.Element => {
     <Alert status='warning'>
       {process.env.REACT_APP_SITE_INFORMATION_MESSAGE}
       {hasLink && (
-        <TextLink external icon to={process.env.REACT_APP_SITE_INFORMATION_LINK || ''}>
-          More information
-        </TextLink>
+        <>
+          {' '}
+          <TextLink external icon to={process.env.REACT_APP_SITE_INFORMATION_LINK || ''}>
+            More information
+          </TextLink>
+        </>
       )}
     </Alert>
   );
