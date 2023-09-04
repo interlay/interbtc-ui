@@ -9,7 +9,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { Layout, SiteInformation, TransactionModal } from '@/components';
+import { Layout, TransactionModal } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
@@ -46,7 +46,6 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
-  const showGlobalWarningMessage = !!process.env.REACT_APP_SITE_INFORMATION_MESSAGE;
 
   // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
@@ -79,7 +78,6 @@ const App = (): JSX.Element => {
 
   return (
     <Layout>
-      {showGlobalWarningMessage && <SiteInformation />}
       <Route
         render={({ location }) => (
           <React.Suspense fallback={<FullLoadingSpinner />}>
