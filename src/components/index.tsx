@@ -27,6 +27,7 @@ export { PlusDivider } from './PlusDivider';
 export type { PoolsTableProps } from './PoolsTable';
 export { PoolsTable } from './PoolsTable';
 export { ReceivableAssets } from './ReceivableAssets';
+export { SiteInformation } from './SiteInformation';
 export type { SlippageManagerProps } from './SlippageManager';
 export { SlippageManager } from './SlippageManager';
 export type { ToastContainerProps } from './ToastContainer';
