@@ -9,7 +9,7 @@ const SiteInformation = (): JSX.Element => {
       {hasLink && (
         <>
           {' '}
-          <TextLink underlined external icon to={process.env.REACT_APP_SITE_INFORMATION_LINK || ''}>
+          <TextLink weight='bold' external icon to={process.env.REACT_APP_SITE_INFORMATION_LINK || ''}>
             More information
           </TextLink>
         </>
