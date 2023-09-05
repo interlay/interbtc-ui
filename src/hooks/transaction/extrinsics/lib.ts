@@ -87,7 +87,7 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
     // Second argument is always boolean denoting if the proxy account identity was set or not.
     case Transaction.STRATEGIES_DEPOSIT: {
       const [strategyType, proxyAccount, isIdentitySet, ...args] = params.args;
-      const depositAmount = args[1];
+      const [, depositAmount] = args;
 
       const transferExtrinsic = window.bridge.tokens.transfer(proxyAccount.toString(), depositAmount);
 
@@ -131,7 +131,7 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
       }
 
       const [, proxyAccount, ...args] = params.args;
-      const withdrawalAmount = args[1];
+      const [, withdrawalAmount] = args;
 
       const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdraw(...args)).extrinsic;
       const proxiedStrategyWithdrawExtrinsic = proxifyExtrinsic(proxyAccount, strategyWithdrawalExtrinsic);
@@ -153,10 +153,9 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
         throw new Error('Primary account not found.');
       }
 
-      const [, proxyAccount, ...args] = params.args;
-      const withdrawalAmount = args[1];
+      const [, proxyAccount, underlyingCurrency, withdrawalAmount] = params.args;
 
-      const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdrawAll(args[0])).extrinsic;
+      const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdrawAll(underlyingCurrency)).extrinsic;
       const proxiedStrategyWithdrawExtrinsic = proxifyExtrinsic(proxyAccount, strategyWithdrawalExtrinsic);
 
       const transferExtrinsic = window.bridge.tokens.transfer(primaryAccount.toString(), withdrawalAmount).extrinsic;
