@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
+import { formatNumber } from '@/common/utils/utils';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { OracleStatus, useGetOracleStatus } from '@/hooks/api/oracle/use-get-oracle-status';
 import { useGetExchangeRate } from '@/hooks/api/use-get-exchange-rate';
@@ -84,7 +85,11 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           </Ring64Title>
           {relayChainExchangeRate && (
             <Ring64Value>
-              {relayChainExchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              {formatNumber(Number(relayChainExchangeRate.toHuman(5)), {
+                minimumFractionDigits: 5,
+                maximumFractionDigits: 5
+              })}{' '}
+              {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>
