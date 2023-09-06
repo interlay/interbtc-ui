@@ -33,7 +33,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
       return <>Loading...</>;
     }
 
-    const exchangeRate = relayChainExchangeRate ? relayChainExchangeRate?.toCounter(new MonetaryAmount(Bitcoin, 1)) : 0;
+    const exchangeRate = relayChainExchangeRate ? relayChainExchangeRate.toCounter(new MonetaryAmount(Bitcoin, 1)) : 0;
 
     const oracleOnline = oracleStatus && oracleStatus === OracleStatus.ONLINE;
 
