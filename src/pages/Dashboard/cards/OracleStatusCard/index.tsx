@@ -1,9 +1,7 @@
-import { Bitcoin, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber } from '@/common/utils/utils';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { OracleStatus, useGetOracleStatus } from '@/hooks/api/oracle/use-get-oracle-status';
 import { useGetExchangeRate } from '@/hooks/api/use-get-exchange-rate';
@@ -33,13 +31,11 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
       return <>Loading...</>;
     }
 
-    const exchangeRate = relayChainExchangeRate ? relayChainExchangeRate.toCounter(new MonetaryAmount(Bitcoin, 1)) : 0;
-
     const oracleOnline = oracleStatus && oracleStatus === OracleStatus.ONLINE;
 
     let statusText;
     let statusCircleText;
-    if (exchangeRate === undefined) {
+    if (relayChainExchangeRate === undefined) {
       statusText = t('dashboard.oracles.not_available');
       statusCircleText = t('unavailable');
     } else if (oracleOnline === true) {
@@ -86,10 +82,9 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           >
             {statusCircleText}
           </Ring64Title>
-          {exchangeRate && (
+          {relayChainExchangeRate && (
             <Ring64Value>
-              {formatNumber(Number(exchangeRate.toHuman(5)), { minimumFractionDigits: 5, maximumFractionDigits: 5 })}{' '}
-              {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              {relayChainExchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>
