@@ -1,5 +1,3 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
-import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -33,15 +31,11 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
       return <>Loading...</>;
     }
 
-    const exchangeRate = relayChainExchangeRate
-      ? new ExchangeRate<Bitcoin, CurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, relayChainExchangeRate.toBig(), 0, 0)
-      : 0;
-
     const oracleOnline = oracleStatus && oracleStatus === OracleStatus.ONLINE;
 
     let statusText;
     let statusCircleText;
-    if (exchangeRate === undefined) {
+    if (relayChainExchangeRate === undefined) {
       statusText = t('dashboard.oracles.not_available');
       statusCircleText = t('unavailable');
     } else if (oracleOnline === true) {
@@ -88,9 +82,9 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           >
             {statusCircleText}
           </Ring64Title>
-          {exchangeRate && (
+          {relayChainExchangeRate && (
             <Ring64Value>
-              {exchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              {relayChainExchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>
