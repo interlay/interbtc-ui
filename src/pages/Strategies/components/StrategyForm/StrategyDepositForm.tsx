@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
-import { AuthCTA, TransactionFeeDetails } from '@/components';
-import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { AuthCTA } from '@/components';
+import { GOVERNANCE_TOKEN, WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import {
@@ -23,6 +24,7 @@ import { useGetStrategyAvailableAmounts } from '../../hooks/use-get-strategy-ava
 import { StrategyPositionData } from '../../hooks/use-get-strategy-position';
 import { useGetStrategyProxyAccount } from '../../hooks/use-get-strategy-proxy-account';
 import { StrategyFormType } from '../../types';
+import { StrategyFormTransactionFees } from './StrategyFormTransactionFees';
 
 type StrategyDepositFormProps = {
   strategy: StrategyData;
@@ -41,6 +43,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
       }
     }
   });
+  const { getAvailableBalance } = useGetBalances();
 
   const {
     isLoading: isLoadingProxyAccount,
@@ -89,7 +92,16 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
       [STRATEGY_DEPOSIT_AMOUNT_FIELD]: '',
       [STRATEGY_DEPOSIT_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     },
-    validationSchema: strategyDepositSchema('deposit', { maxAmount, minAmount }),
+    validationSchema: strategyDepositSchema(
+      'deposit',
+      {
+        maxAmount,
+        minAmount,
+        requireProxyDeposit: !isIdentitySet,
+        governanceBalance: getAvailableBalance(GOVERNANCE_TOKEN.ticker) || newMonetaryAmount(0, GOVERNANCE_TOKEN)
+      },
+      t
+    ),
     onSubmit: handleSubmit,
     onComplete: (values: StrategyDepositFormData) => {
       if (proxyAccount) {
@@ -120,7 +132,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
   );
   const inputUSDValue = convertMonetaryAmountToValueInUSD(inputMonetaryAmount, prices?.[WRAPPED_TOKEN_SYMBOL].usd) || 0;
   const isSubmitButtonDisabled = isFormDisabled(form) || isLoadingProxyAccount;
-
+  console.log(proxyAccount?.toString());
   return (
     <form onSubmit={form.handleSubmit}>
       <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>
@@ -134,9 +146,10 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
           {...mergeProps(form.getFieldProps(STRATEGY_DEPOSIT_AMOUNT_FIELD))}
         />
         <Flex direction='column' gap='spacing4'>
-          <TransactionFeeDetails
+          <StrategyFormTransactionFees
             fee={transaction.fee}
             selectProps={{ ...form.getSelectFieldProps(STRATEGY_DEPOSIT_FEE_TOKEN_FIELD) }}
+            includeProxyAccountFee={!isIdentitySet}
           />
           <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
             {proxyAccount ? t('deposit') : t('strategy.initialize')}

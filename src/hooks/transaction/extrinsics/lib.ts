@@ -1,8 +1,6 @@
 import { ExtrinsicData } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
 
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { DEFAULT_PROXY_ACCOUNT_AMOUNT } from '@/utils/constants/account';
+import { DEFAULT_PROXY_ACCOUNT_AMOUNT, PROXY_ACCOUNT_RESERVE_AMOUNT } from '@/utils/constants/account';
 import { proxifyExtrinsic } from '@/utils/helpers/extrinsic';
 
 import { LibActions, Transaction } from '../types';
@@ -102,10 +100,9 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
 
         return { extrinsic: batchedExtrinsics };
       } else {
-        const identityLockAmount = new MonetaryAmount(GOVERNANCE_TOKEN, 26);
         const identityLockAmountTransferExtrinsic = window.bridge.tokens.transfer(
           proxyAccount.toString(),
-          identityLockAmount
+          PROXY_ACCOUNT_RESERVE_AMOUNT
         );
         const strategyAccountIdentity = {
           additional: [[{ Raw: 'strategyType' }, { Raw: strategyType }]]
@@ -155,18 +152,27 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
 
       const [, proxyAccount, underlyingCurrency, withdrawalAmount] = params.args;
 
+      const clearIdentityExtrinsic = window.bridge.api.tx.identity.clearIdentity();
+
+      const transferIdentityReserveAmount = window.bridge.tokens.transfer(
+        primaryAccount.toString(),
+        PROXY_ACCOUNT_RESERVE_AMOUNT
+      ).extrinsic;
+
       const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdrawAll(underlyingCurrency)).extrinsic;
-      const proxiedStrategyWithdrawExtrinsic = proxifyExtrinsic(proxyAccount, strategyWithdrawalExtrinsic);
 
       const transferExtrinsic = window.bridge.tokens.transfer(primaryAccount.toString(), withdrawalAmount).extrinsic;
-      const proxiedTransferExtrinsic = proxifyExtrinsic(proxyAccount, transferExtrinsic);
 
       const batchExtrinsic = window.bridge.transaction.buildBatchExtrinsic([
-        proxiedStrategyWithdrawExtrinsic,
-        proxiedTransferExtrinsic
+        clearIdentityExtrinsic,
+        transferIdentityReserveAmount,
+        strategyWithdrawalExtrinsic,
+        transferExtrinsic
       ]);
 
-      return { extrinsic: batchExtrinsic };
+      const proxiedBatchExtrinsic = proxifyExtrinsic(proxyAccount, batchExtrinsic);
+
+      return { extrinsic: proxiedBatchExtrinsic };
     }
     /* END - STRATEGIES */
 

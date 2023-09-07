@@ -12,6 +12,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { PROXY_ACCOUNT_RESERVE_AMOUNT } from '@/utils/constants/account';
 
 import { getExtrinsic } from '../extrinsics';
 import { Actions, Transaction } from '../types';
@@ -159,8 +160,11 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     }
     /* END - LOANS */
     case Transaction.STRATEGIES_DEPOSIT: {
-      const [, , , , amount] = params.args;
-      return [amount];
+      const [, , isIdentitySet, , amount] = params.args;
+      if (isIdentitySet) {
+        return [amount];
+      }
+      return [amount, PROXY_ACCOUNT_RESERVE_AMOUNT];
     }
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
       const [amount] = params.args;
