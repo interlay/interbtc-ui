@@ -72,14 +72,13 @@ const useGetAccountPositionsEarnings = (
   lendPositions: CollateralPosition[] | undefined,
   proxyAccount?: AccountId
 ): UseGetAccountPositionsEarningsResult => {
-  const { account } = useWallet();
+  const { account: primaryAccount } = useWallet();
+
+  const account = proxyAccount || primaryAccount;
 
   const { refetch, isLoading, data, error } = useQuery({
     queryKey: ['loan-earnings', account, proxyAccount],
-    queryFn: () =>
-      lendPositions &&
-      account &&
-      getEarnedAmountByTicker(proxyAccount?.toString() || account.toString(), lendPositions),
+    queryFn: () => lendPositions && account && getEarnedAmountByTicker(account.toString(), lendPositions),
     enabled: !!lendPositions && !!account,
     refetchOnWindowFocus: false,
     refetchInterval: REFETCH_INTERVAL.MINUTE

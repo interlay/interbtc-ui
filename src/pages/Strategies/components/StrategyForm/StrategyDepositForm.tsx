@@ -72,7 +72,11 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
 
       if (!depositTransactionData) return;
 
-      const { monetaryAmount } = depositTransactionData;
+      let { monetaryAmount } = depositTransactionData;
+
+      if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
+        monetaryAmount = transaction.calculateAmountWithFeeDeducted(monetaryAmount);
+      }
 
       transaction.execute(
         Transaction.STRATEGIES_DEPOSIT,
@@ -132,7 +136,7 @@ const StrategyDepositForm = ({ strategy, position }: StrategyDepositFormProps): 
   );
   const inputUSDValue = convertMonetaryAmountToValueInUSD(inputMonetaryAmount, prices?.[WRAPPED_TOKEN_SYMBOL].usd) || 0;
   const isSubmitButtonDisabled = isFormDisabled(form) || isLoadingProxyAccount;
-  console.log(proxyAccount?.toString());
+
   return (
     <form onSubmit={form.handleSubmit}>
       <Flex marginTop='spacing4' direction='column' gap='spacing8' justifyContent='space-between'>

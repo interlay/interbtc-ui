@@ -68,7 +68,11 @@ const StrategyWithdrawalForm = ({ strategy, position }: StrategyWithdrawalFormPr
 
       if (!transactionData) return;
 
-      const { monetaryAmount } = transactionData;
+      let { monetaryAmount } = transactionData;
+
+      if (transaction.fee.isEqualFeeCurrency(monetaryAmount.currency)) {
+        monetaryAmount = transaction.calculateAmountWithFeeDeducted(monetaryAmount);
+      }
 
       const isWithdrawAll = isMaxAmount(monetaryAmount);
 
