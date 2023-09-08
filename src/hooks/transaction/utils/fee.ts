@@ -12,6 +12,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { PROXY_ACCOUNT_RESERVE_AMOUNT } from '@/utils/constants/account';
 
 import { getExtrinsic } from '../extrinsics';
 import { Actions, Transaction } from '../types';
@@ -62,6 +63,7 @@ const getTxFeeSwapData = async (
     reverseDirectionTrade.outputAmount.toString(true),
     baseExtrinsic
   );
+
   const withSwapTxFee = await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
   const { inputAmount, path } = getOptimalTradeForTxFeeSwap(
     withSwapTxFee.mul(OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER),
@@ -158,8 +160,11 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     }
     /* END - LOANS */
     case Transaction.STRATEGIES_DEPOSIT: {
-      const [, amount] = params.args;
-      return [amount];
+      const [, , isIdentitySet, , amount] = params.args;
+      if (isIdentitySet) {
+        return [amount];
+      }
+      return [amount, PROXY_ACCOUNT_RESERVE_AMOUNT];
     }
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
       const [amount] = params.args;
@@ -177,6 +182,7 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     case Transaction.LOANS_DISABLE_COLLATERAL:
     case Transaction.STRATEGIES_ALL_WITHDRAW:
     case Transaction.STRATEGIES_WITHDRAW:
+    case Transaction.STRATEGIES_INITIALIZE_PROXY:
     case Transaction.AMM_CLAIM_REWARDS:
       return undefined;
   }
