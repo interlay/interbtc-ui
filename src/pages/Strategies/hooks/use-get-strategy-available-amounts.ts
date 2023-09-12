@@ -1,3 +1,5 @@
+import { AccountId } from '@polkadot/types/interfaces';
+
 import {
   useGetLoanAvailableAmounts,
   UseGetLoanAvailableAmountsResult
@@ -12,12 +14,14 @@ type useGetStrategyAvailableAmountsResult = UseGetLoanAvailableAmountsResult;
 const useGetStrategyAvailableAmounts = (
   type: StrategyFormType,
   strategy: StrategyData,
+  proxyAccount: AccountId | undefined,
   position?: StrategyPositionData
 ): useGetStrategyAvailableAmountsResult => {
   const loanAvailableAmounts = useGetLoanAvailableAmounts(
     type === StrategyFormType.DEPOSIT ? 'lend' : 'withdraw',
     strategy.loanAsset,
-    position?.loanPosition
+    position?.loanPosition,
+    proxyAccount
   );
 
   switch (strategy.type) {

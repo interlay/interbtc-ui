@@ -4,14 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
-import {
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
-} from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
-import useCumulativeCollateralVolumes from '@/hooks/use-cumulative-collateral-volumes';
+import useAllCumulativeVaultCollateralVolumes from '@/hooks/use-all-cumulative-vault-collateral-volumes';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
 import { PAGES } from '@/utils/constants/links';
@@ -29,44 +23,23 @@ const LockedCollateralsCard = (): JSX.Element => {
   const prices = useGetPrices();
 
   const {
-    isIdle: cumulativeRelayChainNativeTokenVolumesIdle,
-    isLoading: cumulativeRelayChainNativeTokenVolumesLoading,
-    data: cumulativeRelayChainNativeTokenVolumes,
-    error: cumulativeRelayChainNativeTokenVolumesError
-  } = useCumulativeCollateralVolumes(RELAY_CHAIN_NATIVE_TOKEN, cutoffTimestamps);
-  useErrorHandler(cumulativeRelayChainNativeTokenVolumesError);
-
-  const {
-    isIdle: cumulativeGovernanceTokenVolumesIdle,
-    isLoading: cumulativeGovernanceTokenVolumesLoading,
-    data: cumulativeGovernanceTokenVolumes,
-    error: cumulativeGovernanceTokenVolumesError
-  } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN, cutoffTimestamps);
-  useErrorHandler(cumulativeGovernanceTokenVolumesError);
-
-  const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;
-  const governanceTokenPriceInUSD = getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd;
+    data: allCumulativeVaultCollateralVolumes,
+    error: allCumulativeVaultCollateralVolumesError
+  } = useAllCumulativeVaultCollateralVolumes(cutoffTimestamps);
+  useErrorHandler(allCumulativeVaultCollateralVolumesError);
 
   const cumulativeUSDVolumes = React.useMemo(() => {
-    if (cumulativeRelayChainNativeTokenVolumes === undefined || cumulativeGovernanceTokenVolumes === undefined) return;
+    if (allCumulativeVaultCollateralVolumes === undefined) return;
 
     return Array<number>(COUNT_OF_DATES_FOR_CHART)
       .fill(0)
       .map((_, index) => {
-        const collaterals = [
-          {
-            cumulativeVolumes: cumulativeRelayChainNativeTokenVolumes,
-            tokenPriceInUSD: relayChainNativeTokenPriceInUSD
-          }
-        ];
+        const collateralTickers = Object.keys(allCumulativeVaultCollateralVolumes);
 
-        // Includes governance token data only if the price is available.
-        if (governanceTokenPriceInUSD !== undefined) {
-          collaterals.push({
-            cumulativeVolumes: cumulativeGovernanceTokenVolumes,
-            tokenPriceInUSD: governanceTokenPriceInUSD
-          });
-        }
+        const collaterals = collateralTickers.map((ticker: string) => ({
+          cumulativeVolumes: allCumulativeVaultCollateralVolumes[ticker],
+          tokenPriceInUSD: getTokenPrice(prices, ticker)?.usd
+        }));
 
         let sumValueInUSD = 0;
         for (const collateral of collaterals) {
@@ -80,21 +53,11 @@ const LockedCollateralsCard = (): JSX.Element => {
           tillTimestamp: cutoffTimestamps[index]
         };
       });
-  }, [
-    cumulativeRelayChainNativeTokenVolumes,
-    cumulativeGovernanceTokenVolumes,
-    relayChainNativeTokenPriceInUSD,
-    governanceTokenPriceInUSD
-  ]);
+  }, [allCumulativeVaultCollateralVolumes, prices]);
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (
-      cumulativeRelayChainNativeTokenVolumesIdle ||
-      cumulativeRelayChainNativeTokenVolumesLoading ||
-      cumulativeGovernanceTokenVolumesIdle ||
-      cumulativeGovernanceTokenVolumesLoading
-    ) {
+    if (allCumulativeVaultCollateralVolumes === undefined) {
       return <>Loading...</>;
     }
 

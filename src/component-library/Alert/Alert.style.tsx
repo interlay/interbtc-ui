@@ -12,14 +12,14 @@ interface StyledAlertProps {
 
 const StyledAlert = styled(Flex)<StyledAlertProps>`
   padding: ${theme.spacing.spacing2};
-  color: ${({ $status }) => theme.alert.status[$status]};
   border: 1px solid ${({ $status }) => theme.alert.status[$status]};
   background-color: ${({ $status }) => theme.alert.bg[$status]};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.xs};
 `;
 
-const StyledWarningIcon = styled(WarningIcon)`
+const StyledWarningIcon = styled(WarningIcon)<StyledAlertProps>`
+  color: ${({ $status }) => theme.alert.status[$status]};
   width: ${theme.spacing.spacing5};
   height: ${theme.spacing.spacing5};
   flex-shrink: 0;
