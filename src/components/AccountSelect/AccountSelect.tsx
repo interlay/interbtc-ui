@@ -1,15 +1,15 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { KeyringPair } from '@polkadot/extension-inject/types';
 
 import { Item, Select, SelectProps } from '@/component-library';
 
 import { AccountItem } from './AccountItem';
 
-type AccountSelectProps = Omit<SelectProps<'modal', InjectedAccountWithMeta>, 'children' | 'type'>;
+type AccountSelectProps = Omit<SelectProps<'modal', KeyringPair>, 'children' | 'type'>;
 
 const AccountSelect = ({ ...props }: AccountSelectProps): JSX.Element => {
   return (
-    <Select<'modal', InjectedAccountWithMeta> {...props} type='modal' modalTitle='Select Account' size='large'>
-      {(data: InjectedAccountWithMeta) => (
+    <Select<'modal', KeyringPair> {...props} type='modal' modalTitle='Select Account' size='large'>
+      {(data: KeyringPair) => (
         <Item key={data.address} textValue={data.address}>
           <AccountItem address={data.address} name={data.meta.name} />
         </Item>

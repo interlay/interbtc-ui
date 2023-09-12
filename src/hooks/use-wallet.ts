@@ -1,5 +1,5 @@
 import { newAccountId } from '@interlay/interbtc-api';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { KeyringPair } from '@polkadot/extension-inject/types';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 type UseWalletResult = {
   isAuth: boolean;
   account?: AccountId;
-  accounts: InjectedAccountWithMeta[];
+  accounts: KeyringPair[];
   getRelayChainAddress: (address?: string) => string | undefined;
 };
 
