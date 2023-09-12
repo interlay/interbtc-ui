@@ -1,6 +1,5 @@
-import { KeyringPair } from '@polkadot/extension-inject/types';
-
 import { Item, Select, SelectProps } from '@/component-library';
+import { KeyringPair } from '@/lib/substrate';
 
 import { AccountItem } from './AccountItem';
 
