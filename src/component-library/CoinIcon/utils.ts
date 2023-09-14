@@ -23,34 +23,36 @@ import {
   qUSDT,
   SKSM,
   USDT,
+  VDOT,
   VKSM
 } from './icons';
 import { CoinComponent } from './types';
 
 export const coins: Record<string, CoinComponent> = {
+  AUSD,
   BTC,
   DOT,
+  ETH,
   IBTC,
   INTR,
+  KAR,
   KBTC,
   KINT,
   KSM,
   LDOT,
   LKSM,
-  USDT,
-  VKSM,
   LSKSM,
   MOVR,
-  SKSM,
-  qUSDT,
-  qKINT,
-  qKBTC,
-  qKSM,
-  qMOVR,
-  AUSD,
-  KAR,
   qDOT,
   qIBTC,
   qINTR,
-  ETH
+  qKBTC,
+  qKINT,
+  qKSM,
+  qMOVR,
+  qUSDT,
+  SKSM,
+  USDT,
+  VDOT,
+  VKSM
 };

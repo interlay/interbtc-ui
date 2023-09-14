@@ -22,4 +22,5 @@ export { qMOVR } from './qMOVR';
 export { qUSDT } from './qUSDT';
 export { SKSM } from './SKSM';
 export { USDT } from './USDT';
+export { VDOT } from './VDOT';
 export { VKSM } from './VKSM';
