@@ -43,7 +43,7 @@ const Topbar = (): JSX.Element => {
 
   const handleAccountSelect = (account: KeyringPair) => {
     const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
-    const keyringAccount = keyring.addFromAddress(account.address, account.meta as any);
+    const keyringAccount = keyring.addFromAddress(account.address, account.meta);
     setSelectedAccount(keyringAccount);
     selectProps.onSelectionChange(keyringAccount as KeyringPair);
     handleAccountModalClose();
