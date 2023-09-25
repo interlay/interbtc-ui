@@ -2,6 +2,8 @@ export type { AccordionItemProps, AccordionProps } from './Accordion';
 export { Accordion, AccordionItem } from './Accordion';
 export type { AlertProps } from './Alert';
 export { Alert } from './Alert';
+export type { BreadcrumbItemProps, BreadcrumbsProps } from './Breadcrumbs';
+export { BreadcrumbItem, Breadcrumbs } from './Breadcrumbs';
 export type { CardProps } from './Card';
 export { Card } from './Card';
 export type { CoinIconProps } from './CoinIcon';

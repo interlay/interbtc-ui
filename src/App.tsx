@@ -5,22 +5,20 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { isVaultClientLoaded } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
+import { Layout, TransactionModal } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
-import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
-import { Layout, TransactionModal } from './components';
 import * as constants from './constants';
 import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
-import TestnetBanner from './legacy-components/TestnetBanner';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
@@ -80,7 +78,6 @@ const App = (): JSX.Element => {
 
   return (
     <Layout>
-      {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
       <Route
         render={({ location }) => (
           <React.Suspense fallback={<FullLoadingSpinner />}>
@@ -119,7 +116,7 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.POOLS}>
                   <Pools />
                 </Route>
-                <Route path={[PAGES.HOME, PAGES.WALLET]}>
+                <Route path={PAGES.WALLET}>
                   <Wallet />
                 </Route>
                 {isStrategiesEnabled && (
@@ -139,6 +136,9 @@ const App = (): JSX.Element => {
                 )}
                 <Route path={PAGES.ACTIONS}>
                   <Actions />
+                </Route>
+                <Route exact path={PAGES.HOME}>
+                  <Redirect to={PAGES.WALLET} />
                 </Route>
                 <Route path='*'>
                   <NoMatch />

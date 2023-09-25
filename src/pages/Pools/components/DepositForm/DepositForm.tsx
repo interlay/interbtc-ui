@@ -28,11 +28,6 @@ import { PoolName } from '../PoolName';
 import { StyledPlusDivider, StyledTokenInput } from './DepositForm.styles';
 import { DepositOutputAssets } from './DepositOutputAssets';
 
-const isCustomAmountsMode = (form: ReturnType<typeof useForm>, pool: LiquidityPool) =>
-  // If pool has no liquidity, the assets ratio is set by the user,
-  // therefore the value inputted is directly used.
-  (form.dirty && Object.values(form.touched).filter(Boolean).length > 0) || pool.isEmpty;
-
 type DepositFormProps = {
   pool: LiquidityPool;
   overlappingModalRef: RefObject<HTMLDivElement>;
@@ -44,8 +39,6 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
   const { pooledCurrencies } = pool;
 
   const [slippage, setSlippage] = useState(0.1);
-
-  const [isCustomMode, setCustomMode] = useState(false);
 
   const accountId = useAccountId();
   const { t } = useTranslation();
@@ -64,7 +57,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
       if (feeCurrencyAmount && transaction.fee.data) {
         const newFeeCurrencyAmount = transaction.calculateAmountWithFeeDeducted(feeCurrencyAmount);
 
-        if (isCustomMode) {
+        if (pool.isEmpty) {
           return amounts.map((amount) =>
             transaction.fee.isEqualFeeCurrency(amount.currency) ? newFeeCurrencyAmount : amount
           );
@@ -75,7 +68,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
       return amounts;
     },
-    [isCustomMode, pool, transaction]
+    [pool, transaction]
   );
 
   const getTransactionArgs = useCallback(
@@ -148,11 +141,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    const isCustom = isCustomAmountsMode(form, pool);
-
-    if (isCustom) {
-      return setCustomMode(true);
-    }
+    if (pool.isEmpty) return;
 
     if (!e.target.value || isNaN(Number(e.target.value))) {
       return form.setValues({ ...form.values, ...defaultValues });

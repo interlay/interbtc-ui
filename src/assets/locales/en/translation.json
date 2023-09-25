@@ -667,7 +667,8 @@
   },
   "strategy": {
     "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",
-    "update_position": "Update position"
+    "update_position": "Update position",
+    "initialize": "Initialize strategy"
   },
   "transaction": {
     "recent_transactions": "Recent transactions",
@@ -779,6 +780,9 @@
     "low_risk_approach_generate_passive_income": "Discover a straightforward and low-risk approach to generate passive income. This strategy lends out deposited {{ticker}} to borrowers, allowing you to earn interest effortlessly",
     "how_does_it_work": "How does it work?",
     "what_are_the_risk": "What are the risks?",
-    "discover_fundamental_origins": "Discover the fundamental origins of the position, potential risks involved, the allocation of your capital, and other pertinent details in the docs section."
+    "discover_fundamental_origins": "Discover the fundamental origins of the position, potential risks involved, the allocation of your capital, and other pertinent details in the docs section.",
+    "proxy_deposit": "{{currency}} Proxy Deposit",
+    "proxy_deposit_tooltip": "This amount will be locked while the strategy is active. When you fully exit strategy deposit will be returned.",
+    "proxy_deposit_insufficient_funds": "Insufficient funds: 26 {{currency}} is required for proxy deposit locking."
   }
 }

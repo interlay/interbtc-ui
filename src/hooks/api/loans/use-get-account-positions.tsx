@@ -4,10 +4,10 @@ import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import { useWallet } from '@/hooks/use-wallet';
 import { BorrowPosition, CollateralPosition } from '@/types/loans';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
-import useAccountId from '../../use-account-id';
 import { useGetAccountPositionsEarnings } from './use-get-account-positions-earnings';
 
 const getLendPositionsOfAccount = async (accountId: AccountId): Promise<Array<CollateralPosition>> =>
@@ -19,13 +19,15 @@ interface UseGetLendPositionsOfAccountResult {
   refetch: () => void;
 }
 
-const useGetLendPositionsOfAccount = (): UseGetLendPositionsOfAccountResult => {
-  const accountId = useAccountId();
+const useGetLendPositionsOfAccount = (proxyAccount?: AccountId): UseGetLendPositionsOfAccountResult => {
+  const { account: primaryAccount } = useWallet();
+
+  const account = proxyAccount || primaryAccount;
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['getLendPositionsOfAccount', accountId],
-    queryFn: () => accountId && getLendPositionsOfAccount(accountId),
-    enabled: !!accountId,
+    queryKey: ['getLendPositionsOfAccount', account?.toString(), proxyAccount],
+    queryFn: () => account && getLendPositionsOfAccount(account),
+    enabled: !!account,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
@@ -40,19 +42,15 @@ interface UseGetBorrowPositionsOfAccountResult {
   refetch: () => void;
 }
 
-const useGetBorrowPositionsOfAccount = (): UseGetBorrowPositionsOfAccountResult => {
-  const accountId = useAccountId();
+const useGetBorrowPositionsOfAccount = (proxyAccount?: AccountId): UseGetBorrowPositionsOfAccountResult => {
+  const { account: primaryAccount } = useWallet();
+
+  const account = proxyAccount || primaryAccount;
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['getBorrowPositionsOfAccount', accountId],
-    queryFn: async () => {
-      if (!accountId) {
-        throw new Error('Something went wrong!');
-      }
-
-      return await window.bridge.loans.getBorrowPositionsOfAccount(accountId);
-    },
-    enabled: !!accountId,
+    queryKey: ['getBorrowPositionsOfAccount', account?.toString()],
+    queryFn: () => account && window.bridge.loans.getBorrowPositionsOfAccount(account),
+    enabled: !!account,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
@@ -76,21 +74,22 @@ type UseGetAccountPositionsResult = {
   refetch: () => void;
 };
 
-const useGetAccountPositions = (): UseGetAccountPositionsResult => {
+const useGetAccountPositions = (proxyAccount?: AccountId): UseGetAccountPositionsResult => {
   const {
     data: lendPositionsWithoutEarnings,
     isLoading: isLendPositionsLoading,
     refetch: lendPositionsRefetch
-  } = useGetLendPositionsOfAccount();
+  } = useGetLendPositionsOfAccount(proxyAccount);
 
   const {
     data: borrowPositions,
     isLoading: isBorrowPositionsLoading,
     refetch: borrowPositionsRefetch
-  } = useGetBorrowPositionsOfAccount();
+  } = useGetBorrowPositionsOfAccount(proxyAccount);
 
   const { getPositionEarnings, isLoading: isAccountEarningsLoading } = useGetAccountPositionsEarnings(
-    lendPositionsWithoutEarnings
+    lendPositionsWithoutEarnings,
+    proxyAccount
   );
 
   const lendPositions: CollateralPosition[] | undefined = lendPositionsWithoutEarnings?.map((position) => ({
