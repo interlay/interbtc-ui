@@ -165,10 +165,7 @@ const IssueRedeemForm = ({
   const label = isIssueModal ? 'Issue amount' : 'Reddem amount';
   const highlightTerm = isIssueModal ? 'Maximum vault capacity:' : 'Locked:';
 
-  const handleSubmit = (data: IssueRedeemFormData) => {
-    onSubmit?.();
-    console.log(data);
-  };
+  const handleSubmit = () => onSubmit?.();
 
   const parsedBTCAmount = new BitcoinAmount(inputBTCAmount);
   const bridgeFee = parsedBTCAmount.mul(issueFeeRate);

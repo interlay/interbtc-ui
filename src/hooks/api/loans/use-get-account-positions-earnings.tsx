@@ -1,5 +1,6 @@
 import { CurrencyExt, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { gql, GraphQLClient } from 'graphql-request';
 import { useCallback } from 'react';
@@ -68,12 +69,15 @@ type UseGetAccountPositionsEarningsResult = {
 };
 
 const useGetAccountPositionsEarnings = (
-  lendPositions: CollateralPosition[] | undefined
+  lendPositions: CollateralPosition[] | undefined,
+  proxyAccount?: AccountId
 ): UseGetAccountPositionsEarningsResult => {
-  const { account } = useWallet();
+  const { account: primaryAccount } = useWallet();
+
+  const account = proxyAccount || primaryAccount;
 
   const { refetch, isLoading, data, error } = useQuery({
-    queryKey: ['loan-earnings', account],
+    queryKey: ['loan-earnings', account, proxyAccount],
     queryFn: () => lendPositions && account && getEarnedAmountByTicker(account.toString(), lendPositions),
     enabled: !!lendPositions && !!account,
     refetchOnWindowFocus: false,
