@@ -15,7 +15,8 @@ const handleTransaction = async (
   account: AddressOrPair,
   extrinsicData: ExtrinsicData,
   expectedStatus?: ExtrinsicStatus['type'],
-  callbacks?: TransactionEvents
+  callbacks?: TransactionEvents,
+  shouldDryRun?: boolean
 ) => {
   let isComplete = false;
 
@@ -28,7 +29,7 @@ const handleTransaction = async (
       // Extrinsic is signed at first and then we use the same signed extrinsic
       // for dry-running and submission.
       .signAsync(account, { nonce: -1 })
-      .then(dryRun)
+      .then((signedExtrinsic) => (shouldDryRun ? dryRun(signedExtrinsic) : signedExtrinsic))
       .then((signedExtrinsic) => signedExtrinsic.send(callback))
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
@@ -59,6 +60,7 @@ const handleTransaction = async (
  * @param {ExtrinsicData} extrinsicData transaction extrinsic data
  * @param {ExtrinsicStatus.type} expectedStatus status where the transaction is counted as fulfilled
  * @param {TransactionEvents} callbacks a set of events emitted accross the lifecycle of the transaction (i.e Bro)
+ * @param {boolean} shouldDryRun wether dry run should be executed
  * @return {Promise<ISubmittableResult>} transaction data that also can contain meta data in case of error
  */
 const submitTransaction = async (
@@ -66,9 +68,16 @@ const submitTransaction = async (
   account: AddressOrPair,
   extrinsicData: ExtrinsicData,
   expectedStatus?: ExtrinsicStatus['type'],
-  callbacks?: TransactionEvents
+  callbacks?: TransactionEvents,
+  shouldDryRun?: boolean
 ): Promise<TransactionResult> => {
-  const { result, unsubscribe } = await handleTransaction(account, extrinsicData, expectedStatus, callbacks);
+  const { result, unsubscribe } = await handleTransaction(
+    account,
+    extrinsicData,
+    expectedStatus,
+    callbacks,
+    shouldDryRun
+  );
 
   unsubscribe();
 

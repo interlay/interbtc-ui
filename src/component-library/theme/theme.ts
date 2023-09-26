@@ -517,6 +517,7 @@ const theme = {
   },
   icon: {
     sizes: {
+      xs: 'var(--spacing-3)',
       s: 'var(--spacing-4)',
       md: 'var(--spacing-6)',
       lg: 'var(--spacing-8)',

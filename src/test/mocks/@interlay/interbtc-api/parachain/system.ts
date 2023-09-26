@@ -22,7 +22,6 @@ const MODULE: Record<keyof SystemAPI, jest.Mock<any, any>> = {
   getCurrentActiveBlockNumber: jest.fn().mockResolvedValue(CURRENT_ACTIVE_BLOCK_NUMBER),
   getCurrentBlockNumber: jest.fn().mockResolvedValue(CURRENT_BLOCK_NUMBER),
   getFutureBlockNumber: jest.fn().mockResolvedValue(FUTURE_BLOCK_NUMBER),
-  getStatusCode: jest.fn().mockResolvedValue(STATUS_CODE),
   getBlockHash: jest.fn(),
   setCode: jest.fn(),
   subscribeToCurrentBlockHeads: jest.fn(),
