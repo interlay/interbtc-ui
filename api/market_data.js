@@ -94,7 +94,7 @@ export default async function (request, response) {
   const args = request.query
   const priceSource = args['price-source']
 
-  const resp = fetchPrices(priceSource, args)
+  const resp = await fetchPrices(priceSource, args)
   return response
     .status(200)
     .setHeader("content-type", "application/json")
