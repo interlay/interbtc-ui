@@ -1,5 +1,6 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 
 import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
 import { CollateralPosition } from '@/types/loans';
@@ -18,8 +19,11 @@ type UseGetStrategyPositionResult = {
   data: StrategyPositionData | undefined;
 };
 
-const useGetStrategyPosition = (strategy: StrategyData | undefined): UseGetStrategyPositionResult => {
-  const { getLendPosition, isLoading: isAccountPositionsLoading } = useGetAccountPositions();
+const useGetStrategyPosition = (
+  strategy: StrategyData | undefined,
+  proxyAccount: AccountId | undefined
+): UseGetStrategyPositionResult => {
+  const { getLendPosition, isLoading: isAccountPositionsLoading } = useGetAccountPositions(proxyAccount);
 
   if (!strategy) {
     return {

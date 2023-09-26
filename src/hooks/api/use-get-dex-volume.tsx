@@ -57,7 +57,11 @@ const GET_DEX_VOLUMES = gql`
         ...AmountFields
       }
     }
-    endVolumes: cumulativeDexTradingVolumes(limit: 1, orderBy: tillTimestamp_DESC, where: { tillTimestamp_lte: $end }) {
+    endVolumes: cumulativeDexTradingVolumes(
+      limit: 1
+      orderBy: tillTimestamp_DESC
+      where: { tillTimestamp_lte: $end, tillTimestamp_gte: $start }
+    ) {
       tillTimestamp
       amounts {
         ...AmountFields
@@ -94,6 +98,10 @@ const useGetDexVolumes = (range: DateRangeVolume): UseGetCurrenciesResult => {
       const end = new Date();
 
       const data = await graphQLClient.request(GET_DEX_VOLUMES, { start, end });
+
+      if (!data.startVolumes.length || !data.endVolumes.length) {
+        return {};
+      }
 
       const [startVolumes] = data.startVolumes;
       const [endVolumes] = data.endVolumes;
