@@ -10,6 +10,7 @@ import { StrategyInfographics, StrategyInsights, StrategyTag } from '../componen
 import { getContent } from '../helpers/content';
 import { useGetStrategies } from '../hooks/use-get-strategies';
 import { useGetStrategyPosition } from '../hooks/use-get-strategy-position';
+import { useGetStrategyProxyAccount } from '../hooks/use-get-strategy-proxy-account';
 import { StrategyRisk, StrategyType } from '../types';
 import { StyledFlex, StyledInfoCards, StyledStrategyForm } from './Strategy.styles';
 
@@ -21,7 +22,9 @@ const Strategy = (): JSX.Element | null => {
 
   const strategy = getStrategy(strategyType);
 
-  const { data: position, isLoading: isPositionLoading } = useGetStrategyPosition(strategy);
+  const { account: proxyAccount } = useGetStrategyProxyAccount(strategyType);
+
+  const { data: position, isLoading: isPositionLoading } = useGetStrategyPosition(strategy, proxyAccount);
 
   if (!strategies || isPositionLoading) {
     return <FullLoadingSpinner />;

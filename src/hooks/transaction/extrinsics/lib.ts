@@ -1,5 +1,8 @@
 import { ExtrinsicData } from '@interlay/interbtc-api';
 
+import { DEFAULT_PROXY_ACCOUNT_AMOUNT, PROXY_ACCOUNT_RESERVE_AMOUNT } from '@/utils/constants/account';
+import { proxifyExtrinsic } from '@/utils/helpers/extrinsic';
+
 import { LibActions, Transaction } from '../types';
 
 const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
@@ -67,13 +70,109 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
     /* END - LOANS */
 
     /* START - STRATEGIES */
-    case Transaction.STRATEGIES_DEPOSIT:
-      return window.bridge.loans.lend(...params.args);
-    case Transaction.STRATEGIES_WITHDRAW:
-      return window.bridge.loans.withdraw(...params.args);
+    case Transaction.STRATEGIES_INITIALIZE_PROXY: {
+      // Initialize 10 proxy accounts and then if we deposit for the first time, the proxy
+      // account will be assigned and stored in identity pallet.
+      const createProxiesExtrinsics = [...Array(DEFAULT_PROXY_ACCOUNT_AMOUNT).keys()].map((index) =>
+        window.bridge.api.tx.proxy.createPure('Any', 0, index)
+      );
+      const batchedExtrinsics = window.bridge.transaction.buildBatchExtrinsic(createProxiesExtrinsics);
+
+      return { extrinsic: batchedExtrinsics };
+    }
+    // Since we use proxy accounts for strategies, first argument is always proxy account for which
+    // the action should be performed - this account must be passed.
+    // Second argument is always boolean denoting if the proxy account identity was set or not.
+    case Transaction.STRATEGIES_DEPOSIT: {
+      const [strategyType, proxyAccount, isIdentitySet, ...args] = params.args;
+      const [, depositAmount] = args;
+
+      const transferExtrinsic = window.bridge.tokens.transfer(proxyAccount.toString(), depositAmount);
+
+      const strategyDepositExtrinsic = (await window.bridge.loans.lend(...args)).extrinsic;
+      const proxiedStrategyDepositExtrinsic = proxifyExtrinsic(proxyAccount, strategyDepositExtrinsic);
+
+      if (isIdentitySet) {
+        const batchedExtrinsics = window.bridge.transaction.buildBatchExtrinsic([
+          transferExtrinsic.extrinsic,
+          proxiedStrategyDepositExtrinsic
+        ]);
+
+        return { extrinsic: batchedExtrinsics };
+      } else {
+        const identityLockAmountTransferExtrinsic = window.bridge.tokens.transfer(
+          proxyAccount.toString(),
+          PROXY_ACCOUNT_RESERVE_AMOUNT
+        );
+        const strategyAccountIdentity = {
+          additional: [[{ Raw: 'strategyType' }, { Raw: strategyType }]]
+        };
+        const setIdentityExtrinsic = window.bridge.api.tx.identity.setIdentity(strategyAccountIdentity);
+        const proxiedSetIdentityExtrinsic = proxifyExtrinsic(proxyAccount, setIdentityExtrinsic);
+
+        const batchedExtrinsicsWithIdentity = window.bridge.transaction.buildBatchExtrinsic([
+          identityLockAmountTransferExtrinsic.extrinsic,
+          proxiedSetIdentityExtrinsic,
+          transferExtrinsic.extrinsic,
+          proxiedStrategyDepositExtrinsic
+        ]);
+
+        return { extrinsic: batchedExtrinsicsWithIdentity };
+      }
+    }
+
+    case Transaction.STRATEGIES_WITHDRAW: {
+      const primaryAccount = window.bridge.account;
+      if (!primaryAccount) {
+        throw new Error('Strategy primary account not found.');
+      }
+
+      const [, proxyAccount, ...args] = params.args;
+      const [, withdrawalAmount] = args;
+
+      const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdraw(...args)).extrinsic;
+      const proxiedStrategyWithdrawExtrinsic = proxifyExtrinsic(proxyAccount, strategyWithdrawalExtrinsic);
+
+      const transferExtrinsic = window.bridge.tokens.transfer(primaryAccount.toString(), withdrawalAmount).extrinsic;
+      const proxiedTransferExtrinsic = proxifyExtrinsic(proxyAccount, transferExtrinsic);
+
+      const batchExtrinsic = window.bridge.transaction.buildBatchExtrinsic([
+        proxiedStrategyWithdrawExtrinsic,
+        proxiedTransferExtrinsic
+      ]);
+
+      return { extrinsic: batchExtrinsic };
+    }
+
     case Transaction.STRATEGIES_ALL_WITHDRAW: {
-      const [underlyingCurrency] = params.args;
-      return window.bridge.loans.withdrawAll(underlyingCurrency);
+      const primaryAccount = window.bridge.account;
+      if (!primaryAccount) {
+        throw new Error('Primary account not found.');
+      }
+
+      const [, proxyAccount, underlyingCurrency, withdrawalAmount] = params.args;
+
+      const clearIdentityExtrinsic = window.bridge.api.tx.identity.clearIdentity();
+
+      const transferIdentityReserveAmount = window.bridge.tokens.transfer(
+        primaryAccount.toString(),
+        PROXY_ACCOUNT_RESERVE_AMOUNT
+      ).extrinsic;
+
+      const strategyWithdrawalExtrinsic = (await window.bridge.loans.withdrawAll(underlyingCurrency)).extrinsic;
+
+      const transferExtrinsic = window.bridge.tokens.transfer(primaryAccount.toString(), withdrawalAmount).extrinsic;
+
+      const batchExtrinsic = window.bridge.transaction.buildBatchExtrinsic([
+        clearIdentityExtrinsic,
+        transferIdentityReserveAmount,
+        strategyWithdrawalExtrinsic,
+        transferExtrinsic
+      ]);
+
+      const proxiedBatchExtrinsic = proxifyExtrinsic(proxyAccount, batchExtrinsic);
+
+      return { extrinsic: proxiedBatchExtrinsic };
     }
     /* END - STRATEGIES */
 

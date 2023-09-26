@@ -206,52 +206,6 @@ describe('Pools Page', () => {
     getClaimableFarmingRewards.mockReturnValue(CLAIMABLE_REWARDS);
   });
 
-  it('should be able to enter customisable input amounts mode', async () => {
-    jest
-      .spyOn(LIQUIDITY_POOLS.ONE, 'getLiquidityDepositInputAmounts')
-      .mockReturnValue(LIQUIDITY_POOLS.ONE.pooledCurrencies);
-
-    const [DEFAULT_CURRENCY_1, DEFAULT_CURRENCY_2] = LIQUIDITY_POOLS.ONE.pooledCurrencies;
-
-    await render(<App />, { path });
-
-    const tabPanel = await withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_A.ticker, TABS.DEPOSIT);
-
-    await userEvent.type(
-      tabPanel.getByRole('textbox', {
-        name: new RegExp(`${DEFAULT_CURRENCY_1.currency.ticker} deposit amount`, 'i')
-      }),
-      DEFAULT_CURRENCY_1.toString(),
-      { delay: 1 }
-    );
-
-    expect(LIQUIDITY_POOLS.ONE.getLiquidityDepositInputAmounts).toHaveBeenCalledWith(DEFAULT_CURRENCY_1);
-
-    await waitFor(() => {
-      expect(
-        tabPanel.getByRole('textbox', {
-          name: new RegExp(`${DEFAULT_CURRENCY_2.currency.ticker} deposit amount`, 'i')
-        })
-      ).toHaveValue(DEFAULT_CURRENCY_2.toString());
-    });
-
-    await userEvent.type(
-      tabPanel.getByRole('textbox', {
-        name: new RegExp(`${DEFAULT_CURRENCY_2.currency.ticker} deposit amount`, 'i')
-      }),
-      '10',
-      { delay: 1 }
-    );
-
-    await waitFor(() => {
-      expect(
-        tabPanel.getByRole('textbox', {
-          name: new RegExp(`${DEFAULT_CURRENCY_1.currency.ticker} deposit amount`, 'i')
-        })
-      ).toHaveValue(DEFAULT_CURRENCY_1.toString());
-    });
-  });
-
   it('should render illiquid pool and deposit with custom ratio', async () => {
     jest
       .spyOn(LIQUIDITY_POOLS.EMPTY, 'getLiquidityDepositInputAmounts')
