@@ -20,7 +20,7 @@
     },
     {
       "source": "/marketdata/(.*)",
-      "destination": "/api/market_data.py"
+      "destination": "/api/market_data.js"
     },
     {
       "source": "/terms/(.*)",
