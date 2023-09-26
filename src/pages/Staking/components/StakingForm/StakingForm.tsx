@@ -24,6 +24,7 @@ import {
   stakingSchema,
   useForm
 } from '@/lib/form';
+import { pickSmallerAmount } from '@/utils/helpers/currencies';
 import { getTokenInputProps } from '@/utils/helpers/input';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { convertBlockNumbersToWeeks, convertWeeksToBlockNumbers } from '@/utils/helpers/staking';
@@ -62,8 +63,8 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
   const hasStake = !!accountData;
 
   const governanceBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker) || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const inputBalance = governanceBalance;
-  // accountData?.limit && governanceBalance && pickSmallerAmount(governanceBalance, accountData.limit);
+  const inputBalance =
+    accountData?.limit && governanceBalance && pickSmallerAmount(governanceBalance, accountData.limit);
 
   const getTransactionArgs = useCallback(
     async (values: StakingFormData) => {

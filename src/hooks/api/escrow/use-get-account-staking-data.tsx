@@ -26,7 +26,7 @@ type AccountStakingData = {
     amount: MonetaryAmount<CurrencyExt>;
     apy: Big;
   };
-  // limit: MonetaryAmount<CurrencyExt>;
+  limit: MonetaryAmount<CurrencyExt>;
 };
 
 const getUnlockData = (stakeEndBlock: number, currentBlockNumber: number): AccountUnlockStakingData => {
@@ -49,18 +49,13 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
     return null;
   }
 
-  // const limitPromise = window.bridge.api.rpc.escrow.freeStakable(accountId);
+  const limitPromise = window.bridge.api.rpc.escrow.freeStakable(accountId);
   const currentBlockNumberPromise = window.bridge.system.getCurrentBlockNumber();
   const projectedPromise = window.bridge.escrow.getRewardEstimate(accountId);
   const votingBalancePromise = window.bridge.escrow.votingBalance(accountId);
 
-  const [
-    // limit,
-    currentBlockNumber,
-    projected,
-    votingBalance
-  ] = await Promise.all([
-    // limitPromise,
+  const [limit, currentBlockNumber, projected, votingBalance] = await Promise.all([
+    limitPromise,
     currentBlockNumberPromise,
     projectedPromise,
     votingBalancePromise
@@ -72,8 +67,8 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
     unlock,
     balance: stakedBalance.amount,
     votingBalance,
-    projected
-    // limit
+    projected,
+    limit
   };
 };
 
