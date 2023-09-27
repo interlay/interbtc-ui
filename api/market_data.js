@@ -8,7 +8,7 @@ const tickers = {
   "Ether": "ethereum",
   "USD Coin": "usd-coin",
   "tBTC v2": "tbtc",
-  "voucher dot": 'voucher-dot'
+  "Voucher Dot": 'voucher-dot'
 }
 
 // Coingecko to Dia asset ids
