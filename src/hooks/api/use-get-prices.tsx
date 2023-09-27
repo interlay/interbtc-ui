@@ -22,6 +22,9 @@ const getCoingeckoId = (currency: CurrencyExt) => {
 const composeIds = (currencies: CurrencyExt[]): string =>
   currencies.reduce((acc, currency) => {
     const coingeckoId = getCoingeckoId(currency);
+    if (!coingeckoId) {
+      return 'voucher-dot';
+    }
 
     if (!acc) {
       return coingeckoId;
