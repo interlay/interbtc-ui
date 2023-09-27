@@ -8,7 +8,8 @@ const tickers = {
   "Ether": "ethereum",
   "USD Coin": "usd-coin",
   "tBTC v2": "tbtc",
-  "Voucher Dot": 'voucher-dot'
+  "Voucher Dot": 'voucher-dot',
+  "Voucher KSM": "voucher-ksm"
 }
 
 // Coingecko to Dia asset ids
@@ -23,6 +24,7 @@ const dia_assets = {
   "karura": "/Bifrost/518",
   "tether": "/Ethereum/0xdAC17F958D2ee523a2206206994597C13D831ec7",
   "voucher-dot": "/Bifrost-polkadot/2304",
+  "voucher-ksm": "/Bifrost/260",
   "binancecoin": "/Ethereum/0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
   "bnb": "/Ethereum/0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
   "tbtc": "/Ethereum/0x18084fbA666a33d37592fA2633fD49a74DD93a88",
