@@ -33,6 +33,7 @@ const useGetVaultData = ({ address }: { address: string }): VaultOverview | unde
   // const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
   const prices = useGetPrices();
+  console.log('prices', prices);
 
   const vaultsResponseData = useGetVaults({ address });
   // useErrorHandler(queryError);
