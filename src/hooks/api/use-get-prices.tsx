@@ -17,10 +17,10 @@ const getCoingeckoId = (currency: CurrencyExt) => {
     // TODO: This is a temporary fix to force V[DOT/KSM] prices. We need to refactor the lib to return an id
     // even when a CoinGecko id doesn't exist. We also need to remove references to CoinGecko ids; this
     // doesn't make sense/is very confusing now that we use DIA as our primary price source.
-    switch (currency) {
-      case currency.ticker === 'VDOT':
+    switch (currency.ticker) {
+      case 'VDOT':
         return 'voucher-dot';
-      case currency.ticker === 'VKSM':
+      case 'VKSM':
         return 'voucher-ksm';
       default:
         return currency.foreignAsset.coingeckoId;
@@ -32,6 +32,7 @@ const getCoingeckoId = (currency: CurrencyExt) => {
 const composeIds = (currencies: CurrencyExt[]): string =>
   currencies.reduce((acc, currency) => {
     const coingeckoId = getCoingeckoId(currency);
+    console.log('coingeckoId', coingeckoId);
     if (!coingeckoId) {
       return acc;
     }
