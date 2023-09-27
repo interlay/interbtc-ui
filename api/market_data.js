@@ -8,7 +8,7 @@ const tickers = {
   "Ether": "ethereum",
   "USD Coin": "usd-coin",
   "tBTC v2": "tbtc",
-  "Voucher Dot": 'voucher-dot',
+  "Voucher Dot": "voucher-dot",
   "Voucher KSM": "voucher-ksm"
 }
 
