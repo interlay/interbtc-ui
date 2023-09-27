@@ -14,7 +14,8 @@ import { useGetCurrencies } from './use-get-currencies';
 // MEMO: Returns `undefined` for currencies without coingecko ID.
 const getCoingeckoId = (currency: CurrencyExt) => {
   if (isForeignAsset(currency)) {
-    return currency.foreignAsset.coingeckoId;
+    // This is a temporary fix
+    return currency.foreignAsset.coingeckoId || 'voucher-dot';
   }
   return COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
 };
