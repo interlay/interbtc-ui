@@ -14,6 +14,7 @@ import { useGetCurrencies } from './use-get-currencies';
 // MEMO: Returns `undefined` for currencies without coingecko ID.
 const getCoingeckoId = (currency: CurrencyExt) => {
   if (isForeignAsset(currency)) {
+    console.log('currency', currency.foreignAsset);
     return currency.foreignAsset.coingeckoId;
   }
   return COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
@@ -22,9 +23,6 @@ const getCoingeckoId = (currency: CurrencyExt) => {
 const composeIds = (currencies: CurrencyExt[]): string =>
   currencies.reduce((acc, currency) => {
     const coingeckoId = getCoingeckoId(currency);
-    if (!coingeckoId) {
-      return acc;
-    }
 
     if (!acc) {
       return coingeckoId;
