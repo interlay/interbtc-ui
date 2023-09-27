@@ -165,7 +165,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
       acala: new AcalaAdapter(),
-      bifrost: new BifrostPolkadotAdapter(),
+      bifrost_polkadot: new BifrostPolkadotAdapter(),
       astar: new AstarAdapter(),
       hydra: new HydraAdapter(),
       parallel: new ParallelAdapter(),
