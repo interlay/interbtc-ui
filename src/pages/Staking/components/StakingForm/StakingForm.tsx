@@ -63,8 +63,9 @@ const StakingForm = ({ accountData, networkData, onStaking, ...props }: StakingF
   const hasStake = !!accountData;
 
   const governanceBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker) || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const inputBalance =
-    accountData?.limit && governanceBalance && pickSmallerAmount(governanceBalance, accountData.limit);
+  const inputBalance = accountData?.limit
+    ? governanceBalance && pickSmallerAmount(governanceBalance, accountData.limit)
+    : governanceBalance;
 
   const getTransactionArgs = useCallback(
     async (values: StakingFormData) => {
