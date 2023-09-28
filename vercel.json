@@ -7,6 +7,10 @@
     "api/terms.js": {
       "memory": 256,
       "maxDuration": 10
+    },
+    "api/market_data.js": {
+      "memory": 128,
+      "maxDuration": 5
     }
   },
   "rewrites": [
@@ -20,7 +24,7 @@
     },
     {
       "source": "/marketdata/(.*)",
-      "destination": "/api/market_data.py"
+      "destination": "/api/market_data.js"
     },
     {
       "source": "/terms/(.*)",
