@@ -23,6 +23,7 @@ export { qKSM } from './qKSM';
 export { qMOVR } from './qMOVR';
 export { qUSDT } from './qUSDT';
 export { SKSM } from './SKSM';
+export { TBTC } from './TBTC';
 export { USDC } from './USDC';
 export { USDT } from './USDT';
 export { VDOT } from './VDOT';
