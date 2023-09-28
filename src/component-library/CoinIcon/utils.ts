@@ -1,8 +1,10 @@
 import {
   AUSD,
   BTC,
+  DAI,
   DOT,
   ETH,
+  GLMR,
   IBTC,
   INTR,
   KAR,
@@ -22,17 +24,24 @@ import {
   qMOVR,
   qUSDT,
   SKSM,
+  TBTC,
+  USDC,
   USDT,
   VDOT,
-  VKSM
+  VKSM,
+  WBNB,
+  WBTC,
+  WETH
 } from './icons';
 import { CoinComponent } from './types';
 
 export const coins: Record<string, CoinComponent> = {
   AUSD,
   BTC,
+  DAI,
   DOT,
   ETH,
+  GLMR,
   IBTC,
   INTR,
   KAR,
@@ -52,7 +61,12 @@ export const coins: Record<string, CoinComponent> = {
   qMOVR,
   qUSDT,
   SKSM,
+  TBTC,
+  USDC,
   USDT,
   VDOT,
-  VKSM
+  VKSM,
+  WBNB,
+  WBTC,
+  WETH
 };
