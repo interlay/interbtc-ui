@@ -1,5 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
-import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
+import { InjectedExtension } from '@polkadot/extension-inject/types';
 import { KeyringPair as PolkadotKeyringPair, KeyringPair$Meta } from '@polkadot/keyring/types';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
@@ -59,7 +59,7 @@ type Action =
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
   | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
-  | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> }
+  | { type: ActionType.SetAccounts; payload: Array<KeyringPair> }
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
 
 type Dispatch = (action: Action) => void;
@@ -73,7 +73,7 @@ type State = {
   apiError: APIError | undefined;
   apiStatus: ApiStatus;
   selectedAccount: KeyringPair | undefined;
-  accounts: Array<InjectedAccountWithMeta>;
+  accounts: Array<KeyringPair>;
   extensions: Array<InjectedExtension>;
 };
 
