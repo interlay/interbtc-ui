@@ -32,7 +32,7 @@ const getCoingeckoId = (currency: CurrencyExt) => {
 const composeIds = (currencies: CurrencyExt[]): string =>
   currencies.reduce((acc, currency) => {
     const coingeckoId = getCoingeckoId(currency);
-    console.log('coingeckoId', coingeckoId);
+
     if (!coingeckoId) {
       return acc;
     }

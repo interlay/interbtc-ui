@@ -87,7 +87,7 @@ const BridgeForm = (): JSX.Element => {
     const apiPromise = data.provider.getApiPromise(formData[BRIDGE_FROM_FIELD] as string);
 
     apiPromise.setSigner(signer);
-    adapter.setApi(apiPromise);
+    await adapter.setApi(apiPromise);
 
     const transferCurrency = getCurrencyFromTicker(currentToken.value);
     const transferAmount = newMonetaryAmount(form.values[BRIDGE_AMOUNT_FIELD] || 0, transferCurrency, true);

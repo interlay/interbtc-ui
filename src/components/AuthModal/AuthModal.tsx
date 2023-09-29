@@ -1,9 +1,10 @@
-import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
+import { InjectedExtension } from '@polkadot/extension-inject/types';
 import { useEffect, useMemo, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps } from '@/component-library';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { KeyringPair } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
 import { findWallet } from '@/utils/helpers/wallet';
 
@@ -25,7 +26,7 @@ const getTitle = (t: TFunction, step: AuthModalSteps, extensions: InjectedExtens
 };
 
 type Props = {
-  onAccountSelect?: (account: InjectedAccountWithMeta) => void;
+  onAccountSelect?: (account: KeyringPair) => void;
   onDisconnect?: () => void;
 };
 
@@ -58,7 +59,7 @@ const AuthModal = ({ onAccountSelect, onDisconnect, isOpen, ...props }: AuthModa
     setWallet(undefined);
   };
 
-  const handleAccountSelection = (account: InjectedAccountWithMeta) => onAccountSelect?.(account);
+  const handleAccountSelection = (account: KeyringPair) => onAccountSelect?.(account);
 
   const handleDisconnect = () => onDisconnect?.();
 
