@@ -1,5 +1,4 @@
 import { Keyring } from '@polkadot/api';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,7 +44,7 @@ const Onboarding = (): JSX.Element => {
 
   const handleAccountModalClose = () => dispatch(showAccountModalAction(false));
 
-  const handleAccountSelect = (account: InjectedAccountWithMeta) => {
+  const handleAccountSelect = (account: KeyringPair) => {
     const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
     const keyringAccount = keyring.addFromAddress(account.address, account.meta);
     setSelectedAccount(keyringAccount);
