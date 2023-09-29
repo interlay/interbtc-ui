@@ -56,7 +56,7 @@ const StrategyFormTransactionFees = ({
       )})`
     : `${0.0} ${selectProps?.value} (${formatUSD(0)})`;
 
-  const proxyDepositAmonut = includeProxyAccountFee
+  const proxyDepositAmount = includeProxyAccountFee
     ? `${PROXY_ACCOUNT_RESERVE_AMOUNT.toHuman()} ${
         PROXY_ACCOUNT_RESERVE_AMOUNT.currency.ticker
       } (${displayMonetaryAmountInUSDFormat(
@@ -91,7 +91,7 @@ const StrategyFormTransactionFees = ({
             <TransactionDetailsDt tooltipLabel={t('strategies.proxy_deposit_tooltip')}>
               {label || t('strategies.proxy_deposit', { currency: GOVERNANCE_TOKEN.ticker })}
             </TransactionDetailsDt>
-            <TransactionDetailsDd>{proxyDepositAmonut}</TransactionDetailsDd>
+            <TransactionDetailsDd>{proxyDepositAmount}</TransactionDetailsDd>
           </TransactionDetailsGroup>
         )}
       </TransactionDetails>
