@@ -33,6 +33,6 @@ const BIFROST_POLKADOT = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   </Icon>
 ));
 
-BIFROST_POLKADOT.displayName = 'KINTSUGI';
+BIFROST_POLKADOT.displayName = 'BIFROST_POLKADOT';
 
 export { BIFROST_POLKADOT };
