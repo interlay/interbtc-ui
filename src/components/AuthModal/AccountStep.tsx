@@ -1,4 +1,3 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { mergeProps } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from 'react-use';
@@ -14,7 +13,7 @@ import { StepComponentProps, withStep } from '@/utils/hocs/step';
 import { StyledAccountItem, StyledCopyItem, StyledP } from './AuthModal.style';
 import { AuthModalSteps } from './types';
 
-type CopyAddressProps = { account: InjectedAccountWithMeta };
+type CopyAddressProps = { account: KeyringPair };
 
 const CopyAddress = ({ account }: CopyAddressProps) => {
   const [, copy] = useCopyToClipboard();
@@ -36,11 +35,11 @@ const CopyAddress = ({ account }: CopyAddressProps) => {
 };
 
 type AccountStepProps = {
-  accounts: InjectedAccountWithMeta[];
+  accounts: KeyringPair[];
   wallet: WalletData;
   selectedAccount?: KeyringPair;
   onChangeWallet?: () => void;
-  onSelectionChange: (account: InjectedAccountWithMeta) => void;
+  onSelectionChange: (account: KeyringPair) => void;
 } & StepComponentProps;
 
 const AccountComponent = ({
