@@ -7,6 +7,7 @@ import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/u
 import { Flex } from '@/component-library';
 import { WRAPPED_TOKEN_SYMBOL, WrappedTokenAmount } from '@/config/relay-chains';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
+import { useWallet } from '@/hooks/use-wallet';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -20,10 +21,10 @@ import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
 
 // TODO: should type properly (`Relay`)
-const renderModalStatusPanel = (request: any) => {
+const renderModalStatusPanel = (request: any, showPendingStatus: boolean) => {
   switch (request.status) {
     case IssueStatus.PendingWithBtcTxNotFound: {
-      return <BTCPaymentPendingStatusUI request={request} />;
+      return showPendingStatus && <BTCPaymentPendingStatusUI request={request} />;
     }
     case IssueStatus.RequestedRefund: {
       return <WhoopsStatusUI request={request} />;
@@ -41,8 +42,10 @@ interface Props {
 const IssueUI = ({ issue }: Props): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const { account } = useWallet();
 
   const destinationAddress = issue.userParachainAddress;
+  const showPendingStatus = account?.toString() === issue.userParachainAddress;
 
   const receivedWrappedTokenAmount: WrappedTokenAmount = issue.execution
     ? issue.execution.amountWrapped
@@ -55,33 +58,35 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
   return (
     <Flex direction='column' gap='spacing4'>
       <div className='space-y-6'>
-        <div className='text-center'>
-          {/* TODO: could componentize */}
-          <h4 className={clsx('space-x-1', 'text-xl')}>
-            <span>{t('receive')}</span>
+        {showPendingStatus && (
+          <div className='text-center'>
+            {/* TODO: could componentize */}
+            <h4 className={clsx('space-x-1', 'text-xl')}>
+              <span>{t('receive')}</span>
+              <span
+                className={clsx(
+                  { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+              >
+                {receivedWrappedTokenAmount.toHuman(8)}
+              </span>
+              <span>{WRAPPED_TOKEN_SYMBOL}</span>
+            </h4>
             <span
               className={clsx(
-                { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                'block'
               )}
             >
-              {receivedWrappedTokenAmount.toHuman(8)}
+              {`≈ ${displayMonetaryAmountInUSDFormat(
+                receivedWrappedTokenAmount,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              )}`}
             </span>
-            <span>{WRAPPED_TOKEN_SYMBOL}</span>
-          </h4>
-          <span
-            className={clsx(
-              { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-              'block'
-            )}
-          >
-            {`≈ ${displayMonetaryAmountInUSDFormat(
-              receivedWrappedTokenAmount,
-              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-            )}`}
-          </span>
-        </div>
+          </div>
+        )}
         <div>
           <PriceInfo
             title={
@@ -195,7 +200,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
           </span>
         </p>
       </div>
-      <>{renderModalStatusPanel(issue)}</>
+      <>{renderModalStatusPanel(issue, showPendingStatus)}</>
     </Flex>
   );
 };
