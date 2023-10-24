@@ -249,8 +249,7 @@ const RedeemForm = ({
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const compensationAmount =
-    monetaryAmount.isZero() && isPremiumRedeem ? getCompensationAmount(monetaryAmount) : undefined;
+  const compensationAmount = isPremiumRedeem ? getCompensationAmount(monetaryAmount) : undefined;
   const compensationAmountUSD = compensationAmount
     ? convertMonetaryAmountToValueInUSD(
         compensationAmount,
