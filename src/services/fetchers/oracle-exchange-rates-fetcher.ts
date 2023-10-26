@@ -1,5 +1,5 @@
 import { CurrencyExt, decodeFixedPointType } from '@interlay/interbtc-api';
-import { OracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
+import { OracleStatus } from '@interlay/interbtc-api/build/types/src/types/oracleTypes';
 import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
