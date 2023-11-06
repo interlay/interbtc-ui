@@ -1,6 +1,6 @@
 import { AcalaAdapter, KaruraAdapter } from '@interlay/bridge/build/adapters/acala';
 import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
-import { BifrostAdapter } from '@interlay/bridge/build/adapters/bifrost';
+import { BifrostKusamaAdapter, BifrostPolkadotAdapter } from '@interlay/bridge/build/adapters/bifrost';
 import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
 import { HeikoAdapter, ParallelAdapter } from '@interlay/bridge/build/adapters/parallel';
@@ -165,6 +165,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
       acala: new AcalaAdapter(),
+      bifrost_polkadot: new BifrostPolkadotAdapter(),
       astar: new AstarAdapter(),
       hydra: new HydraAdapter(),
       parallel: new ParallelAdapter(),
@@ -214,7 +215,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       kusama: new KusamaAdapter(),
       karura: new KaruraAdapter(),
       statemine: new StatemineAdapter(),
-      bifrost: new BifrostAdapter(),
+      bifrost: new BifrostKusamaAdapter(),
       heiko: new HeikoAdapter()
     };
     SS58_PREFIX = 2;

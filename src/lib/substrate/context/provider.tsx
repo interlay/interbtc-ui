@@ -131,7 +131,7 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
       payload: theExtensions
     });
 
-    const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
+    const theAccounts = (await web3Accounts({ ss58Format: constants.SS58_FORMAT })) as KeyringPair[];
     dispatch({
       type: ActionType.SetAccounts,
       payload: theAccounts
