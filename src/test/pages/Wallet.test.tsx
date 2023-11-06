@@ -6,12 +6,7 @@ import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/con
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
-import { MOCK_AMM, MOCK_API, MOCK_LOANS, MOCK_SYSTEM } from '../mocks/@interlay/interbtc-api';
-import {
-  DEFAULT_STAKED_BALANCE,
-  EMPTY_STAKED_BALANCE,
-  mockGetStakedBalance
-} from '../mocks/@interlay/interbtc-api/parachain/escrow';
+import { MOCK_AMM, MOCK_API, MOCK_ESCROW, MOCK_LOANS, MOCK_SYSTEM } from '../mocks/@interlay/interbtc-api';
 import { render, screen, userEvent, waitFor } from '../test-utils';
 import { withinList } from './utils/list';
 import { queryTable, withinTable, withinTableRow } from './utils/table';
@@ -22,11 +17,13 @@ const { getLpTokens, getLiquidityProvidedByAccount } = MOCK_AMM.MODULE;
 const { getCurrentBlockNumber } = MOCK_SYSTEM.MODULE;
 const { getLendPositionsOfAccount, getBorrowPositionsOfAccount } = MOCK_LOANS.MODULE;
 const { claimVesting, vestingSchedules } = MOCK_API.MODULE;
+const { getStakedBalance } = MOCK_ESCROW.MODULE;
 
 const { ACCOUNT_LIQUIDITY } = MOCK_AMM.DATA;
 const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
 const { LOAN_POSITIONS } = MOCK_LOANS.DATA;
 const { VESTING_SCHEDULES } = MOCK_API.DATA;
+const { STAKED_BALANCE } = MOCK_ESCROW.DATA;
 
 const path = '/wallet';
 
@@ -49,7 +46,7 @@ describe('Wallet Page', () => {
     getLendPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.LEND.AVERAGE);
     getBorrowPositionsOfAccount.mockReturnValue(LOAN_POSITIONS.BORROW.AVERAGE);
     getLiquidityProvidedByAccount.mockReturnValue(ACCOUNT_LIQUIDITY.EMPTY);
-    mockGetStakedBalance.mockReturnValue(DEFAULT_STAKED_BALANCE);
+    getStakedBalance.mockReturnValue(STAKED_BALANCE.FULL);
     getCurrentBlockNumber.mockReturnValue(BLOCK_NUMBER.CURRENT);
     vestingSchedules.mockReturnValue(VESTING_SCHEDULES.EMPTY);
   });
@@ -225,7 +222,7 @@ describe('Wallet Page', () => {
     });
 
     it('should not display table', async () => {
-      mockGetStakedBalance.mockReturnValue(EMPTY_STAKED_BALANCE);
+      getStakedBalance.mockResolvedValue(STAKED_BALANCE.EMPTY);
 
       await render(<App />, { path });
 

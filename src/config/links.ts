@@ -28,8 +28,11 @@ const GEOBLOCK_REDIRECTION_LINK = 'https://www.interlay.io/geoblock';
 
 const FORMS_STRATEGIES_LINK = 'https://forms.gle/Ue7NQ81j2u5oNDey6';
 
+const BIFROST_SWAP_LINK = 'https://bifrost.app/swap';
+
 export {
   BANXA_LINK,
+  BIFROST_SWAP_LINK,
   FORMS_STRATEGIES_LINK,
   GEOBLOCK_API_ENDPOINT,
   GEOBLOCK_REDIRECTION_LINK,

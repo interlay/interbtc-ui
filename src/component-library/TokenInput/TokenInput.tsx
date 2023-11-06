@@ -121,6 +121,10 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         )}
         <NumberInput
           ref={inputRef}
+          pattern='^[0-9]*[.,]?[0-9]*$'
+          inputMode='decimal'
+          minLength={1}
+          maxLength={79}
           placeholder={placeholder}
           size='large'
           isDisabled={isDisabled}

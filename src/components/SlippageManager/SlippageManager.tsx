@@ -38,7 +38,8 @@ const SlippageManager = forwardRef<HTMLDivElement, SlippageManagerProps>(
             <List
               aria-label='slippage tolerance'
               direction='row'
-              selectionMode='single'
+              selectionMode='multiple'
+              selectionBehavior='replace'
               onSelectionChange={handleSelectionChange}
               defaultSelectedKeys={[value.toString()]}
             >

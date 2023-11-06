@@ -1,5 +1,5 @@
 import { LoanAsset } from '@interlay/interbtc-api';
-import { useEffect, useRef } from 'react';
+import { RefObject, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Flex } from '@/component-library';
@@ -20,15 +20,20 @@ type CollateralFormProps = {
   asset: LoanAsset;
   variant: Extract<CollateralModalVariant, 'enable' | 'disable'>;
   isOpen?: boolean;
+  overlappingModalRef: RefObject<HTMLDivElement>;
   onSigning: () => void;
 };
 
-const CollateralForm = ({ asset, variant, isOpen, onSigning }: CollateralFormProps): JSX.Element => {
+const CollateralForm = ({
+  asset,
+  variant,
+  isOpen,
+  overlappingModalRef,
+  onSigning
+}: CollateralFormProps): JSX.Element => {
   const { t } = useTranslation();
 
   const { refetch } = useGetAccountLendingStatistics();
-
-  const overlappingModalRef = useRef<HTMLDivElement>(null);
 
   const transaction = useTransaction({
     onSigning,

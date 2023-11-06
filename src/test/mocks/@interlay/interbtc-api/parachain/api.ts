@@ -1,7 +1,10 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { Text, TypeRegistry } from '@polkadot/types';
 import { Registry } from '@polkadot/types/types';
 import Big from 'big.js';
+
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { EXTRINSIC } from '../extrinsic';
 
@@ -22,7 +25,9 @@ const DATA = { VESTING_SCHEDULES };
 // add here mocks that are being manipulated in tests
 const MODULE = {
   vestingSchedules: jest.fn().mockReturnValue(VESTING_SCHEDULES.EMPTY),
-  claimVesting: jest.fn().mockReturnValue(EXTRINSIC)
+  claimVesting: jest.fn().mockReturnValue(EXTRINSIC),
+  batchAll: jest.fn().mockReturnValue(EXTRINSIC),
+  freeStakable: jest.fn().mockResolvedValue(newMonetaryAmount(10000000000000, GOVERNANCE_TOKEN, true))
 };
 
 // maps module to ApiPromise
@@ -33,6 +38,9 @@ const PROMISE: Partial<Record<keyof ApiPromise, unknown>> = {
     system: {
       chain: jest.fn().mockReturnValue(SYSTEM_CHAIN),
       chainType: jest.fn().mockReturnValue(CHAIN_TYPE)
+    },
+    escrow: {
+      freeStakable: MODULE.freeStakable
     }
   },
   query: {
@@ -51,6 +59,9 @@ const PROMISE: Partial<Record<keyof ApiPromise, unknown>> = {
     },
     multiTransactionPayment: {
       withFeeSwapPath: jest.fn().mockReturnValue(EXTRINSIC)
+    },
+    utility: {
+      batchAll: MODULE.batchAll
     }
   }
 };
