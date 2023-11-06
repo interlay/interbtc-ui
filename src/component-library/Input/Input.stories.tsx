@@ -7,8 +7,14 @@ const Template: Story<InputProps> = (args) => <Input {...args} />;
 const Default = Template.bind({});
 Default.args = {
   placeholder: 'placeholder',
+  label: 'Coin'
+};
+
+const Side = Template.bind({});
+Side.args = {
+  placeholder: 'placeholder',
   label: 'Coin',
-  description: "What's your favorite coin?"
+  labelPosition: 'side'
 };
 
 const Label = Template.bind({});

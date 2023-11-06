@@ -17,7 +17,7 @@ import { EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
-import { ActionsCell } from './ActionsCell';
+import { ActionsCell, EXTERNAL_SWAP_LINKS } from './ActionsCell';
 
 const queryString = require('query-string');
 
@@ -102,15 +102,19 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
 
         const isWrappedToken = isCurrencyEqual(currency, WRAPPED_TOKEN);
         const isRedeemable = isWrappedToken && !transferable.isZero();
-        const isPooledAsset = !!pooledTickers?.has(currency.ticker);
+        const swappableToken = pooledTickers?.has(currency.ticker)
+          ? 'internal'
+          : Object.keys(EXTERNAL_SWAP_LINKS).includes(currency.ticker)
+          ? 'external'
+          : undefined;
         const isGovernanceToken = isCurrencyEqual(currency, GOVERNANCE_TOKEN);
         const isVestingClaimable = isGovernanceToken && !!vestingData?.isClaimable;
 
-        const hasActions = isRedeemable || isPooledAsset || isVestingClaimable;
+        const hasActions = isRedeemable || !!swappableToken || isVestingClaimable;
 
         const actions = hasActions ? (
           <ActionsCell
-            isPooledAsset={isPooledAsset}
+            swappableToken={swappableToken}
             isRedeemable={isRedeemable}
             isGovernanceToken={isGovernanceToken}
             isWrappedToken={isWrappedToken}
