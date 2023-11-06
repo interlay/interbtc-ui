@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
@@ -7,6 +7,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { BLOCK_TIME } from '@/config/parachain';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import useAccountId from '../../use-account-id';
@@ -61,6 +62,9 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
     votingBalancePromise
   ]);
 
+  const unparsedLimit = limit?.values().next().value?.toString() as string;
+  const parsedLimit = newMonetaryAmount(unparsedLimit || 0, GOVERNANCE_TOKEN);
+
   const unlock = getUnlockData(stakedBalance.endBlock, currentBlockNumber);
 
   return {
@@ -68,7 +72,7 @@ const getAccountStakingData = async (accountId: AccountId): Promise<AccountStaki
     balance: stakedBalance.amount,
     votingBalance,
     projected,
-    limit
+    limit: parsedLimit
   };
 };
 

@@ -29,7 +29,10 @@ const StakingAccountDetails = ({
   const [isOpen, setOpen] = useState(false);
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW_REWARDS, {
-    onSuccess: onClaimRewards
+    onSuccess: () => {
+      onClaimRewards();
+      setOpen(false);
+    }
   });
 
   const handleSubmit = () => transaction.execute();

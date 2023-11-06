@@ -23,7 +23,10 @@ const StakingWithdrawCard = ({ data, onWithdraw, ...props }: StakingWithdrawCard
   const [isOpen, setOpen] = useState(false);
 
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW, {
-    onSuccess: onWithdraw
+    onSuccess: () => {
+      onWithdraw();
+      setOpen(false);
+    }
   });
 
   const handleSubmit = () => transaction.execute();
