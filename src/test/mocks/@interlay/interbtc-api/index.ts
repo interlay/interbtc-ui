@@ -8,6 +8,7 @@ import { Signer } from '@polkadot/types/types';
 import {
   MOCK_AMM,
   MOCK_API,
+  MOCK_ESCROW,
   MOCK_LOANS,
   MOCK_SYSTEM,
   MOCK_TOKENS,
@@ -36,7 +37,6 @@ import {
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
-import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
 
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
 
@@ -88,10 +88,7 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
   },
   amm: MOCK_AMM.MODULE,
-  escrow: {
-    getStakedBalance: mockGetStakedBalance,
-    votingBalance: mockVotingBalance
-  },
+  escrow: MOCK_ESCROW.MODULE,
   transaction: MOCK_TRANSACTION.MODULE
 };
 
