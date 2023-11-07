@@ -15,6 +15,7 @@ env:
   REACT_APP_FEATURE_FLAG_LENDING: enabled
   REACT_APP_FEATURE_FLAG_AMM: enabled
   REACT_APP_FEATURE_FLAG_WALLET: enabled
+  REACT_APP_BITCOIN_NETWORK: regtest
 
 jobs:
   lint:

@@ -2,6 +2,7 @@ export * from './amm';
 export * from './api';
 export * from './btcRelay';
 export * from './electrsAPI';
+export * from './escrow';
 export * from './fee';
 export * from './issue';
 export * from './loans';

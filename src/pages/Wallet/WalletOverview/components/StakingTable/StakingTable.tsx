@@ -1,5 +1,3 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import { differenceInDays, format, formatDistanceToNowStrict } from 'date-fns';
 import { ReactNode, useMemo } from 'react';
@@ -9,7 +7,7 @@ import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/uti
 import { CoinIcon, Flex } from '@/component-library';
 import { Cell, Table } from '@/components';
 import { GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { GetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
+import { AccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
@@ -31,11 +29,10 @@ type StakingTableRows = {
 };
 
 type StakingTableProps = {
-  data: GetAccountStakingData;
-  votingBalance: MonetaryAmount<CurrencyExt>;
+  data: AccountStakingData;
 };
 
-const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element => {
+const StakingTable = ({ data }: StakingTableProps): JSX.Element => {
   const { t } = useTranslation();
   const titleId = useId();
   const prices = useGetPrices();
@@ -55,7 +52,7 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
   ];
 
   const rows = useMemo((): StakingTableRows[] => {
-    const { balance, unlock } = data;
+    const { balance, unlock, votingBalance } = data;
     const stakingBalancePrice =
       convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, balance.currency.ticker)?.usd) || 0;
 
@@ -88,7 +85,7 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prices, data, votingBalance]);
+  }, [prices, data]);
 
   return <Table title={t('staked')} titleId={titleId} columns={columns} rows={rows} />;
 };

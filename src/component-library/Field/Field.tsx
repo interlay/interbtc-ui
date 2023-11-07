@@ -1,34 +1,47 @@
 import { forwardRef, HTMLAttributes, ReactNode } from 'react';
 
-import { Flex } from '../Flex';
+import { Flex, FlexProps } from '../Flex';
 import { HelperText, HelperTextProps } from '../HelperText';
 import { Label, LabelProps } from '../Label';
 import { hasError } from '../utils/input';
-import { Wrapper } from './Field.style';
+import { LabelPosition, Spacing } from '../utils/prop-types';
+import { StyledField } from './Field.style';
 
 type Props = {
   label?: ReactNode;
+  labelPosition?: LabelPosition;
   labelProps?: LabelProps;
+  maxWidth?: Spacing;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type InheritAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
+type InheritAttrs = Omit<HelperTextProps & FlexProps, keyof Props & NativeAttrs>;
 
 type FieldProps = Props & NativeAttrs & InheritAttrs;
 
 const Field = forwardRef<HTMLDivElement, FieldProps>(
   (
-    { label, labelProps, errorMessage, errorMessageProps, description, descriptionProps, children, ...props },
+    {
+      label,
+      labelPosition = 'top',
+      labelProps,
+      errorMessage,
+      errorMessageProps,
+      description,
+      descriptionProps,
+      children,
+      maxWidth,
+      ...props
+    },
     ref
   ): JSX.Element => {
     const error = hasError({ errorMessage });
     const hasHelpText = !!description || error;
 
-    return (
-      <Flex ref={ref} direction='column' {...props}>
-        {label && <Label {...labelProps}>{label}</Label>}
-        <Wrapper alignItems='center'>{children}</Wrapper>
+    const element = (
+      <>
+        <StyledField $maxWidth={maxWidth}>{children}</StyledField>
         {hasHelpText && (
           <HelperText
             description={description}
@@ -36,6 +49,23 @@ const Field = forwardRef<HTMLDivElement, FieldProps>(
             descriptionProps={descriptionProps}
             errorMessageProps={errorMessageProps}
           />
+        )}
+      </>
+    );
+
+    return (
+      <Flex ref={ref} direction={labelPosition === 'top' ? 'column' : 'row'} {...props}>
+        {label && (
+          <Label {...labelProps} position={labelPosition}>
+            {label}
+          </Label>
+        )}
+        {labelPosition === 'top' ? (
+          element
+        ) : (
+          <Flex direction='column' alignItems='flex-end'>
+            {element}
+          </Flex>
         )}
       </Flex>
     );
@@ -46,6 +76,7 @@ Field.displayName = 'Field';
 
 const useFieldProps = ({
   label,
+  labelPosition,
   labelProps,
   errorMessage,
   errorMessageProps,
@@ -54,11 +85,16 @@ const useFieldProps = ({
   className,
   hidden,
   style,
+  maxWidth,
+  alignItems,
+  justifyContent,
+  gap,
   ...props
 }: FieldProps): { fieldProps: FieldProps; elementProps: any } => {
   return {
     fieldProps: {
       label,
+      labelPosition,
       labelProps,
       errorMessage,
       errorMessageProps,
@@ -66,7 +102,11 @@ const useFieldProps = ({
       descriptionProps,
       className,
       hidden,
-      style
+      style,
+      maxWidth,
+      alignItems,
+      justifyContent,
+      gap
     },
     elementProps: props
   };

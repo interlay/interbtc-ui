@@ -1,14 +1,19 @@
 import { forwardRef, LabelHTMLAttributes } from 'react';
 
+import { LabelPosition } from '../utils/prop-types';
 import { StyledLabel } from './Label.style';
 
-type NativeAttrs = LabelHTMLAttributes<unknown>;
+type Props = {
+  position?: LabelPosition;
+};
 
-type LabelProps = NativeAttrs;
+type NativeAttrs = Omit<LabelHTMLAttributes<unknown>, keyof Props>;
+
+type LabelProps = Props & NativeAttrs;
 
 const Label = forwardRef<HTMLLabelElement, LabelProps>(
-  ({ children, ...props }, ref): JSX.Element => (
-    <StyledLabel {...props} ref={ref}>
+  ({ children, position = 'top', ...props }, ref): JSX.Element => (
+    <StyledLabel {...props} $position={position} ref={ref}>
       {children}
     </StyledLabel>
   )
