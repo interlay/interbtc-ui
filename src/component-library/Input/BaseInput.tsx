@@ -1,16 +1,13 @@
 import { ValidationState } from '@react-types/shared';
 import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { Field, useFieldProps } from '../Field';
+import { Field, FieldProps, useFieldProps } from '../Field';
 import { HelperTextProps } from '../HelperText';
-import { LabelProps } from '../Label';
 import { hasError } from '../utils/input';
 import { Sizes, Spacing } from '../utils/prop-types';
 import { Adornment, StyledBaseInput } from './Input.style';
 
 type Props = {
-  label?: ReactNode;
-  labelProps?: LabelProps;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
   bottomAdornment?: ReactNode;
@@ -25,7 +22,11 @@ type Props = {
 
 type NativeAttrs = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>;
 
-type InheritAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
+type InheritAttrs = Omit<
+  HelperTextProps &
+    Pick<FieldProps, 'label' | 'labelPosition' | 'labelProps' | 'maxWidth' | 'justifyContent' | 'alignItems'>,
+  keyof Props & NativeAttrs
+>;
 
 type BaseInputProps = Props & NativeAttrs & InheritAttrs;
 

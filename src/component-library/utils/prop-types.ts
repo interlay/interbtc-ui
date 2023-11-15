@@ -112,3 +112,5 @@ export type BreakPoints = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ProgressBarColors = 'default' | 'red';
 
 export type BorderRadius = keyof typeof theme.rounded;
+
+export type LabelPosition = 'top' | 'side';

@@ -2966,10 +2966,10 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@interlay/bridge@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@interlay/bridge/-/bridge-0.4.0.tgz#a8ee25a0bcec1579d1a0ad668345080c567ac254"
-  integrity sha512-884QMnnOcnzxUU9IgW3xLhzusQ36z2f7vdRTfB8CXkKEZwdMpq6pXlZM9GSWFyw5zvSeG8dn2IgFd4642eOp9w==
+"@interlay/bridge@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@interlay/bridge/-/bridge-0.4.1.tgz#8df57a2c9f8d51cb7ee1028144f485828df9b625"
+  integrity sha512-7fW/j0TUEmpBA5zAUfbxxSQReM7LwwHQD10VzUA95+oasjR/hTMALXtSnMAT4tyWZzFk5KZvp5G5RG6Xypm1RA==
   dependencies:
     "@acala-network/api" "^5"
     "@acala-network/sdk" "^4.1.9-7"
