@@ -24,9 +24,9 @@ const NATIVE_CURRENCIES: Array<CurrencyExt> = isPolkadotChain
   ? [Polkadot, InterBtc, Interlay]
   : [KBtc, Kintsugi, Kusama];
 
-const BIFROST_RELAY_CHAIN_NATIVE_TOKEN = isPolkadotChain ? 'VDOT' : 'VKSM';
-
 const FEE_TICKERS = [...NATIVE_CURRENCIES.map(({ ticker }) => ticker), 'USDT'];
+
+const BIFROST_RELAY_CHAIN_NATIVE_TOKEN = isPolkadotChain ? 'VDOT' : 'VKSM';
 
 const COINGECKO_ID_BY_CURRENCY_TICKER: Record<string, typeof COINGECKO_IDS[number]> = Object.freeze({
   [Bitcoin.ticker]: 'bitcoin',

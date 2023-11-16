@@ -31,11 +31,13 @@ const StakingAccountDetails = ({
   const transaction = useTransaction(Transaction.ESCROW_WITHDRAW_REWARDS, {
     onSuccess: () => {
       onClaimRewards();
-      setOpen(false);
     }
   });
 
-  const handleSubmit = () => transaction.execute();
+  const handleSubmit = () => {
+    transaction.execute();
+    setOpen(false);
+  };
 
   const handleOpen = () => transaction.fee.estimate();
 
