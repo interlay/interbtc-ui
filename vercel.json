@@ -40,7 +40,7 @@
     },
     {
       "source": "/tvl_dex",
-      "destination": "/api/tvlDex.js"
+      "destination": "/api/tvl_dex.js"
     }
   ],
   "headers": [
