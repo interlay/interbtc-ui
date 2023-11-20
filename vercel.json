@@ -11,8 +11,12 @@
     "api/market_data.js": {
       "memory": 128,
       "maxDuration": 5
+    },
+    "api/tvlDex.js": {
+      "memory": 256,
+      "maxDuration": 5
     }
-  },
+},
   "rewrites": [
     {
       "source": "/supply/(.*)",
@@ -33,6 +37,10 @@
     {
       "source": "/check_access",
       "destination": "/api/geoblock.js"
+    },
+    {
+      "source": "/tvl_dex",
+      "destination": "/api/tvlDex.js"
     }
   ],
   "headers": [
