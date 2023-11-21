@@ -3,7 +3,7 @@ import { createInterBtcApi } from "@interlay/interbtc-api";
 const tvlDex = async (request, response) => {
     if (request.method === 'GET') {
         const interbtcApi = await createInterBtcApi(
-            process.env.REACT_APP_RELAY_CHAIN_URL,
+            process.env.REACT_APP_PARACHAIN_URL,
             process.env.REACT_APP_BITCOIN_NETWORK,
             undefined,
             3
