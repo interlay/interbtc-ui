@@ -14,7 +14,7 @@
     },
     "api/tvl_dex.js": {
       "memory": 256,
-      "maxDuration": 5
+      "maxDuration": 30
     }
 },
   "rewrites": [
