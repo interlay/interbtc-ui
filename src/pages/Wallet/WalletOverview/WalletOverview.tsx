@@ -2,7 +2,6 @@ import { LoanPositionsTable, MainContainer, PoolsTable } from '@/components';
 import { useGetAccountPools } from '@/hooks/api/amm/use-get-account-pools';
 import { useGetLiquidityPools } from '@/hooks/api/amm/use-get-liquidity-pools';
 import { useGetAccountStakingData } from '@/hooks/api/escrow/use-get-account-staking-data';
-import { useGetAccountVotingBalance } from '@/hooks/api/escrow/use-get-account-voting-balance';
 import { useGetAccountPositions } from '@/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/hooks/api/loans/use-get-loan-assets';
 import { useGetBalances } from '@/hooks/api/tokens/use-get-balances';
@@ -21,7 +20,6 @@ const WalletOverview = (): JSX.Element => {
   const { data: accountPoolsData } = useGetAccountPools();
   const { data: liquidityPools } = useGetLiquidityPools();
   const { data: accountStakingData } = useGetAccountStakingData();
-  const { data: accountVotingBalance } = useGetAccountVotingBalance();
   const {
     data: { borrowPositions, lendPositions }
   } = useGetAccountPositions();
@@ -32,11 +30,6 @@ const WalletOverview = (): JSX.Element => {
   }
 
   const handleCloseBanner = () => setBannerOpen(false);
-
-  const hasStakingTable =
-    accountStakingData &&
-    accountVotingBalance &&
-    (!accountStakingData?.balance.isZero() || !accountVotingBalance?.isZero());
 
   const pooledTickers = liquidityPools && getPooledTickers(liquidityPools);
 
@@ -54,7 +47,7 @@ const WalletOverview = (): JSX.Element => {
       {!!accountPoolsData?.positions.length && (
         <PoolsTable variant='account-pools' title='Liquidity Pools' pools={accountPoolsData.positions} />
       )}
-      {hasStakingTable && <StakingTable data={accountStakingData as any} votingBalance={accountVotingBalance as any} />}
+      {accountStakingData && <StakingTable data={accountStakingData} />}
     </MainContainer>
   );
 };

@@ -6,6 +6,7 @@ const XCMEndpoints: XCMEndpointsRecord = {
   acala: ['wss://acala-rpc-1.aca-api.network', 'wss://acala-rpc-3.aca-api.network/ws', 'wss://acala-rpc.dwellir.com'],
   astar: ['wss://rpc.astar.network', 'wss://astar-rpc.dwellir.com'],
   bifrost: ['wss://bifrost-rpc.dwellir.com'],
+  bifrost_polkadot: ['wss://hk.p.bifrost-rpc.liebi.com/ws'],
   heiko: ['wss://heiko-rpc.parallel.fi'],
   hydra: ['wss://rpc.hydradx.cloud', 'wss://hydradx-rpc.dwellir.com'],
   interlay: ['wss://api.interlay.io/parachain'],
@@ -13,8 +14,7 @@ const XCMEndpoints: XCMEndpointsRecord = {
     'wss://karura-rpc-0.aca-api.network',
     'wss://karura-rpc-1.aca-api.network',
     'wss://karura-rpc-2.aca-api.network/ws',
-    'wss://karura-rpc-3.aca-api.network/ws',
-    'wss://karura-rpc.dwellir.com'
+    'wss://karura-rpc-3.aca-api.network/ws'
   ],
   kintsugi: ['wss://api-kusama.interlay.io/parachain'],
   kusama: ['wss://kusama-rpc.polkadot.io', 'wss://kusama-rpc.dwellir.com'],

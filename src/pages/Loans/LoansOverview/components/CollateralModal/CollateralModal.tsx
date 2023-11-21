@@ -101,7 +101,13 @@ const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: Collate
             {t('dismiss')}
           </CTA>
         ) : (
-          <CollateralForm asset={asset} onSigning={onClose} variant={variant} isOpen={isOpen} />
+          <CollateralForm
+            asset={asset}
+            onSigning={onClose}
+            variant={variant}
+            isOpen={isOpen}
+            overlappingModalRef={overlappingModalRef}
+          />
         )}
       </ModalFooter>
     </Modal>

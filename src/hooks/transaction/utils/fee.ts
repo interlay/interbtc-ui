@@ -12,6 +12,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { PROXY_ACCOUNT_RESERVE_AMOUNT } from '@/utils/constants/account';
 
 import { getExtrinsic } from '../extrinsics';
 import { Actions, Transaction } from '../types';
@@ -62,6 +63,7 @@ const getTxFeeSwapData = async (
     reverseDirectionTrade.outputAmount.toString(true),
     baseExtrinsic
   );
+
   const withSwapTxFee = await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
   const { inputAmount, path } = getOptimalTradeForTxFeeSwap(
     withSwapTxFee.mul(OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER),
@@ -157,9 +159,26 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
       return [calculatedLimit];
     }
     /* END - LOANS */
-    case Transaction.STRATEGIES_DEPOSIT: {
-      const [, amount] = params.args;
+    /* START - ESCROW */
+    case Transaction.ESCROW_CREATE_LOCK: {
+      const [amount] = params.args;
       return [amount];
+    }
+    case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT: {
+      const [amount] = params.args;
+      return [amount];
+    }
+    case Transaction.ESCROW_INCREASE_LOCKED_AMOUNT: {
+      const [amount] = params.args;
+      return [amount];
+    }
+    /* END - ESCROW */
+    case Transaction.STRATEGIES_DEPOSIT: {
+      const [, , isIdentitySet, , amount] = params.args;
+      if (isIdentitySet) {
+        return [amount];
+      }
+      return [amount, PROXY_ACCOUNT_RESERVE_AMOUNT];
     }
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL: {
       const [amount] = params.args;
@@ -177,7 +196,11 @@ const getAmount = (params: Actions): MonetaryAmount<CurrencyExt>[] | undefined =
     case Transaction.LOANS_DISABLE_COLLATERAL:
     case Transaction.STRATEGIES_ALL_WITHDRAW:
     case Transaction.STRATEGIES_WITHDRAW:
+    case Transaction.STRATEGIES_INITIALIZE_PROXY:
     case Transaction.AMM_CLAIM_REWARDS:
+    case Transaction.ESCROW_INCREASE_LOCKED_TIME:
+    case Transaction.ESCROW_WITHDRAW:
+    case Transaction.ESCROW_WITHDRAW_REWARDS:
       return undefined;
   }
 

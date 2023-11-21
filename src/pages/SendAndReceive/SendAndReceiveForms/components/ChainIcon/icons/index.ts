@@ -1,6 +1,7 @@
 export { ACALA } from './Acala';
 export { ASTAR } from './Astar';
 export { BIFROST } from './Bifrost';
+export { BIFROST_POLKADOT } from './BifrostPolkadot';
 export { HEIKO } from './Heiko';
 export { HYDRA } from './Hydra';
 export { INTERLAY } from './Interlay';

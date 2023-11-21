@@ -6,24 +6,30 @@ import { useDispatch } from 'react-redux';
 import { showBuyModal } from '@/common/actions/general.actions';
 import { CTA, CTALink, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
+import { BIFROST_SWAP_LINK } from '@/config/links';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { Transaction, useTransaction } from '@/hooks/transaction';
 import { usePageQueryParams } from '@/hooks/use-page-query-params';
+import { BIFROST_RELAY_CHAIN_NATIVE_TOKEN } from '@/utils/constants/currency';
 import { PAGES, QUERY_PARAMETERS, QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
+
+const EXTERNAL_SWAP_LINKS = {
+  [BIFROST_RELAY_CHAIN_NATIVE_TOKEN]: BIFROST_SWAP_LINK
+};
 
 type ActionsCellProps = {
   currency: CurrencyExt;
   isWrappedToken: boolean;
   isRedeemable: boolean;
-  isPooledAsset: boolean;
   isGovernanceToken: boolean;
   isVestingClaimable: boolean;
+  swappableToken?: 'internal' | 'external';
 };
 
 const ActionsCell = ({
   currency,
+  swappableToken,
   isGovernanceToken,
-  isPooledAsset,
   isRedeemable,
   isVestingClaimable,
   isWrappedToken
@@ -76,7 +82,7 @@ const ActionsCell = ({
             {t('redeem')}
           </CTALink>
         )}
-        {isPooledAsset && (
+        {swappableToken === 'internal' ? (
           <CTALink
             {...mergeProps(
               commonCTAProps,
@@ -88,7 +94,11 @@ const ActionsCell = ({
           >
             {t('amm.swap')}
           </CTALink>
-        )}
+        ) : swappableToken === 'external' ? (
+          <CTALink external {...mergeProps(commonCTAProps, { to: EXTERNAL_SWAP_LINKS[currency.ticker] })}>
+            {t('amm.swap')}
+          </CTALink>
+        ) : undefined}
         {isGovernanceToken && (
           <>
             <CTA {...commonCTAProps} onPress={handlePressBuyGovernance}>
@@ -118,5 +128,5 @@ const ActionsCell = ({
   );
 };
 
-export { ActionsCell };
+export { ActionsCell, EXTERNAL_SWAP_LINKS };
 export type { ActionsCellProps };

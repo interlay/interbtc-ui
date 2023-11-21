@@ -1,5 +1,6 @@
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 import { useCallback } from 'react';
 
 import { useGetAccountLendingStatistics } from '@/hooks/api/loans/use-get-account-lending-statistics';
@@ -138,10 +139,11 @@ type UseGetLoanAvailableAmountsResult = {
 const useGetLoanAvailableAmounts = (
   action: BorrowAction | LendAction,
   asset: LoanAsset,
-  position?: CollateralPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition,
+  proxyAccount?: AccountId | undefined
 ): UseGetLoanAvailableAmountsResult => {
   const { getAvailableBalance } = useGetBalances();
-  const { data: statistics } = useGetAccountLendingStatistics();
+  const { data: statistics } = useGetAccountLendingStatistics(proxyAccount);
 
   const maxCalculatedAmount = getMaxCalculatedAmount(action, asset, position, statistics);
 
