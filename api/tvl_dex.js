@@ -4,6 +4,10 @@ const tvlDex = async (request, response) => {
     if (request.method === 'GET') {
         const interbtcApi = await createInterBtcApi(process.env.REACT_APP_RELAY_CHAIN_URL, process.env.REACT_APP_BITCOIN_NETWORK);
 
+        if (!interbtcApi.api.isConnected) {
+            await interbtcApi.api.connect();
+        }
+
         const pools = await interbtcApi.amm.getLiquidityPools();
         const currencies = pools.flatMap((pool) => pool.pooledCurrencies);
 
