@@ -12,7 +12,7 @@
       "memory": 128,
       "maxDuration": 5
     },
-    "api/tvlDex.js": {
+    "api/tvl_dex.js": {
       "memory": 256,
       "maxDuration": 5
     }
