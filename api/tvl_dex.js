@@ -13,7 +13,7 @@ const tvlDex = async (request, response) => {
         const amounts = pools.flatMap((pool) => pool.pooledCurrencies)
             .map((monetaryAmount) => ({
                 currency: monetaryAmount.currency,
-                atomicAmount: monetaryAmount.toHuman(0),
+                atomicAmount: monetaryAmount.toString(true),
                 amount: monetaryAmount.toHuman()
             }));
 
