@@ -10,12 +10,17 @@ const tvlDex = async (request, response) => {
         );
 
         const pools = await interbtcApi.amm.getLiquidityPools();
-        const currencies = pools.flatMap((pool) => pool.pooledCurrencies);
+        const amounts = pools.flatMap((pool) => pool.pooledCurrencies)
+            .map((monetaryAmount) => ({
+                currency: monetaryAmount.currency,
+                atomicAmount: monetaryAmount.toHuman(0),
+                amount: monetaryAmount.toHuman()
+            }));
 
         return response.status(200)
             .setHeader("content-type", "application/json")
             .setHeader("cache-control", "public, maxage=0, s-maxage=300")
-            .json(currencies);
+            .json(amounts);
     } else {
         return response.status(400).send('Bad Request');
     }
