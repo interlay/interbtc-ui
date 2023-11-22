@@ -40,7 +40,6 @@ const tvlDex = async (request, response) => {
                     coingeckoId: cgId,
                     atomicAmount,
                     amount,
-                    atomicAmountUsd,
                     amountUsd
                 }
             });
