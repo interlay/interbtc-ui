@@ -34,7 +34,7 @@ const tvlDex = async (request, response) => {
                     : undefined;
                 
                 const monetaryAmountUsd = usdPrice ? getUsdMonetaryAmount(monetaryAmount) : undefined;
-                const amountUsd = monetaryAmountUsd?.toString(true);
+                const amountUsd = monetaryAmountUsd?.toString();
                 return {
                     currency: monetaryAmount.currency,
                     coingeckoId: cgId,
