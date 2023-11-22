@@ -52,7 +52,7 @@ const getUsdMonetaryAmount = (monetaryAmount, usdPrice) => {
 
     const rate = new Big(usdPrice);
 
-    const xToUsd = new ExchangeRate(monetaryAmount.currency, usdCurrency, Big(usdPrice));
+    const xToUsd = new ExchangeRate(monetaryAmount.currency, usdCurrency, rate);
     return xToUsd.toCounter(monetaryAmount);
 }
 
