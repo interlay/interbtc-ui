@@ -40,7 +40,7 @@ const tvlDex = async (request, response) => {
         const cgResponse = await fetch(queryUrl, { headers: { "accept": "application/json" } });
         const cgData = await cgResponse.json();
 
-        const allAmounts = pools.flatMap(pool.pooledCurrencies);
+        const allAmounts = pools.flatMap((pool) => pool.pooledCurrencies);
         
         const amounts = dedupeMonetaryAmounts(allAmounts)
             .map((monetaryAmount) => {
