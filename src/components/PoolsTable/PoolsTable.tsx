@@ -41,7 +41,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const { t } = useTranslation();
   const prices = useGetPrices();
   const titleId = useId();
-  const { getDexTotalVolumeUSD } = useGetDexVolumes(DateRangeVolume.D7);
+  const { getDexVolumeByPool } = useGetDexVolumes(DateRangeVolume.D7);
 
   const isAccountPools = variant === 'account-pools';
 
@@ -82,7 +82,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
         // TODO: revert alignItems prop when `sevenDayVolume` is adressed
         const totalLiquidity = <Cell label={formatUSD(totalLiquidityUSD, { compact: true })} alignItems='flex-start' />;
 
-        const total7DayVolumeUSD = getDexTotalVolumeUSD(pooledCurrencies.map((pooled) => pooled.currency.ticker));
+        const total7DayVolumeUSD = getDexVolumeByPool(data);
         const total7DayVolumeLabel = formatUSD(total7DayVolumeUSD, { compact: true });
         const sevenDayVolume = (
           <Cell label={total7DayVolumeLabel} alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />
@@ -107,7 +107,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
           accountLiquidity
         };
       }),
-    [getDexTotalVolumeUSD, isAccountPools, onRowAction, pools, prices, variant]
+    [getDexVolumeByPool, isAccountPools, onRowAction, pools, prices, variant]
   );
 
   return (
