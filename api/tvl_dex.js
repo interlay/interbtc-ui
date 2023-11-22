@@ -1,7 +1,7 @@
 import { createInterBtcApi } from "@interlay/interbtc-api";
 import { getCoingeckoId, getCoingeckoQueryUrl, getUsdMonetaryAmount } from "./currency-utils";
 
-const dedupeMonetaryAmounts = (monetaryAmounts) => {
+const consolidateMonetaryAmounts = (monetaryAmounts) => {
     // { <ticker_string>: <MonetaryAmount> }
     const tickerToAmountMap = new Map();
 
@@ -42,7 +42,7 @@ const tvlDex = async (request, response) => {
 
         const allAmounts = pools.flatMap((pool) => pool.pooledCurrencies);
         
-        const amounts = dedupeMonetaryAmounts(allAmounts)
+        const amounts = consolidateMonetaryAmounts(allAmounts)
             .map((monetaryAmount) => {
                 const atomicAmount = monetaryAmount.toString(true);
                 const amount = monetaryAmount.toString();
