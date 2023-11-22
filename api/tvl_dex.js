@@ -1,4 +1,4 @@
-import { createInterBtcApi, isForeignAsset } from "@interlay/interbtc-api";
+import { createInterBtcApi } from "@interlay/interbtc-api";
 import { getCoingeckoId, getCoingeckoQueryUrl } from "./currency-utils";
 
 const tvlDex = async (request, response) => {
