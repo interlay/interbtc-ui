@@ -105,4 +105,7 @@
   --colors-slider-thumb-hover-bg: var(--colors-dark-blue);
   --colors-slider-track-bg: var(--colors-mid-blue);
   --colors-slider-track-fill-bg: var(--colors-yellow);
+  /* Alert */
+  --colors-alert-info-border: var(--colors-yellow);
+  --colors-alert-info-bg: var(--colors-dark-blue);
 }

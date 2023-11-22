@@ -69,6 +69,8 @@
   --colors-success-dark: #61ff00;
   --colors-success-darker: #54ac1a;
   --colors-success-20: rgba(162, 231, 94, 0.2);
+  --colors-info: #e1e7f0;
+  --colors-info-dark: #075abc;
 
   --text-xs: 0.75rem;
   --text-s: 0.875rem;
