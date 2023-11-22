@@ -1,14 +1,16 @@
 import {
+    MonetaryAmount,
+    ExchangeRate,
     Bitcoin,
-    InterBtc, // on Polkadot
-    Interlay, // On Polkadot
-    KBtc, // on Kusama
-    Kintsugi, // On Kusama
-    Kusama, // on Kusama
-    Polkadot // on Polkadot
+    InterBtc,
+    Interlay,
+    KBtc,
+    Kintsugi,
+    Kusama,
+    Polkadot
 } from '@interlay/monetary-js';
 import { isForeignAsset } from "@interlay/interbtc-api";
-
+import Big from "big.js";
 
 const COINGECKO_ID_BY_CURRENCY_TICKER = {
     [Bitcoin.ticker]: 'bitcoin',
@@ -40,4 +42,16 @@ const getCoingeckoQueryUrl = (vsId, coingeckoIds) => {
     return `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsId}&ids=${idsString}`;
 };
 
-export { getCoingeckoId, getCoingeckoQueryUrl };
+const getUsdMonetaryAmount = (monetaryAmount, usdPrice) => {
+    const usdCurrency = {
+        name: "US Dollar",
+        decimals: 2,
+        ticker: "USD",
+        humanDecimals: 2
+    };
+
+    const xToUsd = new ExchangeRate(monetaryAmount.currency, usdCurrency, Big(usdPrice));
+    return xToUsd.toCounter(monetaryAmount);
+}
+
+export { getCoingeckoId, getCoingeckoQueryUrl, getUsdMonetaryAmount };

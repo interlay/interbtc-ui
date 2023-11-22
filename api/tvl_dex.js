@@ -1,5 +1,5 @@
 import { createInterBtcApi } from "@interlay/interbtc-api";
-import { getCoingeckoId, getCoingeckoQueryUrl } from "./currency-utils";
+import { getCoingeckoId, getCoingeckoQueryUrl, getUsdMonetaryAmount } from "./currency-utils";
 
 const tvlDex = async (request, response) => {
     if (request.method === 'GET') {
@@ -20,8 +20,8 @@ const tvlDex = async (request, response) => {
         const queryUrl = getCoingeckoQueryUrl("usd", Array.from(coingeckoIds));
         // return format: { <conigeckoId> : { <vs_id>: <price_as_number> }, ... }
         // eg. {"bitcoin":{"usd":36478},"interlay":{"usd":0.0240072},"voucher-dot":{"usd":6.12}}
-        const response = await fetch(queryUrl, { headers: { "accept": "application/json" } });
-        const cgData = await response.json();
+        const cgResponse = await fetch(queryUrl, { headers: { "accept": "application/json" } });
+        const cgData = await cgResponse.json();
         
         const amounts = pools.flatMap((pool) => pool.pooledCurrencies)
             .map((monetaryAmount) => {
@@ -33,7 +33,7 @@ const tvlDex = async (request, response) => {
                     ? cgData[cgId]["usd"]
                     : undefined;
                 
-                const monetaryAmountUsd = usdPrice ? monetaryAmount.mul(usdPrice) : undefined;
+                const monetaryAmountUsd = usdPrice ? getUsdMonetaryAmount(monetaryAmount) : undefined;
                 const amountUsd = monetaryAmountUsd?.toString(true);
                 const atomicAmountUsd = monetaryAmountUsd?.toString();
                 return {
