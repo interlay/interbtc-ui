@@ -33,7 +33,7 @@ const tvlDex = async (request, response) => {
                     ? cgData[cgId]["usd"]
                     : undefined;
                 
-                const monetaryAmountUsd = usdPrice ? getUsdMonetaryAmount(monetaryAmount) : undefined;
+                const monetaryAmountUsd = usdPrice ? getUsdMonetaryAmount(monetaryAmount, usdPrice) : undefined;
                 const amountUsd = monetaryAmountUsd?.toString();
                 return {
                     currency: monetaryAmount.currency,

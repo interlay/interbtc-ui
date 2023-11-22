@@ -43,12 +43,16 @@ const getCoingeckoQueryUrl = (vsId, coingeckoIds) => {
 };
 
 const getUsdMonetaryAmount = (monetaryAmount, usdPrice) => {
+    assert(usdPrice != undefined);
+    
     const usdCurrency = {
         name: "US Dollar",
         decimals: 2,
         ticker: "USD",
         humanDecimals: 2
     };
+
+    const rate = new Big(usdPrice);
 
     const xToUsd = new ExchangeRate(monetaryAmount.currency, usdCurrency, Big(usdPrice));
     return xToUsd.toCounter(monetaryAmount);
