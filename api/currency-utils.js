@@ -43,8 +43,6 @@ const getCoingeckoQueryUrl = (vsId, coingeckoIds) => {
 };
 
 const getUsdMonetaryAmount = (monetaryAmount, usdPrice) => {
-    assert(usdPrice != undefined);
-    
     const usdCurrency = {
         name: "US Dollar",
         decimals: 2,
