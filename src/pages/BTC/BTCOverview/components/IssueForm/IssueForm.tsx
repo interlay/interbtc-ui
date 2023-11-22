@@ -5,7 +5,7 @@ import {
   Issue,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
-import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
+import { IssueLimits } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEvent, Key, useCallback, useEffect, useMemo, useState } from 'react';
