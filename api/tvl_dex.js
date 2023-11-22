@@ -5,15 +5,15 @@ const dedupeMonetaryAmounts = (monetaryAmounts) => {
     // { <ticker_string>: <MonetaryAmount> }
     const tickerToAmountMap = new Map();
 
-    for (monAmt of monetaryAmounts) {
+    monetaryAmounts.forEach(monAmt => {
         const ticker = monAmt.currency.ticker;
         if (tickerToAmountMap.has(ticker)) {
             const newMonAmt = tickerToAmountMap.get(ticker).add(monAmt);
             tickerToAmountMap.set(ticker, newMonAmt);
         } else {
             tickerToAmountMap.set(ticker, monAmt);
-        }
-    }
+        }        
+    });
 
     return Array.from(tickerToAmountMap.values());
 };
