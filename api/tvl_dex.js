@@ -1,4 +1,5 @@
-import { createInterBtcApi } from "@interlay/interbtc-api";
+import { createInterBtcApi, isForeignAsset } from "@interlay/interbtc-api";
+import { getCoingeckoId } from "./currency-utils";
 
 const tvlDex = async (request, response) => {
     if (request.method === 'GET') {
@@ -13,6 +14,7 @@ const tvlDex = async (request, response) => {
         const amounts = pools.flatMap((pool) => pool.pooledCurrencies)
             .map((monetaryAmount) => ({
                 currency: monetaryAmount.currency,
+                coingeckoId: getCoingeckoId(monetaryAmount.currency),
                 atomicAmount: monetaryAmount.toString(true),
                 amount: monetaryAmount.toHuman()
             }));
