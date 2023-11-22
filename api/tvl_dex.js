@@ -14,11 +14,12 @@ const tvlDex = async (request, response) => {
         // dedupe ids
         const coingeckoIds = new Set(
             pools.flatMap((pool) => pool.pooledCurrencies)
-            .map((monetaryAmount) => getCoingeckoId(monetaryAmount))
+                .map((monetaryAmount) => getCoingeckoId(monetaryAmount.currency))
         );
         // base: usd, get price for all coingeckoIds
         const queryUrl = getCoingeckoQueryUrl("usd", Array.from(coingeckoIds));
-        // return format: [ { <conigeckoId> : { <vs_id>: <price_as_number> } }, ... ]
+        // return format: { <conigeckoId> : { <vs_id>: <price_as_number> }, ... }
+        // eg. {"bitcoin":{"usd":36478},"interlay":{"usd":0.0240072},"voucher-dot":{"usd":6.12}}
         const response = await fetch(queryUrl, { headers: { "accept": "application/json" } });
         const cgData = await response.json();
         
@@ -28,7 +29,7 @@ const tvlDex = async (request, response) => {
                 const amount = monetaryAmount.toString();
 
                 const cgId = getCoingeckoId(monetaryAmount.currency);
-                const usdPrice = (cgData[cgId] != undefined && cgData[cgId]["usd"] != undefined) 
+                const usdPrice = (cgId != undefined && cgData[cgId] != undefined && cgData[cgId]["usd"] != undefined) 
                     ? cgData[cgId]["usd"]
                     : undefined;
                 
@@ -37,7 +38,7 @@ const tvlDex = async (request, response) => {
                 const atomicAmountUsd = monetaryAmountUsd?.toString();
                 return {
                     currency: monetaryAmount.currency,
-                    coingeckoId: getCoingeckoId(monetaryAmount.currency),
+                    coingeckoId: cgId,
                     atomicAmount,
                     amount,
                     atomicAmountUsd,
