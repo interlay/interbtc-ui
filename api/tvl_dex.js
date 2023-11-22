@@ -1,6 +1,23 @@
 import { createInterBtcApi } from "@interlay/interbtc-api";
 import { getCoingeckoId, getCoingeckoQueryUrl, getUsdMonetaryAmount } from "./currency-utils";
 
+const dedupeMonetaryAmounts = (monetaryAmounts) => {
+    // { <ticker_string>: <MonetaryAmount> }
+    const tickerToAmountMap = new Map();
+
+    for (monAmt of monetaryAmounts) {
+        const ticker = monAmt.currency.ticker;
+        if (tickerToAmountMap.has(ticker)) {
+            const newMonAmt = tickerToAmountMap.get(ticker).add(monAmt);
+            tickerToAmountMap.set(ticker, newMonAmt);
+        } else {
+            tickerToAmountMap.set(ticker, monAmt);
+        }
+    }
+
+    return Array.from(tickerToAmountMap.values());
+};
+
 const tvlDex = async (request, response) => {
     if (request.method === 'GET') {
         const interbtcApi = await createInterBtcApi(
@@ -18,12 +35,14 @@ const tvlDex = async (request, response) => {
         );
         // base: usd, get price for all coingeckoIds
         const queryUrl = getCoingeckoQueryUrl("usd", Array.from(coingeckoIds));
-        // return format: { <conigeckoId> : { <vs_id>: <price_as_number> }, ... }
+        // return format: { <coingeckoId> : { <vs_id>: <price_as_number> }, ... }
         // eg. {"bitcoin":{"usd":36478},"interlay":{"usd":0.0240072},"voucher-dot":{"usd":6.12}}
         const cgResponse = await fetch(queryUrl, { headers: { "accept": "application/json" } });
         const cgData = await cgResponse.json();
+
+        const allAmounts = pools.flatMap(pool.pooledCurrencies);
         
-        const amounts = pools.flatMap((pool) => pool.pooledCurrencies)
+        const amounts = dedupeMonetaryAmounts(allAmounts)
             .map((monetaryAmount) => {
                 const atomicAmount = monetaryAmount.toString(true);
                 const amount = monetaryAmount.toString();
