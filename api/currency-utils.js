@@ -6,8 +6,10 @@ import {
     Kintsugi, // On Kusama
     Kusama, // on Kusama
     Polkadot // on Polkadot
-  } from '@interlay/monetary-js';
-  
+} from '@interlay/monetary-js';
+import { isForeignAsset } from "@interlay/interbtc-api";
+
+
 const COINGECKO_ID_BY_CURRENCY_TICKER = {
     [Bitcoin.ticker]: 'bitcoin',
     [Kintsugi.ticker]: 'kintsugi',
@@ -33,4 +35,9 @@ const getCoingeckoId = (currency) => {
     return COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
 };
 
-export { getCoingeckoId };
+const getCoingeckoQueryUrl = (vsId, coingeckoIds) => {
+    const idsString = coingeckoIds.join(",");
+    return `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsId}&ids=${idsString}`;
+};
+
+export { getCoingeckoId, getCoingeckoQueryUrl };

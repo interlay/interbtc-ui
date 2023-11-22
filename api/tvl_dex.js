@@ -1,5 +1,5 @@
 import { createInterBtcApi, isForeignAsset } from "@interlay/interbtc-api";
-import { getCoingeckoId } from "./currency-utils";
+import { getCoingeckoId, getCoingeckoQueryUrl } from "./currency-utils";
 
 const tvlDex = async (request, response) => {
     if (request.method === 'GET') {
@@ -11,13 +11,39 @@ const tvlDex = async (request, response) => {
         );
 
         const pools = await interbtcApi.amm.getLiquidityPools();
+        // dedupe ids
+        const coingeckoIds = new Set(
+            pools.flatMap((pool) => pool.pooledCurrencies)
+            .map((monetaryAmount) => getCoingeckoId(monetaryAmount))
+        );
+        // base: usd, get price for all coingeckoIds
+        const queryUrl = getCoingeckoQueryUrl("usd", Array.from(coingeckoIds));
+        // return format: [ { <conigeckoId> : { <vs_id>: <price_as_number> } }, ... ]
+        const response = await fetch(queryUrl, { headers: { "accept": "application/json" } });
+        const cgData = await response.json();
+        
         const amounts = pools.flatMap((pool) => pool.pooledCurrencies)
-            .map((monetaryAmount) => ({
-                currency: monetaryAmount.currency,
-                coingeckoId: getCoingeckoId(monetaryAmount.currency),
-                atomicAmount: monetaryAmount.toString(true),
-                amount: monetaryAmount.toHuman()
-            }));
+            .map((monetaryAmount) => {
+                const atomicAmount = monetaryAmount.toString(true);
+                const amount = monetaryAmount.toString();
+
+                const cgId = getCoingeckoId(monetaryAmount.currency);
+                const usdPrice = (cgData[cgId] != undefined && cgData[cgId]["usd"] != undefined) 
+                    ? cgData[cgId]["usd"]
+                    : undefined;
+                
+                const monetaryAmountUsd = usdPrice ? monetaryAmount.mul(usdPrice) : undefined;
+                const amountUsd = monetaryAmountUsd?.toString(true);
+                const atomicAmountUsd = monetaryAmountUsd?.toString();
+                return {
+                    currency: monetaryAmount.currency,
+                    coingeckoId: getCoingeckoId(monetaryAmount.currency),
+                    atomicAmount,
+                    amount,
+                    atomicAmountUsd,
+                    amountUsd
+                }
+            });
 
         return response.status(200)
             .setHeader("content-type", "application/json")
