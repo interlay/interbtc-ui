@@ -1,4 +1,4 @@
-import { IssueLimits } from '@interlay/interbtc-api';
+import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
