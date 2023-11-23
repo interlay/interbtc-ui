@@ -22,12 +22,12 @@ const Pools = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <PoolsInsights pools={pools} accountPoolsData={accountPoolsData} refetch={refetchAccountPools} />
       <Alert status='info'>
         Please be aware that there are currently no {GOVERNANCE_TOKEN.ticker} incentives being provided to the pools.
         The APR displayed represents the earnings based on solely on trading fees. These earnings are automatically
         reinvested into your positions.
       </Alert>
+      <PoolsInsights pools={pools} accountPoolsData={accountPoolsData} refetch={refetchAccountPools} />
       <PoolsTables pools={pools} accountPools={accountPositions} />
     </MainContainer>
   );
