@@ -15,7 +15,7 @@ const tvlLoans = async (request, response) => {
         
         // dedupe ids
         const coingeckoIds = new Set(
-            liquidityAmounts.map((monetaryAmount) => monetaryAmount.currency)
+            liquidityAmounts.map((monetaryAmount) => getCoingeckoId(monetaryAmount.currency))
         );
         // base: usd, get price for all coingeckoIds
         const queryUrl = getCoingeckoQueryUrl("usd", Array.from(coingeckoIds));
@@ -44,6 +44,7 @@ const tvlLoans = async (request, response) => {
                 }
             });
 
+        interbtcApi.disconnect();
         return response.status(200)
             .setHeader("content-type", "application/json")
             .setHeader("cache-control", "public, maxage=0, s-maxage=300")

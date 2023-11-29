@@ -44,6 +44,7 @@ const tvlDex = async (request, response) => {
                 }
             });
 
+        interbtcApi.disconnect();
         return response.status(200)
             .setHeader("content-type", "application/json")
             .setHeader("cache-control", "public, maxage=0, s-maxage=300")
