@@ -15,6 +15,10 @@
     "api/tvl_dex.js": {
       "memory": 256,
       "maxDuration": 30
+    },
+    "api/tvl_loans.js": {
+      "memory": 256,
+      "maxDuration": 30
     }
 },
   "rewrites": [
@@ -41,6 +45,10 @@
     {
       "source": "/tvl_dex",
       "destination": "/api/tvl_dex.js"
+    },
+    {
+      "source": "/tvl_loans",
+      "destination": "/api/tvl_loans.js"
     }
   ],
   "headers": [
