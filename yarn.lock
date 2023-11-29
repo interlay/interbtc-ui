@@ -2980,19 +2980,19 @@
     axios "^0.27.2"
     lodash "^4.17.20"
 
-"@interlay/esplora-btc-api@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@interlay/esplora-btc-api/-/esplora-btc-api-0.4.0.tgz#1db5662ad3f843ca17e7bd4626c5b9041599f591"
-  integrity sha512-7SXQrd7ladtLKjlhLv1/O12Ca+cKLfJvbF/RosSqwpTubBfayESLhTdMt3I9sIVpnjGHWHAR2epA/wW3yOcKJQ==
+"@interlay/esplora-btc-api@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@interlay/esplora-btc-api/-/esplora-btc-api-1.3.0.tgz#570df165e6982ecdfee6aec4dc2b8c07ed7cb682"
+  integrity sha512-+PD/Jw56S9fuC0vzT2mTC/UT0+5pkI+vMj9GnH9Eu10ecSAEWBcq3OJGFJPiAvqsKbFJsdpnOUcQZ7ygO0cmgg==
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@2.6.0-rc.0":
-  version "2.6.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.6.0-rc.0.tgz#a950b7dc45bc883024677fe5482f43c1073d02de"
-  integrity sha512-Zich2YGzxFtvmT36d/NCtJHea6kMUWnSpOxzm6e5vxpgpLcQ98kxZ2lVPjFh6Nj5bXSD0cLghcRzgOBZm+mYwQ==
+"@interlay/interbtc-api@2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.6.0.tgz#e53da4c10634d3a12a0eece5439da6a7288e253c"
+  integrity sha512-VC6sqLnmUJTw3IrS2ybpxjzjgOIj5P9CgALgBSAUyTXkECtJ/KEyCkSfP6PFmXUQZ8Kv2/1DHh74kJgLs7VIsg==
   dependencies:
-    "@interlay/esplora-btc-api" "0.4.0"
+    "@interlay/esplora-btc-api" "1.3.0"
     "@interlay/monetary-js" "0.7.3"
     "@polkadot/api" "10.9.1"
     big.js "6.1.1"
