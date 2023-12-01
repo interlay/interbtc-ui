@@ -61,6 +61,8 @@ export type CTASizes = 'x-small' | 'small' | 'medium' | 'large';
 
 export type Status = typeof status[number];
 
+export type AlertStatus = typeof status[number] | 'info';
+
 export type Sizes = typeof sizes[number];
 
 export type Colors = typeof colors[number];

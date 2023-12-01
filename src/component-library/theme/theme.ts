@@ -234,12 +234,14 @@ const theme = {
     status: {
       error: 'var(--colors-error)',
       warning: 'var(--colors-warning)',
-      success: 'var(--colors-success-darker)'
+      success: 'var(--colors-success-darker)',
+      info: 'var(--colors-alert-info-border)'
     },
     bg: {
       error: 'var(--colors-error-20)',
       warning: 'var(--colors-warning-light-20)',
-      success: 'var(--colors-success-20)'
+      success: 'var(--colors-success-20)',
+      info: 'var(--colors-alert-info-bg)'
     }
   },
   transition: {
