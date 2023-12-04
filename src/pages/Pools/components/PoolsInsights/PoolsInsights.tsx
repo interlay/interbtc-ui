@@ -1,22 +1,13 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
 import Big from 'big.js';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatUSD } from '@/common/utils/utils';
-import { Card, CTA, Dl, DlGroup, Flex, Modal, ModalBody, ModalFooter, ModalHeader } from '@/component-library';
-import {
-  AuthCTA,
-  TransactionDetails,
-  TransactionDetailsDd,
-  TransactionDetailsDt,
-  TransactionDetailsGroup,
-  TransactionFeeDetails
-} from '@/components';
+import { Card, Dl, DlGroup } from '@/component-library';
 import { AccountPoolsData } from '@/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/hooks/transaction';
-import { isTransactionFormDisabled } from '@/hooks/transaction/utils/form';
 import {
   ClaimRewardsPoolFormData,
   claimRewardsPoolSchema,
@@ -26,7 +17,6 @@ import {
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
 
 import { StyledDd, StyledDt } from './PoolsInsights.style';
-import { calculateClaimableFarmingRewardUSD } from './utils';
 
 type PoolsInsightsProps = {
   pools: LiquidityPool[];
@@ -38,7 +28,6 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
   const { t } = useTranslation();
   const prices = useGetPrices();
   const [isOpen, setOpen] = useState(false);
-  const overlappingModalRef = useRef<HTMLDivElement>(null);
 
   const transaction = useTransaction(Transaction.AMM_CLAIM_REWARDS, {
     onSuccess: refetch,
@@ -72,8 +61,6 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  const handleCloseModal = () => setOpen(false);
-
   const accountPositions = accountPoolsData?.positions;
 
   const supplyAmountUSD = accountPositions?.reduce((acc, curr) => {
@@ -97,75 +84,21 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
 
   const totalLiquidityUSD = formatUSD(totalLiquidity?.toNumber() || 0, { compact: true });
 
-  const totalClaimableRewardUSD = calculateClaimableFarmingRewardUSD(accountPoolsData?.claimableRewards, prices);
-  const totalClaimableRewardUSDLabel = formatUSD(totalClaimableRewardUSD, { compact: true });
-
-  const handleClickClaimRewards = () => setOpen(true);
-
-  const hasClaimableRewards = totalClaimableRewardUSD > 0;
-
-  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
-
   return (
-    <>
-      <Dl wrap direction='row'>
-        <Card flex='1'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>{t('supply_balance')}</StyledDt>
-            <StyledDd color='secondary'>{supplyBalanceLabel}</StyledDd>
-          </DlGroup>
-        </Card>
-        <Card flex='1'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>{t('total_liquidity')}</StyledDt>
-            <StyledDd color='secondary'>{totalLiquidityUSD}</StyledDd>
-          </DlGroup>
-        </Card>
-        <Card direction='row' flex='1' gap='spacing2' alignItems='center' justifyContent='space-between'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>{t('rewards')}</StyledDt>
-            <StyledDd color='secondary'>{totalClaimableRewardUSDLabel}</StyledDd>
-          </DlGroup>
-          {hasClaimableRewards && (
-            <CTA onPress={handleClickClaimRewards} loading={transaction.isLoading}>
-              Claim
-            </CTA>
-          )}
-        </Card>
-      </Dl>
-      <Modal
-        isOpen={isOpen}
-        onClose={handleCloseModal}
-        // does not close overlapped modal when overlapping modal is closed
-        shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
-      >
-        <ModalHeader>Claim Rewards</ModalHeader>
-        <ModalBody>
-          <TransactionDetails>
-            <TransactionDetailsGroup>
-              <TransactionDetailsDt>Amount</TransactionDetailsDt>
-              <TransactionDetailsDd>{totalClaimableRewardUSDLabel}</TransactionDetailsDd>
-            </TransactionDetailsGroup>
-          </TransactionDetails>
-        </ModalBody>
-        <ModalFooter>
-          <form onSubmit={form.handleSubmit}>
-            <Flex direction='column' gap='spacing4'>
-              <TransactionFeeDetails
-                fee={transaction.fee}
-                selectProps={{
-                  ...form.getSelectFieldProps(POOL_CLAIM_REWARDS_FEE_TOKEN_FIELD),
-                  modalRef: overlappingModalRef
-                }}
-              />
-              <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
-                {t('claim_rewards')}
-              </AuthCTA>
-            </Flex>
-          </form>
-        </ModalFooter>
-      </Modal>
-    </>
+    <Dl wrap direction='row'>
+      <Card flex='1'>
+        <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
+          <StyledDt color='primary'>{t('supply_balance')}</StyledDt>
+          <StyledDd color='secondary'>{supplyBalanceLabel}</StyledDd>
+        </DlGroup>
+      </Card>
+      <Card flex='1'>
+        <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
+          <StyledDt color='primary'>{t('total_liquidity')}</StyledDt>
+          <StyledDd color='secondary'>{totalLiquidityUSD}</StyledDd>
+        </DlGroup>
+      </Card>
+    </Dl>
   );
 };
 
