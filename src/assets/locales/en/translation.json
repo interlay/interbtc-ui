@@ -541,8 +541,8 @@
   },
   "staking_page": {
     "stake_ticker": "Stake {{ticker}}",
-    "total_staked_ticker_in_the_network": "Total Staked {{ticker}} in the network",
-    "total_ticker_in_the_network": "Total {{ticker}} in the network",
+    "total_staked_ticker_in_the_network": "Total Staked {{ticker}}",
+    "total_ticker_in_the_network": "{{ticker}} - Total vote-escrow",
     "time": {
       "one_week": "1 Week",
       "one_month": "1 Month",

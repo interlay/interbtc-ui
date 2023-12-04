@@ -135,6 +135,16 @@ const formatPercentage = (
   return `${format(percentage)}%`;
 };
 
+const formatLargeNumber = (amount: number): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    notation: 'compact',
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  });
+
+  return format(amount);
+};
+
 function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
   if (amount === undefined) return defaultValue;
 
@@ -194,6 +204,7 @@ export {
   displayMonetaryAmountInUSDFormat,
   formatDateTime,
   formatDateTimePrecise,
+  formatLargeNumber,
   formatNumber,
   formatPercentage,
   formatUSD,
