@@ -135,7 +135,7 @@ const formatPercentage = (
   return `${format(percentage)}%`;
 };
 
-const formatLargeNumber = (amount: number) => {
+const formatLargeNumber = (amount: number): string => {
   const { format } = new Intl.NumberFormat(undefined, {
     notation: 'compact',
     maximumFractionDigits: 2,
