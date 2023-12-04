@@ -1,13 +1,16 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
 import { subDays } from 'date-fns';
-import { gql, GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from 'graphql-request';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToBigUSD } from '@/common/utils/utils';
 import { SQUID_URL } from '@/constants';
+import { getPoolDataId, getPoolsVolumesQuery } from '@/services/queries/pools';
+import { CurrencySquidFormat } from '@/types/currency';
 import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
@@ -21,133 +24,78 @@ const graphQLClient = new GraphQLClient(SQUID_URL, {
   }
 });
 
-// TODO: add this to a dedicated schemas folder
-const AMOUNT_FIELDS = gql`
-  fragment AmountFields on PooledAmount {
-    amount
-    amountHuman
-    token {
-      ... on NativeToken {
-        __typename
-        token
-      }
-      ... on ForeignAsset {
-        __typename
-        asset
-      }
-      ... on StableLpToken {
-        __typename
-        poolId
-      }
-    }
-  }
-`;
-
-// TODO: add this to a dedicated schemas folder
-const GET_DEX_VOLUMES = gql`
-  ${AMOUNT_FIELDS}
-  query poolVolumes($start: DateTime, $end: DateTime) {
-    startVolumes: cumulativeDexTradingVolumes(
-      limit: 1
-      orderBy: tillTimestamp_ASC
-      where: { tillTimestamp_gte: $start }
-    ) {
-      tillTimestamp
-      amounts {
-        ...AmountFields
-      }
-    }
-    endVolumes: cumulativeDexTradingVolumes(
-      limit: 1
-      orderBy: tillTimestamp_DESC
-      where: { tillTimestamp_lte: $end, tillTimestamp_gte: $start }
-    ) {
-      tillTimestamp
-      amounts {
-        ...AmountFields
-      }
-    }
-  }
-`;
-
 enum DateRangeVolume {
   H24,
   D7
 }
 
-type DexCurrencyVolume = {
-  amount: MonetaryAmount<CurrencyExt>;
-  usd: number;
-};
-
-type DexVolumesData = Record<string, DexCurrencyVolume>;
+type DexVolumesData = Record<string, Big>;
 
 type UseGetCurrenciesResult = UseQueryResult<DexVolumesData> & {
-  getDexVolumeByTicker: (ticker: string) => DexCurrencyVolume | undefined;
-  getDexTotalVolumeUSD: (tickers: string[]) => number;
+  getDexVolumeByPool: (pool: LiquidityPool | undefined) => number;
+};
+
+const getVolumes = (
+  volumes: any,
+  dataId: string,
+  getCurrencyFromSquidFormat: (currencySquid: CurrencySquidFormat) => CurrencyExt
+): Array<MonetaryAmount<CurrencyExt>> => {
+  const startVolumes = volumes[`${dataId}__startVolumes`];
+  const endVolumes = volumes[`${dataId}__endVolumes`];
+  if (startVolumes.length === 0 || endVolumes.length === 0) {
+    return [];
+  }
+
+  return startVolumes[0].amounts.map((amount: any, index: number) => {
+    const currency = getCurrencyFromSquidFormat(amount.token);
+    const endAmount = Big(endVolumes[0].amounts[index].amount);
+    const amountDelta = endAmount.sub(Big(amount.amount));
+
+    return newMonetaryAmount(amountDelta, currency);
+  });
 };
 
 const useGetDexVolumes = (range: DateRangeVolume): UseGetCurrenciesResult => {
-  const { getCurrencyFromTicker, getForeignCurrencyFromId } = useGetCurrencies(true);
-  const { getStableLiquidityPoolById } = useGetLiquidityPools();
+  const { getCurrencyFromSquidFormat } = useGetCurrencies(true);
+  const { data: pools } = useGetLiquidityPools();
   const prices = useGetPrices();
 
   const getDexVolumes = useCallback(
     async (range: DateRangeVolume): Promise<DexVolumesData> => {
-      const start = subDays(new Date(), range === DateRangeVolume.D7 ? 7 : 1);
-      const end = new Date();
-
-      const data = await graphQLClient.request(GET_DEX_VOLUMES, { start, end });
-
-      if (!data.startVolumes.length || !data.endVolumes.length) {
+      if (!pools) {
         return {};
       }
 
-      const [startVolumes] = data.startVolumes;
-      const [endVolumes] = data.endVolumes;
+      const start = subDays(new Date(), range === DateRangeVolume.D7 ? 7 : 1);
+      const end = new Date();
 
-      return startVolumes.amounts.reduce((acc: DexVolumesData, item: any) => {
-        let currency: CurrencyExt;
-        let endVolume;
+      const query = getPoolsVolumesQuery(pools);
 
-        switch (item.token.__typename) {
-          case 'NativeToken': {
-            const { token } = item.token;
-            currency = getCurrencyFromTicker(token);
-            endVolume = endVolumes.amounts.find((endAmount: any) => endAmount.token.token === token);
-            break;
-          }
-          case 'ForeignAsset': {
-            const { asset } = item.token;
-            currency = getForeignCurrencyFromId(asset);
-            endVolume = endVolumes.amounts.find((endAmount: any) => endAmount.token.asset === asset);
-            break;
-          }
-          case 'StableLpToken': {
-            const { poolId } = item.token;
-            currency = getStableLiquidityPoolById(poolId).lpToken;
-            endVolume = endVolumes.amounts.find((endAmount: any) => endAmount.token.poolId === poolId);
-            break;
-          }
-          default:
-            return acc;
+      const data = await graphQLClient.request(query, { start, end });
+
+      const result = pools.map((pool: LiquidityPool) => {
+        const dataId = getPoolDataId(pool);
+
+        const volumes = getVolumes(data, dataId, getCurrencyFromSquidFormat);
+        if (volumes.length === 0) {
+          return { [dataId]: Big(0) };
         }
 
-        if (!endVolume) {
-          return acc;
-        }
+        const totalVolumeInUSD = volumes
+          .reduce(
+            (total, amount) =>
+              total.add(convertMonetaryAmountToBigUSD(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)),
+            Big(0)
+          )
+          // Divide by amount of pooled currencies.
+          .div(pool.pooledCurrencies.length);
 
-        const volumeAmount = newMonetaryAmount(endVolume.amount - item.amount, currency);
+        return { [dataId]: totalVolumeInUSD };
+      });
 
-        const volume: DexCurrencyVolume = {
-          amount: volumeAmount,
-          usd: convertMonetaryAmountToValueInUSD(volumeAmount, getTokenPrice(prices, currency.ticker)?.usd) || 0
-        };
-
-        return { ...acc, [currency.ticker]: volume };
-      }, {});
+      return result.reduce((result, pool) => ({ ...result, ...pool }));
     },
-    [getCurrencyFromTicker, getForeignCurrencyFromId, getStableLiquidityPoolById, prices]
+    [pools, getCurrencyFromSquidFormat, prices]
   );
 
   const queryResult = useQuery({
@@ -156,16 +104,15 @@ const useGetDexVolumes = (range: DateRangeVolume): UseGetCurrenciesResult => {
     refetchInterval: REFETCH_INTERVAL.MINUTE
   });
 
-  const getDexVolumeByTicker = useCallback((ticker: string) => queryResult.data?.[ticker], [queryResult.data]);
-
-  const getDexTotalVolumeUSD = useCallback(
-    (tickers: string[]) => tickers.reduce((sum, ticker) => sum + (getDexVolumeByTicker(ticker)?.usd || 0), 0),
-    [getDexVolumeByTicker]
+  const getDexVolumeByPool = useCallback(
+    (pool: LiquidityPool | undefined) =>
+      queryResult.data && pool ? queryResult.data[getPoolDataId(pool)].toNumber() : 0,
+    [queryResult]
   );
 
   useErrorHandler(queryResult.error);
 
-  return { ...queryResult, getDexTotalVolumeUSD, getDexVolumeByTicker };
+  return { ...queryResult, getDexVolumeByPool };
 };
 
 export { DateRangeVolume, useGetDexVolumes };

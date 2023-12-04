@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { formatLargeNumber } from '@/common/utils/utils';
 import {
   TransactionDetails,
   TransactionDetailsDd,
@@ -28,15 +29,15 @@ const StakingNetworkDetails = ({ data, ...props }: StakingNetworkDetailsProps): 
           {t('staking_page.total_staked_ticker_in_the_network', { ticker: GOVERNANCE_TOKEN.ticker })}
         </TransactionDetailsDt>
         <TransactionDetailsDd>
-          {data.totalStakedBalance.toHuman()} {GOVERNANCE_TOKEN.ticker}
+          {formatLargeNumber(data.totalStakedBalance.toBig().toNumber())} {GOVERNANCE_TOKEN.ticker}
         </TransactionDetailsDd>
       </TransactionDetailsGroup>
       <TransactionDetailsGroup>
         <TransactionDetailsDt>
-          {t('staking_page.total_ticker_in_the_network', { ticker: GOVERNANCE_TOKEN.ticker })}
+          {t('staking_page.total_ticker_in_the_network', { ticker: VOTE_GOVERNANCE_TOKEN.ticker })}
         </TransactionDetailsDt>
         <TransactionDetailsDd>
-          {data.totalVotingSupply.toHuman()} {VOTE_GOVERNANCE_TOKEN.ticker}
+          {formatLargeNumber(data.totalVotingSupply.toBig().toNumber())} {VOTE_GOVERNANCE_TOKEN.ticker}
         </TransactionDetailsDd>
       </TransactionDetailsGroup>
     </TransactionDetails>

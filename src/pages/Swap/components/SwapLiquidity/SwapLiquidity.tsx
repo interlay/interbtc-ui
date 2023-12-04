@@ -18,9 +18,9 @@ type SwapLiquidityProps = Props & InheritAttrs;
 
 const SwapLiquidity = ({ input, output, liquidityPool, ...props }: SwapLiquidityProps): JSX.Element | null => {
   const prices = useGetPrices();
-  const { getDexTotalVolumeUSD } = useGetDexVolumes(DateRangeVolume.H24);
+  const { getDexVolumeByPool } = useGetDexVolumes(DateRangeVolume.H24);
 
-  const h24Volume = getDexTotalVolumeUSD([input.ticker, output.ticker]);
+  const h24Volume = getDexVolumeByPool(liquidityPool);
   const h24VolumeLabel = formatUSD(h24Volume, { compact: true });
 
   const liquidity = liquidityPool && calculateTotalLiquidityUSD(liquidityPool.pooledCurrencies, prices);

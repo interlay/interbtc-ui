@@ -1,19 +1,13 @@
-import {
-  CurrencyExt,
-  isForeignAsset,
-  LiquidityPool,
-  newMonetaryAmount,
-  PooledCurrencies,
-  TickerToData
-} from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { gql, GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from 'graphql-request';
 import { useCallback } from 'react';
 import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToBigUSD } from '@/common/utils/utils';
 import { SQUID_URL } from '@/constants';
+import { getPoolDataId, getPoolsVolumesQuery } from '@/services/queries/pools';
 import { CurrencySquidFormat } from '@/types/currency';
 import { MILLISECONDS_PER_DAY } from '@/utils/constants/date-time';
 import { calculateTotalLiquidityUSD } from '@/utils/helpers/pool';
@@ -28,63 +22,6 @@ const graphQLClient = new GraphQLClient(SQUID_URL, {
     'Content-Type': 'application/json'
   }
 });
-
-const getPoolDataId = (pool: LiquidityPool): string =>
-  `${pool.type}_${pool.pooledCurrencies.map(({ currency }) => currency.ticker).join('_')}`;
-
-const getPooledCurrenciesCondition = (pooledCurrencies: PooledCurrencies) =>
-  `${pooledCurrencies
-    .map(({ currency }) => {
-      const currencyId = isForeignAsset(currency) ? currency.foreignAsset.id.toString() : currency.ticker;
-      return `AND: {poolId_contains: "${currencyId}"`;
-    })
-    .join()}${pooledCurrencies.map((_) => '}').join('')}`;
-
-const getPoolsVolumesQuery = (pools: Array<LiquidityPool>): string => gql`
-  fragment AmountFields on PooledAmount {
-    amount
-    amountHuman
-    token {
-      ... on NativeToken {
-        __typename
-        token
-      }
-      ... on ForeignAsset {
-        __typename
-        asset
-      }
-      ... on StableLpToken {
-        __typename
-        poolId
-      }
-    }
-  }
-
-  fragment PoolVolumeFields on CumulativeDexTradingVolumePerPool {
-    poolId
-    poolType
-    tillTimestamp
-    amounts {
-      ...AmountFields
-    }
-  }
-
-  query poolVolumes($start: DateTime, $end: DateTime) {
-    ${pools
-      .map((pool: LiquidityPool) => {
-        const poolDataId = getPoolDataId(pool);
-        const pooledCurrenciesCondition = getPooledCurrenciesCondition(pool.pooledCurrencies);
-        return `${poolDataId}__startVolumes: cumulativeDexTradingVolumePerPools(limit: 1, orderBy: tillTimestamp_ASC, where: {tillTimestamp_gte: $start, ${pooledCurrenciesCondition}}) {
-        ...PoolVolumeFields
-      }
-      ${poolDataId}__endVolumes:cumulativeDexTradingVolumePerPools(limit: 1, orderBy: tillTimestamp_DESC, where: {tillTimestamp_lte: $end, ${pooledCurrenciesCondition}}) {
-        ...PoolVolumeFields
-      }
-      `;
-      })
-      .join('\n')}
-  }
-`;
 
 const getYearlyVolume = (
   volumes: any,
