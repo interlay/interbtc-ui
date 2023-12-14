@@ -1,4 +1,4 @@
-import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
+import { IssueLimits } from '@interlay/interbtc-api';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryOptions } from 'react-query';
 
