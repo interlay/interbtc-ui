@@ -3,7 +3,7 @@ import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
 import { BifrostKusamaAdapter, BifrostPolkadotAdapter } from '@interlay/bridge/build/adapters/bifrost';
 import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
-import { HeikoAdapter, ParallelAdapter } from '@interlay/bridge/build/adapters/parallel';
+import { HeikoAdapter } from '@interlay/bridge/build/adapters/parallel';
 import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
 import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
@@ -168,7 +168,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       bifrost_polkadot: new BifrostPolkadotAdapter(),
       astar: new AstarAdapter(),
       hydra: new HydraAdapter(),
-      parallel: new ParallelAdapter(),
       polkadot: new PolkadotAdapter(),
       statemint: new StatemintAdapter()
     };
