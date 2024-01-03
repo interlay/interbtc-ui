@@ -34,12 +34,39 @@ const dia_assets = {
   "wrapped-bitcoin": "/Ethereum/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
 }
 
+// Coingecko to Dia XLSD tickers
+const dia_xlsd = {
+  "voucher-ksm": "vKSM",
+  "voucher-dot": "vDOT",
+}
+
+// retrieve Dia XLSD fair prices
+const fetchDiaXLSD = async () => {
+  const url = 'https://api.diadata.org/xlsd'
+  const resp = await fetch(url, { headers: { "accept": "application/json" } })
+  if (!resp.ok) {
+    throw new Error(resp.status)
+  }
+  const json = await resp.json()
+  return new Map(json.map(x => [x.Token, x]))
+}
+
 const fetchDiaAsset = async (asset) => {
   try {
     if (!dia_assets[asset]) {
       console.log('Missing DIA asset: ', asset)
       return coingecko({ ids: [asset], vs_currencies: ["usd"] })
     }
+    if (asset in dia_xlsd) {
+      const prices = await fetchDiaXLSD();
+      const name = dia_xlsd[asset]
+      return {
+        [name]: {
+          'usd': prices.get(name).FairPrice
+        }
+      }
+    }
+
     const url = 'https://api.diadata.org/v1/assetQuotation' + dia_assets[asset]
     const response = await fetch(url, { headers: { "accept": "application/json" } })
     if (!response.ok) {
@@ -56,6 +83,7 @@ const fetchDiaAsset = async (asset) => {
     }
   } catch (error) {
     console.log(error)
+    throw error;
   }
 }
 
