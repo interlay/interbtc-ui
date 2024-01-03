@@ -59,10 +59,9 @@ const fetchDiaAsset = async (asset) => {
     }
     if (asset in dia_xlsd) {
       const prices = await fetchDiaXLSD();
-      const name = dia_xlsd[asset]
       return {
-        [name]: {
-          'usd': prices.get(name).FairPrice
+        [asset]: {
+          'usd': prices.get(dia_xlsd[asset]).FairPrice
         }
       }
     }
