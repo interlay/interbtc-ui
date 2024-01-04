@@ -18,7 +18,7 @@ const XCMEndpoints: XCMEndpointsRecord = {
   ],
   kintsugi: ['wss://api-kusama.interlay.io/parachain'],
   kusama: ['wss://kusama-rpc.polkadot.io', 'wss://kusama-rpc.dwellir.com'],
-  parallel: ['wss://rpc.parallel.fi'],
+  parallel: ['wss://parallel-rpc.dwellir.com', 'wss://polkadot-rpc.parallel.fi'],
   polkadot: ['wss://rpc.polkadot.io', 'wss://polkadot-rpc.dwellir.com'],
   statemine: [
     'wss://kusama-asset-hub-rpc.polkadot.io',
