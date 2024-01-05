@@ -9,7 +9,8 @@ const tickers = {
   "USD Coin": "usd-coin",
   "tBTC v2": "tbtc",
   "Voucher Dot": "voucher-dot",
-  "Voucher KSM": "voucher-ksm"
+  "Voucher KSM": "voucher-ksm",
+  "Moonriver": "moonriver"
 }
 
 // Coingecko to Dia asset ids
@@ -30,6 +31,7 @@ const dia_assets = {
   "tbtc": "/Ethereum/0x18084fbA666a33d37592fA2633fD49a74DD93a88",
   "dai": "/Ethereum/0x6B175474E89094C44Da98b954EedeAC495271d0F",
   "moonbeam": "/Moonbeam/0x0000000000000000000000000000000000000000",
+  "moonriver": "Moonriver/0x0000000000000000000000000000000000000000/",
   "usd-coin": "/Ethereum/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   "wrapped-bitcoin": "/Ethereum/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
 }
