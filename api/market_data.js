@@ -10,7 +10,7 @@ const tickers = {
   "tBTC v2": "tbtc",
   "Voucher Dot": "voucher-dot",
   "Voucher KSM": "voucher-ksm",
-  "Moonriver": "movr"
+  "Moonriver": "moonriver"
 }
 
 // Coingecko to Dia asset ids
