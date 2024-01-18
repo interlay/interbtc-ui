@@ -1,8 +1,8 @@
 {
   "functions": {
-    "api/*.py": {
+    "api/supply_info.js": {
       "memory": 128,
-      "maxDuration": 5
+      "maxDuration": 10
     },
     "api/terms.js": {
       "memory": 256,
@@ -24,11 +24,7 @@
   "rewrites": [
     {
       "source": "/supply/(.*)",
-      "destination": "/api/supply_info.py"
-    },
-    {
-      "source": "/_health/(.*)",
-      "destination": "/api/health.py"
+      "destination": "/api/supply_info.js"
     },
     {
       "source": "/marketdata/(.*)",
