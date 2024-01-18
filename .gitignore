@@ -122,3 +122,4 @@ dist
 .vscode
 /.env.development.local.example
 /.env
+.vercel
