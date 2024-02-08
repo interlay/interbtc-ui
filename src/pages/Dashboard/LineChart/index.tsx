@@ -76,6 +76,7 @@ const LineChart = ({ colors, labels, yLabels, yAxes, datasets, wrapperClassName 
             zeroLineColor
           },
           ticks: {
+            maxTicksLimit: 8,
             fontColor: textPrimaryColor
           }
         }
