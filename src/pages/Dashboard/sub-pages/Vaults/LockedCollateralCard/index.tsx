@@ -7,7 +7,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getLastMidnightTimestamps
 } from '@/common/utils/utils';
-import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import { CountOfDatesForChart } from '@/config/charts';
 import useCumulativeCollateralVolumes from '@/hooks/use-cumulative-collateral-volumes';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
@@ -16,7 +16,7 @@ import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
-const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
+const cutoffTimestamps = getLastMidnightTimestamps(CountOfDatesForChart.SIX_MONTHS, true);
 
 interface Props {
   collateralToken: CollateralCurrencyExt;

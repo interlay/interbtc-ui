@@ -3,7 +3,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
-import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import { CountOfDatesForChart } from '@/config/charts';
 import { useGetPrices } from '@/hooks/api/use-get-prices';
 import useAllCumulativeVaultCollateralVolumes from '@/hooks/use-all-cumulative-vault-collateral-volumes';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
@@ -16,7 +16,7 @@ import DashboardCard from '../../../cards/DashboardCard';
 import LineChart from '../../../LineChart';
 import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../../Stats';
 
-const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
+const cutoffTimestamps = getLastMidnightTimestamps(CountOfDatesForChart.ONE_MONTH, true);
 
 const LockedCollateralsCard = (): JSX.Element => {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ const LockedCollateralsCard = (): JSX.Element => {
   const cumulativeUSDVolumes = React.useMemo(() => {
     if (allCumulativeVaultCollateralVolumes === undefined) return;
 
-    return Array<number>(COUNT_OF_DATES_FOR_CHART)
+    return Array<number>(CountOfDatesForChart.ONE_MONTH)
       .fill(0)
       .map((_, index) => {
         const collateralTickers = Object.keys(allCumulativeVaultCollateralVolumes);

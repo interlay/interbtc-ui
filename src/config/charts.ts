@@ -1,3 +1,6 @@
-const COUNT_OF_DATES_FOR_CHART = 180;
+enum CountOfDatesForChart {
+  SIX_MONTHS = 180,
+  ONE_MONTH = 30
+}
 
-export { COUNT_OF_DATES_FOR_CHART };
+export { CountOfDatesForChart };
