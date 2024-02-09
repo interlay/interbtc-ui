@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
 import { formatNumber, getLastMidnightTimestamps } from '@/common/utils/utils';
-import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import { CountOfDatesForChart } from '@/config/charts';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from '@/utils/constants/colors';
@@ -23,7 +23,7 @@ interface VaultRegistration {
   registrationTimestamp: number;
 }
 
-const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
+const cutoffTimestamps = getLastMidnightTimestamps(CountOfDatesForChart.SIX_MONTHS, true);
 
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
