@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
 import { getLastMidnightTimestamps } from '@/common/utils/utils';
-import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import { CountOfDatesForChart } from '@/config/charts';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import cumulativeVolumesFetcher, {
@@ -17,7 +17,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import LineChart from '../LineChart';
 
-const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
+const cutoffTimestamps = getLastMidnightTimestamps(CountOfDatesForChart.SIX_MONTHS, true);
 
 const IssuedChart = (): JSX.Element => {
   const { t } = useTranslation();
