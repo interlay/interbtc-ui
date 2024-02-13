@@ -5,7 +5,7 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { CurrencySquidFormat } from '@/types/currency';
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
-enum ExcludedForeignAssets {
+enum ExcludedForeignCurrencies {
   USDC_WH = 'USDC.wh'
 }
 
@@ -24,7 +24,7 @@ const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
   ]);
 
   const filteredForeignCurrencies = foreignCurrencies.filter(
-    (currency) => !Object.values(ExcludedForeignAssets).includes(currency.ticker as ExcludedForeignAssets)
+    (currency) => !Object.values(ExcludedForeignCurrencies).includes(currency.ticker as ExcludedForeignCurrencies)
   );
 
   return [...NATIVE_CURRENCIES, ...filteredForeignCurrencies, ...lendCurrencies, ...lpTokens];
