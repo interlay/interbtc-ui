@@ -66,7 +66,7 @@ const BridgeForm = (): JSX.Element => {
       minAmount: currentToken
         ? newMonetaryAmount(currentToken.minTransferAmount, getCurrencyFromTicker(currentToken.value), true)
         : undefined,
-      maxAmount: maxTransferable || undefined
+      maxAmount: maxTransferable
     }
   };
 
