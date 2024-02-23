@@ -1,5 +1,6 @@
 import { ChainName } from '@interlay/bridge';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, Key, useCallback, useEffect, useState } from 'react';
@@ -44,6 +45,7 @@ const BridgeForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
   const [currentToken, setCurrentToken] = useState<XCMTokenData>();
+  const [maxTransferable, setMaxTransferable] = useState<MonetaryAmount<CurrencyExt>>();
 
   const prices = useGetPrices();
   const { t } = useTranslation();
@@ -64,9 +66,7 @@ const BridgeForm = (): JSX.Element => {
       minAmount: currentToken
         ? newMonetaryAmount(currentToken.minTransferAmount, getCurrencyFromTicker(currentToken.value), true)
         : undefined,
-      maxAmount: currentToken
-        ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
-        : undefined
+      maxAmount: maxTransferable || undefined
     }
   };
 
@@ -193,6 +193,25 @@ const BridgeForm = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
 
+  // TODO: This is a hotfix for this issue:
+  // https://github.com/interlay/interbtc-ui/issues/1644
+  // https://discord.com/channels/745259537707040778/1210509457902018600
+  // Revert this change when fixed in the bridge and revert to currentToken.balance
+  useEffect(() => {
+    if (!currentToken) return;
+
+    const fromField = form.values[BRIDGE_FROM_FIELD];
+    const balance = newSafeMonetaryAmount(currentToken?.balance, getCurrencyFromTicker(currentToken.value), true);
+
+    // An upstream change allows users to make transactions which fall below the ED when transferring from
+    // Polkadot or Kusama. This needs to be fixed in the bridge, but setting max balance to 95% mitigates
+    // the issue for now.
+    const transferable = fromField === 'polkadot' || fromField === 'kusama' ? balance.mul(0.95) : balance;
+
+    setMaxTransferable(transferable);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentToken]);
+
   if (!originatingChains || !destinationChains || !transferableTokens.length) {
     return (
       <Flex justifyContent='center'>
@@ -225,8 +244,8 @@ const BridgeForm = (): JSX.Element => {
           <TokenInput
             placeholder='0.00'
             label='Transfer amount'
-            balance={currentToken?.balance.toString() || 0}
-            humanBalance={currentToken?.balance.toString() || 0}
+            balance={maxTransferable?.toString() || 0}
+            humanBalance={maxTransferable?.toString() || 0}
             valueUSD={valueUSD || 0}
             selectProps={mergeProps(form.getSelectFieldProps(BRIDGE_TOKEN_FIELD), {
               onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, BRIDGE_TOKEN_FIELD),
