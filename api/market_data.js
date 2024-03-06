@@ -59,7 +59,7 @@ const fetchDiaXLSD = async () => {
   const result = new Map(json.map(x => [x.Token, x]))
 
   // cache the data for 120 seconds
-  kv.set(cache_key, JSON.stringify(result), { ex: 120 })
+  await kv.set(cache_key, JSON.stringify(result), { ex: 120 })
     .catch(err => console.error('Unable to cache Dia data', err))
   return result;
 }
@@ -127,6 +127,7 @@ const coingecko = async (args) => {
   const cache_key = "coingecko_" + args.ids
   const cached = await kv.get(cache_key)
   if (cached) {
+    console.log('Cached', cache_key, cached)
     return JSON.parse(cached)
   }
 
@@ -138,6 +139,7 @@ const coingecko = async (args) => {
   }
 
   // cache the data for 120 seconds
+  console.log('Caching', cache_key, JSON.stringify(data))
   kv.set(cache_key, JSON.stringify(data), { ex: 120 })
     .catch(err => console.error('Unable to cache coingecko data', err))
   return data;
