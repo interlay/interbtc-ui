@@ -1,3 +1,5 @@
+import { kv } from "@vercel/kv";
+
 // Dia to Coingecko names
 const tickers = {
   "Tether USD": "tether",
@@ -81,14 +83,19 @@ const fetchDiaAsset = async (asset) => {
       }
     }
   } catch (error) {
-    console.log(error)
+    console.warn('Dia API error for asset: ', asset, error)
     throw error;
   }
 }
 
 const dia = async (args) => {
-  const assets = args.ids.split(',')
+  const cache_key = "dia_" + args.ids
+  const cached = await kv.get(cache_key)
+  if (cached) {
+    return JSON.parse(x)
+  }
 
+  const assets = args.ids.split(',')
   return Promise
     .all(assets.map(x => fetchDiaAsset(x)))
     .then(x => x.reduce((map, obj) => {
@@ -97,12 +104,30 @@ const dia = async (args) => {
       map[k] = obj[k]
       return map
     }, {}))
+    .then(async x => {
+      // cache the data for 60 seconds
+      await kv.set(cache_key, JSON.stringify(x), { ex: 60 })
+      return x
+    })
 }
 
 const coingecko = async (args) => {
+  const cache_key = "coingecko_" + args.ids
+  const cached = await kv.get(cache_key)
+  if (cached) {
+    return JSON.parse(x)
+  }
+
   const url = 'https://api.coingecko.com/api/v3/simple/price?' + new URLSearchParams(args)
   const response = await fetch(url, { headers: { "accept": "application/json" } })
-  return await response.json()
+  const data = await response.json()
+  if (!response.ok) {
+    throw new Error(data)
+  }
+
+  // cache the data for 60 seconds
+  await kv.set(cache_key, JSON.stringify(data), { ex: 60 })
+  return data;
 }
 
 const fetchPrices = (priceSource, args) => {
@@ -111,12 +136,7 @@ const fetchPrices = (priceSource, args) => {
   } else if (priceSource === 'dia') {
     return dia(args)
   } else {
-    try {
-      return dia(args)
-    } catch (error) {
-      console.log(error)
-      return coingecko(args)
-    }
+    return dia(args).catch(() => coingecko(args))
   }
 }
 
@@ -124,10 +144,15 @@ export default async function (request, response) {
   const args = request.query
   const priceSource = args['price-source']
 
-  const resp = await fetchPrices(priceSource, args)
-  return response
-    .status(200)
-    .setHeader("content-type", "application/json")
-    .setHeader("cache-control", "public, maxage=0, s-maxage=300")
-    .json(resp)
+  try {
+    const resp = await fetchPrices(priceSource, args)
+    return response
+      .status(200)
+      .setHeader("content-type", "application/json")
+      .setHeader("cache-control", "public, maxage=0, s-maxage=300")
+      .json(resp)
+  } catch (err) {
+    console.error('Unable to fetch prices', err)
+    return response.status(500);
+  }
 }
