@@ -10,8 +10,7 @@
     },
     "api/market_data.js": {
       "memory": 128,
-      "maxDuration": 10,
-      "runtime": "nodejs20"
+      "maxDuration": 10
     },
     "api/tvl_dex.js": {
       "memory": 256,
