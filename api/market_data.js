@@ -44,13 +44,24 @@ const dia_xlsd = {
 
 // retrieve Dia XLSD fair prices
 const fetchDiaXLSD = async () => {
+  const cache_key = "diaxlsd"
+  const cached = await kv.get(cache_key)
+  if (cached) {
+    return JSON.parse(x)
+  }
+
   const url = 'https://api.diadata.org/xlsd'
   const resp = await fetch(url, { headers: { "accept": "application/json" } })
   if (!resp.ok) {
     throw new Error(resp.status)
   }
   const json = await resp.json()
-  return new Map(json.map(x => [x.Token, x]))
+  const result = new Map(json.map(x => [x.Token, x]))
+
+  // cache the data for 120 seconds
+  kv.set(cache_key, JSON.stringify(result), { ex: 120 })
+    .catch(err => console.error('Unable to cache Dia data', err))
+  return result;
 }
 
 const fetchDiaAsset = async (asset) => {
@@ -105,8 +116,8 @@ const dia = async (args) => {
       return map
     }, {}))
     .then(async x => {
-      // cache the data for 60 seconds
-      kv.set(cache_key, JSON.stringify(x), { ex: 60 })
+      // cache the data for 120 seconds
+      kv.set(cache_key, JSON.stringify(x), { ex: 120 })
         .catch(err => console.error('Unable to cache Dia data', err))
       return x
     })
@@ -126,7 +137,7 @@ const coingecko = async (args) => {
     throw new Error(data)
   }
 
-  // cache the data for 60 seconds
+  // cache the data for 120 seconds
   kv.set(cache_key, JSON.stringify(data), { ex: 120 })
     .catch(err => console.error('Unable to cache coingecko data', err))
   return data;
