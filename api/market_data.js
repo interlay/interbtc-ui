@@ -47,7 +47,7 @@ const fetchDiaXLSD = async () => {
   const cache_key = "diaxlsd"
   const cached = await kv.get(cache_key)
   if (cached) {
-    return JSON.parse(x)
+    return JSON.parse(cached)
   }
 
   const url = 'https://api.diadata.org/xlsd'
@@ -103,7 +103,7 @@ const dia = async (args) => {
   const cache_key = "dia_" + args.ids
   const cached = await kv.get(cache_key)
   if (cached) {
-    return JSON.parse(x)
+    return JSON.parse(cached)
   }
 
   const assets = args.ids.split(',')
@@ -127,7 +127,7 @@ const coingecko = async (args) => {
   const cache_key = "coingecko_" + args.ids
   const cached = await kv.get(cache_key)
   if (cached) {
-    return JSON.parse(x)
+    return JSON.parse(cached)
   }
 
   const url = 'https://api.coingecko.com/api/v3/simple/price?' + new URLSearchParams(args)
