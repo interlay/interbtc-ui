@@ -1,17 +1,16 @@
 name: Setup
-description: Sets up a Node.js environment, installs the dependencies using Yarn, 
+description: Sets up a Node.js environment, installs the dependencies using Yarn,
              and caches the installed dependencies for faster future builds.
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
-        node-version: 16
+        node-version: 18
         registry-url: https://registry.npmjs.org
         cache: yarn
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       id: install-cache
       with:
         path: node_modules/
