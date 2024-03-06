@@ -106,7 +106,8 @@ const dia = async (args) => {
     }, {}))
     .then(async x => {
       // cache the data for 60 seconds
-      await kv.set(cache_key, JSON.stringify(x), { ex: 60 })
+      kv.set(cache_key, JSON.stringify(x), { ex: 60 })
+        .catch(err => console.error('Unable to cache Dia data', err))
       return x
     })
 }
@@ -126,7 +127,8 @@ const coingecko = async (args) => {
   }
 
   // cache the data for 60 seconds
-  await kv.set(cache_key, JSON.stringify(data), { ex: 60 })
+  kv.set(cache_key, JSON.stringify(data), { ex: 120 })
+    .catch(err => console.error('Unable to cache coingecko data', err))
   return data;
 }
 
@@ -149,7 +151,7 @@ export default async function (request, response) {
     return response
       .status(200)
       .setHeader("content-type", "application/json")
-      .setHeader("cache-control", "public, maxage=0, s-maxage=300")
+      .setHeader("cache-control", "public, maxage=0, s-maxage=120")
       .json(resp)
   } catch (err) {
     console.error('Unable to fetch prices', err)
