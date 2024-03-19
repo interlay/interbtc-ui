@@ -1,9 +1,11 @@
 export { AUSD } from './AUSD';
+export { BNC } from './BNC';
 export { BTC } from './BTC';
 export { DAI } from './DAI';
 export { DOT } from './DOT';
 export { ETH } from './ETH';
 export { GLMR } from './GLMR';
+export { HDX } from './HDX';
 export { IBTC } from './IBTC';
 export { INTR } from './INTR';
 export { KAR } from './KAR';
