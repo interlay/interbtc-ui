@@ -16,6 +16,7 @@
     "@interlay/interbtc-api": "2.6.0",
     "@interlay/monetary-js": "0.7.3",
     "@polkadot/util-crypto": "12.6.1",
+    "@vercel/kv": "^1.0.1",
     "big.js": "6.1.1",
     "pg": "^8.10.0"
   }
