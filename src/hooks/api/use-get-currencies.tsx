@@ -5,6 +5,10 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { CurrencySquidFormat } from '@/types/currency';
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
+enum ExcludedForeignCurrencies {
+  USDC_WH = 'USDC.wh'
+}
+
 type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
   getCurrencyFromTicker: (ticker: string) => CurrencyExt;
   getForeignCurrencyFromId: (id: number) => CurrencyExt;
@@ -18,7 +22,12 @@ const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
     window.bridge.loans.getLendTokens(),
     window.bridge.amm.getLpTokens()
   ]);
-  return [...NATIVE_CURRENCIES, ...foreignCurrencies, ...lendCurrencies, ...lpTokens];
+
+  const filteredForeignCurrencies = foreignCurrencies.filter(
+    (currency) => !Object.values(ExcludedForeignCurrencies).includes(currency.ticker as ExcludedForeignCurrencies)
+  );
+
+  return [...NATIVE_CURRENCIES, ...filteredForeignCurrencies, ...lendCurrencies, ...lpTokens];
 };
 
 // Returns all currencies, both native and foreign and helping utils to get CurrencyExt object.
