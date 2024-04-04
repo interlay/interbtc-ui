@@ -146,13 +146,7 @@ const coingecko = async (args) => {
 }
 
 const fetchPrices = (priceSource, args) => {
-  if (priceSource === 'coingecko') {
-    return coingecko(args)
-  } else if (priceSource === 'dia') {
-    return dia(args)
-  } else {
-    return dia(args).catch(() => coingecko(args))
-  }
+  return coingecko(args)
 }
 
 export default async function (request, response) {
@@ -164,7 +158,7 @@ export default async function (request, response) {
     return response
       .status(200)
       .setHeader("content-type", "application/json")
-      .setHeader("cache-control", "public, maxage=0, s-maxage=120")
+      .setHeader("cache-control", "public, maxage=0, s-maxage=120, stale-while-revalidate=300, stale-if-error=300")
       .json(resp)
   } catch (err) {
     console.error('Unable to fetch prices', err)
