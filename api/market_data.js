@@ -146,7 +146,13 @@ const coingecko = async (args) => {
 }
 
 const fetchPrices = (priceSource, args) => {
-  return coingecko(args)
+  if (priceSource === 'coingecko') {
+    return coingecko(args)
+  } else if (priceSource === 'dia') {
+    return dia(args)
+  } else {
+    return dia(args).catch(() => coingecko(args))
+  }
 }
 
 export default async function (request, response) {
