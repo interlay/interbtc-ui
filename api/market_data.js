@@ -47,7 +47,7 @@ const fetchDiaXLSD = async () => {
   const cache_key = "diaxlsd"
   const cached = await kv.get(cache_key)
   if (cached) {
-    return JSON.parse(cached)
+    return cached
   }
 
   const url = 'https://api.diadata.org/xlsd'
@@ -59,7 +59,7 @@ const fetchDiaXLSD = async () => {
   const result = new Map(json.map(x => [x.Token, x]))
 
   // cache the data for 120 seconds
-  await kv.set(cache_key, JSON.stringify(result), { ex: 120 })
+  await kv.set(cache_key, result, { ex: 120 })
     .catch(err => console.error('Unable to cache Dia data', err))
   return result;
 }
@@ -103,7 +103,7 @@ const dia = async (args) => {
   const cache_key = "dia_" + args.ids
   const cached = await kv.get(cache_key)
   if (cached) {
-    return JSON.parse(cached)
+    return cached
   }
 
   const assets = args.ids.split(',')
@@ -117,7 +117,7 @@ const dia = async (args) => {
     }, {}))
     .then(async x => {
       // cache the data for 120 seconds
-      kv.set(cache_key, JSON.stringify(x), { ex: 120 })
+      kv.set(cache_key, x, { ex: 120 })
         .catch(err => console.error('Unable to cache Dia data', err))
       return x
     })
@@ -128,7 +128,7 @@ const coingecko = async (args) => {
   const cached = await kv.get(cache_key)
   if (cached) {
     console.log('Cached', cache_key, cached)
-    return JSON.parse(cached)
+    return cached
   }
 
   const url = 'https://api.coingecko.com/api/v3/simple/price?' + new URLSearchParams(args)
@@ -139,8 +139,8 @@ const coingecko = async (args) => {
   }
 
   // cache the data for 120 seconds
-  console.log('Caching', cache_key, JSON.stringify(data))
-  kv.set(cache_key, JSON.stringify(data), { ex: 120 })
+  console.log('Caching', cache_key, data)
+  kv.set(cache_key, data, { ex: 120 })
     .catch(err => console.error('Unable to cache coingecko data', err))
   return data;
 }
@@ -164,7 +164,7 @@ export default async function (request, response) {
     return response
       .status(200)
       .setHeader("content-type", "application/json")
-      .setHeader("cache-control", "public, maxage=0, s-maxage=120")
+      .setHeader("cache-control", "public, maxage=0, s-maxage=120, stale-while-revalidate=300, stale-if-error=300")
       .json(resp)
   } catch (err) {
     console.error('Unable to fetch prices', err)
