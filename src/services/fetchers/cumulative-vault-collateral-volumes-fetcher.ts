@@ -61,7 +61,7 @@ const cumulativeVaultCollateralVolumesFetcher = async (
       [ticker]: [
         ...(result[ticker] || []),
         {
-          amount: newMonetaryAmount(volumeData.amount || 0, currency),
+          amount: newMonetaryAmount(volumeData?.amount || 0, currency),
           tillTimestamp: cutoffTimestamps.find((cutoffTimestamp) => cutoffTimestamp.getTime().toString() === timestamp)
         }
       ]
