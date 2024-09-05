@@ -22,12 +22,12 @@ const XCMEndpoints: XCMEndpointsRecord = {
   polkadot: ['wss://rpc.polkadot.io', 'wss://polkadot-rpc.dwellir.com'],
   statemine: [
     'wss://kusama-asset-hub-rpc.polkadot.io',
-    'wss://statemine-rpc.dwellir.com',
+    'wss://asset-hub-kusama-rpc.dwellir.com',
     'wss://statemine-rpc-tn.dwellir.com'
   ],
   statemint: [
     'wss://polkadot-asset-hub-rpc.polkadot.io',
-    'wss://statemint-rpc.dwellir.com',
+    'wss://asset-hub-polkadot-rpc.dwellir.com',
     'wss://statemint-rpc-tn.dwellir.com'
   ]
 };
