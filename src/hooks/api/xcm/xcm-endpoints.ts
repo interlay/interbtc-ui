@@ -17,17 +17,25 @@ const XCMEndpoints: XCMEndpointsRecord = {
     'wss://karura-rpc-3.aca-api.network/ws'
   ],
   kintsugi: ['wss://api-kusama.interlay.io/parachain'],
-  kusama: ['wss://kusama-rpc.polkadot.io', 'wss://kusama-rpc.dwellir.com'],
+  kusama: [
+    'wss://kusama-rpc.dwellir.com',
+    'wss://rpc.ibp.network/kusama',
+    'wss://rpc-kusama.luckyfriday.io'
+  ],
   parallel: ['wss://parallel-rpc.dwellir.com', 'wss://polkadot-rpc.parallel.fi'],
-  polkadot: ['wss://rpc.polkadot.io', 'wss://polkadot-rpc.dwellir.com'],
+  polkadot: [
+    'wss://polkadot-rpc.dwellir.com',
+    'wss://rpc.ibp.network/polkadot',
+    'wss://rpc-polkadot.luckyfriday.io'
+  ],
   statemine: [
     'wss://kusama-asset-hub-rpc.polkadot.io',
-    'wss://statemine-rpc.dwellir.com',
+    'wss://asset-hub-kusama-rpc.dwellir.com',
     'wss://statemine-rpc-tn.dwellir.com'
   ],
   statemint: [
     'wss://polkadot-asset-hub-rpc.polkadot.io',
-    'wss://statemint-rpc.dwellir.com',
+    'wss://asset-hub-polkadot-rpc.dwellir.com',
     'wss://statemint-rpc-tn.dwellir.com'
   ]
 };
