@@ -21,18 +21,10 @@ const XCMEndpoints: XCMEndpointsRecord = {
     'wss://karura-rpc-3.aca-api.network/ws'
   ],
   kintsugi: ['wss://api-kusama.interlay.io/parachain'],
-  kusama: [
-    'wss://kusama-rpc.dwellir.com',
-    'wss://rpc.ibp.network/kusama',
-    'wss://rpc-kusama.luckyfriday.io'
-  ],
-  parallel: ['wss://parallel-rpc.dwellir.com', 'wss://polkadot-rpc.parallel.fi'],
-  phala: ['wss://api.phala.network/ws', 'wss://phala-rpc.dwellir.com]'],
-  polkadot: [
-    'wss://polkadot-rpc.dwellir.com',
-    'wss://rpc.ibp.network/polkadot',
-    'wss://rpc-polkadot.luckyfriday.io'
-  ],
+  kusama: ['wss://kusama-rpc.dwellir.com', 'wss://rpc.ibp.network/kusama', 'wss://rpc-kusama.luckyfriday.io'],
+  parallel: ['wss://polkadot-parallel-rpc.parallel.fi', 'wss://parallel-rpc.dwellir.com'],
+  phala: ['wss://api.phala.network/ws', 'wss://phala-rpc.dwellir.com'],
+  polkadot: ['wss://polkadot-rpc.dwellir.com', 'wss://rpc.ibp.network/polkadot', 'wss://rpc-polkadot.luckyfriday.io'],
   statemine: [
     'wss://kusama-asset-hub-rpc.polkadot.io',
     'wss://asset-hub-kusama-rpc.dwellir.com',
