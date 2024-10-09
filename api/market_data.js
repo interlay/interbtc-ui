@@ -33,7 +33,8 @@ const dia_assets = {
   "dai": "/Ethereum/0x6B175474E89094C44Da98b954EedeAC495271d0F",
   "moonbeam": "/Moonbeam/0x0000000000000000000000000000000000000000",
   "usd-coin": "/Ethereum/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  "wrapped-bitcoin": "/Ethereum/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+  "wrapped-bitcoin": "/Ethereum/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+  "phala-network": "/Ethereum/0x6c5bA91642F10282b576d91922Ae6448C9d52f4E"
 }
 
 // Coingecko to Dia XLSD tickers

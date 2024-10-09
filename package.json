@@ -1,13 +1,13 @@
 {
   "name": "interbtc-ui",
-  "version": "2.41.13",
+  "version": "2.41.14",
   "private": true,
   "dependencies": {
     "@acala-network/sdk-core": "^4.1.5",
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.18",
-    "@interlay/bridge": "^0.6.0",
+    "@interlay/bridge": "^0.6.2",
     "@interlay/interbtc-api": "2.6.0",
     "@interlay/monetary-js": "0.7.3",
     "@polkadot/api": "10.9.1",
