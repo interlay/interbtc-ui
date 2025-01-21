@@ -11,7 +11,6 @@ const XCMEndpoints: XCMEndpointsRecord = {
     'wss://bifrost-polkadot-rpc.dwellir.com',
     'wss://eu.bifrost-polkadot-rpc.liebi.com/ws'
   ],
-  heiko: ['wss://heiko-rpc.parallel.fi'],
   hydra: ['wss://rpc.hydradx.cloud', 'wss://hydradx-rpc.dwellir.com'],
   interlay: ['wss://api.interlay.io/parachain'],
   karura: [
@@ -22,7 +21,6 @@ const XCMEndpoints: XCMEndpointsRecord = {
   ],
   kintsugi: ['wss://api-kusama.interlay.io/parachain'],
   kusama: ['wss://kusama-rpc.dwellir.com', 'wss://rpc.ibp.network/kusama', 'wss://rpc-kusama.luckyfriday.io'],
-  parallel: ['wss://polkadot-parallel-rpc.parallel.fi', 'wss://parallel-rpc.dwellir.com'],
   phala: ['wss://api.phala.network/ws', 'wss://phala-rpc.dwellir.com'],
   polkadot: ['wss://polkadot-rpc.dwellir.com', 'wss://rpc.ibp.network/polkadot', 'wss://rpc-polkadot.luckyfriday.io'],
   statemine: [
