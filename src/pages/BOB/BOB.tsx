@@ -150,14 +150,17 @@ const BOB = (): JSX.Element => {
                     <TextLink external to='http://app.gobob.xyz' underlined>
                       BOB
                     </TextLink>{' '}
-                    x Interlay exclusive NFT badge today.
+                    x Interlay exclusive NFT badge.
                   </P>
                   <P>
                     Only original Interlay community members are eligible. Simply submit the EVM address you&apos;d like
                     to receive the NFT and sign the transaction with your Interlay account to prove your community
                     status.
                   </P>
-                  <P>We&apos;ll let you know in Interlay Discord when the NFT will be available to claim.</P>
+                  <P>
+                    Submit your Ethereum address below to register. We&apos;ll let you know in Interlay Discord when the NFT
+                    is available to claim.
+                  </P>
                 </Flex>
                 <form onSubmit={form.handleSubmit}>
                   <Flex direction='column' gap='spacing8'>
@@ -171,7 +174,7 @@ const BOB = (): JSX.Element => {
                     </Flex>
                     <Flex direction='column' gap='spacing4'>
                       <AuthCTA type='submit' size='large'>
-                        Claim your NFT
+                        Register your Ethereum address
                       </AuthCTA>
                     </Flex>
                   </Flex>
