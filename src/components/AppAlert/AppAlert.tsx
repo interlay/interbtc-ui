@@ -13,7 +13,7 @@ const AppAlert = (): JSX.Element => {
           <Alert style={{ borderLeft: 0, borderRight: 0, borderTop: 0, borderRadius: 0, width: '100%' }} status='info'>
             <P size='s'>Ledger is not supported on Interlay. Please don&apos;t use Ledger to store your tokens.</P>
           </Alert>
-          <StyledCloseCTA size='small' variant='text' aria-label='dimiss ledger alert banner' onPress={() => setIsAlertOpen(false)}>
+          <StyledCloseCTA style={{ top: 0}} size='small' variant='text' aria-label='dimiss ledger alert banner' onPress={() => setIsAlertOpen(false)}>
             <StyledXMark />
           </StyledCloseCTA>
         </Flex>
