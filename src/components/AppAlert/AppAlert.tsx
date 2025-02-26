@@ -1,7 +1,8 @@
 import { XMark } from "@/assets/icons";
 import { Alert, Flex, P } from "@/component-library";
-import { StyledCloseCTA } from "@/component-library/Dialog/Dialog.style";
 import { LocalStorageKey,useLocalStorage } from "@/hooks/use-local-storage";
+
+import { StyledCloseCTA } from "./AppAlert.styles";
 
 type Props = {
   alertText: string
