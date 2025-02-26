@@ -18,6 +18,7 @@ const URL_PARAMETERS = Object.freeze({
 const PAGES = Object.freeze({
   HOME: '/',
   BTC: '/btc',
+  BOB: '/bob-x-interlay',
   STRATEGIES: '/strategies',
   STRATEGY: `/strategies/:${URL_PARAMETERS.STRATEGY.TYPE}`,
   SEND_AND_RECEIVE: '/send-and-receive',
