@@ -1,3 +1,5 @@
+import { APP_NAME } from '@/config/relay-chains';
+
 import Sidebar from '../../legacy-components/Sidebar';
 import Topbar from '../../legacy-components/Topbar';
 import { AppAlert } from '../AppAlert';
@@ -10,7 +12,7 @@ interface Props {
 
 const Layout = ({ className, children }: Props): JSX.Element => (
   <>
-    <AppAlert alertText='Ledger is not supported on Interlay. Please don&apos;t use Ledger to store your tokens.'/>
+    <AppAlert alertText={`Ledger is not supported on ${APP_NAME}. Please don't use Ledger to store your tokens.`} />
     <Sidebar className={className}>
       <StyledWrapper>
         <Topbar />
