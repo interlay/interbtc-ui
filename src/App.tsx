@@ -47,6 +47,7 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
   const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
+  const isBobXInterlayEnabled = useFeatureFlag(FeatureFlags.BOB_X_INTERLAY);
 
   // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
@@ -120,9 +121,11 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.WALLET}>
                   <Wallet />
                 </Route>
-                <Route path={PAGES.BOB}>
-                  <BOB />
-                </Route>
+                {isBobXInterlayEnabled && (
+                  <Route path={PAGES.BOB}>
+                    <BOB />
+                  </Route>
+                )}
                 {isStrategiesEnabled && (
                   <>
                     <Route exact path={PAGES.STRATEGIES}>
