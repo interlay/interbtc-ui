@@ -155,9 +155,9 @@ const BOB = (): JSX.Element => {
                   <P>
                     Only original Interlay community members are eligible. Simply submit the EVM address you&apos;d like
                     to receive the NFT and sign the transaction with your Interlay account to prove your community
-                    status. We&apos;ll let you know in Interlay Discord when the NFT will be available to claim.
+                    status.
                   </P>
-                  <P>The claim page is only live until [DATE].</P>
+                  <P>We&apos;ll let you know in Interlay Discord when the NFT will be available to claim.</P>
                 </Flex>
                 <form onSubmit={form.handleSubmit}>
                   <Flex direction='column' gap='spacing8'>
