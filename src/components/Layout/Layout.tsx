@@ -10,7 +10,7 @@ interface Props {
 
 const Layout = ({ className, children }: Props): JSX.Element => (
   <>
-    <AppAlert />
+    <AppAlert alertText='Ledger is not supported on Interlay. Please don&apos;t use Ledger to store your tokens.'/>
     <Sidebar className={className}>
       <StyledWrapper>
         <Topbar />
