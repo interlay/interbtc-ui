@@ -21,6 +21,7 @@ import * as constants from './constants';
 import { FeatureFlags, useFeatureFlag } from './hooks/use-feature-flag';
 
 const BTC = React.lazy(() => import(/* webpackChunkName: 'btc' */ '@/pages/BTC'));
+const BOB = React.lazy(() => import(/* webpackChunkName: 'bob' */ '@/pages/BOB'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
 const Strategy = React.lazy(() => import(/* webpackChunkName: 'strategy' */ '@/pages/Strategies/Strategy'));
 const SendAndReceive = React.lazy(() => import(/* webpackChunkName: 'sendAndReceive' */ '@/pages/SendAndReceive'));
@@ -118,6 +119,9 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.WALLET}>
                   <Wallet />
+                </Route>
+                <Route path={PAGES.BOB}>
+                  <BOB />
                 </Route>
                 {isStrategiesEnabled && (
                   <>

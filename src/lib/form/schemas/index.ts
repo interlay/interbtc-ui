@@ -1,3 +1,4 @@
+export * from './bob';
 export * from './btc';
 export * from './loans';
 export * from './pools';

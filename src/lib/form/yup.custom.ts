@@ -6,7 +6,7 @@ import i18n from 'i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
-import { isValidBTCAddress, isValidRelayAddress } from './validate';
+import { isValidBTCAddress, isValidEthereumAddress, isValidRelayAddress } from './validate';
 
 yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string, customMessage?: string) {
   return this.transform((value) => (isNaN(value) ? undefined : value)).test('requiredAmount', (value, ctx) => {
@@ -108,12 +108,14 @@ yup.addMethod<yup.StringSchema>(
 
 enum AddressType {
   RELAY_CHAIN,
-  BTC
+  BTC,
+  ETHEREUM
 }
 
 const addressValidationMap = {
   [AddressType.RELAY_CHAIN]: isValidRelayAddress,
-  [AddressType.BTC]: isValidBTCAddress
+  [AddressType.BTC]: isValidBTCAddress,
+  [AddressType.ETHEREUM]: isValidEthereumAddress
 };
 
 yup.addMethod<yup.StringSchema>(
