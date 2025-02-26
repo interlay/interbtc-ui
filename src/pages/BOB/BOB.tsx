@@ -150,7 +150,7 @@ const BOB = (): JSX.Element => {
                     <TextLink external to='http://app.gobob.xyz' underlined>
                       BOB
                     </TextLink>{' '}
-                    x Interlay exclusive NFT badge today.
+                    x Interlay exclusive NFT badge.
                   </P>
                   <P>
                     Only original Interlay community members are eligible. Simply submit the EVM address you&apos;d like
