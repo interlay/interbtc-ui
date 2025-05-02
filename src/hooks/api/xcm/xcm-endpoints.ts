@@ -8,7 +8,6 @@ const XCMEndpoints: XCMEndpointsRecord = {
   bifrost: ['wss://us.bifrost-rpc.liebi.com/ws', 'wss://bifrost-rpc.liebi.com/ws'],
   bifrost_polkadot: [
     'wss://hk.p.bifrost-rpc.liebi.com/ws',
-    'wss://bifrost-polkadot-rpc.dwellir.com',
     'wss://eu.bifrost-polkadot-rpc.liebi.com/ws'
   ],
   hydra: ['wss://rpc.hydradx.cloud', 'wss://hydradx-rpc.dwellir.com'],
