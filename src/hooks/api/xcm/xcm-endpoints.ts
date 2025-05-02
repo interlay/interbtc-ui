@@ -5,10 +5,9 @@ type XCMEndpointsRecord = Record<ChainName, string[]>;
 const XCMEndpoints: XCMEndpointsRecord = {
   acala: ['wss://acala-rpc-1.aca-api.network', 'wss://acala-rpc-3.aca-api.network/ws', 'wss://acala-rpc.dwellir.com'],
   astar: ['wss://rpc.astar.network', 'wss://astar-rpc.dwellir.com'],
-  bifrost: ['wss://bifrost-rpc.dwellir.com', 'wss://us.bifrost-rpc.liebi.com/ws', 'wss://bifrost-rpc.liebi.com/ws'],
+  bifrost: ['wss://us.bifrost-rpc.liebi.com/ws', 'wss://bifrost-rpc.liebi.com/ws'],
   bifrost_polkadot: [
     'wss://hk.p.bifrost-rpc.liebi.com/ws',
-    'wss://bifrost-polkadot-rpc.dwellir.com',
     'wss://eu.bifrost-polkadot-rpc.liebi.com/ws'
   ],
   hydra: ['wss://rpc.hydradx.cloud', 'wss://hydradx-rpc.dwellir.com'],
