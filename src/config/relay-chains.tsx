@@ -1,4 +1,4 @@
-import { AcalaAdapter, KaruraAdapter } from '@interlay/bridge/build/adapters/acala';
+import { KaruraAdapter } from '@interlay/bridge/build/adapters/acala';
 import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
 import { BifrostKusamaAdapter, BifrostPolkadotAdapter } from '@interlay/bridge/build/adapters/bifrost';
 import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
@@ -163,7 +163,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
-      acala: new AcalaAdapter(),
       bifrost_polkadot: new BifrostPolkadotAdapter(),
       astar: new AstarAdapter(),
       hydra: new HydraAdapter(),
