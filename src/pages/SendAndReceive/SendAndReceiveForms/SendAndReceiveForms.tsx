@@ -27,11 +27,11 @@ const SendAndReceiveForms = (): JSX.Element => {
                 <StyledFormWrapper>
                   <Alert status='info'>
                     <P size='s'>
-                    The Kintsugi bridge is in maintenance mode while{' '}
+                    The Kintsugi Bridge is in maintenance mode while{' '}
                     <TextLink external to='https://kusama.subsquare.io/referenda/601' color='secondary'>
                       Referenda 601
                     </TextLink>{' '}
-                    (Runtime Upgrade 1.9.1) is in progress. Bridging will be available again when the runtime upgrade has been completed.
+                    (Runtime Upgrade 1.9.1) is in progress. Bridging will be available when all upgrades have been completed.
                     </P>
                   </Alert>
                   {/* <BridgeForm /> */}
