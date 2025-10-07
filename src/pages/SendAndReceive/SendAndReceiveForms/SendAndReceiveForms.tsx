@@ -1,4 +1,4 @@
-import { Alert, Flex, Tabs, TabsItem, TextLink } from '@/component-library';
+import { Alert, Flex, P, Tabs, TabsItem, TextLink } from '@/component-library';
 import { MainContainer } from '@/components';
 import { usePageQueryParams } from '@/hooks/use-page-query-params';
 import { QUERY_PARAMETERS, QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
@@ -26,11 +26,13 @@ const SendAndReceiveForms = (): JSX.Element => {
               <TabsItem title='Bridge' key={QUERY_PARAMETERS_VALUES.TRANSFER.TAB.BRIDGE}>
                 <StyledFormWrapper>
                   <Alert status='info'>
+                    <P size='s'>
                     The Kintsugi bridge is in maintenance mode while{' '}
-                    <TextLink external to='https://kusama.subsquare.io/referenda/601' underlined>
+                    <TextLink external to='https://kusama.subsquare.io/referenda/601' color='secondary'>
                       Referenda 601
                     </TextLink>{' '}
                     (Runtime Upgrade 1.9.1) is in progress. Bridging will be available again when the runtime upgrade has been completed.
+                    </P>
                   </Alert>
                   {/* <BridgeForm /> */}
                 </StyledFormWrapper>
