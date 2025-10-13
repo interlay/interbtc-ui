@@ -3,7 +3,7 @@ import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
 import { BifrostKusamaAdapter, BifrostPolkadotAdapter } from '@interlay/bridge/build/adapters/bifrost';
 import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
-import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
+import { PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
 import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import {
@@ -209,7 +209,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
       kintsugi: new KintsugiAdapter(),
-      kusama: new KusamaAdapter(),
       karura: new KaruraAdapter(),
       statemine: new StatemineAdapter(),
       bifrost: new BifrostKusamaAdapter(),
