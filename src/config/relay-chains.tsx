@@ -3,7 +3,6 @@ import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
 import { BifrostKusamaAdapter, BifrostPolkadotAdapter } from '@interlay/bridge/build/adapters/bifrost';
 import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
-// import { PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
 import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import {
@@ -166,7 +165,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       bifrost_polkadot: new BifrostPolkadotAdapter(),
       astar: new AstarAdapter(),
       hydra: new HydraAdapter(),
-      // polkadot: new PolkadotAdapter(),
       statemint: new StatemintAdapter()
     };
     SS58_PREFIX = 0;
