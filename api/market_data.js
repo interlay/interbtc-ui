@@ -132,7 +132,7 @@ const coingecko = async (args) => {
     return cached
   }
 
-  const url = 'https://api.coingecko.com/api/v3/simple/price?' + new URLSearchParams(args)
+  const url = 'https://api.coingecko.com/api/v3/simple/price?' + new URLSearchParams({ids: args.ids, vs_currencies: "usd"} )
   const response = await fetch(url, { headers: { "accept": "application/json" } })
   const data = await response.json()
   if (!response.ok) {
