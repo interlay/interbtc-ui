@@ -1,5 +1,7 @@
-import { Flex, H1, P } from '@/component-library';
+import { Flex, H1, P, TextLink } from '@/component-library';
 import { GovernanceTokenLogoWithTextIcon } from '@/config/relay-chains';
+
+const SHUTDOWN_ANNOUNCEMENT_LINK = 'https://x.com/InterlayHQ/status/2065344161788670027';
 
 const ServiceHalted = (): JSX.Element => (
   <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
@@ -10,11 +12,16 @@ const ServiceHalted = (): JSX.Element => (
           Service Halted
         </H1>
         <P align='center'>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+          The Interlay and Kintsugi networks have been wound down and this app is no longer operational. INTR and KINT
+          are native tokens and could never be withdrawn; they remain on their chains. All code is open source and
+          governance lives on-chain, so the community can restart the networks using the published runbook.
+        </P>
+        <P align='center'>
+          The mission continues at BOB, where Bitcoin DeFi is finding real traction. Read the full announcement and FAQ:{' '}
+          <TextLink external to={SHUTDOWN_ANNOUNCEMENT_LINK} underlined>
+            Closing a Chapter: Winding Down Interlay and Kintsugi
+          </TextLink>
+          .
         </P>
       </Flex>
     </Flex>
