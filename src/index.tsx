@@ -4,58 +4,23 @@ import '@/component-library/theme/theme.interlay.css';
 import '@/component-library/theme/theme.kintsugi.css';
 
 import { configGlobalBig } from '@interlay/monetary-js';
-import { OverlayProvider } from '@react-aria/overlays';
-import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
 
-import { Subscriptions } from '@/hooks/api/tokens/use-balances-subscription';
 import ThemeWrapper from '@/legacy-components/ThemeWrapper';
-import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/lib/substrate';
 
-import App from './App';
-import { GeoblockingWrapper } from './components/Geoblock/Geoblock';
+import ServiceHalted from './pages/ServiceHalted';
 import reportWebVitals from './reportWebVitals';
-import { store } from './store';
-import { NotificationsProvider } from './utils/context/Notifications';
 
 configGlobalBig();
 
 window.isFetchingActive = false;
 
-const queryClient = new QueryClient();
-
-// MEMO: temporarily removed React.StrictMode. We should add back when react-spectrum handles
-// it across their library. (Issue: https://github.com/adobe/react-spectrum/issues/779#issuecomment-1353734729)
+// MEMO: The apps are halted. All routes and chain connections are bypassed; only the
+// branded Service Halted page is rendered. Restore the full provider/router tree to re-enable.
 ReactDOM.render(
-  <GeoblockingWrapper>
-    <Router>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <Provider store={store}>
-            <SubstrateProvider>
-              <ThemeWrapper>
-                <SubstrateLoadingAndErrorHandlingWrapper>
-                  <Subscriptions>
-                    <NotificationsProvider>
-                      <OverlayProvider>
-                        <App />
-                      </OverlayProvider>
-                    </NotificationsProvider>
-                  </Subscriptions>
-                </SubstrateLoadingAndErrorHandlingWrapper>
-              </ThemeWrapper>
-            </SubstrateProvider>
-          </Provider>
-        </HelmetProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </Router>
-  </GeoblockingWrapper>,
+  <ThemeWrapper>
+    <ServiceHalted />
+  </ThemeWrapper>,
   document.getElementById('root')
 );
 
