@@ -5,9 +5,11 @@ import '@/component-library/theme/theme.kintsugi.css';
 
 import { configGlobalBig } from '@interlay/monetary-js';
 import ReactDOM from 'react-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import ThemeWrapper from '@/legacy-components/ThemeWrapper';
 
+import InterlayHelmet from './components/InterlayHelmet';
 import ServiceHalted from './pages/ServiceHalted';
 import reportWebVitals from './reportWebVitals';
 
@@ -18,9 +20,12 @@ window.isFetchingActive = false;
 // MEMO: The apps are halted. All routes and chain connections are bypassed; only the
 // branded Service Halted page is rendered. Restore the full provider/router tree to re-enable.
 ReactDOM.render(
-  <ThemeWrapper>
-    <ServiceHalted />
-  </ThemeWrapper>,
+  <HelmetProvider>
+    <ThemeWrapper>
+      <InterlayHelmet />
+      <ServiceHalted />
+    </ThemeWrapper>
+  </HelmetProvider>,
   document.getElementById('root')
 );
 
