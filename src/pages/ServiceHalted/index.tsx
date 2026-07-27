@@ -11,8 +11,16 @@ const ServiceHalted = (): JSX.Element => (
         </H1>
         <P align='center'>
           The {APP_NAME} app is currently offline as coretime for the chain has not been extended. All funds on the
-          chain are locked until the chain is restarted. The chain can be restarted following the runbook: [link to
-          follow].
+          chain are locked until the chain is restarted. The chain can be restarted following the{' '}
+          <a
+            href='https://medium.com/interlay/interlay-and-kintsugi-restart-runbook-1b742dfd0392'
+            target='_blank'
+            rel='noreferrer'
+            style={{ textDecoration: 'underline' }}
+          >
+            runbook
+          </a>
+          .
         </P>
       </Flex>
     </Flex>
